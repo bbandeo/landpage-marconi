@@ -37,8 +37,11 @@
     "@radix-ui/react-toggle": "latest",
     "@radix-ui/react-toggle-group": "latest",
     "@radix-ui/react-tooltip": "latest",
+    "@supabase/auth-helpers-nextjs": "^0.8.7",
+    "@supabase/supabase-js": "latest",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
+    "cloudinary": "latest",
     "clsx": "^2.1.1",
     "cmdk": "latest",
     "date-fns": "4.1.0",
@@ -55,22 +58,19 @@
     "recharts": "latest",
     "sonner": "latest",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7",
     "tailwindcss": "^3.3.0",
+    "tailwindcss-animate": "^1.0.7",
     "vaul": "latest",
-    "zod": "^3.24.1",
-    "@supabase/auth-helpers-nextjs": "^0.8.7",
-    "@supabase/supabase-js": "^2.38.4",
-    "cloudinary": "^1.41.0"
+    "zod": "^3.24.1"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.3",
-    "postcss": "^8",
+    "postcss": "^8.5",
     "typescript": "^5"
   }
 }
