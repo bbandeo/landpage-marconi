@@ -1,54 +1,44 @@
-import { type NextRequest, NextResponse } from "next/server"
-import { supabaseAdmin } from "@/lib/supabase"
+import { NextResponse } from "next/server"
+import { createClient } from "@supabase/supabase-js"
 
-export async function GET(request: NextRequest) {
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+
+export async function GET() {
   try {
-    // Mock data for now - will be replaced with real Supabase queries
-    const mockStats = {
-      stats: {
-        activeProperties: { value: 23, change: "+12%" },
-        newLeads: { value: 47, change: "+23%" },
-        monthlySales: { value: "$145,000", change: "+15%" },
-        totalViews: { value: "1,247", change: "+8%" },
-      },
+    // Try to connect to Supabase
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+    // Try to fetch real data from Supabase
+    const { data: properties, error: propertiesError } = await supabase.from("properties").select("*")
+
+    const { data: leads, error: leadsError } = await supabase.from("leads").select("*")
+
+    // If we have real data, calculate stats and return them
+    if (!propertiesError && !leadsError && properties && leads) {
+      const totalProperties = properties.length
+      const totalLeads = leads.length
+      const totalRevenue = properties.filter((p) => p.status === "sold").reduce((sum, p) => sum + (p.price || 0), 0)
+      const totalViews = properties.reduce((sum, p) => sum + (p.views || 0), 0)
+
+      return NextResponse.json({
+        totalProperties,
+        totalLeads,
+        totalRevenue,
+        totalViews,
+      })
     }
-
-    try {
-      // Try to get real data from Supabase
-      const { data: properties, error: propertiesError } = await supabaseAdmin
-        .from("properties")
-        .select("id, status")
-        .eq("status", "active")
-
-      const { data: leads, error: leadsError } = await supabaseAdmin
-        .from("leads")
-        .select("id, created_at")
-        .gte("created_at", new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString())
-
-      // If we have real data, use it
-      if (properties && !propertiesError) {
-        mockStats.stats.activeProperties.value = properties.length
-      }
-
-      if (leads && !leadsError) {
-        mockStats.stats.newLeads.value = leads.length
-      }
-    } catch (dbError) {
-      console.log("Database not available, using mock data:", dbError)
-    }
-
-    return NextResponse.json(mockStats)
   } catch (error) {
-    console.error("Error fetching dashboard stats:", error)
-
-    // Return fallback mock data
-    return NextResponse.json({
-      stats: {
-        activeProperties: { value: 23, change: "+12%" },
-        newLeads: { value: 47, change: "+23%" },
-        monthlySales: { value: "$145,000", change: "+15%" },
-        totalViews: { value: "1,247", change: "+8%" },
-      },
-    })
+    console.error("Error connecting to Supabase:", error)
   }
+
+  // Fallback to mock data if Supabase is not available
+  const mockStats = {
+    totalProperties: 24,
+    totalLeads: 156,
+    totalRevenue: 2450000,
+    totalViews: 8924,
+  }
+
+  return NextResponse.json(mockStats)
 }

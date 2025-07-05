@@ -1,19 +1,29 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
 
-// Temporarily bypass authentication
 export function middleware(request: NextRequest) {
-  // Comment out authentication logic for now
-  /*
-  const token = request.cookies.get('auth-token')
+  // Temporarily bypass authentication for development
+  return NextResponse.next()
+
+  /* 
+  // Re-enable this code when authentication is needed
+  const { pathname } = request.nextUrl
   
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!token) {
-      return NextResponse.redirect(new URL('/admin/login?redirectTo=' + request.nextUrl.pathname, request.url))
+  // Check if the request is for admin routes
+  if (pathname.startsWith('/admin')) {
+    // Check for authentication token (you can customize this logic)
+    const token = request.cookies.get('auth-token')
+    
+    if (!token && pathname !== '/admin/login') {
+      // Redirect to login page with return URL
+      const loginUrl = new URL('/admin/login', request.url)
+      loginUrl.searchParams.set('redirectTo', pathname)
+      return NextResponse.redirect(loginUrl)
     }
   }
-  */
-
+  
   return NextResponse.next()
+  */
 }
 
 export const config = {

@@ -1,385 +1,356 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
-  TrendingUp,
   Home,
-  MessageSquare,
-  DollarSign,
   Users,
+  DollarSign,
   Eye,
   Plus,
-  ArrowUpRight,
+  Settings,
+  MessageSquare,
+  TrendingUp,
   Calendar,
-  MapPin,
+  Bell,
+  ArrowUpRight,
+  ArrowDownRight,
 } from "lucide-react"
 
 interface DashboardStats {
   totalProperties: number
-  activeListings: number
   totalLeads: number
-  monthlyRevenue: number
-  viewsThisMonth: number
-  conversionRate: number
+  totalRevenue: number
+  totalViews: number
 }
 
 interface RecentActivity {
   id: string
-  type: "lead" | "property" | "view"
+  type: "lead" | "property" | "sale"
   title: string
   description: string
-  timestamp: string
-  status?: "new" | "contacted" | "sold"
+  time: string
+  icon: string
 }
 
 export default function AdminPage() {
   const [stats, setStats] = useState<DashboardStats>({
-    totalProperties: 23,
-    activeListings: 18,
-    totalLeads: 47,
-    monthlyRevenue: 145000,
-    viewsThisMonth: 1247,
-    conversionRate: 12.5,
+    totalProperties: 0,
+    totalLeads: 0,
+    totalRevenue: 0,
+    totalViews: 0,
   })
-
-  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([
-    {
-      id: "1",
-      type: "lead",
-      title: "Nueva consulta",
-      description: "María González preguntó sobre la casa en Barrio Parque",
-      timestamp: "Hace 5 minutos",
-      status: "new",
-    },
-    {
-      id: "2",
-      type: "property",
-      title: "Propiedad actualizada",
-      description: "Se actualizó el precio del terreno en Centro",
-      timestamp: "Hace 1 hora",
-    },
-    {
-      id: "3",
-      type: "view",
-      title: "Nueva visualización",
-      description: "Departamento en Lorenzón fue visto 15 veces hoy",
-      timestamp: "Hace 2 horas",
-    },
-    {
-      id: "4",
-      type: "lead",
-      title: "Contacto respondido",
-      description: "Se respondió la consulta de Juan Pérez",
-      timestamp: "Hace 3 horas",
-      status: "contacted",
-    },
-  ])
-
-  const [loading, setLoading] = useState(false)
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      setLoading(true)
-      setError(null)
-
-      try {
-        // Try to fetch real data from API
-        const statsResponse = await fetch("/api/dashboard/stats")
-        if (statsResponse.ok) {
-          const statsData = await statsResponse.json()
-          if (statsData.stats) {
-            setStats((prevStats) => ({
-              totalProperties: statsData.stats.activeProperties?.value || prevStats.totalProperties,
-              activeListings: statsData.stats.activeProperties?.value || prevStats.activeListings,
-              totalLeads: statsData.stats.newLeads?.value || prevStats.totalLeads,
-              monthlyRevenue:
-                Number.parseInt(statsData.stats.monthlySales?.value?.replace(/[$,]/g, "") || "0") ||
-                prevStats.monthlyRevenue,
-              viewsThisMonth:
-                Number.parseInt(statsData.stats.totalViews?.value?.replace(/,/g, "") || "0") ||
-                prevStats.viewsThisMonth,
-              conversionRate: prevStats.conversionRate,
-            }))
-          }
-        }
-
-        // Try to fetch recent activity
-        const activityResponse = await fetch("/api/dashboard/recent-activity")
-        if (activityResponse.ok) {
-          const activityData = await activityResponse.json()
-          if (activityData.activities && Array.isArray(activityData.activities)) {
-            setRecentActivity(
-              activityData.activities.map((activity: any) => ({
-                id: activity.id || Math.random().toString(),
-                type:
-                  activity.type === "property_created"
-                    ? "property"
-                    : activity.type === "lead_created"
-                      ? "lead"
-                      : "view",
-                title:
-                  activity.type === "property_created"
-                    ? "Nueva propiedad"
-                    : activity.type === "lead_created"
-                      ? "Nueva consulta"
-                      : "Actividad",
-                description: activity.message || "Sin descripción",
-                timestamp: activity.timeAgo || activity.timestamp || "Hace un momento",
-                status: activity.type === "lead_created" ? "new" : undefined,
-              })),
-            )
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error)
-        setError("No se pudieron cargar algunos datos. Mostrando datos de ejemplo.")
-      } finally {
-        setLoading(false)
-      }
-    }
-
     fetchDashboardData()
   }, [])
 
-  const statCards = [
-    {
-      title: "Propiedades Totales",
-      value: stats.totalProperties || 0,
-      icon: Home,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
-      change: "+12%",
-    },
-    {
-      title: "Listados Activos",
-      value: stats.activeListings || 0,
-      icon: TrendingUp,
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-      change: "+8%",
-    },
-    {
-      title: "Leads del Mes",
-      value: stats.totalLeads || 0,
-      icon: Users,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      change: "+23%",
-    },
-    {
-      title: "Ingresos Mensuales",
-      value: `$${(stats.monthlyRevenue || 0).toLocaleString()}`,
-      icon: DollarSign,
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
-      change: "+15%",
-    },
-  ]
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+
+      // Fetch stats
+      const statsResponse = await fetch("/api/dashboard/stats")
+      if (!statsResponse.ok) {
+        throw new Error("Error fetching stats")
+      }
+      const statsData = await statsResponse.json()
+      setStats(statsData)
+
+      // Fetch recent activity
+      const activityResponse = await fetch("/api/dashboard/recent-activity")
+      if (!activityResponse.ok) {
+        throw new Error("Error fetching recent activity")
+      }
+      const activityData = await activityResponse.json()
+      setRecentActivity(activityData.recentActivity || [])
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error)
+      setError("Error al cargar los datos del dashboard")
+
+      // Set fallback data
+      setStats({
+        totalProperties: 24,
+        totalLeads: 156,
+        totalRevenue: 2450000,
+        totalViews: 8924,
+      })
+      setRecentActivity([
+        {
+          id: "1",
+          type: "lead",
+          title: "Nuevo contacto: María González",
+          description: "Interesada en casa de 3 dormitorios",
+          time: new Date(Date.now() - 1000 * 60 * 15).toLocaleString("es-AR"),
+          icon: "👤",
+        },
+        {
+          id: "2",
+          type: "property",
+          title: "Propiedad actualizada: Casa Barrio Norte",
+          description: "Precio reducido a $85.000 USD",
+          time: new Date(Date.now() - 1000 * 60 * 45).toLocaleString("es-AR"),
+          icon: "🏠",
+        },
+      ])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+    }).format(amount)
+  }
+
+  const formatNumber = (num: number) => {
+    return new Intl.NumberFormat("es-AR").format(num)
+  }
 
   if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className="p-6">
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-8 bg-gray-200 rounded w-1/2"></div>
-              </CardContent>
-            </Card>
-          ))}
+      <div className="min-h-screen bg-gray-50 p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-64 mb-6"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="bg-white p-6 rounded-lg shadow">
+                  <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
+                  <div className="h-8 bg-gray-200 rounded w-16"></div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">¡Bienvenida, Floriana!</h1>
-          <p className="text-gray-600 mt-1">Aquí tienes un resumen de tu inmobiliaria</p>
-          {error && <p className="text-amber-600 text-sm mt-1 bg-amber-50 px-2 py-1 rounded">{error}</p>}
-        </div>
-        <div className="mt-4 sm:mt-0 flex gap-3">
-          <Button variant="outline" size="sm">
-            <Calendar className="w-4 h-4 mr-2" />
-            Este mes
-          </Button>
-          <Button size="sm" className="bg-orange-500 hover:bg-orange-600">
-            <Plus className="w-4 h-4 mr-2" />
-            Nueva propiedad
-          </Button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Panel de Administración</h1>
+              <p className="text-gray-600">Marconi Inmobiliaria - Dashboard</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button variant="outline" size="sm">
+                <Bell className="h-4 w-4 mr-2" />
+                Notificaciones
+              </Button>
+              <Button size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Nueva Propiedad
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statCards.map((stat, index) => (
-          <Card key={index} className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                  <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                  <div className="flex items-center mt-2">
-                    <ArrowUpRight className="w-4 h-4 text-green-500" />
-                    <span className="text-sm text-green-600 font-medium">{stat.change}</span>
-                    <span className="text-sm text-gray-500 ml-1">vs mes anterior</span>
-                  </div>
-                </div>
-                <div className={`p-3 rounded-full ${stat.bgColor}`}>
-                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
-                </div>
+      <div className="max-w-7xl mx-auto p-6">
+        {error && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <Bell className="h-5 w-5 text-yellow-400" />
               </div>
+              <div className="ml-3">
+                <p className="text-sm text-yellow-700">{error}</p>
+                <p className="text-xs text-yellow-600 mt-1">Mostrando datos de ejemplo</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Propiedades Activas</CardTitle>
+              <Home className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatNumber(stats.totalProperties)}</div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-green-600 flex items-center">
+                  <ArrowUpRight className="h-3 w-3 mr-1" />
+                  +12% desde el mes pasado
+                </span>
+              </p>
             </CardContent>
           </Card>
-        ))}
-      </div>
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Activity */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>Actividad Reciente</span>
-              <Button variant="ghost" size="sm">
-                Ver todo
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentActivity.length > 0 ? (
-                recentActivity.map((activity) => (
-                  <div
-                    key={activity.id}
-                    className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <div
-                      className={`p-2 rounded-full ${
-                        activity.type === "lead"
-                          ? "bg-blue-50"
-                          : activity.type === "property"
-                            ? "bg-green-50"
-                            : "bg-purple-50"
-                      }`}
-                    >
-                      {activity.type === "lead" && <Users className="w-4 h-4 text-blue-600" />}
-                      {activity.type === "property" && <Home className="w-4 h-4 text-green-600" />}
-                      {activity.type === "view" && <Eye className="w-4 h-4 text-purple-600" />}
-                    </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Leads Totales</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatNumber(stats.totalLeads)}</div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-green-600 flex items-center">
+                  <ArrowUpRight className="h-3 w-3 mr-1" />
+                  +23% desde el mes pasado
+                </span>
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Ingresos Totales</CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-green-600 flex items-center">
+                  <ArrowUpRight className="h-3 w-3 mr-1" />
+                  +8% desde el mes pasado
+                </span>
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Visualizaciones</CardTitle>
+              <Eye className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatNumber(stats.totalViews)}</div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-red-600 flex items-center">
+                  <ArrowDownRight className="h-3 w-3 mr-1" />
+                  -2% desde el mes pasado
+                </span>
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Recent Activity */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Actividad Reciente</CardTitle>
+              <CardDescription>Últimas actualizaciones y contactos</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentActivity.map((activity) => (
+                  <div key={activity.id} className="flex items-start space-x-4">
+                    <div className="text-2xl">{activity.icon}</div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900">{activity.title}</p>
                       <p className="text-sm text-gray-500">{activity.description}</p>
-                      <p className="text-xs text-gray-400 mt-1">{activity.timestamp}</p>
+                      <p className="text-xs text-gray-400 mt-1">{activity.time}</p>
                     </div>
-                    {activity.status && (
-                      <Badge
-                        variant={
-                          activity.status === "new"
-                            ? "default"
-                            : activity.status === "contacted"
-                              ? "secondary"
-                              : "outline"
-                        }
-                      >
-                        {activity.status === "new"
-                          ? "Nuevo"
-                          : activity.status === "contacted"
-                            ? "Contactado"
-                            : "Vendido"}
-                      </Badge>
-                    )}
+                    <Badge variant={activity.type === "lead" ? "default" : "secondary"}>
+                      {activity.type === "lead" ? "Lead" : "Propiedad"}
+                    </Badge>
                   </div>
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500">No hay actividad reciente</p>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions & Tasks */}
+          <div className="space-y-6">
+            {/* Quick Actions */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Acciones Rápidas</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button className="w-full justify-start bg-transparent" variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Agregar Propiedad
+                </Button>
+                <Button className="w-full justify-start bg-transparent" variant="outline">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Ver Contactos
+                </Button>
+                <Button className="w-full justify-start bg-transparent" variant="outline">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Reportes
+                </Button>
+                <Button className="w-full justify-start bg-transparent" variant="outline">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Configuración
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Performance Metrics */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Métricas del Mes</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Tasa de Conversión</span>
+                  <span className="text-sm font-medium">12.5%</span>
                 </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Tiempo Respuesta</span>
+                  <span className="text-sm font-medium">15 min</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Propiedades Vendidas</span>
+                  <span className="text-sm font-medium">8</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Satisfacción Cliente</span>
+                  <span className="text-sm font-medium">98%</span>
+                </div>
+              </CardContent>
+            </Card>
 
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Acciones Rápidas</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Button className="w-full justify-start bg-orange-500 hover:bg-orange-600" size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              Agregar Propiedad
-            </Button>
-            <Button variant="outline" className="w-full justify-start bg-transparent" size="sm">
-              <MessageSquare className="w-4 h-4 mr-2" />
-              Ver Contactos
-            </Button>
-            <Button variant="outline" className="w-full justify-start bg-transparent" size="sm">
-              <Eye className="w-4 h-4 mr-2" />
-              Estadísticas
-            </Button>
-            <Button variant="outline" className="w-full justify-start bg-transparent" size="sm">
-              <MapPin className="w-4 h-4 mr-2" />
-              Mapa de Propiedades
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Performance Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Rendimiento del Mes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Visualizaciones</span>
-                <span className="font-semibold">{(stats.viewsThisMonth || 0).toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Tasa de Conversión</span>
-                <span className="font-semibold">{stats.conversionRate || 0}%</span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Propiedades Vendidas</span>
-                <span className="font-semibold">3</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Próximas Tareas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                <span className="text-sm">Responder 3 consultas pendientes</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                <span className="text-sm">Actualizar fotos de 2 propiedades</span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-sm">Programar visitas para mañana</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            {/* Upcoming Tasks */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Tareas Pendientes</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <Calendar className="h-4 w-4 text-orange-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Visita programada</p>
+                    <p className="text-xs text-gray-500">Hoy 15:00</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <MessageSquare className="h-4 w-4 text-blue-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Responder consultas</p>
+                    <p className="text-xs text-gray-500">3 pendientes</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <Home className="h-4 w-4 text-green-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Actualizar precios</p>
+                    <p className="text-xs text-gray-500">2 propiedades</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   )
