@@ -108,7 +108,7 @@ export class PropertiesService {
 		return result.property;
 	}
 
-	// Actualizar propiedad
+	// Actualizar propiedad existente
 	static async updateProperty(id: number, data: PropertyUpdate): Promise<Property> {
 		const response = await fetch(`${this.baseUrl}/${id}`, {
 			method: "PUT",
@@ -139,7 +139,12 @@ export class PropertiesService {
 		}
 	}
 
-	// Alternar estado destacado
+	// Cambiar estado de propiedad
+	static async updatePropertyStatus(id: number, status: string): Promise<Property> {
+		return this.updateProperty(id, { status });
+	}
+
+	// Cambiar estado destacado
 	static async toggleFeatured(id: number, featured: boolean): Promise<Property> {
 		return this.updateProperty(id, { featured });
 	}

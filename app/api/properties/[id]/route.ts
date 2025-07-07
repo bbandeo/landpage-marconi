@@ -57,12 +57,23 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 		if (body.area_m2 !== undefined) updateData.area_m2 = parseFloat(body.area_m2);
 		if (body.address !== undefined) updateData.address = body.address;
 		if (body.neighborhood !== undefined) updateData.neighborhood = body.neighborhood;
+		if (body.city !== undefined) updateData.city = body.city;
+		if (body.province !== undefined) updateData.province = body.province;
 		if (body.images !== undefined) updateData.images = body.images;
 		if (body.features !== undefined) updateData.features = body.features;
 		if (body.featured !== undefined) updateData.featured = body.featured;
 		if (body.status !== undefined) updateData.status = body.status;
 
-		const { data, error } = await supabaseAdmin.from("properties").update(updateData).eq("id", id).select().single();
+		// Agregar timestamp de actualización
+		updateData.updated_at = new Date().toISOString();
+
+		// Actualizar en Supabase
+		const { data, error } = await supabaseAdmin
+			.from("properties")
+			.update(updateData)
+			.eq("id", id)
+			.select()
+			.single();
 
 		if (error) {
 			console.error("Error updating property:", error);
@@ -85,10 +96,33 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 			return NextResponse.json({ error: "ID de propiedad inválido" }, { status: 400 });
 		}
 
-		const { error } = await supabaseAdmin.from("properties").delete().eq("id", id);
+		// Verificar que la propiedad existe antes de eliminar
+		const { data: existingProperty, error: fetchError } = await supabaseAdmin
+			.from("properties")
+			.select("id, images")
+			.eq("id", id)
+			.single();
 
-		if (error) {
-			console.error("Error deleting property:", error);
+		if (fetchError || !existingProperty) {
+			return NextResponse.json({ error: "Property not found" }, { status: 404 });
+		}
+
+		// TODO: Eliminar imágenes de Cloudinary
+		// if (existingProperty.images && existingProperty.images.length > 0) {
+		//     for (const imageUrl of existingProperty.images) {
+		//         const publicId = extractPublicIdFromUrl(imageUrl);
+		//         await deleteFromCloudinary(publicId);
+		//     }
+		// }
+
+		// Eliminar propiedad de Supabase
+		const { error: deleteError } = await supabaseAdmin
+			.from("properties")
+			.delete()
+			.eq("id", id);
+
+		if (deleteError) {
+			console.error("Error deleting property:", deleteError);
 			return NextResponse.json({ error: "Failed to delete property" }, { status: 500 });
 		}
 
