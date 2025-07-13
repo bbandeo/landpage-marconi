@@ -1,159 +1,173 @@
-import { type Property, type PropertyInsert, type PropertyUpdate, STATUS_MAP } from "@/lib/supabase"
+import { supabase, supabaseAdmin } from "@/lib/supabase"
+import type { Property, PropertyInsert, PropertyUpdate } from "@/lib/supabase"
 
-interface PaginationParams {
-  page?: number
-  limit?: number
-}
-
-interface PropertyFilters {
-  type?: string
-  operation?: string
-  status?: string
-  featured?: boolean
-  neighborhood?: string
-  minPrice?: number
-  maxPrice?: number
-  search?: string
-}
-
-interface PropertiesResponse {
-  properties: Property[]
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    totalPages: number
-  }
-}
-
-// Servicio para gestionar propiedades
 export class PropertiesService {
-  private static baseUrl = "/api/properties"
+  // Obtener propiedades destacadas para la landing page
+  static async getFeaturedProperties(): Promise<Property[]> {
+    try {
+      const { data, error } = await supabase
+        .from("properties")
+        .select("*")
+        .eq("featured", true)
+        .eq("status", "available")
+        .order("created_at", { ascending: false })
+        .limit(6)
+
+      if (error) {
+        console.error("Error fetching featured properties:", error)
+        throw error
+      }
+
+      return data || []
+    } catch (error) {
+      console.error("Error in getFeaturedProperties:", error)
+      throw error
+    }
+  }
 
   // Obtener todas las propiedades con filtros
   static async getProperties(
-    filters: PropertyFilters = {},
-    pagination: PaginationParams = {},
-  ): Promise<PropertiesResponse> {
-    const params = new URLSearchParams()
+    filters: {
+      type?: string
+      operation?: string
+      status?: string
+      featured?: boolean
+      neighborhood?: string
+      minPrice?: number
+      maxPrice?: number
+      search?: string
+      page?: number
+      limit?: number
+    } = {},
+  ): Promise<{ properties: Property[]; total: number }> {
+    try {
+      let query = supabase.from("properties").select("*", { count: "exact" })
 
-    // Agregar filtros
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        params.append(key, value.toString())
+      // Aplicar filtros
+      if (filters.type) query = query.eq("property_type", filters.type)
+      if (filters.operation) query = query.eq("operation_type", filters.operation)
+      if (filters.status) query = query.eq("status", filters.status)
+      if (filters.featured !== undefined) query = query.eq("featured", filters.featured)
+      if (filters.neighborhood) query = query.eq("neighborhood", filters.neighborhood)
+      if (filters.minPrice) query = query.gte("price", filters.minPrice)
+      if (filters.maxPrice) query = query.lte("price", filters.maxPrice)
+
+      // Búsqueda de texto
+      if (filters.search) {
+        query = query.or(
+          `title.ilike.%${filters.search}%,address.ilike.%${filters.search}%,neighborhood.ilike.%${filters.search}%`,
+        )
       }
-    })
 
-    // Agregar paginación
-    if (pagination.page) params.append("page", pagination.page.toString())
-    if (pagination.limit) params.append("limit", pagination.limit.toString())
+      // Paginación
+      const page = filters.page || 1
+      const limit = filters.limit || 10
+      const from = (page - 1) * limit
+      const to = from + limit - 1
 
-    const response = await fetch(`${this.baseUrl}?${params.toString()}`)
+      query = query.order("created_at", { ascending: false }).range(from, to)
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch properties")
+      const { data, error, count } = await query
+
+      if (error) {
+        console.error("Error fetching properties:", error)
+        throw error
+      }
+
+      return {
+        properties: data || [],
+        total: count || 0,
+      }
+    } catch (error) {
+      console.error("Error in getProperties:", error)
+      throw error
     }
-
-    return response.json()
-  }
-
-  // Obtener propiedades para la landing page (públicas)
-  static async getPublicProperties(filters: PropertyFilters = {}): Promise<Property[]> {
-    const publicFilters = {
-      ...filters,
-      status: "available", // Usar valor de DB
-    }
-
-    const result = await this.getProperties(publicFilters, { limit: 50 })
-    return result.properties
-  }
-
-  // Obtener propiedades destacadas
-  static async getFeaturedProperties(): Promise<Property[]> {
-    const result = await this.getProperties(
-      {
-        featured: true,
-        status: "available", // Usar valor de DB
-      },
-      { limit: 6 },
-    )
-    return result.properties
-  }
-
-  // Obtener una propiedad específica
-  static async getProperty(id: number): Promise<Property> {
-    const response = await fetch(`${this.baseUrl}/${id}`)
-
-    if (!response.ok) {
-      throw new Error("Property not found")
-    }
-
-    const result = await response.json()
-    return result.property
   }
 
   // Crear nueva propiedad
-  static async createProperty(data: Omit<PropertyInsert, "id">): Promise<Property> {
-    const response = await fetch(this.baseUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
+  static async createProperty(propertyData: PropertyInsert): Promise<Property> {
+    try {
+      const { data, error } = await supabaseAdmin.from("properties").insert(propertyData).select().single()
 
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.error || "Failed to create property")
+      if (error) {
+        console.error("Error creating property:", error)
+        throw error
+      }
+
+      return data
+    } catch (error) {
+      console.error("Error in createProperty:", error)
+      throw error
     }
-
-    const result = await response.json()
-    return result.property
   }
 
-  // Actualizar propiedad existente
-  static async updateProperty(id: number, data: PropertyUpdate): Promise<Property> {
-    const response = await fetch(`${this.baseUrl}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
+  // Actualizar propiedad
+  static async updateProperty(id: number, propertyData: PropertyUpdate): Promise<Property> {
+    try {
+      const { data, error } = await supabaseAdmin.from("properties").update(propertyData).eq("id", id).select().single()
 
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.error || "Failed to update property")
+      if (error) {
+        console.error("Error updating property:", error)
+        throw error
+      }
+
+      return data
+    } catch (error) {
+      console.error("Error in updateProperty:", error)
+      throw error
     }
+  }
 
-    const result = await response.json()
-    return result.property
+  // Obtener propiedad por ID
+  static async getPropertyById(id: number): Promise<Property | null> {
+    try {
+      const { data, error } = await supabase.from("properties").select("*").eq("id", id).single()
+
+      if (error) {
+        if (error.code === "PGRST116") {
+          return null // No encontrado
+        }
+        console.error("Error fetching property:", error)
+        throw error
+      }
+
+      return data
+    } catch (error) {
+      console.error("Error in getPropertyById:", error)
+      throw error
+    }
   }
 
   // Eliminar propiedad
   static async deleteProperty(id: number): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/${id}`, {
-      method: "DELETE",
-    })
+    try {
+      const { error } = await supabaseAdmin.from("properties").delete().eq("id", id)
 
-    if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.error || "Failed to delete property")
+      if (error) {
+        console.error("Error deleting property:", error)
+        throw error
+      }
+    } catch (error) {
+      console.error("Error in deleteProperty:", error)
+      throw error
     }
   }
 
-  // Cambiar estado de propiedad
-  static async updatePropertyStatus(id: number, status: string): Promise<Property> {
-    return this.updateProperty(id, { status })
-  }
+  // Incrementar vistas de una propiedad
+  static async incrementViews(id: number): Promise<void> {
+    try {
+      const { error } = await supabaseAdmin
+        .from("properties")
+        .update({ views: supabase.raw("views + 1") })
+        .eq("id", id)
 
-  // Cambiar estado destacado
-  static async toggleFeatured(id: number, featured: boolean): Promise<Property> {
-    return this.updateProperty(id, { featured })
-  }
-
-  // Función helper para convertir status de DB a frontend
-  static getStatusLabel(dbStatus: string): string {
-    return STATUS_MAP[dbStatus as keyof typeof STATUS_MAP] || dbStatus
+      if (error) {
+        console.error("Error incrementing views:", error)
+        throw error
+      }
+    } catch (error) {
+      console.error("Error in incrementViews:", error)
+      throw error
+    }
   }
 }
