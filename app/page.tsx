@@ -26,7 +26,7 @@ import {
 } from "lucide-react"
 
 // Importar servicios
-import { PropertiesService } from "@/services/properties"
+import { PropertyService } from "@/services/properties"
 import { LeadsService } from "@/services/leads"
 import type { Property } from "@/lib/supabase"
 
