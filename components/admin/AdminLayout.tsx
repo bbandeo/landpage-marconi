@@ -44,7 +44,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
 				<div className="flex flex-col h-full">
 					{/* Logo */}
 					<div className="flex items-center justify-between p-6 border-b border-gray-200">
-						<div className="flex items-center space-x-2">
+						<a href="/" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 cursor-pointer">
 							<div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
 								<Home className="w-5 h-5 text-white" />
 							</div>
@@ -52,7 +52,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
 								<h1 className="font-bold text-gray-900">MARCONI</h1>
 								<p className="text-xs text-gray-500">Admin Panel</p>
 							</div>
-						</div>
+						</a>
 						<button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 text-gray-400 hover:text-gray-600">
 							<X className="w-5 h-5" />
 						</button>
