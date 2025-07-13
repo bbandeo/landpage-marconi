@@ -26,6 +26,7 @@ import {
 } from "lucide-react"
 
 // Importar servicios
+import { useIsClient } from "@/hooks/use-is-client"
 import { PropertyService } from "@/services/properties"
 import { LeadsService } from "@/services/leads"
 import type { Property } from "@/lib/supabase"
@@ -33,7 +34,8 @@ import type { Property } from "@/lib/supabase"
 export default function MarconiInmobiliaria() {
   const [currentStat, setCurrentStat] = useState(0)
   const [scrolled, setScrolled] = useState(false)
-  
+  const isClient = useIsClient()
+
   // Estados para datos del backend
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
   const [loadingProperties, setLoadingProperties] = useState(true)
@@ -59,7 +61,7 @@ export default function MarconiInmobiliaria() {
     const loadFeaturedProperties = async () => {
       try {
         setLoadingProperties(true)
-        const properties = await PropertiesService.getFeaturedProperties()
+        const properties = await PropertyService.getFeaturedProperties()
         setFeaturedProperties(properties)
       } catch (error) {
         console.error('Error loading featured properties:', error)
@@ -79,12 +81,15 @@ export default function MarconiInmobiliaria() {
   }, [])
 
   useEffect(() => {
+    if (!isClient) {
+      return
+    }
     const handleScroll = () => {
       setScrolled(window.scrollY > 50)
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [isClient])
 
   // Formatear precio
   const formatPrice = (price: number, currency: string) => {
