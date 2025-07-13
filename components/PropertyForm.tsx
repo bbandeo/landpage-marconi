@@ -35,8 +35,8 @@ const PropertyForm = ({ property, mode = "create" }: PropertyFormProps) => {
 	const [formData, setFormData] = useState<PropertyFormData>({
 		title: property?.title || "",
 		description: property?.description || "",
-		type: property?.type || "Casa",
-		operation: property?.operation || "Venta",
+		type: property?.type || "casa",
+		operation: property?.operation || "venta",
 		price: property?.price || "",
 		currency: property?.currency || "USD",
 		bedrooms: property?.bedrooms || "",
@@ -46,18 +46,31 @@ const PropertyForm = ({ property, mode = "create" }: PropertyFormProps) => {
 		neighborhood: property?.neighborhood || "Centro",
 		features: property?.features?.join(", ") || "",
 		featured: property?.featured || false,
-		status: property?.status || "Disponible",
+		status: property?.status || "available",
 		images: []
 	});
 
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [imagePreview, setImagePreview] = useState<string[]>(property?.images || []);
 
-	const propertyTypes = ["Casa", "Departamento", "Terreno", "Local"];
-	const operations = ["Venta", "Alquiler"];
+	const propertyTypes = [
+		{ value: "casa", label: "Casa" },
+		{ value: "departamento", label: "Departamento" },
+		{ value: "terreno", label: "Terreno" },
+		{ value: "local", label: "Local" }
+	];
+	const operations = [
+		{ value: "venta", label: "Venta" },
+		{ value: "alquiler", label: "Alquiler" }
+	];
 	const currencies = ["USD", "ARS"];
 	const neighborhoods = ["Centro", "Barrio Parque", "Barrio Lorenzón", "314 Viviendas", "Zona Rural", "Barrio Norte", "Villa Constitución"];
-	const statuses = ["Disponible", "Reservado", "Vendido", "Alquilado"];
+	const statuses = [
+		{ value: "available", label: "Disponible" },
+		{ value: "reserved", label: "Reservado" },
+		{ value: "sold", label: "Vendido" },
+		{ value: "rented", label: "Alquilado" }
+	];
 
 	const validateForm = () => {
 		const newErrors: Record<string, string> = {};
@@ -69,7 +82,7 @@ const PropertyForm = ({ property, mode = "create" }: PropertyFormProps) => {
 		if (!formData.address.trim()) newErrors.address = "La dirección es obligatoria";
 
 		// Validaciones específicas por tipo
-		if (formData.type === "Casa" || formData.type === "Departamento") {
+		if (formData.type === "casa" || formData.type === "departamento") {
 			if (!formData.bedrooms) newErrors.bedrooms = "Los dormitorios son obligatorios para casas y departamentos";
 			if (!formData.bathrooms) newErrors.bathrooms = "Los baños son obligatorios para casas y departamentos";
 		}
@@ -211,8 +224,8 @@ const PropertyForm = ({ property, mode = "create" }: PropertyFormProps) => {
 											onChange={e => handleInputChange("type", e.target.value)}
 											className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500">
 											{propertyTypes.map(type => (
-												<option key={type} value={type}>
-													{type}
+												<option key={type.value} value={type.value}>
+													{type.label}
 												</option>
 											))}
 										</select>
@@ -224,8 +237,8 @@ const PropertyForm = ({ property, mode = "create" }: PropertyFormProps) => {
 											onChange={e => handleInputChange("operation", e.target.value)}
 											className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500">
 											{operations.map(op => (
-												<option key={op} value={op}>
-													{op}
+												<option key={op.value} value={op.value}>
+													{op.label}
 												</option>
 											))}
 										</select>
@@ -397,8 +410,8 @@ const PropertyForm = ({ property, mode = "create" }: PropertyFormProps) => {
 										onChange={e => handleInputChange("status", e.target.value)}
 										className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500">
 										{statuses.map(status => (
-											<option key={status} value={status}>
-												{status}
+											<option key={status.value} value={status.value}>
+												{status.label}
 											</option>
 										))}
 									</select>
