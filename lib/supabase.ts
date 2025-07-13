@@ -1,19 +1,30 @@
 import { createClient } from "@supabase/supabase-js"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Verificar que las variables de entorno estén disponibles
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+if (!supabaseUrl) {
+  throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_URL")
+}
+
+if (!supabaseAnonKey) {
+  throw new Error("Missing env.NEXT_PUBLIC_SUPABASE_ANON_KEY")
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Para operaciones del servidor (con service role)
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-})
+export const supabaseAdmin = supabaseServiceRoleKey
+  ? createClient(supabaseUrl, supabaseServiceRoleKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    })
+  : null
 
 // Tipos TypeScript para la base de datos
 export interface Database {

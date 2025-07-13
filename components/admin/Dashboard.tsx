@@ -2,341 +2,292 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import {
-  Home,
-  DollarSign,
-  Users,
-  TrendingUp,
-  Eye,
-  MessageSquare,
-  Calendar,
-  ArrowUpRight,
-  ArrowDownRight,
-} from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Home, Users, TrendingUp, Eye, Plus, BarChart3, ArrowUpRight, Building2 } from "lucide-react"
 
-interface StatCard {
-  label: string
-  value: string
-  change: string
-  isPositive: boolean
-  icon: any
-  color: string
+interface DashboardStats {
+  totalProperties: number
+  totalLeads: number
+  totalViews: number
+  featuredProperties: number
 }
 
-interface Property {
+interface RecentProperty {
   id: number
   title: string
-  address: string
-  neighborhood: string
   price: number
-  currency: string
-  property_type: string
-  operation_type: string
   status: string
-  views: number
-  leads: number
   created_at: string
-  featured: boolean
 }
 
-const Dashboard = () => {
+interface RecentLead {
+  id: number
+  name: string
+  email: string
+  created_at: string
+  status: string
+}
+
+export default function Dashboard() {
   const router = useRouter()
+  const [stats, setStats] = useState<DashboardStats>({
+    totalProperties: 0,
+    totalLeads: 0,
+    totalViews: 0,
+    featuredProperties: 0,
+  })
+  const [recentProperties, setRecentProperties] = useState<RecentProperty[]>([])
+  const [recentLeads, setRecentLeads] = useState<RecentLead[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const [stats, setStats] = useState<StatCard[]>([
-    {
-      label: "Propiedades Activas",
-      value: "23",
-      change: "+2 esta semana",
-      isPositive: true,
-      icon: Home,
-      color: "bg-blue-500",
-    },
-    {
-      label: "Ventas del Mes",
-      value: "$145.000",
-      change: "+15% vs mes anterior",
-      isPositive: true,
-      icon: DollarSign,
-      color: "bg-green-500",
-    },
-    {
-      label: "Leads Nuevos",
-      value: "47",
-      change: "+8 hoy",
-      isPositive: true,
-      icon: Users,
-      color: "bg-purple-500",
-    },
-    {
-      label: "Visitas Totales",
-      value: "1.247",
-      change: "+23% esta semana",
-      isPositive: true,
-      icon: TrendingUp,
-      color: "bg-orange-500",
-    },
-  ])
-
-  const [recentProperties, setRecentProperties] = useState<Property[]>([
-    {
-      id: 1,
-      title: "Casa familiar en Barrio Parque",
-      address: "Belgrano 1234",
-      neighborhood: "Barrio Parque",
-      price: 75000,
-      currency: "USD",
-      property_type: "Casa",
-      operation_type: "Venta",
-      status: "Disponible",
-      views: 127,
-      leads: 8,
-      created_at: "2024-06-15",
-      featured: true,
-    },
-    {
-      id: 2,
-      title: "Terreno céntrico 10x18",
-      address: "San Martín 567",
-      neighborhood: "Centro",
-      price: 48000,
-      currency: "USD",
-      property_type: "Terreno",
-      operation_type: "Venta",
-      status: "Disponible",
-      views: 89,
-      leads: 12,
-      created_at: "2024-06-10",
-      featured: true,
-    },
-    {
-      id: 3,
-      title: "Departamento luminoso",
-      address: "Moreno 890",
-      neighborhood: "Barrio Lorenzón",
-      price: 200000,
-      currency: "ARS",
-      property_type: "Departamento",
-      operation_type: "Alquiler",
-      status: "Disponible",
-      views: 45,
-      leads: 5,
-      created_at: "2024-06-01",
-      featured: false,
-    },
-  ])
-
-  const [recentActivity] = useState([
-    { id: 1, type: "lead", message: "Nuevo contacto para Casa en Barrio Parque", time: "5 min ago" },
-    { id: 2, type: "property", message: "Propiedad actualizada: Terreno céntrico", time: "1 hora ago" },
-    { id: 3, type: "lead", message: "Consulta sobre departamento en Lorenzón", time: "2 horas ago" },
-    { id: 4, type: "sale", message: "Venta confirmada: Casa en 314 Viviendas", time: "1 día ago" },
-  ])
-
-  // Simular carga de datos desde API
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      try {
-        // Aquí iría la llamada real a la API
-        // const statsResponse = await fetch('/api/dashboard/stats')
-        // const activityResponse = await fetch('/api/dashboard/recent-activity')
-        console.log("Loading dashboard data...")
-      } catch (error) {
-        console.error("Error loading dashboard data:", error)
-      }
-    }
-
     fetchDashboardData()
   }, [])
 
-  const formatCurrency = (amount: number, currency: string) => {
-    return `$${amount.toLocaleString()} ${currency}`
+  const fetchDashboardData = async () => {
+    try {
+      const [statsResponse, activityResponse] = await Promise.all([
+        fetch("/api/dashboard/stats"),
+        fetch("/api/dashboard/recent-activity"),
+      ])
+
+      if (statsResponse.ok) {
+        const statsData = await statsResponse.json()
+        setStats(statsData)
+      }
+
+      if (activityResponse.ok) {
+        const activityData = await activityResponse.json()
+        setRecentProperties(activityData.recentProperties || [])
+        setRecentLeads(activityData.recentLeads || [])
+      }
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const getStatusColor = (status: string) => {
+  const handleNavigateToProperties = () => {
+    router.push("/admin/properties")
+  }
+
+  const handleNavigateToNewProperty = () => {
+    router.push("/admin/properties/new")
+  }
+
+  const handleNavigateToContacts = () => {
+    router.push("/admin/contacts")
+  }
+
+  const handleNavigateToReports = () => {
+    router.push("/admin/reports")
+  }
+
+  const handlePropertyClick = (propertyId: number) => {
+    router.push(`/admin/properties/${propertyId}/edit`)
+  }
+
+  const getStatusBadgeVariant = (status: string) => {
     switch (status) {
+      case "available":
       case "Disponible":
-        return "bg-green-100 text-green-800"
+        return "default"
+      case "sold":
       case "Vendido":
-        return "bg-red-100 text-red-800"
+        return "secondary"
+      case "rented":
       case "Alquilado":
-        return "bg-blue-100 text-blue-800"
+        return "outline"
+      case "reserved":
+      case "Reservado":
+        return "destructive"
       default:
-        return "bg-gray-100 text-gray-800"
+        return "default"
     }
   }
 
-  const getActivityIcon = (type: string) => {
-    switch (type) {
-      case "lead":
-        return <MessageSquare className="w-4 h-4 text-blue-500" />
-      case "property":
-        return <Home className="w-4 h-4 text-green-500" />
-      case "sale":
-        return <DollarSign className="w-4 h-4 text-orange-500" />
-      default:
-        return <Calendar className="w-4 h-4 text-gray-500" />
-    }
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price)
   }
 
-  const handleQuickAction = (action: string) => {
-    switch (action) {
-      case "new-property":
-        router.push("/admin/properties/new")
-        break
-      case "view-contacts":
-        router.push("/admin/contacts")
-        break
-      case "view-reports":
-        // Por ahora redirigir a propiedades, después se puede crear una página de reportes
-        router.push("/admin/properties")
-        break
-      default:
-        console.log("Unknown action:", action)
-    }
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("es-AR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    })
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[...Array(4)].map((_, i) => (
+            <Card key={i}>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <div className="h-4 w-20 bg-gray-200 rounded animate-pulse" />
+                <div className="h-4 w-4 bg-gray-200 rounded animate-pulse" />
+              </CardHeader>
+              <CardContent>
+                <div className="h-8 w-16 bg-gray-200 rounded animate-pulse mb-1" />
+                <div className="h-3 w-24 bg-gray-200 rounded animate-pulse" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="space-y-6">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex-1">
-                <p className="text-sm font-medium text-gray-600">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900 mt-1">{stat.value}</p>
-                <div className="flex items-center mt-2">
-                  {stat.isPositive ? (
-                    <ArrowUpRight className="w-4 h-4 text-green-500 mr-1" />
-                  ) : (
-                    <ArrowDownRight className="w-4 h-4 text-red-500 mr-1" />
-                  )}
-                  <p className={`text-sm ${stat.isPositive ? "text-green-600" : "text-red-600"}`}>{stat.change}</p>
-                </div>
-              </div>
-              <div className={`${stat.color} p-3 rounded-lg`}>
-                <stat.icon className="w-6 h-6 text-white" />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Stats Cards */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Propiedades</CardTitle>
+            <Building2 className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalProperties}</div>
+            <p className="text-xs text-muted-foreground">
+              <Button variant="link" className="p-0 h-auto text-xs" onClick={handleNavigateToProperties}>
+                Ver todas <ArrowUpRight className="h-3 w-3 ml-1" />
+              </Button>
+            </p>
+          </CardContent>
+        </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Propiedades Recientes */}
-        <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold text-gray-900">Propiedades Recientes</h2>
-              <button
-                onClick={() => router.push("/admin/properties")}
-                className="text-orange-500 hover:text-orange-600 font-medium text-sm transition-colors"
-              >
-                Ver todas
-              </button>
-            </div>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              {recentProperties.map((property) => (
-                <div
-                  key={property.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-                  onClick={() => router.push(`/admin/properties/${property.id}/edit`)}
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
-                      <Home className="w-8 h-8 text-gray-400" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-gray-900 truncate">{property.title}</h3>
-                      <p className="text-sm text-gray-500">
-                        {property.address}, {property.neighborhood}
-                      </p>
-                      <div className="flex items-center space-x-4 mt-1">
-                        <p className="text-sm font-medium text-orange-600">
-                          {formatCurrency(property.price, property.currency)}
-                        </p>
-                        <span
-                          className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(property.status)}`}
-                        >
-                          {property.status}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span className="flex items-center">
-                        <Eye className="w-4 h-4 mr-1" />
-                        {property.views}
-                      </span>
-                      <span className="flex items-center">
-                        <MessageSquare className="w-4 h-4 mr-1" />
-                        {property.leads}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-400 mt-1">{property.created_at}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Contactos</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalLeads}</div>
+            <p className="text-xs text-muted-foreground">
+              <Button variant="link" className="p-0 h-auto text-xs" onClick={handleNavigateToContacts}>
+                Ver contactos <ArrowUpRight className="h-3 w-3 ml-1" />
+              </Button>
+            </p>
+          </CardContent>
+        </Card>
 
-        {/* Actividad Reciente */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-          <div className="p-6 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Actividad Reciente</h2>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              {recentActivity.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 mt-1">{getActivityIcon(activity.type)}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-900">{activity.message}</p>
-                    <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Visualizaciones</CardTitle>
+            <Eye className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalViews}</div>
+            <p className="text-xs text-muted-foreground">
+              <Button variant="link" className="p-0 h-auto text-xs" onClick={handleNavigateToReports}>
+                Ver reportes <ArrowUpRight className="h-3 w-3 ml-1" />
+              </Button>
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Destacadas</CardTitle>
+            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.featuredProperties}</div>
+            <p className="text-xs text-muted-foreground">Propiedades destacadas</p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Acciones Rápidas</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button
-            onClick={() => handleQuickAction("new-property")}
-            className="flex items-center justify-center space-x-2 p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors group"
-          >
-            <Home className="w-5 h-5 text-gray-400 group-hover:text-orange-500" />
-            <span className="text-gray-600 group-hover:text-orange-600 font-medium">Nueva Propiedad</span>
-          </button>
-          <button
-            onClick={() => handleQuickAction("view-contacts")}
-            className="flex items-center justify-center space-x-2 p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors group"
-          >
-            <MessageSquare className="w-5 h-5 text-gray-400 group-hover:text-orange-500" />
-            <span className="text-gray-600 group-hover:text-orange-600 font-medium">Ver Contactos</span>
-          </button>
-          <button
-            onClick={() => handleQuickAction("view-reports")}
-            className="flex items-center justify-center space-x-2 p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors group"
-          >
-            <TrendingUp className="w-5 h-5 text-gray-400 group-hover:text-orange-500" />
-            <span className="text-gray-600 group-hover:text-orange-600 font-medium">Ver Reportes</span>
-          </button>
-        </div>
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Button onClick={handleNavigateToNewProperty} className="h-20 flex-col gap-2">
+          <Plus className="h-6 w-6" />
+          Nueva Propiedad
+        </Button>
+        <Button variant="outline" onClick={handleNavigateToProperties} className="h-20 flex-col gap-2 bg-transparent">
+          <Home className="h-6 w-6" />
+          Ver Propiedades
+        </Button>
+        <Button variant="outline" onClick={handleNavigateToContacts} className="h-20 flex-col gap-2 bg-transparent">
+          <Users className="h-6 w-6" />
+          Ver Contactos
+        </Button>
+        <Button variant="outline" onClick={handleNavigateToReports} className="h-20 flex-col gap-2 bg-transparent">
+          <BarChart3 className="h-6 w-6" />
+          Ver Reportes
+        </Button>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Propiedades Recientes</CardTitle>
+            <CardDescription>Últimas propiedades agregadas al sistema</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {recentProperties.length > 0 ? (
+                recentProperties.map((property) => (
+                  <div
+                    key={property.id}
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => handlePropertyClick(property.id)}
+                  >
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">{property.title}</p>
+                      <p className="text-sm text-muted-foreground">{formatPrice(property.price)}</p>
+                    </div>
+                    <div className="text-right space-y-1">
+                      <Badge variant={getStatusBadgeVariant(property.status)}>{property.status}</Badge>
+                      <p className="text-xs text-muted-foreground">{formatDate(property.created_at)}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-4">No hay propiedades recientes</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-lg">Contactos Recientes</CardTitle>
+            <CardDescription>Últimos contactos recibidos</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {recentLeads.length > 0 ? (
+                recentLeads.map((lead) => (
+                  <div key={lead.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium leading-none">{lead.name}</p>
+                      <p className="text-sm text-muted-foreground">{lead.email}</p>
+                    </div>
+                    <div className="text-right space-y-1">
+                      <Badge variant="outline">{lead.status}</Badge>
+                      <p className="text-xs text-muted-foreground">{formatDate(lead.created_at)}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-4">No hay contactos recientes</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
 }
-
-export default Dashboard
