@@ -1,154 +1,146 @@
-"use client"
+// components/admin/AdminLayout.tsx - VERSIÓN CORREGIDA
+"use client";
 
-import type React from "react"
-
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Home, Building2, Users, Settings, Menu, BarChart3, ExternalLink, Globe } from "lucide-react"
-
-const navigation = [
-  { name: "Dashboard", href: "/admin", icon: Home },
-  { name: "Propiedades", href: "/admin/properties", icon: Building2 },
-  { name: "Contactos", href: "/admin/contacts", icon: Users },
-  { name: "Reportes", href: "/admin/reports", icon: BarChart3 },
-  { name: "Configuración", href: "/admin/settings", icon: Settings },
-]
+import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { Home, TrendingUp, MessageSquare, Settings, LogOut, Menu, X } from "lucide-react";
 
 interface AdminLayoutProps {
-  children: React.ReactNode
+children: React.ReactNode;
 }
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
-  const pathname = usePathname()
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+const AdminLayout = ({ children }: AdminLayoutProps) => {
+const [sidebarOpen, setSidebarOpen] = useState(false);
+const router = useRouter();
+const pathname = usePathname();
 
-  const handleViewWebsite = () => {
-    window.open("/", "_blank")
-  }
+const navigation = [
+{ name: "Dashboard", href: "/admin", icon: TrendingUp, current: pathname === "/admin" },
+{ name: "Propiedades", href: "/admin/properties", icon: Home, current: pathname.startsWith("/admin/properties") },
+{ name: "Contactos", href: "/admin/contacts", icon: MessageSquare, current: pathname === "/admin/contacts" },
+{ name: "Configuración", href: "/admin/settings", icon: Settings, current: pathname === "/admin/settings" }
+];
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Mobile sidebar */}
-      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="w-64 p-0">
-          <div className="flex h-full flex-col">
-            {/* Logo */}
-            <div className="flex h-16 items-center justify-between px-6 border-b">
-              <Link href="/admin" className="flex items-center space-x-2">
-                <Building2 className="h-8 w-8 text-blue-600" />
-                <span className="text-xl font-bold">Marconi Admin</span>
-              </Link>
-            </div>
-
-            {/* Navigation */}
-            <nav className="flex-1 space-y-1 px-3 py-4">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    onClick={() => setSidebarOpen(false)}
-                    className={cn(
-                      "flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100",
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    <span>{item.name}</span>
-                  </Link>
-                )
-              })}
-            </nav>
-
-            {/* View Website Button */}
-            <div className="border-t p-4">
-              <Button variant="outline" onClick={handleViewWebsite} className="w-full justify-start bg-transparent">
-                <Globe className="h-4 w-4 mr-2" />
-                Ver Sitio Web
-                <ExternalLink className="h-3 w-3 ml-auto" />
-              </Button>
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
-
-      {/* Desktop sidebar */}
-      <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex flex-col flex-grow bg-white border-r border-gray-200">
-          {/* Logo */}
-          <div className="flex h-16 items-center justify-between px-6 border-b">
-            <Link href="/admin" className="flex items-center space-x-2">
-              <Building2 className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold">Marconi Admin</span>
-            </Link>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 space-y-1 px-3 py-4">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                    isActive ? "bg-blue-100 text-blue-700" : "text-gray-700 hover:bg-gray-100",
-                  )}
-                >
-                  <item.icon className="h-5 w-5" />
-                  <span>{item.name}</span>
-                </Link>
-              )
-            })}
-          </nav>
-
-          {/* View Website Button */}
-          <div className="border-t p-4">
-            <Button variant="outline" onClick={handleViewWebsite} className="w-full justify-start bg-transparent">
-              <Globe className="h-4 w-4 mr-2" />
-              Ver Sitio Web
-              <ExternalLink className="h-3 w-3 ml-auto" />
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Main content */}
-      <div className="lg:pl-64">
-        {/* Top bar */}
-        <div className="sticky top-0 z-40 flex h-16 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden">
-              <Menu className="h-6 w-6" />
-              <span className="sr-only">Abrir sidebar</span>
-            </Button>
-          </SheetTrigger>
-
-          <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-            <div className="flex flex-1 items-center">
-              <h1 className="text-lg font-semibold text-gray-900">Panel de Administración</h1>
-            </div>
-            <div className="flex items-center gap-x-4 lg:gap-x-6">
-              <Button variant="outline" size="sm" onClick={handleViewWebsite} className="hidden sm:flex bg-transparent">
-                <Globe className="h-4 w-4 mr-2" />
-                Ver Sitio Web
-                <ExternalLink className="h-3 w-3 ml-1" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Page content */}
-        <main className="py-6">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
-        </main>
-      </div>
-    </div>
-  )
+const handleLogout = async () => {
+// Remover cualquier estado de autenticación
+if (typeof window !== 'undefined') {
+localStorage.removeItem('admin_logged_in');
 }
+router.push("/admin/login");
+};
+
+return (
+<div className="min-h-screen bg-gray-50">
+{/* Mobile sidebar overlay */}
+{sidebarOpen && (
+<div className="fixed inset-0 z-40 lg:hidden">
+<div 
+className="fixed inset-0 bg-gray-600 bg-opacity-75" 
+onClick={() => setSidebarOpen(false)} 
+/>
+</div>
+)}
+
+{/* Sidebar */}
+<div
+className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+sidebarOpen ? "translate-x-0" : "-translate-x-full"
+} lg:static lg:inset-0`}>
+<div className="flex flex-col h-full">
+{/* Logo */}
+<div className="flex items-center justify-between p-6 border-b border-gray-200">
+<div className="flex items-center space-x-2">
+<div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+<Home className="w-5 h-5 text-white" />
+</div>
+<div>
+<h1 className="font-bold text-gray-900">MARCONI</h1>
+<p className="text-xs text-gray-500">Admin Panel</p>
+</div>
+</div>
+<button 
+onClick={() => setSidebarOpen(false)} 
+className="lg:hidden p-1 text-gray-400 hover:text-gray-600"
+>
+<X className="w-5 h-5" />
+</button>
+</div>
+
+{/* Navigation */}
+<nav className="flex-1 px-6 py-6 space-y-2">
+{navigation.map(item => (
+<button
+key={item.name}
+onClick={() => {
+router.push(item.href);
+setSidebarOpen(false);
+}}
+className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+item.current ? "bg-orange-50 text-orange-700 border border-orange-200" : "text-gray-700 hover:bg-gray-100"
+}`}>
+<item.icon className="w-5 h-5" />
+<span className="font-medium">{item.name}</span>
+</button>
+))}
+</nav>
+
+{/* User Profile */}
+<div className="p-6 border-t border-gray-200">
+<div className="flex items-center space-x-3 mb-3">
+<div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+<span className="text-white text-sm font-medium">F</span>
+</div>
+<div className="flex-1 min-w-0">
+<p className="text-sm font-medium text-gray-900 truncate">Floriana Marconi</p>
+<p className="text-xs text-gray-500">Administrador</p>
+</div>
+</div>
+<button
+onClick={handleLogout}
+className="w-full flex items-center space-x-2 px-3 py-2 rounded-lg text-left text-gray-600 hover:bg-gray-100 transition-colors">
+<LogOut className="w-4 h-4" />
+<span className="text-sm">Cerrar Sesión</span>
+</button>
+</div>
+</div>
+</div>
+
+{/* Main Content */}
+<div className="lg:ml-64 min-h-screen flex flex-col">
+{/* Top Header */}
+<header className="bg-white border-b border-gray-200 px-4 lg:px-6 py-4">
+<div className="flex items-center justify-between">
+<div className="flex items-center space-x-4">
+<button 
+onClick={() => setSidebarOpen(true)} 
+className="lg:hidden p-2 text-gray-400 hover:text-gray-600"
+>
+<Menu className="w-5 h-5" />
+</button>
+<div>
+<h1 className="text-xl lg:text-2xl font-bold text-gray-900">Panel de Administración</h1>
+<p className="text-sm text-gray-600 hidden sm:block">Gestiona tu inmobiliaria desde aquí</p>
+</div>
+</div>
+<div className="flex items-center space-x-4">
+<button className="relative p-2 text-gray-400 hover:text-gray-600 transition-colors">
+<MessageSquare className="w-5 h-5" />
+<span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+3
+</span>
+</button>
+<div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+<span className="text-white text-sm font-medium">F</span>
+</div>
+</div>
+</div>
+</header>
+
+{/* Page Content */}
+<main className="flex-1 p-4 lg:p-6">{children}</main>
+</div>
+</div>
+);
+};
+
+export default AdminLayout;

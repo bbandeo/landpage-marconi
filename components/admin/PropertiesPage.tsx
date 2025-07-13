@@ -1,3 +1,4 @@
+// components/admin/PropertiesPage.tsx - VERSIÓN SIN DIÁLOGOS
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -74,42 +75,6 @@ const PropertiesPage = () => {
       views: 89,
       leads: 12,
       createdAt: "2024-06-10",
-      featured: true
-    },
-    {
-      id: 3,
-      title: "Departamento luminoso",
-      address: "Moreno 890",
-      neighborhood: "Barrio Lorenzón",
-      price: 200000,
-      currency: "ARS",
-      type: "Departamento",
-      operation: "Alquiler",
-      bedrooms: 1,
-      bathrooms: 1,
-      area: 45,
-      status: "Alquilado",
-      views: 45,
-      leads: 5,
-      createdAt: "2024-06-01",
-      featured: false
-    },
-    {
-      id: 4,
-      title: "Casa quinta con pileta",
-      address: "Ruta Provincial 1 Km 5",
-      neighborhood: "Zona Rural",
-      price: 120000,
-      currency: "USD",
-      type: "Casa",
-      operation: "Venta",
-      bedrooms: 4,
-      bathrooms: 3,
-      area: 300,
-      status: "Vendido",
-      views: 203,
-      leads: 15,
-      createdAt: "2024-05-28",
       featured: true
     }
   ])
@@ -412,29 +377,6 @@ const PropertiesPage = () => {
           </table>
         </div>
       </div>
-      
-      {/* Pagination */}
-      {filteredProperties.length > 0 && (
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-700">
-              Mostrando <span className="font-medium">1</span> a <span className="font-medium">{filteredProperties.length}</span> de{' '}
-              <span className="font-medium">{properties.length}</span> resultados
-            </div>
-            <div className="flex items-center space-x-2">
-              <button className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors" disabled>
-                Anterior
-              </button>
-              <button className="px-3 py-1 text-sm bg-orange-500 text-white rounded">
-                1
-              </button>
-              <button className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors" disabled>
-                Siguiente
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }

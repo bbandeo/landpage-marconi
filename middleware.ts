@@ -1,31 +1,27 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
+// middleware.ts - VERSIÓN SIMPLIFICADA SIN SUPABASE
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  // Temporarily bypass authentication for development
-  return NextResponse.next()
+  const pathname = request.nextUrl.pathname
 
-  /* 
-  // Re-enable this code when authentication is needed
-  const { pathname } = request.nextUrl
-  
-  // Check if the request is for admin routes
-  if (pathname.startsWith('/admin')) {
-    // Check for authentication token (you can customize this logic)
-    const token = request.cookies.get('auth-token')
-    
-    if (!token && pathname !== '/admin/login') {
-      // Redirect to login page with return URL
-      const loginUrl = new URL('/admin/login', request.url)
-      loginUrl.searchParams.set('redirectTo', pathname)
-      return NextResponse.redirect(loginUrl)
-    }
+  // Rutas que requieren autenticación
+  const protectedRoutes = ["/admin"]
+  const isProtectedRoute = protectedRoutes.some(route => 
+    pathname.startsWith(route) && pathname !== "/admin/login"
+  )
+
+  // Por ahora, permitir todo hasta solucionar Supabase
+  if (isProtectedRoute) {
+    // En producción, aquí verificarías autenticación
+    console.log('Protected route accessed:', pathname)
   }
-  
+
   return NextResponse.next()
-  */
 }
 
 export const config = {
-  matcher: ["/admin", "/admin/:path*"],
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\.(?:svg|png|jpg|jpeg|gif|webp)$).*),'
+  ]
 }
