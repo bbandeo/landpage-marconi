@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from "@supabase/supabase-js"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -11,8 +11,8 @@ const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
   auth: {
     autoRefreshToken: false,
-    persistSession: false
-  }
+    persistSession: false,
+  },
 })
 
 // Tipos TypeScript para la base de datos
@@ -30,9 +30,9 @@ export interface Database {
           operation_type: string
           bedrooms: number | null
           bathrooms: number | null
-          area_m2: number
-          address: string
-          neighborhood: string
+          area_m2: number | null
+          address: string | null
+          neighborhood: string | null
           city: string
           province: string
           images: string[]
@@ -53,9 +53,9 @@ export interface Database {
           operation_type: string
           bedrooms?: number | null
           bathrooms?: number | null
-          area_m2: number
-          address: string
-          neighborhood: string
+          area_m2?: number | null
+          address?: string | null
+          neighborhood?: string | null
           city?: string
           province?: string
           images?: string[]
@@ -76,9 +76,9 @@ export interface Database {
           operation_type?: string
           bedrooms?: number | null
           bathrooms?: number | null
-          area_m2?: number
-          address?: string
-          neighborhood?: string
+          area_m2?: number | null
+          address?: string | null
+          neighborhood?: string | null
           city?: string
           province?: string
           images?: string[]
@@ -161,12 +161,39 @@ export interface Database {
   }
 }
 
-export type Property = Database['public']['Tables']['properties']['Row']
-export type PropertyInsert = Database['public']['Tables']['properties']['Insert']
-export type PropertyUpdate = Database['public']['Tables']['properties']['Update']
+export type Property = Database["public"]["Tables"]["properties"]["Row"]
+export type PropertyInsert = Database["public"]["Tables"]["properties"]["Insert"]
+export type PropertyUpdate = Database["public"]["Tables"]["properties"]["Update"]
 
-export type Lead = Database['public']['Tables']['leads']['Row']
-export type LeadInsert = Database['public']['Tables']['leads']['Insert']
-export type LeadUpdate = Database['public']['Tables']['leads']['Update']
+export type Lead = Database["public"]["Tables"]["leads"]["Row"]
+export type LeadInsert = Database["public"]["Tables"]["leads"]["Insert"]
+export type LeadUpdate = Database["public"]["Tables"]["leads"]["Update"]
 
-export type Profile = Database['public']['Tables']['profiles']['Row']
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"]
+
+// Mapeo de valores para el frontend
+export const STATUS_MAP = {
+  available: "Disponible",
+  sold: "Vendido",
+  rented: "Alquilado",
+  reserved: "Reservado",
+} as const
+
+export const STATUS_MAP_REVERSE = {
+  Disponible: "available",
+  Vendido: "sold",
+  Alquilado: "rented",
+  Reservado: "reserved",
+} as const
+
+export const PROPERTY_TYPE_MAP = {
+  casa: "Casa",
+  departamento: "Departamento",
+  terreno: "Terreno",
+  local: "Local",
+} as const
+
+export const OPERATION_TYPE_MAP = {
+  venta: "Venta",
+  alquiler: "Alquiler",
+} as const
