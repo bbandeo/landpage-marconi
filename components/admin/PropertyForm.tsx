@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "@/hooks/use-toast"
-import { X, Plus } from "lucide-react"
+import { X, Plus, Upload } from "lucide-react"
 
 const propertySchema = z.object({
   title: z.string().min(1, "El título es requerido"),
@@ -82,14 +82,14 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
 
   useEffect(() => {
     if (property) {
-      setImages(property.images || [])
-      setFeatures(property.features || [])
+      setImages(Array.isArray(property.images) ? property.images : [])
+      setFeatures(Array.isArray(property.features) ? property.features : [])
     }
   }, [property])
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
-    if (!files) return
+    if (!files || files.length === 0) return
 
     setUploadingImages(true)
     const formData = new FormData()
@@ -104,24 +104,35 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
         body: formData,
       })
 
-      if (response.ok) {
-        const { urls } = await response.json()
-        setImages((prev) => [...prev, ...urls])
-        toast({
-          title: "Éxito",
-          description: "Imágenes subidas correctamente",
-        })
-      } else {
+      if (!response.ok) {
         throw new Error("Error al subir imágenes")
       }
+
+      const data = await response.json()
+
+      // Check if the response has urls and it's an array
+      if (data.success && Array.isArray(data.urls)) {
+        setImages((prev) => [...prev, ...data.urls])
+        toast({
+          title: "Éxito",
+          description: `${data.urls.length} imagen(es) subida(s) correctamente`,
+        })
+      } else {
+        throw new Error("Respuesta inválida del servidor")
+      }
     } catch (error) {
+      console.error("Upload error:", error)
       toast({
         title: "Error",
-        description: "Error al subir las imágenes",
+        description: error instanceof Error ? error.message : "Error al subir las imágenes",
         variant: "destructive",
       })
     } finally {
       setUploadingImages(false)
+      // Clear the input
+      if (event.target) {
+        event.target.value = ""
+      }
     }
   }
 
@@ -164,18 +175,19 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
           body: JSON.stringify(propertyData),
         })
 
-        if (response.ok) {
-          toast({
-            title: "Éxito",
-            description: property ? "Propiedad actualizada correctamente" : "Propiedad creada correctamente",
-          })
-          router.push("/admin/properties")
-        } else {
+        if (!response.ok) {
           const errorData = await response.json()
           throw new Error(errorData.error || "Error al guardar la propiedad")
         }
+
+        toast({
+          title: "Éxito",
+          description: property ? "Propiedad actualizada correctamente" : "Propiedad creada correctamente",
+        })
+        router.push("/admin/properties")
       }
     } catch (error) {
+      console.error("Form submission error:", error)
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Error al guardar la propiedad",
@@ -354,27 +366,43 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
       <Card>
         <CardHeader>
           <CardTitle>Imágenes</CardTitle>
-          <CardDescription>Sube imágenes de la propiedad</CardDescription>
+          <CardDescription>Sube imágenes de la propiedad (máximo 10 imágenes)</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div>
               <Label htmlFor="images">Subir Imágenes</Label>
-              <Input
-                id="images"
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={uploadingImages}
-              />
-              {uploadingImages && <p className="text-sm text-gray-600 mt-1">Subiendo imágenes...</p>}
+              <div className="mt-2">
+                <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:hover:bg-gray-800 dark:bg-gray-700 hover:border-gray-400 dark:border-gray-600 dark:hover:border-gray-500">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Upload className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
+                    <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                      <span className="font-semibold">Click para subir</span> o arrastra y suelta
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG o JPEG (MAX. 5MB cada una)</p>
+                  </div>
+                  <input
+                    type="file"
+                    className="hidden"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={uploadingImages || images.length >= 10}
+                  />
+                </label>
+              </div>
+              {uploadingImages && (
+                <p className="text-sm text-blue-600 mt-2 flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                  Subiendo imágenes...
+                </p>
+              )}
             </div>
 
             {images.length > 0 && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {images.map((image, index) => (
-                  <div key={index} className="relative">
+                  <div key={index} className="relative group">
                     <img
                       src={image || "/placeholder.svg"}
                       alt={`Imagen ${index + 1}`}
@@ -384,14 +412,21 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
                       type="button"
                       variant="destructive"
                       size="sm"
-                      className="absolute top-2 right-2"
+                      className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={() => removeImage(index)}
                     >
                       <X className="h-4 w-4" />
                     </Button>
+                    {index === 0 && <Badge className="absolute bottom-2 left-2 bg-blue-600">Principal</Badge>}
                   </div>
                 ))}
               </div>
+            )}
+
+            {images.length > 0 && (
+              <p className="text-sm text-gray-600">
+                {images.length}/10 imágenes subidas. La primera imagen será la principal.
+              </p>
             )}
           </div>
         </CardContent>
@@ -412,7 +447,7 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
                 placeholder="Ej: Pileta, Garage, Jardín"
                 onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addFeature())}
               />
-              <Button type="button" onClick={addFeature}>
+              <Button type="button" onClick={addFeature} disabled={!newFeature.trim()}>
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
@@ -426,7 +461,7 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="h-auto p-0 ml-1"
+                      className="h-auto p-0 ml-1 hover:bg-transparent"
                       onClick={() => removeFeature(index)}
                     >
                       <X className="h-3 w-3" />
