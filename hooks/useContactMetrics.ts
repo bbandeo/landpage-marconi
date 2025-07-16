@@ -4,67 +4,64 @@ import { useMemo } from "react"
 import type { Contact } from "./useContacts"
 
 export function useContactMetrics(contacts: Contact[]) {
-  const metrics = useMemo(() => {
-    const now = new Date()
-    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-
-    // Basic counts
+  return useMemo(() => {
     const totalContacts = contacts.length
     const newContacts = contacts.filter((c) => c.status === "new").length
     const contactedContacts = contacts.filter((c) => c.status === "contacted").length
     const qualifiedContacts = contacts.filter((c) => c.status === "qualified").length
     const convertedContacts = contacts.filter((c) => c.status === "converted").length
 
-    // Time-based metrics
-    const contactsThisWeek = contacts.filter((c) => new Date(c.createdAt) >= weekAgo).length
-    const contactsThisMonth = contacts.filter((c) => new Date(c.createdAt) >= monthAgo).length
-
-    // Conversion rate
     const conversionRate = totalContacts > 0 ? (convertedContacts / totalContacts) * 100 : 0
 
-    // Source analysis
+    const averageScore =
+      contacts.length > 0 ? contacts.reduce((sum, c) => sum + (c.score || 0), 0) / contacts.length : 0
+
+    // Calculate contacts this week
+    const oneWeekAgo = new Date()
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+    const contactsThisWeek = contacts.filter((c) => new Date(c.createdAt) >= oneWeekAgo).length
+
+    // Calculate overdue actions
+    const today = new Date()
+    const overdueActions = contacts.filter((c) => c.nextActionDate && new Date(c.nextActionDate) < today).length
+
+    // Source statistics
     const sourceStats = contacts.reduce(
       (acc, contact) => {
-        acc[contact.source] = (acc[contact.source] || 0) + 1
+        const source = contact.source || "Unknown"
+        acc[source] = (acc[source] || 0) + 1
         return acc
       },
       {} as Record<string, number>,
     )
 
-    // Priority distribution
+    // Priority statistics
     const priorityStats = contacts.reduce(
       (acc, contact) => {
-        acc[contact.priority] = (acc[contact.priority] || 0) + 1
+        const priority = contact.priority || "medium"
+        acc[priority] = (acc[priority] || 0) + 1
         return acc
       },
       {} as Record<string, number>,
     )
 
-    // Average score
-    const averageScore = contacts.length > 0 ? contacts.reduce((sum, c) => sum + c.score, 0) / contacts.length : 0
+    // Weekly data for chart
+    const weeklyData = []
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      const dateStr = date.toISOString().split("T")[0]
 
-    // Overdue actions
-    const overdueActions = contacts.filter((c) => {
-      if (!c.nextActionDate) return false
-      return new Date(c.nextActionDate) < now
-    }).length
+      const dayContacts = contacts.filter((c) => c.createdAt.startsWith(dateStr)).length
 
-    // Weekly conversion data for chart
-    const weeklyData = Array.from({ length: 7 }, (_, i) => {
-      const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
-      const dayContacts = contacts.filter((c) => {
-        const contactDate = new Date(c.createdAt)
-        return contactDate.toDateString() === date.toDateString()
-      })
-      const dayConverted = dayContacts.filter((c) => c.status === "converted").length
+      const dayConverted = contacts.filter((c) => c.createdAt.startsWith(dateStr) && c.status === "converted").length
 
-      return {
-        date: date.toLocaleDateString("es-AR", { weekday: "short" }),
-        contacts: dayContacts.length,
+      weeklyData.push({
+        date: date.toLocaleDateString("es-AR", { month: "short", day: "numeric" }),
+        contacts: dayContacts,
         converted: dayConverted,
-      }
-    }).reverse()
+      })
+    }
 
     return {
       totalContacts,
@@ -72,16 +69,13 @@ export function useContactMetrics(contacts: Contact[]) {
       contactedContacts,
       qualifiedContacts,
       convertedContacts,
-      contactsThisWeek,
-      contactsThisMonth,
       conversionRate,
+      averageScore,
+      contactsThisWeek,
+      overdueActions,
       sourceStats,
       priorityStats,
-      averageScore,
-      overdueActions,
       weeklyData,
     }
   }, [contacts])
-
-  return metrics
 }

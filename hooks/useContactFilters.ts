@@ -3,60 +3,132 @@
 import { useState, useMemo } from "react"
 import type { Contact } from "./useContacts"
 
+export interface ContactFilters {
+  search: string
+  status: string
+  source: string
+  priority: string
+  dateFrom: string
+  dateTo: string
+}
+
 export function useContactFilters(contacts: Contact[]) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [sourceFilter, setSourceFilter] = useState<string>("all")
-  const [priorityFilter, setPriorityFilter] = useState<string>("all")
-  const [dateFilter, setDateFilter] = useState<string>("all")
+  const [filters, setFilters] = useState<ContactFilters>({
+    search: "",
+    status: "",
+    source: "",
+    priority: "",
+    dateFrom: "",
+    dateTo: "",
+  })
+
+  const [sortBy, setSortBy] = useState<keyof Contact>("createdAt")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
 
   const filteredContacts = useMemo(() => {
-    return contacts.filter((contact) => {
-      const matchesSearch =
-        contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.property.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.phone.includes(searchTerm)
+    let filtered = [...contacts]
 
-      const matchesStatus = statusFilter === "all" || contact.status === statusFilter
-      const matchesSource = sourceFilter === "all" || contact.source === sourceFilter
-      const matchesPriority = priorityFilter === "all" || contact.priority === priorityFilter
+    // Search filter
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase()
+      filtered = filtered.filter(
+        (contact) =>
+          contact.name.toLowerCase().includes(searchLower) ||
+          contact.email.toLowerCase().includes(searchLower) ||
+          contact.phone.includes(filters.search) ||
+          contact.property.toLowerCase().includes(searchLower) ||
+          (contact.message && contact.message.toLowerCase().includes(searchLower)),
+      )
+    }
 
-      let matchesDate = true
-      if (dateFilter !== "all") {
-        const contactDate = new Date(contact.createdAt)
-        const now = new Date()
+    // Status filter
+    if (filters.status) {
+      filtered = filtered.filter((contact) => contact.status === filters.status)
+    }
 
-        switch (dateFilter) {
-          case "today":
-            matchesDate = contactDate.toDateString() === now.toDateString()
-            break
-          case "week":
-            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-            matchesDate = contactDate >= weekAgo
-            break
-          case "month":
-            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-            matchesDate = contactDate >= monthAgo
-            break
-        }
+    // Source filter
+    if (filters.source) {
+      filtered = filtered.filter((contact) => contact.source === filters.source)
+    }
+
+    // Priority filter
+    if (filters.priority) {
+      filtered = filtered.filter((contact) => contact.priority === filters.priority)
+    }
+
+    // Date range filter
+    if (filters.dateFrom) {
+      filtered = filtered.filter((contact) => new Date(contact.createdAt) >= new Date(filters.dateFrom))
+    }
+
+    if (filters.dateTo) {
+      filtered = filtered.filter((contact) => new Date(contact.createdAt) <= new Date(filters.dateTo))
+    }
+
+    // Sorting
+    filtered.sort((a, b) => {
+      const aValue = a[sortBy]
+      const bValue = b[sortBy]
+
+      if (aValue === bValue) return 0
+
+      let comparison = 0
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        comparison = aValue.localeCompare(bValue)
+      } else if (typeof aValue === "number" && typeof bValue === "number") {
+        comparison = aValue - bValue
+      } else {
+        comparison = String(aValue).localeCompare(String(bValue))
       }
 
-      return matchesSearch && matchesStatus && matchesSource && matchesPriority && matchesDate
+      return sortOrder === "asc" ? comparison : -comparison
     })
-  }, [contacts, searchTerm, statusFilter, sourceFilter, priorityFilter, dateFilter])
+
+    return filtered
+  }, [contacts, filters, sortBy, sortOrder])
+
+  const updateFilter = (key: keyof ContactFilters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      search: "",
+      status: "",
+      source: "",
+      priority: "",
+      dateFrom: "",
+      dateTo: "",
+    })
+  }
+
+  const updateSort = (field: keyof Contact) => {
+    if (sortBy === field) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+    } else {
+      setSortBy(field)
+      setSortOrder("asc")
+    }
+  }
+
+  // Get unique values for filter options
+  const filterOptions = useMemo(
+    () => ({
+      statuses: [...new Set(contacts.map((c) => c.status))],
+      sources: [...new Set(contacts.map((c) => c.source))],
+      priorities: [...new Set(contacts.map((c) => c.priority))],
+    }),
+    [contacts],
+  )
 
   return {
-    searchTerm,
-    setSearchTerm,
-    statusFilter,
-    setStatusFilter,
-    sourceFilter,
-    setSourceFilter,
-    priorityFilter,
-    setPriorityFilter,
-    dateFilter,
-    setDateFilter,
+    filters,
     filteredContacts,
+    sortBy,
+    sortOrder,
+    updateFilter,
+    clearFilters,
+    updateSort,
+    filterOptions,
   }
 }

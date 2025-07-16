@@ -29,32 +29,44 @@ export function useContacts() {
     try {
       setLoading(true)
       const response = await fetch("/api/leads")
-      if (!response.ok) throw new Error("Failed to fetch contacts")
+      if (!response.ok) {
+        throw new Error("Failed to fetch contacts")
+      }
       const data = await response.json()
-      setContacts(data)
+      setContacts(Array.isArray(data) ? data : [])
+      setError(null)
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error")
+      setError(err instanceof Error ? err.message : "An error occurred")
+      setContacts([])
     } finally {
       setLoading(false)
     }
   }
 
+  useEffect(() => {
+    fetchContacts()
+  }, [])
+
   const updateContact = async (id: number, updates: Partial<Contact>) => {
     try {
       const response = await fetch(`/api/leads/${id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(updates),
       })
 
-      if (!response.ok) throw new Error("Failed to update contact")
+      if (!response.ok) {
+        throw new Error("Failed to update contact")
+      }
 
       const updatedContact = await response.json()
       setContacts((prev) => prev.map((contact) => (contact.id === id ? { ...contact, ...updatedContact } : contact)))
 
       return updatedContact
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error")
+      setError(err instanceof Error ? err.message : "Failed to update contact")
       throw err
     }
   }
@@ -65,18 +77,16 @@ export function useContacts() {
         method: "DELETE",
       })
 
-      if (!response.ok) throw new Error("Failed to delete contact")
+      if (!response.ok) {
+        throw new Error("Failed to delete contact")
+      }
 
       setContacts((prev) => prev.filter((contact) => contact.id !== id))
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unknown error")
+      setError(err instanceof Error ? err.message : "Failed to delete contact")
       throw err
     }
   }
-
-  useEffect(() => {
-    fetchContacts()
-  }, [])
 
   return {
     contacts,

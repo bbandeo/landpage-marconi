@@ -4,8 +4,19 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
-import { Home, Users, TrendingUp, MessageSquare, Phone, Mail, Calendar, AlertCircle, Target, Clock } from "lucide-react"
+import {
+  Home,
+  Users,
+  TrendingUp,
+  MessageSquare,
+  Phone,
+  Mail,
+  Calendar,
+  AlertCircle,
+  Target,
+  Clock,
+  BarChart3,
+} from "lucide-react"
 import { useContacts } from "@/hooks/useContacts"
 import { useContactMetrics } from "@/hooks/useContactMetrics"
 
@@ -13,7 +24,7 @@ export default function Dashboard() {
   const { contacts, loading } = useContacts()
   const metrics = useContactMetrics(contacts)
 
-  const [properties, setProperties] = useState([])
+  const [properties, setProperties] = useState<any[]>([])
   const [propertiesLoading, setPropertiesLoading] = useState(true)
 
   useEffect(() => {
@@ -22,10 +33,14 @@ export default function Dashboard() {
         const response = await fetch("/api/properties")
         if (response.ok) {
           const data = await response.json()
-          setProperties(data)
+          // Ensure data is an array
+          setProperties(Array.isArray(data) ? data : [])
+        } else {
+          setProperties([])
         }
       } catch (error) {
         console.error("Error fetching properties:", error)
+        setProperties([])
       } finally {
         setPropertiesLoading(false)
       }
@@ -33,14 +48,6 @@ export default function Dashboard() {
 
     fetchProperties()
   }, [])
-
-  const sourceColors = ["#3B82F6", "#EF4444", "#10B981", "#F59E0B", "#8B5CF6"]
-
-  const sourceData = Object.entries(metrics.sourceStats).map(([source, count], index) => ({
-    name: source,
-    value: count,
-    color: sourceColors[index % sourceColors.length],
-  }))
 
   if (loading || propertiesLoading) {
     return (
@@ -175,27 +182,28 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Charts */}
+      {/* Simple Charts Placeholder */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weekly Activity Chart */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <BarChart className="w-5 h-5 mr-2" />
+              <BarChart3 className="w-5 h-5 mr-2" />
               Actividad Semanal
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={metrics.weeklyData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="contacts" fill="#3B82F6" name="Contactos" />
-                <Bar dataKey="converted" fill="#10B981" name="Convertidos" />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="space-y-2">
+              {metrics.weeklyData.map((day, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">{day.date}</span>
+                  <div className="flex space-x-4">
+                    <span className="text-sm">Contactos: {day.contacts}</span>
+                    <span className="text-sm text-green-600">Convertidos: {day.converted}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
 
@@ -203,30 +211,19 @@ export default function Dashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <PieChart className="w-5 h-5 mr-2" />
+              <Users className="w-5 h-5 mr-2" />
               Fuentes de Contacto
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={sourceData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {sourceData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="space-y-3">
+              {Object.entries(metrics.sourceStats).map(([source, count]) => (
+                <div key={source} className="flex items-center justify-between">
+                  <span className="text-sm">{source}</span>
+                  <Badge variant="secondary">{count}</Badge>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
