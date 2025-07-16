@@ -1,42 +1,35 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { AnimatedCounter } from "@/components/ui/animated-counter"
-import { ParticleBackground } from "@/components/ui/particle-background"
 import {
   Menu,
   X,
+  Phone,
+  Mail,
   MapPin,
+  Home,
+  Users,
+  Award,
+  Star,
+  Heart,
   Bed,
   Bath,
   Square,
-  Heart,
-  Phone,
-  Mail,
-  Instagram,
-  Facebook,
-  Twitter,
-  ChevronDown,
-  Users,
-  Home,
-  Award,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
+import { AnimatedCounter } from "@/components/ui/animated-counter"
+import { ParticleBackground } from "@/components/ui/particle-background"
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeFilter, setActiveFilter] = useState("todos")
-  const [isHeaderScrolled, setIsHeaderScrolled] = useState(false)
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsHeaderScrolled(window.scrollY > 50)
+      setIsScrolled(window.scrollY > 50)
     }
-
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
@@ -45,112 +38,131 @@ export default function HomePage() {
     {
       id: 1,
       title: "Casa Moderna en Zona Norte",
-      price: 450000,
-      type: "venta",
-      location: "Zona Norte, Ciudad",
+      price: "$450.000",
+      type: "Venta",
       bedrooms: 4,
       bathrooms: 3,
       area: 280,
-      image: "/placeholder.jpg?height=300&width=400",
+      image: "/placeholder.svg?height=300&width=400&text=Casa+Moderna",
+      location: "Zona Norte",
       featured: true,
     },
     {
       id: 2,
       title: "Departamento Céntrico",
-      price: 2800,
-      type: "alquiler",
-      location: "Centro, Ciudad",
+      price: "$1.200/mes",
+      type: "Alquiler",
       bedrooms: 2,
       bathrooms: 2,
       area: 85,
-      image: "/placeholder.jpg?height=300&width=400",
-      featured: false,
+      image: "/placeholder.svg?height=300&width=400&text=Departamento",
+      location: "Centro",
+      featured: true,
     },
     {
       id: 3,
       title: "Casa con Jardín",
-      price: 320000,
-      type: "venta",
-      location: "Zona Oeste, Ciudad",
+      price: "$320.000",
+      type: "Venta",
       bedrooms: 3,
       bathrooms: 2,
       area: 200,
-      image: "/placeholder.jpg?height=300&width=400",
+      image: "/placeholder.svg?height=300&width=400&text=Casa+Jardín",
+      location: "Zona Oeste",
       featured: true,
     },
   ]
 
-  const filteredProperties = properties.filter((property) => activeFilter === "todos" || property.type === activeFilter)
+  const testimonials = [
+    {
+      name: "María González",
+      text: "Excelente atención y profesionalismo. Encontré mi casa ideal gracias a Marconi Inmobiliaria.",
+      rating: 5,
+    },
+    {
+      name: "Carlos Rodríguez",
+      text: "Muy recomendable. El proceso de compra fue rápido y transparente.",
+      rating: 5,
+    },
+    {
+      name: "Ana Martínez",
+      text: "Floriana nos ayudó a encontrar el departamento perfecto. Servicio excepcional.",
+      rating: 5,
+    },
+  ]
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % testimonials.length)
+  }
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+  }
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          isHeaderScrolled ? "glass-effect shadow-lg" : "bg-transparent"
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          isScrolled ? "glass-effect shadow-lg" : "bg-transparent"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                <Home className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl md:text-2xl font-black text-gray-900">Marconi</span>
+              <Home className="h-8 w-8 text-orange-500" />
+              <span className="text-fluid-xl font-black text-gray-900">
+                Marconi <span className="gradient-text">Inmobiliaria</span>
+              </span>
             </div>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8">
-              <a href="#inicio" className="text-gray-700 hover:text-orange-500 font-medium transition-colors">
+            <nav className="hidden md:flex space-x-8">
+              <a href="#inicio" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
                 Inicio
               </a>
-              <a href="#propiedades" className="text-gray-700 hover:text-orange-500 font-medium transition-colors">
+              <a href="#propiedades" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
                 Propiedades
               </a>
-              <a href="#nosotros" className="text-gray-700 hover:text-orange-500 font-medium transition-colors">
+              <a href="#nosotros" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
                 Nosotros
               </a>
-              <a href="#contacto" className="text-gray-700 hover:text-orange-500 font-medium transition-colors">
+              <a href="#contacto" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
                 Contacto
               </a>
             </nav>
 
             <div className="hidden md:flex items-center space-x-4">
-              <Button variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent">
-                Iniciar Sesión
-              </Button>
-              <Button className="btn-premium">Contactar</Button>
+              <a href="tel:+1234567890" className="text-orange-500 hover:text-orange-600 transition-colors">
+                <Phone className="h-5 w-5" />
+              </a>
+              <button className="btn-premium">Contactar</button>
             </div>
 
-            {/* Mobile Menu Button */}
-            <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {/* Mobile menu button */}
+            <button className="md:hidden text-gray-700" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden glass-effect border-t border-white/20">
-            <div className="px-4 py-4 space-y-4">
-              <a href="#inicio" className="block text-gray-700 hover:text-orange-500 font-medium">
+          <div className="md:hidden bg-white border-t border-gray-200">
+            <div className="px-4 py-2 space-y-2">
+              <a href="#inicio" className="block py-2 text-gray-700 hover:text-orange-500">
                 Inicio
               </a>
-              <a href="#propiedades" className="block text-gray-700 hover:text-orange-500 font-medium">
+              <a href="#propiedades" className="block py-2 text-gray-700 hover:text-orange-500">
                 Propiedades
               </a>
-              <a href="#nosotros" className="block text-gray-700 hover:text-orange-500 font-medium">
+              <a href="#nosotros" className="block py-2 text-gray-700 hover:text-orange-500">
                 Nosotros
               </a>
-              <a href="#contacto" className="block text-gray-700 hover:text-orange-500 font-medium">
+              <a href="#contacto" className="block py-2 text-gray-700 hover:text-orange-500">
                 Contacto
               </a>
-              <div className="pt-4 space-y-2">
-                <Button variant="outline" className="w-full border-orange-500 text-orange-500 bg-transparent">
-                  Iniciar Sesión
-                </Button>
-                <Button className="w-full btn-premium">Contactar</Button>
-              </div>
+              <button className="btn-premium w-full mt-4">Contactar</button>
             </div>
           </div>
         )}
@@ -163,205 +175,194 @@ export default function HomePage() {
       >
         <ParticleBackground />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 lg:px-8 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-fade-in-up">
-            <h1 className="text-fluid-5xl md:text-fluid-7xl font-black text-white mb-6 tracking-tight">
-              Tu hogar ideal{" "}
-              <span className="gradient-text bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
-                te espera
-              </span>
+            <h1 className="text-fluid-7xl font-black text-white mb-6 tracking-tight">
+              Tu hogar ideal
+              <span className="block gradient-text">te espera</span>
             </h1>
-            <p className="text-fluid-lg md:text-fluid-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Descubre propiedades excepcionales con Marconi Inmobiliaria. Más de 15 años conectando familias con sus
-              hogares perfectos.
+            <p className="text-fluid-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Descubre las mejores propiedades con Marconi Inmobiliaria. Más de 15 años conectando familias con sus
+              hogares soñados.
             </p>
-          </div>
 
-          <div
-            className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in-up"
-            style={{ animationDelay: "0.2s" }}
-          >
-            <Button size="lg" className="btn-premium text-lg px-8 py-4">
-              Ver Propiedades
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-gray-900 text-lg px-8 py-4 bg-transparent"
-            >
-              Contactar Ahora
-            </Button>
-          </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <button className="btn-premium text-lg px-8 py-4">Ver Propiedades</button>
+              <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300">
+                Contactar Ahora
+              </button>
+            </div>
 
-          {/* Stats */}
-          <div
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 animate-fade-in-up"
-            style={{ animationDelay: "0.4s" }}
-          >
-            <div className="text-center">
-              <div className="text-fluid-3xl md:text-fluid-4xl font-black text-orange-400 mb-2">
-                <AnimatedCounter end={500} suffix="+" />
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
+              <div className="text-center animate-float" style={{ animationDelay: "0s" }}>
+                <div className="text-fluid-4xl font-black text-white mb-2">
+                  <AnimatedCounter end={500} suffix="+" />
+                </div>
+                <p className="text-gray-300">Propiedades Vendidas</p>
               </div>
-              <p className="text-gray-300 text-fluid-sm">Propiedades Vendidas</p>
-            </div>
-            <div className="text-center">
-              <div className="text-fluid-3xl md:text-fluid-4xl font-black text-orange-400 mb-2">
-                <AnimatedCounter end={15} suffix="+" />
+              <div className="text-center animate-float" style={{ animationDelay: "0.5s" }}>
+                <div className="text-fluid-4xl font-black text-white mb-2">
+                  <AnimatedCounter end={15} suffix="+" />
+                </div>
+                <p className="text-gray-300">Años de Experiencia</p>
               </div>
-              <p className="text-gray-300 text-fluid-sm">Años de Experiencia</p>
-            </div>
-            <div className="text-center">
-              <div className="text-fluid-3xl md:text-fluid-4xl font-black text-orange-400 mb-2">
-                <AnimatedCounter end={1200} suffix="+" />
+              <div className="text-center animate-float" style={{ animationDelay: "1s" }}>
+                <div className="text-fluid-4xl font-black text-white mb-2">
+                  <AnimatedCounter end={98} suffix="%" />
+                </div>
+                <p className="text-gray-300">Clientes Satisfechos</p>
               </div>
-              <p className="text-gray-300 text-fluid-sm">Clientes Satisfechos</p>
-            </div>
-            <div className="text-center">
-              <div className="text-fluid-3xl md:text-fluid-4xl font-black text-orange-400 mb-2">
-                <AnimatedCounter end={98} suffix="%" />
+              <div className="text-center animate-float" style={{ animationDelay: "1.5s" }}>
+                <div className="text-fluid-4xl font-black text-white mb-2">
+                  <AnimatedCounter end={24} suffix="/7" />
+                </div>
+                <p className="text-gray-300">Atención al Cliente</p>
               </div>
-              <p className="text-gray-300 text-fluid-sm">Satisfacción</p>
             </div>
           </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <ChevronDown className="w-8 h-8 text-white/60" />
         </div>
       </section>
 
       {/* Properties Section */}
-      <section id="propiedades" className="py-16 md:py-20 lg:py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-fluid-3xl md:text-fluid-5xl font-black text-gray-900 mb-4 tracking-tight">
+      <section id="propiedades" className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
               Propiedades <span className="gradient-text">Destacadas</span>
             </h2>
-            <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
-              Descubre nuestra selección de propiedades premium en las mejores ubicaciones
+            <p className="text-fluid-lg text-gray-600 max-w-3xl mx-auto">
+              Explora nuestra selección de propiedades premium, cuidadosamente elegidas para ofrecerte las mejores
+              opciones del mercado.
             </p>
           </div>
 
-          {/* Filters */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {[
-              { key: "todos", label: "Todas" },
-              { key: "venta", label: "En Venta" },
-              { key: "alquiler", label: "En Alquiler" },
-            ].map((filter) => (
-              <Button
-                key={filter.key}
-                variant={activeFilter === filter.key ? "default" : "outline"}
-                onClick={() => setActiveFilter(filter.key)}
-                className={
-                  activeFilter === filter.key ? "btn-premium" : "border-orange-500 text-orange-500 hover:bg-orange-50"
-                }
-              >
-                {filter.label}
-              </Button>
-            ))}
-          </div>
-
-          {/* Properties Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProperties.map((property) => (
-              <Card key={property.id} className="card-hover overflow-hidden group">
+            {properties.map((property) => (
+              <div key={property.id} className="card-hover bg-white rounded-2xl overflow-hidden shadow-lg">
                 <div className="relative">
                   <img
                     src={property.image || "/placeholder.svg"}
                     alt={property.title}
-                    className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                    className="w-full h-64 object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                  {property.featured && (
-                    <Badge className="absolute top-4 left-4 bg-orange-500 text-white">Destacada</Badge>
-                  )}
-
-                  <Button size="sm" variant="ghost" className="absolute top-4 right-4 text-white hover:bg-white/20">
-                    <Heart className="w-5 h-5" />
-                  </Button>
-
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <Badge variant="secondary" className="mb-2">
-                      {property.type === "venta" ? "En Venta" : "En Alquiler"}
-                    </Badge>
+                  <div className="absolute top-4 left-4">
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                        property.type === "Venta" ? "bg-green-100 text-green-800" : "bg-blue-100 text-blue-800"
+                      }`}
+                    >
+                      {property.type}
+                    </span>
                   </div>
+                  <button className="absolute top-4 right-4 p-2 bg-white/80 rounded-full hover:bg-white transition-colors">
+                    <Heart className="h-5 w-5 text-gray-600 hover:text-red-500" />
+                  </button>
+                  {property.featured && (
+                    <div className="absolute bottom-4 left-4">
+                      <span className="bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        Destacada
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{property.title}</h3>
-
-                  <div className="flex items-center text-gray-600 mb-4">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    <span className="text-sm">{property.location}</span>
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-bold text-gray-900">{property.title}</h3>
+                    <span className="text-2xl font-black text-orange-500">{property.price}</span>
                   </div>
 
-                  <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+                  <p className="text-gray-600 mb-4 flex items-center">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    {property.location}
+                  </p>
+
+                  <div className="flex justify-between items-center text-gray-600 mb-6">
                     <div className="flex items-center">
-                      <Bed className="w-4 h-4 mr-1" />
+                      <Bed className="h-4 w-4 mr-1" />
                       <span>{property.bedrooms}</span>
                     </div>
                     <div className="flex items-center">
-                      <Bath className="w-4 h-4 mr-1" />
+                      <Bath className="h-4 w-4 mr-1" />
                       <span>{property.bathrooms}</span>
                     </div>
                     <div className="flex items-center">
-                      <Square className="w-4 h-4 mr-1" />
+                      <Square className="h-4 w-4 mr-1" />
                       <span>{property.area}m²</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div className="text-2xl font-black text-orange-500">
-                      ${property.price.toLocaleString()}
-                      {property.type === "alquiler" && <span className="text-sm text-gray-600">/mes</span>}
-                    </div>
-                    <Button className="btn-premium">Ver Detalles</Button>
-                  </div>
-                </CardContent>
-              </Card>
+                  <button className="w-full btn-premium">Ver Detalles</button>
+                </div>
+              </div>
             ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <button className="bg-white text-orange-500 border-2 border-orange-500 px-8 py-3 rounded-lg font-semibold hover:bg-orange-500 hover:text-white transition-all duration-300">
+              Ver Todas las Propiedades
+            </button>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="nosotros" className="py-16 md:py-20 lg:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section id="nosotros" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-fluid-3xl md:text-fluid-5xl font-black text-gray-900 mb-6 tracking-tight">
+              <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
                 Conoce a <span className="gradient-text">Floriana Marconi</span>
               </h2>
-              <p className="text-fluid-lg text-gray-600 mb-6 leading-relaxed">
-                Con más de 15 años de experiencia en el mercado inmobiliario, Floriana Marconi ha ayudado a cientos de
-                familias a encontrar su hogar ideal.
-              </p>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                Su enfoque personalizado y conocimiento profundo del mercado local la convierten en la elección perfecta
-                para tu próxima inversión inmobiliaria.
+              <p className="text-fluid-lg text-gray-600 mb-8 leading-relaxed">
+                Con más de 15 años de experiencia en el mercado inmobiliario, Floriana Marconi se ha consolidado como
+                una de las profesionales más confiables y exitosas del sector.
               </p>
 
-              <div className="grid grid-cols-2 gap-6 mb-8">
-                <div className="text-center p-4 bg-orange-50 rounded-lg">
-                  <Award className="w-8 h-8 text-orange-500 mx-auto mb-2" />
-                  <div className="text-2xl font-black text-orange-500">
-                    <AnimatedCounter end={15} suffix="+" />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Home className="h-6 w-6 text-orange-500" />
                   </div>
-                  <p className="text-sm text-gray-600">Años de Experiencia</p>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Experiencia</h3>
+                    <p className="text-gray-600">15+ años en el mercado</p>
+                  </div>
                 </div>
-                <div className="text-center p-4 bg-orange-50 rounded-lg">
-                  <Users className="w-8 h-8 text-orange-500 mx-auto mb-2" />
-                  <div className="text-2xl font-black text-orange-500">
-                    <AnimatedCounter end={500} suffix="+" />
+
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Users className="h-6 w-6 text-orange-500" />
                   </div>
-                  <p className="text-sm text-gray-600">Clientes Atendidos</p>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Clientes</h3>
+                    <p className="text-gray-600">500+ familias felices</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Award className="h-6 w-6 text-orange-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Reconocimientos</h3>
+                    <p className="text-gray-600">Agente del año 2023</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Star className="h-6 w-6 text-orange-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Calificación</h3>
+                    <p className="text-gray-600">4.9/5 estrellas</p>
+                  </div>
                 </div>
               </div>
 
-              <Button className="btn-premium">Conocer Más</Button>
+              <button className="btn-premium">Conocer Más</button>
             </div>
 
             <div className="relative">
@@ -369,188 +370,239 @@ export default function HomePage() {
                 <img
                   src="/placeholder-user.jpg"
                   alt="Floriana Marconi"
-                  className="w-full max-w-md mx-auto rounded-2xl shadow-2xl"
+                  className="w-full h-96 object-cover rounded-2xl shadow-2xl"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-2xl transform rotate-3" />
+              <div className="absolute -bottom-6 -right-6 w-full h-full bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl -z-10"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
+              Lo que dicen nuestros <span className="gradient-text">clientes</span>
+            </h2>
+            <p className="text-fluid-lg text-gray-600 max-w-3xl mx-auto">
+              La satisfacción de nuestros clientes es nuestra mayor recompensa. Descubre por qué confían en nosotros
+              para encontrar su hogar ideal.
+            </p>
+          </div>
+
+          <div className="relative max-w-4xl mx-auto">
+            <div className="overflow-hidden">
+              <div
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="w-full flex-shrink-0 px-4">
+                    <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
+                      <div className="flex justify-center mb-4">
+                        {[...Array(testimonial.rating)].map((_, i) => (
+                          <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                        ))}
+                      </div>
+                      <p className="text-gray-600 text-lg mb-6 italic">"{testimonial.text}"</p>
+                      <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={prevSlide}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <ChevronLeft className="h-6 w-6 text-gray-600" />
+            </button>
+
+            <button
+              onClick={nextSlide}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <ChevronRight className="h-6 w-6 text-gray-600" />
+            </button>
+
+            <div className="flex justify-center mt-8 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentSlide ? "bg-orange-500" : "bg-gray-300"
+                  }`}
+                />
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contacto" className="py-16 md:py-20 lg:py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-fluid-3xl md:text-fluid-5xl font-black text-gray-900 mb-4 tracking-tight">
+      <section id="contacto" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
               ¿Listo para encontrar tu <span className="gradient-text">hogar ideal</span>?
             </h2>
-            <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
-              Contáctanos hoy mismo y comencemos a buscar la propiedad perfecta para ti
+            <p className="text-fluid-lg text-gray-600 max-w-3xl mx-auto">
+              Contáctanos hoy mismo y comienza el camino hacia la propiedad de tus sueños. Estamos aquí para ayudarte en
+              cada paso del proceso.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Información de Contacto</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-8">Información de Contacto</h3>
 
               <div className="space-y-6">
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mr-4">
-                    <Phone className="w-6 h-6 text-white" />
+                <div className="flex items-center space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Phone className="h-6 w-6 text-orange-500" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">Teléfono</p>
+                    <h4 className="font-semibold text-gray-900">Teléfono</h4>
                     <p className="text-gray-600">+54 11 1234-5678</p>
                   </div>
                 </div>
 
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mr-4">
-                    <Mail className="w-6 h-6 text-white" />
+                <div className="flex items-center space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Mail className="h-6 w-6 text-orange-500" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">Email</p>
+                    <h4 className="font-semibold text-gray-900">Email</h4>
                     <p className="text-gray-600">info@marconipropiedades.com</p>
                   </div>
                 </div>
 
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center mr-4">
-                    <MapPin className="w-6 h-6 text-white" />
+                <div className="flex items-center space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-orange-500" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">Dirección</p>
+                    <h4 className="font-semibold text-gray-900">Oficina</h4>
                     <p className="text-gray-600">Av. Principal 123, Ciudad</p>
                   </div>
                 </div>
               </div>
-
-              <div className="mt-8">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">Síguenos en redes sociales</h4>
-                <div className="flex space-x-4">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent"
-                  >
-                    <Instagram className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent"
-                  >
-                    <Facebook className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent"
-                  >
-                    <Twitter className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
             </div>
 
-            <Card className="p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Envíanos un mensaje</h3>
-
+            <div>
               <form className="space-y-6">
                 <div className="form-group">
-                  <Input
+                  <input
                     type="text"
+                    id="name"
+                    className="floating-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
                     placeholder=" "
-                    className="floating-input w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    required
                   />
-                  <label className="floating-label">Nombre completo</label>
+                  <label htmlFor="name" className="floating-label">
+                    Nombre completo
+                  </label>
                 </div>
 
                 <div className="form-group">
-                  <Input
+                  <input
                     type="email"
+                    id="email"
+                    className="floating-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
                     placeholder=" "
-                    className="floating-input w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    required
                   />
-                  <label className="floating-label">Email</label>
+                  <label htmlFor="email" className="floating-label">
+                    Email
+                  </label>
                 </div>
 
                 <div className="form-group">
-                  <Input
+                  <input
                     type="tel"
+                    id="phone"
+                    className="floating-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200"
                     placeholder=" "
-                    className="floating-input w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                   />
-                  <label className="floating-label">Teléfono</label>
+                  <label htmlFor="phone" className="floating-label">
+                    Teléfono
+                  </label>
                 </div>
 
                 <div className="form-group">
-                  <Textarea
-                    placeholder=" "
+                  <textarea
+                    id="message"
                     rows={4}
-                    className="floating-input w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+                    className="floating-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200 resize-none"
+                    placeholder=" "
+                    required
                   />
-                  <label className="floating-label">Mensaje</label>
+                  <label htmlFor="message" className="floating-label">
+                    Mensaje
+                  </label>
                 </div>
 
-                <Button type="submit" className="w-full btn-premium">
+                <button type="submit" className="btn-premium w-full">
                   Enviar Mensaje
-                </Button>
+                </button>
               </form>
-            </Card>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-br from-gray-900 to-black text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+      <footer className="bg-gray-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                  <Home className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-2xl font-black">Marconi Inmobiliaria</span>
+              <div className="flex items-center space-x-2 mb-6">
+                <Home className="h-8 w-8 text-orange-500" />
+                <span className="text-2xl font-black">
+                  Marconi <span className="text-orange-500">Inmobiliaria</span>
+                </span>
               </div>
-              <p className="text-gray-300 mb-4 max-w-md">
-                Tu socio de confianza en el mercado inmobiliario. Conectamos familias con sus hogares perfectos desde
-                hace más de 15 años.
+              <p className="text-gray-400 mb-6 max-w-md">
+                Tu socio de confianza en el mercado inmobiliario. Conectamos familias con sus hogares ideales desde hace
+                más de 15 años.
               </p>
               <div className="flex space-x-4">
-                <Button size="sm" variant="ghost" className="text-gray-300 hover:text-orange-400">
-                  <Instagram className="w-5 h-5" />
-                </Button>
-                <Button size="sm" variant="ghost" className="text-gray-300 hover:text-orange-400">
-                  <Facebook className="w-5 h-5" />
-                </Button>
-                <Button size="sm" variant="ghost" className="text-gray-300 hover:text-orange-400">
-                  <Twitter className="w-5 h-5" />
-                </Button>
+                <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                  Facebook
+                </a>
+                <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                  Instagram
+                </a>
+                <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                  LinkedIn
+                </a>
               </div>
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold mb-4">Enlaces Rápidos</h4>
-              <ul className="space-y-2">
+              <h3 className="text-lg font-semibold mb-6">Enlaces Rápidos</h3>
+              <ul className="space-y-3">
                 <li>
-                  <a href="#inicio" className="text-gray-300 hover:text-orange-400 transition-colors">
+                  <a href="#inicio" className="text-gray-400 hover:text-orange-500 transition-colors">
                     Inicio
                   </a>
                 </li>
                 <li>
-                  <a href="#propiedades" className="text-gray-300 hover:text-orange-400 transition-colors">
+                  <a href="#propiedades" className="text-gray-400 hover:text-orange-500 transition-colors">
                     Propiedades
                   </a>
                 </li>
                 <li>
-                  <a href="#nosotros" className="text-gray-300 hover:text-orange-400 transition-colors">
+                  <a href="#nosotros" className="text-gray-400 hover:text-orange-500 transition-colors">
                     Nosotros
                   </a>
                 </li>
                 <li>
-                  <a href="#contacto" className="text-gray-300 hover:text-orange-400 transition-colors">
+                  <a href="#contacto" className="text-gray-400 hover:text-orange-500 transition-colors">
                     Contacto
                   </a>
                 </li>
@@ -558,25 +610,33 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold mb-4">Servicios</h4>
-              <ul className="space-y-2">
+              <h3 className="text-lg font-semibold mb-6">Servicios</h3>
+              <ul className="space-y-3">
                 <li>
-                  <span className="text-gray-300">Venta de Propiedades</span>
+                  <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Venta de Propiedades
+                  </a>
                 </li>
                 <li>
-                  <span className="text-gray-300">Alquiler de Propiedades</span>
+                  <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Alquiler
+                  </a>
                 </li>
                 <li>
-                  <span className="text-gray-300">Asesoramiento</span>
+                  <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Tasaciones
+                  </a>
                 </li>
                 <li>
-                  <span className="text-gray-300">Tasaciones</span>
+                  <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Asesoramiento
+                  </a>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+          <div className="border-t border-gray-800 mt-12 pt-8 text-center">
             <p className="text-gray-400">© 2024 Marconi Inmobiliaria. Todos los derechos reservados.</p>
           </div>
         </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 interface AnimatedCounterProps {
   end: number
@@ -19,39 +19,34 @@ export function AnimatedCounter({
 }: AnimatedCounterProps) {
   const [count, setCount] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
-  const counterRef = useRef<HTMLSpanElement>(null)
+  const ref = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
+        if (entry.isIntersecting) {
           setIsVisible(true)
         }
       },
       { threshold: 0.1 },
     )
 
-    if (counterRef.current) {
-      observer.observe(counterRef.current)
+    if (ref.current) {
+      observer.observe(ref.current)
     }
 
     return () => observer.disconnect()
-  }, [isVisible])
+  }, [])
 
   useEffect(() => {
     if (!isVisible) return
 
     let startTime: number
-    const startCount = 0
-
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime
       const progress = Math.min((currentTime - startTime) / duration, 1)
 
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
-      const currentCount = Math.floor(easeOutQuart * (end - startCount) + startCount)
-
-      setCount(currentCount)
+      setCount(Math.floor(progress * end))
 
       if (progress < 1) {
         requestAnimationFrame(animate)
@@ -62,7 +57,7 @@ export function AnimatedCounter({
   }, [isVisible, end, duration])
 
   return (
-    <span ref={counterRef} className={className}>
+    <span ref={ref} className={className}>
       {prefix}
       {count.toLocaleString()}
       {suffix}
