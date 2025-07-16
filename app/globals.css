@@ -125,7 +125,7 @@ body {
   }
 
   .btn-premium:hover {
-    @apply shadow-[0_8px_30px_rgb(249,115,22,0.25)] -translate-y-1;
+    @apply shadow-[0_8px_30px_rgb(249,115,22,.25)] -translate-y-1;
   }
 
   .card-hover {
@@ -137,7 +137,7 @@ body {
   }
 
   .glass-effect {
-    @apply backdrop-blur-lg bg-white/80 border border-white/20;
+    @apply backdrop-blur-lg bg-white/80;
   }
 
   .gradient-text {
@@ -145,7 +145,7 @@ body {
   }
 
   .form-group {
-    @apply relative mb-6;
+    @apply relative;
   }
 
   .floating-input {
