@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 interface AnimatedCounterProps {
   end: number
@@ -24,7 +24,7 @@ export function AnimatedCounter({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !isVisible) {
           setIsVisible(true)
         }
       },
@@ -36,28 +36,29 @@ export function AnimatedCounter({
     }
 
     return () => observer.disconnect()
-  }, [])
+  }, [isVisible])
 
   useEffect(() => {
     if (!isVisible) return
 
     let startTime: number
-    let animationFrame: number
+    const startCount = 0
 
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime
       const progress = Math.min((currentTime - startTime) / duration, 1)
 
-      setCount(Math.floor(progress * end))
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+      const currentCount = Math.floor(easeOutQuart * (end - startCount) + startCount)
+
+      setCount(currentCount)
 
       if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate)
+        requestAnimationFrame(animate)
       }
     }
 
-    animationFrame = requestAnimationFrame(animate)
-
-    return () => cancelAnimationFrame(animationFrame)
+    requestAnimationFrame(animate)
   }, [isVisible, end, duration])
 
   return (
