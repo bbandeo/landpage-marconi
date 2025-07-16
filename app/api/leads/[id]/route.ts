@@ -1,34 +1,54 @@
-import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
+import { type NextRequest, NextResponse } from "next/server"
+import { supabase } from "@/lib/supabase"
 
-// PUT /api/leads/[id] - Actualizar estado del lead
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-	try {
-		const id = parseInt(params.id);
-		const body = await request.json();
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const { data, error } = await supabase.from("leads").select("*").eq("id", params.id).single()
 
-		if (isNaN(id)) {
-			return NextResponse.json({ error: "ID de lead inválido" }, { status: 400 });
-		}
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
 
-		const { data, error } = await supabaseAdmin
-			.from("leads")
-			.update({
-				status: body.status,
-				...(body.notes && { notes: body.notes })
-			})
-			.eq("id", id)
-			.select()
-			.single();
+    return NextResponse.json(data)
+  } catch (error) {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
+}
 
-		if (error) {
-			console.error("Error updating lead:", error);
-			return NextResponse.json({ error: "Failed to update lead" }, { status: 500 });
-		}
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const body = await request.json()
 
-		return NextResponse.json({ lead: data });
-	} catch (error) {
-		console.error("Unexpected error:", error);
-		return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-	}
+    const { data, error } = await supabase
+      .from("leads")
+      .update({
+        ...body,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", params.id)
+      .select()
+      .single()
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
+
+    return NextResponse.json(data)
+  } catch (error) {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const { error } = await supabase.from("leads").delete().eq("id", params.id)
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
 }

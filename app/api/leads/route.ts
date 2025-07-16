@@ -1,93 +1,67 @@
-import { NextRequest, NextResponse } from "next/server";
-import { supabaseAdmin } from "@/lib/supabase";
-import { LeadInsert } from "@/lib/supabase";
+import { type NextRequest, NextResponse } from "next/server"
+import { supabase } from "@/lib/supabase"
 
-// GET /api/leads - Obtener leads con filtros
-export async function GET(request: NextRequest) {
-	try {
-		const { searchParams } = new URL(request.url);
-		const status = searchParams.get("status");
-		const source = searchParams.get("source");
-		const page = parseInt(searchParams.get("page") || "1");
-		const limit = parseInt(searchParams.get("limit") || "10");
+export async function GET() {
+  try {
+    const { data, error } = await supabase.from("leads").select("*").order("created_at", { ascending: false })
 
-		let query = supabaseAdmin.from("leads").select(
-			`
-        *,
-        properties (
-          id,
-          title,
-          address,
-          price,
-          currency
-        )
-      `,
-			{ count: "exact" }
-		);
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
 
-		if (status) query = query.eq("status", status);
-		if (source) query = query.eq("lead_source", source);
+    // Transform data to match frontend interface
+    const transformedData = data.map((lead) => ({
+      id: lead.id,
+      name: lead.name,
+      email: lead.email || "",
+      phone: lead.phone || "",
+      message: lead.message || "",
+      property: `Propiedad #${lead.property_id || "N/A"}`,
+      status: lead.status || "new",
+      source: lead.lead_source || "Website",
+      createdAt: lead.created_at,
+      notes: lead.notes || "",
+      lastContact: lead.last_contact || "",
+      nextAction: lead.next_action || "",
+      nextActionDate: lead.next_action_date || "",
+      priority: lead.priority || "medium",
+      score: lead.score || 5,
+    }))
 
-		const from = (page - 1) * limit;
-		const to = from + limit - 1;
-
-		query = query.order("created_at", { ascending: false }).range(from, to);
-
-		const { data, error, count } = await query;
-
-		if (error) {
-			console.error("Error fetching leads:", error);
-			return NextResponse.json({ error: "Failed to fetch leads" }, { status: 500 });
-		}
-
-		return NextResponse.json({
-			leads: data,
-			pagination: {
-				page,
-				limit,
-				total: count || 0,
-				totalPages: Math.ceil((count || 0) / limit)
-			}
-		});
-	} catch (error) {
-		console.error("Unexpected error:", error);
-		return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-	}
+    return NextResponse.json(transformedData)
+  } catch (error) {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
 }
 
-// POST /api/leads - Crear nuevo lead (desde formulario de contacto)
 export async function POST(request: NextRequest) {
-	try {
-		const body = await request.json();
+  try {
+    const body = await request.json()
 
-		// Validar datos requeridos
-		if (!body.name || !body.message) {
-			return NextResponse.json({ error: "Nombre y mensaje son requeridos" }, { status: 400 });
-		}
+    const { data, error } = await supabase
+      .from("leads")
+      .insert({
+        name: body.name,
+        email: body.email,
+        phone: body.phone,
+        message: body.message,
+        property_id: body.property_id,
+        lead_source: body.source || "Website",
+        status: body.status || "new",
+        notes: body.notes || "",
+        priority: body.priority || "medium",
+        score: body.score || 5,
+        created_at: new Date().toISOString(),
+      })
+      .select()
+      .single()
 
-		const leadData: LeadInsert = {
-			name: body.name,
-			email: body.email || null,
-			phone: body.phone || null,
-			message: body.message,
-			property_id: body.property_id || null,
-			lead_source: body.lead_source || "website",
-			status: "new"
-		};
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
 
-		const { data, error } = await supabaseAdmin.from("leads").insert(leadData).select().single();
-
-		if (error) {
-			console.error("Error creating lead:", error);
-			return NextResponse.json({ error: "Failed to create lead" }, { status: 500 });
-		}
-
-		// Aquí podrías agregar notificaciones (email, WhatsApp, etc.)
-		// await sendNotification(data)
-
-		return NextResponse.json({ lead: data }, { status: 201 });
-	} catch (error) {
-		console.error("Unexpected error:", error);
-		return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-	}
+    return NextResponse.json(data)
+  } catch (error) {
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
 }
