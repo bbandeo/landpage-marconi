@@ -111,7 +111,14 @@ export interface Database {
           property_id: number | null
           lead_source: string
           status: string
+          notes: string | null
+          last_contact: string | null
+          next_action: string | null
+          next_action_date: string | null
+          priority: string
+          score: number
           created_at: string
+          updated_at: string
         }
         Insert: {
           id?: number
@@ -122,7 +129,14 @@ export interface Database {
           property_id?: number | null
           lead_source?: string
           status?: string
+          notes?: string | null
+          last_contact?: string | null
+          next_action?: string | null
+          next_action_date?: string | null
+          priority?: string
+          score?: number
           created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: number
@@ -133,7 +147,14 @@ export interface Database {
           property_id?: number | null
           lead_source?: string
           status?: string
+          notes?: string | null
+          last_contact?: string | null
+          next_action?: string | null
+          next_action_date?: string | null
+          priority?: string
+          score?: number
           created_at?: string
+          updated_at?: string
         }
       }
       profiles: {
@@ -207,4 +228,18 @@ export const PROPERTY_TYPE_MAP = {
 export const OPERATION_TYPE_MAP = {
   venta: "Venta",
   alquiler: "Alquiler",
+} as const
+
+// Lead status mapping
+export const LEAD_STATUS_MAP = {
+  new: "Nuevo",
+  contacted: "Contactado",
+  qualified: "Calificado",
+  converted: "Convertido",
+} as const
+
+export const LEAD_PRIORITY_MAP = {
+  low: "Baja",
+  medium: "Media",
+  high: "Alta",
 } as const
