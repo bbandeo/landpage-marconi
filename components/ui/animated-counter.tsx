@@ -1,22 +1,15 @@
 "use client"
 
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 interface AnimatedCounterProps {
   end: number
   duration?: number
-  prefix?: string
   suffix?: string
-  className?: string
+  prefix?: string
 }
 
-export function AnimatedCounter({
-  end,
-  duration = 2000,
-  prefix = "",
-  suffix = "",
-  className = "",
-}: AnimatedCounterProps) {
+export function AnimatedCounter({ end, duration = 2000, suffix = "", prefix = "" }: AnimatedCounterProps) {
   const [count, setCount] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
@@ -24,7 +17,7 @@ export function AnimatedCounter({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting && !isVisible) {
           setIsVisible(true)
         }
       },
@@ -36,17 +29,22 @@ export function AnimatedCounter({
     }
 
     return () => observer.disconnect()
-  }, [])
+  }, [isVisible])
 
   useEffect(() => {
     if (!isVisible) return
 
     let startTime: number
+    const startCount = 0
+
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime
       const progress = Math.min((currentTime - startTime) / duration, 1)
 
-      setCount(Math.floor(progress * end))
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
+      const currentCount = Math.floor(easeOutQuart * (end - startCount) + startCount)
+
+      setCount(currentCount)
 
       if (progress < 1) {
         requestAnimationFrame(animate)
@@ -57,7 +55,7 @@ export function AnimatedCounter({
   }, [isVisible, end, duration])
 
   return (
-    <span ref={ref} className={className}>
+    <span ref={ref} className="font-bold">
       {prefix}
       {count.toLocaleString()}
       {suffix}

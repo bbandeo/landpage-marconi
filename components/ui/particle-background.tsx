@@ -37,7 +37,7 @@ export function ParticleBackground() {
         size: Math.random() * 3 + 1,
         speedX: (Math.random() - 0.5) * 0.5,
         speedY: (Math.random() - 0.5) * 0.5,
-        opacity: Math.random() * 0.5 + 0.1,
+        opacity: Math.random() * 0.3 + 0.1,
       })
     }
 
