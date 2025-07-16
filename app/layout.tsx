@@ -11,7 +11,14 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Marconi Inmobiliaria - Tu hogar ideal te espera",
   description:
-    "Encuentra la propiedad perfecta con Marconi Inmobiliaria. Especialistas en venta y alquiler de propiedades premium.",
+    "Encuentra la propiedad perfecta con Marconi Inmobiliaria. Especialistas en venta y alquiler de propiedades en las mejores ubicaciones.",
+  keywords: "inmobiliaria, propiedades, venta, alquiler, casas, departamentos",
+  authors: [{ name: "Marconi Inmobiliaria" }],
+  openGraph: {
+    title: "Marconi Inmobiliaria - Tu hogar ideal te espera",
+    description: "Encuentra la propiedad perfecta con Marconi Inmobiliaria",
+    type: "website",
+  },
     generator: 'v0.dev'
 }
 
@@ -21,8 +28,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es">
-      <body className={inter.className}>
+    <html lang="es" suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <ScrollProgress />
           {children}

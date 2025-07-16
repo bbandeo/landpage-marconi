@@ -4,14 +4,22 @@ import { useEffect, useState, useRef } from "react"
 
 interface AnimatedCounterProps {
   end: number
-  suffix?: string
   duration?: number
+  prefix?: string
+  suffix?: string
+  className?: string
 }
 
-export function AnimatedCounter({ end, suffix = "", duration = 2000 }: AnimatedCounterProps) {
+export function AnimatedCounter({
+  end,
+  duration = 2000,
+  prefix = "",
+  suffix = "",
+  className = "",
+}: AnimatedCounterProps) {
   const [count, setCount] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
-  const ref = useRef<HTMLSpanElement>(null)
+  const counterRef = useRef<HTMLSpanElement>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -23,8 +31,8 @@ export function AnimatedCounter({ end, suffix = "", duration = 2000 }: AnimatedC
       { threshold: 0.1 },
     )
 
-    if (ref.current) {
-      observer.observe(ref.current)
+    if (counterRef.current) {
+      observer.observe(counterRef.current)
     }
 
     return () => observer.disconnect()
@@ -34,28 +42,28 @@ export function AnimatedCounter({ end, suffix = "", duration = 2000 }: AnimatedC
     if (!isVisible) return
 
     let startTime: number
-    const startCount = 0
+    let animationFrame: number
 
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime
       const progress = Math.min((currentTime - startTime) / duration, 1)
 
-      const easeOutQuart = 1 - Math.pow(1 - progress, 4)
-      const currentCount = Math.floor(easeOutQuart * (end - startCount) + startCount)
-
-      setCount(currentCount)
+      setCount(Math.floor(progress * end))
 
       if (progress < 1) {
-        requestAnimationFrame(animate)
+        animationFrame = requestAnimationFrame(animate)
       }
     }
 
-    requestAnimationFrame(animate)
+    animationFrame = requestAnimationFrame(animate)
+
+    return () => cancelAnimationFrame(animationFrame)
   }, [isVisible, end, duration])
 
   return (
-    <span ref={ref}>
-      {count}
+    <span ref={counterRef} className={className}>
+      {prefix}
+      {count.toLocaleString()}
       {suffix}
     </span>
   )
