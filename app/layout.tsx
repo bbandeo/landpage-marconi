@@ -20,10 +20,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className={inter.className}>
-      <ScrollProgress />
-      {children}
-      <Toaster />
-    </div>
+    <html lang="es" suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
+        <ScrollProgress />
+        {children}
+        <Toaster />
+      </body>
+    </html>
   )
 }
