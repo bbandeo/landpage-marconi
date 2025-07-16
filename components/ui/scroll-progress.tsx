@@ -13,7 +13,7 @@ export function ScrollProgress() {
       setProgress(scrollPercent)
     }
 
-    window.addEventListener("scroll", updateProgress)
+    window.addEventListener("scroll", updateProgress, { passive: true })
     return () => window.removeEventListener("scroll", updateProgress)
   }, [])
 

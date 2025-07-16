@@ -1,22 +1,14 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 
 interface AnimatedCounterProps {
   end: number
-  duration?: number
-  prefix?: string
   suffix?: string
-  className?: string
+  duration?: number
 }
 
-export function AnimatedCounter({
-  end,
-  duration = 2000,
-  prefix = "",
-  suffix = "",
-  className = "",
-}: AnimatedCounterProps) {
+export function AnimatedCounter({ end, suffix = "", duration = 2000 }: AnimatedCounterProps) {
   const [count, setCount] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
   const ref = useRef<HTMLSpanElement>(null)
@@ -24,7 +16,7 @@ export function AnimatedCounter({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
+        if (entry.isIntersecting) {
           setIsVisible(true)
         }
       },
@@ -36,7 +28,7 @@ export function AnimatedCounter({
     }
 
     return () => observer.disconnect()
-  }, [isVisible])
+  }, [])
 
   useEffect(() => {
     if (!isVisible) return
@@ -62,9 +54,8 @@ export function AnimatedCounter({
   }, [isVisible, end, duration])
 
   return (
-    <span ref={ref} className={className}>
-      {prefix}
-      {count.toLocaleString()}
+    <span ref={ref}>
+      {count}
       {suffix}
     </span>
   )
