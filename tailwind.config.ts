@@ -1,29 +1,30 @@
 import type { Config } from "tailwindcss"
-import { fontFamily } from "tailwindcss/defaultTheme"
 
-const config: Config = {
+const config = {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
+  prefix: "",
   theme: {
-    screens: {
-      xs: "320px",
-      sm: "640px",
-      md: "768px",
-      lg: "1024px",
-      xl: "1280px",
-      "2xl": "1536px",
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-inter)", ...fontFamily.sans],
-        serif: ["var(--font-playfair-display)", ...fontFamily.serif],
+        sans: ["var(--font-inter)"],
+        serif: ["var(--font-playfair-display)"],
       },
       colors: {
+        "brand-orange": "#F97316",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -57,23 +58,11 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        brand: {
-          orange: "#F97316",
-        },
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 4px)",
-        sm: "calc(var(--radius) - 8px)",
-      },
-      spacing: {
-        xs: "0.5rem", // 8px
-        sm: "1rem", // 16px
-        md: "1.5rem", // 24px
-        lg: "2rem", // 32px
-        xl: "3rem", // 48px
-        "2xl": "4rem", // 64px
-        "3xl": "6rem", // 96px
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
         "accordion-down": {
@@ -89,8 +78,18 @@ const config: Config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      spacing: {
+        xs: "0.5rem", // 8px
+        sm: "1rem", // 16px
+        md: "1.5rem", // 24px
+        lg: "2rem", // 32px
+        xl: "3rem", // 48px
+        "2xl": "4rem", // 64px
+        "3xl": "6rem", // 96px
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
+} satisfies Config
+
 export default config
