@@ -1,16 +1,22 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Manrope } from "next/font/google"
+import { Inter } from "next/font/google"
 import "./globals.css"
-import { Toaster } from "@/components/ui/sonner"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 import { ScrollProgress } from "@/components/ui/scroll-progress"
 
-const manrope = Manrope({ subsets: ["latin"], weight: ["400", "600", "700", "800", "900"] })
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
+})
 
 export const metadata: Metadata = {
-  title: "Marconi Inmobiliaria | Excelencia y Confianza",
-  description: "La inmobiliaria que está revolucionando Reconquista con tecnología y confianza local.",
-  generator: "v0.dev",
+  title: "Marconi Inmobiliaria - Tu hogar ideal te espera",
+  description:
+    "Encuentra la propiedad perfecta con Marconi Inmobiliaria. Especialistas en venta y alquiler de propiedades premium.",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -19,11 +25,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className="dark">
-      <body className={`${manrope.className} bg-gray-900 text-gray-200 antialiased`}>
-        <ScrollProgress />
-        {children}
-        <Toaster richColors theme="dark" position="bottom-right" />
+    <html lang="es" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased`}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <ScrollProgress />
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )
