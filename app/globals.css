@@ -124,7 +124,12 @@
 
 @layer components {
   .btn-premium {
-    @apply hover:shadow-[0_8px_30px_rgb(249,115,22,0.25)] hover:-translate-y-1 transition-all duration-300;
+    transition: all 0.3s ease;
+  }
+
+  .btn-premium:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(249, 115, 22, 0.25);
   }
 
   .form-group {
@@ -140,7 +145,12 @@
   }
 
   .card-hover {
-    @apply hover:shadow-2xl hover:-translate-y-2 transition-all duration-300;
+    transition: all 0.3s ease;
+  }
+
+  .card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   }
 
   .gradient-text {
