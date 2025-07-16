@@ -62,26 +62,11 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
         orange: {
-          50: "#fff7ed",
-          100: "#ffedd5",
-          200: "#fed7aa",
-          300: "#fdba74",
-          400: "#fb923c",
-          500: "#f97316",
-          600: "#ea580c",
-          700: "#c2410c",
-          800: "#9a3412",
-          900: "#7c2d12",
-        },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+          50: "rgb(var(--orange-50))",
+          100: "rgb(var(--orange-100))",
+          500: "rgb(var(--orange-500))",
+          600: "rgb(var(--orange-600))",
+          900: "rgb(var(--orange-900))",
         },
       },
       borderRadius: {
@@ -102,7 +87,11 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-20px)" },
         },
-        fadeInUp: {
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 20px rgba(249, 115, 22, 0.3)" },
+          "50%": { boxShadow: "0 0 40px rgba(249, 115, 22, 0.6)" },
+        },
+        "slide-up": {
           from: {
             opacity: "0",
             transform: "translateY(30px)",
@@ -112,17 +101,16 @@ const config: Config = {
             transform: "translateY(0)",
           },
         },
-        pulse: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.5" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         float: "float 6s ease-in-out infinite",
-        fadeInUp: "fadeInUp 0.6s ease-out",
-        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "slide-up": "slide-up 0.6s ease-out",
+      },
+      fontFamily: {
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
       },
       spacing: {
         "18": "4.5rem",

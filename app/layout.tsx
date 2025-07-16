@@ -3,7 +3,6 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
 import { ScrollProgress } from "@/components/ui/scroll-progress"
 
 const inter = Inter({
@@ -30,7 +29,6 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <ScrollProgress />
           {children}
-          <Toaster />
         </ThemeProvider>
       </body>
     </html>
