@@ -121,44 +121,75 @@ body {
 
 @layer components {
   .btn-premium {
-    @apply bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+    background-color: #f97316;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
   }
 
   .btn-premium:hover {
-    @apply shadow-[0_8px_30px_rgb(249,115,22,.25)] -translate-y-1;
+    background-color: #ea580c;
+    box-shadow: 0 8px 30px rgba(249, 115, 22, 0.25);
+    transform: translateY(-4px);
   }
 
   .card-hover {
-    @apply transition-all duration-300;
+    transition: all 0.3s ease;
   }
 
   .card-hover:hover {
-    @apply shadow-xl -translate-y-2;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    transform: translateY(-8px);
   }
 
   .glass-effect {
-    @apply backdrop-blur-lg bg-white/80;
+    backdrop-filter: blur(16px);
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent;
+    background: linear-gradient(to right, #f97316, #ea580c);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
   }
 
   .form-group {
-    @apply relative;
+    position: relative;
+    margin-bottom: 1.5rem;
   }
 
   .floating-input {
-    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-200;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+  }
+
+  .floating-input:focus {
+    outline: none;
+    ring: 2px solid #f97316;
+    border-color: transparent;
   }
 
   .floating-label {
-    @apply absolute left-4 top-3 text-gray-500 transition-all duration-200 pointer-events-none;
+    position: absolute;
+    left: 1rem;
+    top: 0.75rem;
+    color: #6b7280;
+    transition: all 0.2s ease;
+    pointer-events: none;
   }
 
   .floating-input:focus + .floating-label,
   .floating-input:not(:placeholder-shown) + .floating-label {
-    @apply -translate-y-6 text-sm text-orange-500;
+    transform: translateY(-1.5rem);
+    font-size: 0.875rem;
+    color: #f97316;
   }
 }
 

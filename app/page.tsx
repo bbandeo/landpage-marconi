@@ -8,12 +8,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
+import { AnimatedCounter } from "@/components/ui/animated-counter"
+import { ParticleBackground } from "@/components/ui/particle-background"
 import { useToast } from "@/hooks/use-toast"
 import {
   MapPin,
   Phone,
   Mail,
   Star,
+  Home,
   Building,
   Award,
   Menu,
@@ -24,140 +27,120 @@ import {
   Bath,
   Square,
   Car,
+  Users,
+  TrendingUp,
 } from "lucide-react"
-
-// Animated Counter Component
-function AnimatedCounter({ end, duration = 2000 }: { end: number; duration?: number }) {
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    let startTime: number
-    let animationFrame: number
-
-    const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime
-      const progress = Math.min((currentTime - startTime) / duration, 1)
-
-      setCount(Math.floor(progress * end))
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate)
-      }
-    }
-
-    animationFrame = requestAnimationFrame(animate)
-    return () => cancelAnimationFrame(animationFrame)
-  }, [end, duration])
-
-  return <span>{count}</span>
-}
-
-// Scroll Progress Component
-function ScrollProgress() {
-  const [scrollProgress, setScrollProgress] = useState(0)
-
-  useEffect(() => {
-    const updateScrollProgress = () => {
-      const scrollPx = document.documentElement.scrollTop
-      const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight
-      const scrolled = scrollPx / winHeightPx
-      setScrollProgress(scrolled)
-    }
-
-    window.addEventListener("scroll", updateScrollProgress)
-    return () => window.removeEventListener("scroll", updateScrollProgress)
-  }, [])
-
-  return <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress})` }} />
-}
-
-// Particle Background Component
-function ParticleBackground() {
-  useEffect(() => {
-    const createParticle = () => {
-      const particle = document.createElement("div")
-      particle.className = "particle"
-      particle.style.left = Math.random() * 100 + "%"
-      particle.style.animationDuration = Math.random() * 3 + 2 + "s"
-      particle.style.opacity = (Math.random() * 0.5 + 0.1).toString()
-      particle.style.width = particle.style.height = Math.random() * 10 + 5 + "px"
-
-      document.body.appendChild(particle)
-
-      setTimeout(() => {
-        particle.remove()
-      }, 5000)
-    }
-
-    const interval = setInterval(createParticle, 300)
-    return () => clearInterval(interval)
-  }, [])
-
-  return null
-}
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
+  const [isScrolled, setIsScrolled] = useState(false)
   const { toast } = useToast()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const properties = [
     {
       id: 1,
-      title: "Casa Moderna en Zona Norte",
-      price: "$450,000",
-      location: "Zona Norte, Ciudad",
+      title: "Casa Moderna en Palermo",
+      price: "$850,000",
+      location: "Palermo, Buenos Aires",
       image: "/placeholder.svg?height=300&width=400&text=Casa+Moderna",
-      beds: 3,
-      baths: 2,
-      area: "180m²",
+      beds: 4,
+      baths: 3,
+      area: "280m²",
       parking: 2,
       type: "Casa",
+      featured: true,
     },
     {
       id: 2,
-      title: "Apartamento de Lujo Centro",
-      price: "$320,000",
-      location: "Centro, Ciudad",
-      image: "/placeholder.svg?height=300&width=400&text=Apartamento+Lujo",
-      beds: 2,
+      title: "Departamento de Lujo en Puerto Madero",
+      price: "$1,200,000",
+      location: "Puerto Madero, Buenos Aires",
+      image: "/placeholder.svg?height=300&width=400&text=Departamento+Lujo",
+      beds: 3,
       baths: 2,
-      area: "120m²",
+      area: "180m²",
       parking: 1,
-      type: "Apartamento",
+      type: "Departamento",
+      featured: true,
     },
     {
       id: 3,
-      title: "Villa con Piscina",
-      price: "$750,000",
-      location: "Zona Residencial",
-      image: "/placeholder.svg?height=300&width=400&text=Villa+Piscina",
-      beds: 4,
-      baths: 3,
-      area: "300m²",
-      parking: 3,
-      type: "Villa",
+      title: "Terreno Premium en Nordelta",
+      price: "$450,000",
+      location: "Nordelta, Buenos Aires",
+      image: "/placeholder.svg?height=300&width=400&text=Terreno+Premium",
+      beds: 0,
+      baths: 0,
+      area: "1,200m²",
+      parking: 0,
+      type: "Terreno",
+      featured: false,
     },
   ]
 
   const testimonials = [
     {
       name: "María González",
-      text: "Excelente servicio, encontraron la casa perfecta para mi familia.",
+      role: "Compradora",
+      content: "Excelente servicio. Me ayudaron a encontrar la casa perfecta para mi familia.",
       rating: 5,
       image: "/placeholder.svg?height=60&width=60&text=MG",
     },
     {
       name: "Carlos Rodríguez",
-      text: "Profesionales y confiables. Muy recomendados.",
+      role: "Vendedor",
+      content: "Profesionales excepcionales. Vendieron mi propiedad en tiempo récord.",
       rating: 5,
       image: "/placeholder.svg?height=60&width=60&text=CR",
     },
     {
       name: "Ana Martínez",
-      text: "El proceso de compra fue muy sencillo gracias a su equipo.",
+      role: "Inversora",
+      content: "La mejor asesoría en inversiones inmobiliarias. Altamente recomendados.",
       rating: 5,
       image: "/placeholder.svg?height=60&width=60&text=AM",
+    },
+  ]
+
+  const services = [
+    {
+      icon: Home,
+      title: "Compra y Venta",
+      description: "Te ayudamos a encontrar la propiedad ideal o vender tu inmueble al mejor precio del mercado.",
+    },
+    {
+      icon: Building,
+      title: "Alquiler",
+      description: "Gestión completa de alquileres con garantía de cobro y mantenimiento incluido.",
+    },
+    {
+      icon: TrendingUp,
+      title: "Inversiones",
+      description: "Asesoramiento especializado en inversiones inmobiliarias rentables y seguras.",
+    },
+    {
+      icon: Users,
+      title: "Consultoría",
+      description: "Consultoría personalizada para desarrolladores e inversores institucionales.",
+    },
+    {
+      icon: Award,
+      title: "Tasaciones",
+      description: "Tasaciones profesionales realizadas por expertos certificados en el mercado.",
+    },
+    {
+      icon: Building,
+      title: "Desarrollos",
+      description: "Participación en desarrollos inmobiliarios exclusivos y oportunidades de pre-venta.",
     },
   ]
 
@@ -177,18 +160,28 @@ export default function HomePage() {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length)
   }
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [testimonials.length])
+
   return (
     <div className="min-h-screen bg-white">
-      <ScrollProgress />
       <ParticleBackground />
 
       {/* Header */}
-      <header className="glass-effect fixed w-full top-0 z-50 border-b border-white/20">
+      <header
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          isScrolled ? "glass-effect shadow-lg" : "bg-transparent"
+        }`}
+      >
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Menu className="h-8 w-8 text-orange-500" />
-              <span className="text-fluid-xl font-black gradient-text">Marconi Inmobiliaria</span>
+              <Home className="h-8 w-8 text-orange-500" />
+              <span className="text-fluid-xl font-black gradient-text">Marconi</span>
             </div>
 
             {/* Desktop Navigation */}
@@ -251,8 +244,9 @@ export default function HomePage() {
               <br />
               Te Espera
             </h1>
-            <p className="text-fluid-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Encuentra la propiedad perfecta con más de 15 años de experiencia en el mercado inmobiliario
+            <p className="text-fluid-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Descubre las mejores propiedades en Argentina con más de 15 años de experiencia en el mercado inmobiliario
+              premium.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -264,7 +258,7 @@ export default function HomePage() {
                 variant="outline"
                 className="text-fluid-lg px-8 py-4 border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300 bg-transparent"
               >
-                Contactar Ahora
+                Agendar Cita
               </Button>
             </div>
 
@@ -272,27 +266,27 @@ export default function HomePage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
               <div className="text-center animate-float">
                 <div className="text-fluid-4xl font-black text-orange-500 mb-2">
-                  <AnimatedCounter end={500} />+
+                  <AnimatedCounter end={500} suffix="+" />
                 </div>
                 <p className="text-gray-600 font-medium">Propiedades Vendidas</p>
               </div>
               <div className="text-center animate-float" style={{ animationDelay: "0.5s" }}>
                 <div className="text-fluid-4xl font-black text-orange-500 mb-2">
-                  <AnimatedCounter end={15} />+
+                  <AnimatedCounter end={15} suffix="+" />
                 </div>
                 <p className="text-gray-600 font-medium">Años de Experiencia</p>
               </div>
               <div className="text-center animate-float" style={{ animationDelay: "1s" }}>
                 <div className="text-fluid-4xl font-black text-orange-500 mb-2">
-                  <AnimatedCounter end={1200} />+
+                  <AnimatedCounter end={1200} suffix="+" />
                 </div>
                 <p className="text-gray-600 font-medium">Clientes Satisfechos</p>
               </div>
               <div className="text-center animate-float" style={{ animationDelay: "1.5s" }}>
                 <div className="text-fluid-4xl font-black text-orange-500 mb-2">
-                  <AnimatedCounter end={98} />%
+                  <AnimatedCounter end={98} suffix="%" />
                 </div>
-                <p className="text-gray-600 font-medium">Satisfacción</p>
+                <p className="text-gray-600 font-medium">Tasa de Éxito</p>
               </div>
             </div>
           </div>
@@ -307,7 +301,7 @@ export default function HomePage() {
               Propiedades <span className="gradient-text">Destacadas</span>
             </h2>
             <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
-              Descubre nuestra selección de propiedades premium en las mejores ubicaciones
+              Explora nuestra selección exclusiva de propiedades premium en las mejores ubicaciones.
             </p>
           </div>
 
@@ -320,43 +314,63 @@ export default function HomePage() {
                     alt={property.title}
                     className="w-full h-64 object-cover"
                   />
-                  <Badge className="absolute top-4 left-4 bg-orange-500 text-white">{property.type}</Badge>
+                  {property.featured && (
+                    <Badge className="absolute top-4 left-4 bg-orange-500 hover:bg-orange-600 text-white">
+                      Destacada
+                    </Badge>
+                  )}
+                  <div className="absolute top-4 right-4">
+                    <Badge variant="secondary" className="bg-white/90 text-gray-700">
+                      {property.type}
+                    </Badge>
+                  </div>
                 </div>
                 <CardHeader>
-                  <CardTitle className="text-fluid-lg font-bold">{property.title}</CardTitle>
+                  <CardTitle className="text-fluid-xl font-bold">{property.title}</CardTitle>
                   <CardDescription className="flex items-center text-gray-600">
                     <MapPin className="h-4 w-4 mr-1" />
                     {property.location}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-between mb-4">
+                  <div className="flex justify-between items-center mb-4">
                     <span className="text-fluid-2xl font-black text-orange-500">{property.price}</span>
+                    <span className="text-gray-600 font-medium">{property.area}</span>
                   </div>
-
-                  <div className="grid grid-cols-4 gap-4 text-sm text-gray-600 mb-4">
-                    <div className="flex items-center">
-                      <Bed className="h-4 w-4 mr-1" />
-                      {property.beds}
+                  {property.beds > 0 && (
+                    <div className="grid grid-cols-4 gap-4 text-sm text-gray-600 mb-4">
+                      <div className="flex items-center">
+                        <Bed className="h-4 w-4 mr-1" />
+                        {property.beds}
+                      </div>
+                      <div className="flex items-center">
+                        <Bath className="h-4 w-4 mr-1" />
+                        {property.baths}
+                      </div>
+                      <div className="flex items-center">
+                        <Square className="h-4 w-4 mr-1" />
+                        {property.area}
+                      </div>
+                      <div className="flex items-center">
+                        <Car className="h-4 w-4 mr-1" />
+                        {property.parking}
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <Bath className="h-4 w-4 mr-1" />
-                      {property.baths}
-                    </div>
-                    <div className="flex items-center">
-                      <Square className="h-4 w-4 mr-1" />
-                      {property.area}
-                    </div>
-                    <div className="flex items-center">
-                      <Car className="h-4 w-4 mr-1" />
-                      {property.parking}
-                    </div>
-                  </div>
-
+                  )}
                   <Button className="w-full btn-premium">Ver Detalles</Button>
                 </CardContent>
               </Card>
             ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-2 border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent"
+            >
+              Ver Todas las Propiedades
+            </Button>
           </div>
         </div>
       </section>
@@ -369,52 +383,24 @@ export default function HomePage() {
               Nuestros <span className="gradient-text">Servicios</span>
             </h2>
             <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
-              Ofrecemos soluciones integrales para todas tus necesidades inmobiliarias
+              Ofrecemos servicios integrales para todas tus necesidades inmobiliarias.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="card-hover text-center p-8 border-0 shadow-lg">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Menu className="h-8 w-8 text-orange-500" />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-fluid-xl font-bold">Compra y Venta</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Te ayudamos a encontrar la propiedad ideal o vender tu inmueble al mejor precio del mercado.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="card-hover text-center p-8 border-0 shadow-lg">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Building className="h-8 w-8 text-orange-500" />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-fluid-xl font-bold">Alquiler</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Gestión completa de alquileres con garantía de cobro y mantenimiento incluido.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="card-hover text-center p-8 border-0 shadow-lg">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Award className="h-8 w-8 text-orange-500" />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-fluid-xl font-bold">Asesoría Legal</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">
-                  Acompañamiento legal completo en todos los procesos de compra, venta y alquiler.
-                </p>
-              </CardContent>
-            </Card>
+            {services.map((service, index) => (
+              <Card key={index} className="card-hover text-center p-8 border-0 shadow-lg">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <service.icon className="h-8 w-8 text-orange-500" />
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-fluid-xl font-bold">{service.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">{service.description}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
@@ -426,44 +412,60 @@ export default function HomePage() {
             <h2 className="text-fluid-5xl font-black text-gray-900 mb-4">
               Lo que dicen nuestros <span className="gradient-text">Clientes</span>
             </h2>
+            <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
+              La satisfacción de nuestros clientes es nuestra mayor recompensa.
+            </p>
           </div>
 
-          <div className="max-w-4xl mx-auto relative">
+          <div className="relative max-w-4xl mx-auto">
             <Card className="border-0 shadow-xl p-8">
               <CardContent className="text-center">
                 <div className="flex justify-center mb-6">
                   <img
                     src={testimonials[currentTestimonial].image || "/placeholder.svg"}
                     alt={testimonials[currentTestimonial].name}
-                    className="w-16 h-16 rounded-full"
+                    className="w-16 h-16 rounded-full object-cover"
                   />
                 </div>
-
                 <div className="flex justify-center mb-4">
                   {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-
-                <p className="text-fluid-lg text-gray-600 mb-6 italic">"{testimonials[currentTestimonial].text}"</p>
-
-                <h4 className="text-fluid-xl font-bold text-gray-900">{testimonials[currentTestimonial].name}</h4>
+                <blockquote className="text-fluid-lg text-gray-700 mb-6 italic">
+                  "{testimonials[currentTestimonial].content}"
+                </blockquote>
+                <div>
+                  <p className="font-bold text-gray-900">{testimonials[currentTestimonial].name}</p>
+                  <p className="text-gray-600">{testimonials[currentTestimonial].role}</p>
+                </div>
               </CardContent>
             </Card>
 
             <button
               onClick={prevTestimonial}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
             >
-              <ChevronLeft className="h-6 w-6 text-orange-500" />
+              <ChevronLeft className="h-6 w-6 text-gray-600" />
             </button>
-
             <button
               onClick={nextTestimonial}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all duration-300"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
             >
-              <ChevronRight className="h-6 w-6 text-orange-500" />
+              <ChevronRight className="h-6 w-6 text-gray-600" />
             </button>
+
+            <div className="flex justify-center mt-6 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    index === currentTestimonial ? "bg-orange-500" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -473,10 +475,10 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-fluid-5xl font-black text-gray-900 mb-4">
-              <span className="gradient-text">Contáctanos</span>
+              Contáctanos <span className="gradient-text">Hoy</span>
             </h2>
             <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
-              Estamos aquí para ayudarte a encontrar tu hogar ideal
+              Estamos aquí para ayudarte a encontrar la propiedad perfecta o vender la tuya.
             </p>
           </div>
 
@@ -489,26 +491,22 @@ export default function HomePage() {
                 <CardContent>
                   <form onSubmit={handleContactSubmit} className="space-y-6">
                     <div className="form-group">
-                      <Input placeholder=" " className="floating-input" required />
+                      <Input type="text" placeholder=" " className="floating-input" required />
                       <label className="floating-label">Nombre completo</label>
                     </div>
-
                     <div className="form-group">
                       <Input type="email" placeholder=" " className="floating-input" required />
-                      <label className="floating-label">Correo electrónico</label>
+                      <label className="floating-label">Email</label>
                     </div>
-
                     <div className="form-group">
                       <Input type="tel" placeholder=" " className="floating-input" required />
                       <label className="floating-label">Teléfono</label>
                     </div>
-
                     <div className="form-group">
                       <Textarea placeholder=" " className="floating-input min-h-[120px]" required />
                       <label className="floating-label">Mensaje</label>
                     </div>
-
-                    <Button type="submit" className="w-full btn-premium text-fluid-lg py-4">
+                    <Button type="submit" className="w-full btn-premium text-fluid-lg py-3">
                       Enviar Mensaje
                     </Button>
                   </form>
@@ -518,39 +516,58 @@ export default function HomePage() {
 
             <div className="space-y-8">
               <Card className="border-0 shadow-xl p-8">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                    <Phone className="h-6 w-6 text-orange-500" />
+                <CardContent>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-6 w-6 text-orange-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">Nuestra Oficina</h3>
+                      <p className="text-gray-600">
+                        Av. Santa Fe 1234, Piso 5<br />
+                        Palermo, Buenos Aires
+                        <br />
+                        Argentina
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-fluid-lg font-bold">Teléfono</h3>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
-                  </div>
-                </div>
+                </CardContent>
               </Card>
 
               <Card className="border-0 shadow-xl p-8">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                    <Mail className="h-6 w-6 text-orange-500" />
+                <CardContent>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Phone className="h-6 w-6 text-orange-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">Teléfono</h3>
+                      <p className="text-gray-600">
+                        +54 11 4567-8900
+                        <br />
+                        +54 9 11 2345-6789
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-fluid-lg font-bold">Email</h3>
-                    <p className="text-gray-600">info@marconiinmobiliaria.com</p>
-                  </div>
-                </div>
+                </CardContent>
               </Card>
 
               <Card className="border-0 shadow-xl p-8">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
-                    <MapPin className="h-6 w-6 text-orange-500" />
+                <CardContent>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Mail className="h-6 w-6 text-orange-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">Email</h3>
+                      <p className="text-gray-600">
+                        info@marconiinmobiliaria.com
+                        <br />
+                        ventas@marconiinmobiliaria.com
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-fluid-lg font-bold">Oficina</h3>
-                    <p className="text-gray-600">Av. Principal 123, Ciudad</p>
-                  </div>
-                </div>
+                </CardContent>
               </Card>
             </div>
           </div>
@@ -562,19 +579,32 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <Menu className="h-8 w-8 text-orange-500" />
-                <span className="text-fluid-xl font-black">Marconi Inmobiliaria</span>
+              <div className="flex items-center space-x-2 mb-6">
+                <Home className="h-8 w-8 text-orange-500" />
+                <span className="text-fluid-xl font-black">Marconi</span>
               </div>
-              <p className="text-gray-400">Tu socio de confianza en el mercado inmobiliario desde 2008.</p>
+              <p className="text-gray-400 mb-4">
+                Tu socio de confianza en el mercado inmobiliario argentino desde 2008.
+              </p>
+              <div className="flex space-x-4">
+                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors cursor-pointer">
+                  <span className="text-sm font-bold">f</span>
+                </div>
+                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors cursor-pointer">
+                  <span className="text-sm font-bold">ig</span>
+                </div>
+                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors cursor-pointer">
+                  <span className="text-sm font-bold">in</span>
+                </div>
+              </div>
             </div>
 
             <div>
-              <h3 className="text-fluid-lg font-bold mb-4">Servicios</h3>
+              <h3 className="font-bold text-lg mb-4">Servicios</h3>
               <ul className="space-y-2 text-gray-400">
                 <li>
                   <a href="#" className="hover:text-orange-500 transition-colors">
-                    Compra y Venta
+                    Venta
                   </a>
                 </li>
                 <li>
@@ -584,58 +614,50 @@ export default function HomePage() {
                 </li>
                 <li>
                   <a href="#" className="hover:text-orange-500 transition-colors">
-                    Asesoría Legal
+                    Inversiones
                   </a>
                 </li>
                 <li>
                   <a href="#" className="hover:text-orange-500 transition-colors">
-                    Valuaciones
+                    Tasaciones
                   </a>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-fluid-lg font-bold mb-4">Enlaces</h3>
+              <h3 className="font-bold text-lg mb-4">Propiedades</h3>
               <ul className="space-y-2 text-gray-400">
                 <li>
-                  <a href="#inicio" className="hover:text-orange-500 transition-colors">
-                    Inicio
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Casas
                   </a>
                 </li>
                 <li>
-                  <a href="#propiedades" className="hover:text-orange-500 transition-colors">
-                    Propiedades
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Departamentos
                   </a>
                 </li>
                 <li>
-                  <a href="#servicios" className="hover:text-orange-500 transition-colors">
-                    Servicios
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Terrenos
                   </a>
                 </li>
                 <li>
-                  <a href="#contacto" className="hover:text-orange-500 transition-colors">
-                    Contacto
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Comerciales
                   </a>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h3 className="text-fluid-lg font-bold mb-4">Contacto</h3>
+              <h3 className="font-bold text-lg mb-4">Contacto</h3>
               <ul className="space-y-2 text-gray-400">
-                <li className="flex items-center">
-                  <Phone className="h-4 w-4 mr-2" />
-                  +1 (555) 123-4567
-                </li>
-                <li className="flex items-center">
-                  <Mail className="h-4 w-4 mr-2" />
-                  info@marconiinmobiliaria.com
-                </li>
-                <li className="flex items-center">
-                  <MapPin className="h-4 w-4 mr-2" />
-                  Av. Principal 123, Ciudad
-                </li>
+                <li>Av. Santa Fe 1234, Piso 5</li>
+                <li>Palermo, Buenos Aires</li>
+                <li>+54 11 4567-8900</li>
+                <li>info@marconiinmobiliaria.com</li>
               </ul>
             </div>
           </div>

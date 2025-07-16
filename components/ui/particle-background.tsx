@@ -1,72 +1,33 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 
 export function ParticleBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const createParticle = () => {
+      const particle = document.createElement("div")
+      particle.className = "particle"
+      particle.style.position = "absolute"
+      particle.style.background = "rgba(249, 115, 22, 0.1)"
+      particle.style.borderRadius = "50%"
+      particle.style.pointerEvents = "none"
+      particle.style.left = Math.random() * 100 + "%"
+      particle.style.animationDuration = Math.random() * 3 + 2 + "s"
+      particle.style.opacity = (Math.random() * 0.5 + 0.1).toString()
+      particle.style.width = particle.style.height = Math.random() * 10 + 5 + "px"
 
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+      document.body.appendChild(particle)
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
+      setTimeout(() => {
+        if (particle.parentNode) {
+          particle.remove()
+        }
+      }, 5000)
     }
 
-    resizeCanvas()
-    window.addEventListener("resize", resizeCanvas)
-
-    const particles: Array<{
-      x: number
-      y: number
-      size: number
-      speedX: number
-      speedY: number
-      opacity: number
-    }> = []
-
-    const particleCount = 50
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2 + 1,
-        speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5,
-        opacity: Math.random() * 0.5 + 0.2,
-      })
-    }
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      particles.forEach((particle) => {
-        particle.x += particle.speedX
-        particle.y += particle.speedY
-
-        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1
-        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1
-
-        ctx.beginPath()
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(249, 115, 22, ${particle.opacity})`
-        ctx.fill()
-      })
-
-      requestAnimationFrame(animate)
-    }
-
-    animate()
-
-    return () => {
-      window.removeEventListener("resize", resizeCanvas)
-    }
+    const interval = setInterval(createParticle, 300)
+    return () => clearInterval(interval)
   }, [])
 
-  return <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} />
+  return null
 }

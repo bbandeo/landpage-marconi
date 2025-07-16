@@ -7,24 +7,15 @@ export function ScrollProgress() {
 
   useEffect(() => {
     const updateScrollProgress = () => {
-      const currentProgress = window.scrollY
-      const scrollHeight = document.body.scrollHeight - window.innerHeight
-
-      if (scrollHeight) {
-        setScrollProgress((currentProgress / scrollHeight) * 100)
-      }
+      const scrollPx = document.documentElement.scrollTop
+      const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight
+      const scrolled = scrollPx / winHeightPx
+      setScrollProgress(scrolled)
     }
 
     window.addEventListener("scroll", updateScrollProgress)
     return () => window.removeEventListener("scroll", updateScrollProgress)
   }, [])
 
-  return (
-    <div
-      className="scroll-progress"
-      style={{
-        transform: `scaleX(${scrollProgress / 100})`,
-      }}
-    />
-  )
+  return <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress})` }} />
 }
