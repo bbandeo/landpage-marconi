@@ -41,80 +41,34 @@ interface Property {
 
 const PropertiesPage = () => {
   const router = useRouter()
-  const [properties, setProperties] = useState<Property[]>([
-    {
-      id: 1,
-      title: "Casa familiar en Barrio Parque",
-      address: "Belgrano 1234",
-      neighborhood: "Barrio Parque",
-      price: 75000,
-      currency: "USD",
-      type: "Casa",
-      operation: "Venta",
-      bedrooms: 3,
-      bathrooms: 2,
-      area: 150,
-      status: "Disponible",
-      views: 127,
-      leads: 8,
-      createdAt: "2024-06-15",
-      featured: true
-    },
-    {
-      id: 2,
-      title: "Terreno céntrico 10x18",
-      address: "San Martín 567",
-      neighborhood: "Centro",
-      price: 48000,
-      currency: "USD",
-      type: "Terreno",
-      operation: "Venta",
-      area: 180,
-      status: "Disponible",
-      views: 89,
-      leads: 12,
-      createdAt: "2024-06-10",
-      featured: true
-    },
-    {
-      id: 3,
-      title: "Departamento luminoso",
-      address: "Moreno 890",
-      neighborhood: "Barrio Lorenzón",
-      price: 200000,
-      currency: "ARS",
-      type: "Departamento",
-      operation: "Alquiler",
-      bedrooms: 1,
-      bathrooms: 1,
-      area: 45,
-      status: "Alquilado",
-      views: 45,
-      leads: 5,
-      createdAt: "2024-06-01",
-      featured: false
-    },
-    {
-      id: 4,
-      title: "Casa quinta con pileta",
-      address: "Ruta Provincial 1 Km 5",
-      neighborhood: "Zona Rural",
-      price: 120000,
-      currency: "USD",
-      type: "Casa",
-      operation: "Venta",
-      bedrooms: 4,
-      bathrooms: 3,
-      area: 300,
-      status: "Vendido",
-      views: 203,
-      leads: 15,
-      createdAt: "2024-05-28",
-      featured: true
-    }
-  ])
+  const [properties, setProperties] = useState<Property[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
   
-  const [filteredProperties, setFilteredProperties] = useState<Property[]>(properties)
+  useEffect(() => {
+    const fetchProperties = async () => {
+      setIsLoading(true)
+      try {
+        const response = await fetch(`/api/properties?page=${currentPage}&limit=10`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch properties')
+        }
+        const data = await response.json()
+        setProperties(data.properties)
+        setTotalPages(data.totalPages)
+      } catch (error) {
+        console.error(error)
+        // Aquí podrías manejar el error, por ejemplo, mostrando un toast
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchProperties()
+  }, [currentPage])
+  
+  const [filteredProperties, setFilteredProperties] = useState<Property[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedType, setSelectedType] = useState('all')
   const [selectedOperation, setSelectedOperation] = useState('all')
@@ -210,11 +164,13 @@ const PropertiesPage = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                disabled={isLoading}
               />
             </div>
             <button 
               onClick={() => setShowFilters(!showFilters)}
               className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              disabled={isLoading}
             >
               <Filter className="w-4 h-4 mr-2" />
               Filtros
@@ -236,6 +192,7 @@ const PropertiesPage = () => {
                   value={selectedType}
                   onChange={(e) => setSelectedType(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  disabled={isLoading}
                 >
                   <option value="all">Todos</option>
                   <option value="Casa">Casa</option>
@@ -250,6 +207,7 @@ const PropertiesPage = () => {
                   value={selectedOperation}
                   onChange={(e) => setSelectedOperation(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  disabled={isLoading}
                 >
                   <option value="all">Todas</option>
                   <option value="Venta">Venta</option>
@@ -262,6 +220,7 @@ const PropertiesPage = () => {
                   value={selectedStatus}
                   onChange={(e) => setSelectedStatus(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  disabled={isLoading}
                 >
                   <option value="all">Todos</option>
                   <option value="Disponible">Disponible</option>
@@ -280,6 +239,7 @@ const PropertiesPage = () => {
                     setSelectedStatus('all')
                   }}
                   className="w-full px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  disabled={isLoading}
                 >
                   Limpiar Filtros
                 </button>
@@ -304,7 +264,16 @@ const PropertiesPage = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {filteredProperties.length === 0 ? (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center">
+                    <div className="flex flex-col items-center">
+                      <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"></div>
+                      <p className="text-gray-500">Cargando propiedades...</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredProperties.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-12 text-center">
                     <Home className="w-12 h-12 text-gray-300 mx-auto mb-4" />
@@ -414,21 +383,25 @@ const PropertiesPage = () => {
       </div>
       
       {/* Pagination */}
-      {filteredProperties.length > 0 && (
+      {totalPages > 1 && (
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-700">
-              Mostrando <span className="font-medium">1</span> a <span className="font-medium">{filteredProperties.length}</span> de{' '}
-              <span className="font-medium">{properties.length}</span> resultados
+              Página <span className="font-medium">{currentPage}</span> de <span className="font-medium">{totalPages}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <button className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors" disabled>
+              <button 
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1 || isLoading}
+                className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 Anterior
               </button>
-              <button className="px-3 py-1 text-sm bg-orange-500 text-white rounded">
-                1
-              </button>
-              <button className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors" disabled>
+              <button 
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages || isLoading}
+                className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 Siguiente
               </button>
             </div>
