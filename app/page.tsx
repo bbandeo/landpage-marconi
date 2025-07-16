@@ -1,97 +1,115 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { ParticleBackground } from "@/components/ui/particle-background"
+import { AnimatedCounter } from "@/components/ui/animated-counter"
+import { useToast } from "@/hooks/use-toast"
 import {
-  Menu,
-  X,
   MapPin,
-  Bed,
-  Bath,
-  Square,
   Phone,
   Mail,
   Star,
-  ChevronLeft,
-  ChevronRight,
   Home,
   Building,
+  TreePine,
   Users,
   Award,
+  TrendingUp,
+  Menu,
+  X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
-  const [isScrolled, setIsScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  const { toast } = useToast()
 
   const properties = [
     {
       id: 1,
-      title: "Casa Moderna en Zona Norte",
-      price: "$450,000",
-      location: "Zona Norte, Ciudad",
+      title: "Casa Moderna en Palermo",
+      price: "$850,000",
+      location: "Palermo, Buenos Aires",
       bedrooms: 4,
       bathrooms: 3,
-      area: 280,
-      type: "Venta",
+      area: "280 m²",
       image: "/placeholder.svg?height=300&width=400&text=Casa+Moderna",
+      type: "Casa",
+      featured: true,
     },
     {
       id: 2,
-      title: "Departamento Céntrico",
-      price: "$1,200/mes",
-      location: "Centro, Ciudad",
-      bedrooms: 2,
+      title: "Departamento de Lujo en Puerto Madero",
+      price: "$1,200,000",
+      location: "Puerto Madero, Buenos Aires",
+      bedrooms: 3,
       bathrooms: 2,
-      area: 85,
-      type: "Alquiler",
-      image: "/placeholder.svg?height=300&width=400&text=Departamento+Céntrico",
+      area: "180 m²",
+      image: "/placeholder.svg?height=300&width=400&text=Departamento+Lujo",
+      type: "Departamento",
+      featured: true,
     },
     {
       id: 3,
-      title: "Villa con Piscina",
-      price: "$750,000",
-      location: "Zona Residencial",
-      bedrooms: 5,
-      bathrooms: 4,
-      area: 450,
-      type: "Venta",
-      image: "/placeholder.svg?height=300&width=400&text=Villa+con+Piscina",
+      title: "Terreno Premium en Nordelta",
+      price: "$450,000",
+      location: "Nordelta, Buenos Aires",
+      bedrooms: 0,
+      bathrooms: 0,
+      area: "1,200 m²",
+      image: "/placeholder.svg?height=300&width=400&text=Terreno+Premium",
+      type: "Terreno",
+      featured: false,
     },
   ]
 
   const testimonials = [
     {
       name: "María González",
-      text: "Excelente servicio, encontré mi casa ideal gracias a Marconi Inmobiliaria.",
+      role: "Compradora",
+      content: "Excelente servicio. Me ayudaron a encontrar la casa perfecta para mi familia.",
       rating: 5,
+      image: "/placeholder.svg?height=60&width=60&text=MG",
     },
     {
       name: "Carlos Rodríguez",
-      text: "Profesionales y confiables. Recomiendo sus servicios al 100%.",
+      role: "Vendedor",
+      content: "Profesionales excepcionales. Vendieron mi propiedad en tiempo récord.",
       rating: 5,
+      image: "/placeholder.svg?height=60&width=60&text=CR",
     },
     {
       name: "Ana Martínez",
-      text: "Proceso rápido y transparente. Muy satisfecha con la atención recibida.",
+      role: "Inversora",
+      content: "La mejor asesoría en inversiones inmobiliarias. Altamente recomendados.",
       rating: 5,
+      image: "/placeholder.svg?height=60&width=60&text=AM",
     },
   ]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [testimonials.length])
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    toast({
+      title: "Mensaje enviado",
+      description: "Nos pondremos en contacto contigo pronto.",
+    })
+  }
 
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
@@ -104,196 +122,166 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          isScrolled ? "glass-effect shadow-lg" : "bg-transparent"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
+      <header className="fixed top-0 w-full z-50 glass-effect">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Home className="h-8 w-8 text-orange-500" />
-              <span className="text-fluid-xl font-black gradient-text">Marconi</span>
+              <span className="text-2xl font-black gradient-text">Marconi</span>
             </div>
 
-            <nav className="hidden md:flex space-x-8">
-              <a href="#inicio" className="text-gray-900 hover:text-orange-500 transition-colors font-medium">
+            <nav className="hidden md:flex items-center space-x-8">
+              <a href="#inicio" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
                 Inicio
               </a>
-              <a href="#propiedades" className="text-gray-900 hover:text-orange-500 transition-colors font-medium">
+              <a href="#propiedades" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
                 Propiedades
               </a>
-              <a href="#nosotros" className="text-gray-900 hover:text-orange-500 transition-colors font-medium">
-                Nosotros
+              <a href="#servicios" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+                Servicios
               </a>
-              <a href="#contacto" className="text-gray-900 hover:text-orange-500 transition-colors font-medium">
+              <a href="#contacto" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
                 Contacto
               </a>
+              <Button className="btn-premium">Consultar Ahora</Button>
             </nav>
-
-            <div className="hidden md:flex items-center space-x-4">
-              <Button variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent">
-                Iniciar Sesión
-              </Button>
-              <Button className="btn-premium">Contactar</Button>
-            </div>
 
             <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
-        </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden glass-effect border-t">
-            <div className="px-4 py-4 space-y-4">
-              <a href="#inicio" className="block text-gray-900 hover:text-orange-500 transition-colors">
-                Inicio
-              </a>
-              <a href="#propiedades" className="block text-gray-900 hover:text-orange-500 transition-colors">
-                Propiedades
-              </a>
-              <a href="#nosotros" className="block text-gray-900 hover:text-orange-500 transition-colors">
-                Nosotros
-              </a>
-              <a href="#contacto" className="block text-gray-900 hover:text-orange-500 transition-colors">
-                Contacto
-              </a>
-              <div className="pt-4 space-y-2">
-                <Button variant="outline" className="w-full border-orange-500 text-orange-500 bg-transparent">
-                  Iniciar Sesión
-                </Button>
-                <Button className="w-full btn-premium">Contactar</Button>
-              </div>
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
+              <nav className="flex flex-col space-y-4 pt-4">
+                <a href="#inicio" className="text-gray-700 hover:text-orange-500 transition-colors">
+                  Inicio
+                </a>
+                <a href="#propiedades" className="text-gray-700 hover:text-orange-500 transition-colors">
+                  Propiedades
+                </a>
+                <a href="#servicios" className="text-gray-700 hover:text-orange-500 transition-colors">
+                  Servicios
+                </a>
+                <a href="#contacto" className="text-gray-700 hover:text-orange-500 transition-colors">
+                  Contacto
+                </a>
+                <Button className="btn-premium w-full">Consultar Ahora</Button>
+              </nav>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </header>
 
       {/* Hero Section */}
-      <section
-        id="inicio"
-        className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-gray-900 to-orange-900/20 overflow-hidden"
-      >
+      <section id="inicio" className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <ParticleBackground />
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-50/90 to-white/90 z-10" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="container mx-auto px-4 text-center z-20 relative">
           <div className="animate-fade-in-up">
-            <h1 className="text-fluid-7xl font-black text-white mb-6 tracking-tight">
-              Tu hogar ideal
-              <span className="block gradient-text">te espera</span>
+            <h1 className="text-fluid-6xl font-black text-gray-900 mb-6 leading-tight">
+              Encuentra tu
+              <span className="gradient-text block">Hogar Perfecto</span>
             </h1>
-            <p className="text-fluid-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Descubre las mejores propiedades con Marconi Inmobiliaria. Más de 15 años conectando familias con sus
-              hogares perfectos.
+            <p className="text-fluid-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Descubre las mejores propiedades en Argentina con más de 15 años de experiencia en el mercado inmobiliario
+              premium.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button size="lg" className="btn-premium text-lg px-8 py-4">
                 Ver Propiedades
               </Button>
               <Button
-                size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-gray-900 text-lg px-8 py-4 bg-transparent"
+                size="lg"
+                className="text-lg px-8 py-4 border-2 border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent"
               >
-                Contactar Ahora
+                Agendar Cita
               </Button>
             </div>
+          </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16">
-              <div className="text-center animate-float" style={{ animationDelay: "0s" }}>
-                <div className="text-fluid-4xl font-black text-white mb-2">
-                  <AnimatedCounter end={500} suffix="+" />
-                </div>
-                <p className="text-gray-300">Propiedades Vendidas</p>
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-16 animate-fade-in-up">
+            <div className="text-center">
+              <div className="text-fluid-4xl font-black text-orange-500 mb-2">
+                <AnimatedCounter end={500} suffix="+" />
               </div>
-              <div className="text-center animate-float" style={{ animationDelay: "0.5s" }}>
-                <div className="text-fluid-4xl font-black text-white mb-2">
-                  <AnimatedCounter end={15} suffix="+" />
-                </div>
-                <p className="text-gray-300">Años de Experiencia</p>
+              <p className="text-gray-600 font-medium">Propiedades Vendidas</p>
+            </div>
+            <div className="text-center">
+              <div className="text-fluid-4xl font-black text-orange-500 mb-2">
+                <AnimatedCounter end={15} suffix="+" />
               </div>
-              <div className="text-center animate-float" style={{ animationDelay: "1s" }}>
-                <div className="text-fluid-4xl font-black text-white mb-2">
-                  <AnimatedCounter end={98} suffix="%" />
-                </div>
-                <p className="text-gray-300">Clientes Satisfechos</p>
+              <p className="text-gray-600 font-medium">Años de Experiencia</p>
+            </div>
+            <div className="text-center">
+              <div className="text-fluid-4xl font-black text-orange-500 mb-2">
+                <AnimatedCounter end={1200} suffix="+" />
               </div>
-              <div className="text-center animate-float" style={{ animationDelay: "1.5s" }}>
-                <div className="text-fluid-4xl font-black text-white mb-2">
-                  <AnimatedCounter end={50} suffix="+" />
-                </div>
-                <p className="text-gray-300">Agentes Expertos</p>
+              <p className="text-gray-600 font-medium">Clientes Satisfechos</p>
+            </div>
+            <div className="text-center">
+              <div className="text-fluid-4xl font-black text-orange-500 mb-2">
+                <AnimatedCounter end={98} suffix="%" />
               </div>
+              <p className="text-gray-600 font-medium">Tasa de Éxito</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Properties Section */}
-      <section id="propiedades" className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="propiedades" className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
+            <h2 className="text-fluid-4xl font-black text-gray-900 mb-4">
               Propiedades <span className="gradient-text">Destacadas</span>
             </h2>
-            <p className="text-fluid-lg text-gray-600 max-w-3xl mx-auto">
-              Explora nuestra selección de propiedades premium en las mejores ubicaciones
+            <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
+              Explora nuestra selección exclusiva de propiedades premium en las mejores ubicaciones.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {properties.map((property) => (
-              <Card key={property.id} className="card-hover overflow-hidden">
+              <Card key={property.id} className="card-hover overflow-hidden border-0 shadow-lg">
                 <div className="relative">
                   <img
                     src={property.image || "/placeholder.svg"}
                     alt={property.title}
                     className="w-full h-64 object-cover"
                   />
-                  <div className="absolute top-4 left-4">
-                    <Badge
-                      className={`${
-                        property.type === "Venta" ? "bg-green-500 hover:bg-green-600" : "bg-blue-500 hover:bg-blue-600"
-                      } text-white`}
-                    >
+                  {property.featured && (
+                    <Badge className="absolute top-4 left-4 bg-orange-500 hover:bg-orange-600">Destacada</Badge>
+                  )}
+                  <div className="absolute top-4 right-4">
+                    <Badge variant="secondary" className="bg-white/90">
                       {property.type}
                     </Badge>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                 </div>
-
-                <CardContent className="p-6">
-                  <h3 className="text-fluid-xl font-bold text-gray-900 mb-2">{property.title}</h3>
-                  <div className="flex items-center text-gray-600 mb-4">
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold">{property.title}</CardTitle>
+                  <CardDescription className="flex items-center text-gray-600">
                     <MapPin className="h-4 w-4 mr-1" />
-                    <span className="text-sm">{property.location}</span>
+                    {property.location}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-2xl font-black text-orange-500">{property.price}</span>
+                    <span className="text-gray-600">{property.area}</span>
                   </div>
-
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-4 text-sm text-gray-600">
-                      <div className="flex items-center">
-                        <Bed className="h-4 w-4 mr-1" />
-                        {property.bedrooms}
-                      </div>
-                      <div className="flex items-center">
-                        <Bath className="h-4 w-4 mr-1" />
-                        {property.bathrooms}
-                      </div>
-                      <div className="flex items-center">
-                        <Square className="h-4 w-4 mr-1" />
-                        {property.area}m²
-                      </div>
+                  {property.bedrooms > 0 && (
+                    <div className="flex gap-4 text-sm text-gray-600 mb-4">
+                      <span>{property.bedrooms} dormitorios</span>
+                      <span>{property.bathrooms} baños</span>
                     </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span className="text-fluid-2xl font-black gradient-text">{property.price}</span>
-                    <Button className="btn-premium">Ver Detalles</Button>
-                  </div>
+                  )}
+                  <Button className="w-full btn-premium">Ver Detalles</Button>
                 </CardContent>
               </Card>
             ))}
@@ -301,9 +289,9 @@ export default function HomePage() {
 
           <div className="text-center mt-12">
             <Button
-              size="lg"
               variant="outline"
-              className="border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent"
+              size="lg"
+              className="border-2 border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent"
             >
               Ver Todas las Propiedades
             </Button>
@@ -311,234 +299,300 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="nosotros" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
-                Conoce a <span className="gradient-text">Floriana Marconi</span>
-              </h2>
-              <p className="text-fluid-lg text-gray-600 mb-8 leading-relaxed">
-                Con más de 15 años de experiencia en el mercado inmobiliario, Floriana Marconi ha ayudado a cientos de
-                familias a encontrar su hogar ideal. Su compromiso con la excelencia y atención personalizada la han
-                convertido en una de las agentes más reconocidas de la región.
-              </p>
+      {/* Services Section */}
+      <section id="servicios" className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-fluid-4xl font-black text-gray-900 mb-4">
+              Nuestros <span className="gradient-text">Servicios</span>
+            </h2>
+            <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
+              Ofrecemos servicios integrales para todas tus necesidades inmobiliarias.
+            </p>
+          </div>
 
-              <div className="grid grid-cols-2 gap-8 mb-8">
-                <div className="text-center">
-                  <Building className="h-12 w-12 text-orange-500 mx-auto mb-4" />
-                  <h3 className="font-bold text-gray-900 mb-2">Experiencia</h3>
-                  <p className="text-gray-600">15+ años en el mercado</p>
-                </div>
-                <div className="text-center">
-                  <Users className="h-12 w-12 text-orange-500 mx-auto mb-4" />
-                  <h3 className="font-bold text-gray-900 mb-2">Clientes</h3>
-                  <p className="text-gray-600">500+ familias satisfechas</p>
-                </div>
-                <div className="text-center">
-                  <Award className="h-12 w-12 text-orange-500 mx-auto mb-4" />
-                  <h3 className="font-bold text-gray-900 mb-2">Reconocimientos</h3>
-                  <p className="text-gray-600">Agente del año 2023</p>
-                </div>
-                <div className="text-center">
-                  <Star className="h-12 w-12 text-orange-500 mx-auto mb-4" />
-                  <h3 className="font-bold text-gray-900 mb-2">Calificación</h3>
-                  <p className="text-gray-600">5.0 estrellas promedio</p>
-                </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="card-hover text-center p-8 border-0 shadow-lg">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Home className="h-8 w-8 text-orange-500" />
               </div>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Venta de Propiedades</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Asesoramiento completo para la venta de tu propiedad al mejor precio del mercado.
+                </p>
+              </CardContent>
+            </Card>
 
-              <Button className="btn-premium">Agendar Consulta</Button>
-            </div>
-
-            <div className="relative">
-              <div className="relative z-10">
-                <img
-                  src="/placeholder-user.jpg"
-                  alt="Floriana Marconi"
-                  className="w-full h-96 object-cover rounded-2xl shadow-2xl"
-                />
+            <Card className="card-hover text-center p-8 border-0 shadow-lg">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Building className="h-8 w-8 text-orange-500" />
               </div>
-              <div className="absolute -top-4 -right-4 w-full h-full bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl -z-10" />
-            </div>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Alquiler</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Gestión integral de alquileres con garantías y seguimiento personalizado.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="card-hover text-center p-8 border-0 shadow-lg">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <TrendingUp className="h-8 w-8 text-orange-500" />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Inversiones</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Asesoramiento especializado en inversiones inmobiliarias rentables.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="card-hover text-center p-8 border-0 shadow-lg">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Users className="h-8 w-8 text-orange-500" />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Consultoría</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Consultoría personalizada para desarrolladores e inversores institucionales.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="card-hover text-center p-8 border-0 shadow-lg">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Award className="h-8 w-8 text-orange-500" />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Tasaciones</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Tasaciones profesionales realizadas por expertos certificados.</p>
+              </CardContent>
+            </Card>
+
+            <Card className="card-hover text-center p-8 border-0 shadow-lg">
+              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <TreePine className="h-8 w-8 text-orange-500" />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Desarrollos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Participación en desarrollos inmobiliarios exclusivos y pre-ventas.</p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
-              Lo que dicen nuestros <span className="gradient-text">clientes</span>
+            <h2 className="text-fluid-4xl font-black text-gray-900 mb-4">
+              Lo que dicen nuestros <span className="gradient-text">Clientes</span>
             </h2>
+            <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
+              La satisfacción de nuestros clientes es nuestra mayor recompensa.
+            </p>
           </div>
 
-          <div className="relative">
-            <Card className="p-8 text-center">
-              <div className="flex justify-center mb-4">
-                {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
-                  <Star key={i} className="h-6 w-6 text-yellow-400 fill-current" />
-                ))}
-              </div>
-              <p className="text-fluid-xl text-gray-600 mb-6 italic">"{testimonials[currentTestimonial].text}"</p>
-              <h4 className="text-fluid-lg font-bold text-gray-900">{testimonials[currentTestimonial].name}</h4>
+          <div className="relative max-w-4xl mx-auto">
+            <Card className="border-0 shadow-xl p-8">
+              <CardContent className="text-center">
+                <div className="flex justify-center mb-6">
+                  <img
+                    src={testimonials[currentTestimonial].image || "/placeholder.svg"}
+                    alt={testimonials[currentTestimonial].name}
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
+                </div>
+                <div className="flex justify-center mb-4">
+                  {[...Array(testimonials[currentTestimonial].rating)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <blockquote className="text-fluid-lg text-gray-700 mb-6 italic">
+                  "{testimonials[currentTestimonial].content}"
+                </blockquote>
+                <div>
+                  <p className="font-bold text-gray-900">{testimonials[currentTestimonial].name}</p>
+                  <p className="text-gray-600">{testimonials[currentTestimonial].role}</p>
+                </div>
+              </CardContent>
             </Card>
 
             <button
               onClick={prevTestimonial}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
             >
               <ChevronLeft className="h-6 w-6 text-gray-600" />
             </button>
             <button
               onClick={nextTestimonial}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-all"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
             >
               <ChevronRight className="h-6 w-6 text-gray-600" />
             </button>
-          </div>
 
-          <div className="flex justify-center mt-8 space-x-2">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentTestimonial(index)}
-                className={`w-3 h-3 rounded-full transition-all ${
-                  index === currentTestimonial ? "bg-orange-500" : "bg-gray-300"
-                }`}
-              />
-            ))}
+            <div className="flex justify-center mt-6 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    index === currentTestimonial ? "bg-orange-500" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contacto" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="contacto" className="py-20">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
-              ¿Listo para encontrar tu <span className="gradient-text">hogar ideal</span>?
+            <h2 className="text-fluid-4xl font-black text-gray-900 mb-4">
+              Contáctanos <span className="gradient-text">Hoy</span>
             </h2>
-            <p className="text-fluid-lg text-gray-600 max-w-3xl mx-auto">
-              Contáctanos hoy mismo y comienza tu búsqueda con la mejor asesoría profesional
+            <p className="text-fluid-lg text-gray-600 max-w-2xl mx-auto">
+              Estamos aquí para ayudarte a encontrar la propiedad perfecta o vender la tuya.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             <div>
-              <h3 className="text-fluid-2xl font-bold text-gray-900 mb-8">Información de Contacto</h3>
-
-              <div className="space-y-6">
-                <div className="flex items-center">
-                  <Phone className="h-6 w-6 text-orange-500 mr-4" />
-                  <div>
-                    <p className="font-semibold text-gray-900">Teléfono</p>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <Mail className="h-6 w-6 text-orange-500 mr-4" />
-                  <div>
-                    <p className="font-semibold text-gray-900">Email</p>
-                    <p className="text-gray-600">info@marconipropiedades.com</p>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <MapPin className="h-6 w-6 text-orange-500 mr-4" />
-                  <div>
-                    <p className="font-semibold text-gray-900">Oficina</p>
-                    <p className="text-gray-600">Av. Principal 123, Ciudad</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-12">
-                <h4 className="text-fluid-lg font-bold text-gray-900 mb-4">Horarios de Atención</h4>
-                <div className="space-y-2 text-gray-600">
-                  <p>Lunes - Viernes: 9:00 AM - 6:00 PM</p>
-                  <p>Sábados: 9:00 AM - 2:00 PM</p>
-                  <p>Domingos: Cerrado</p>
-                </div>
-              </div>
+              <Card className="border-0 shadow-xl p-8">
+                <CardHeader>
+                  <CardTitle className="text-2xl font-bold mb-6">Envíanos un mensaje</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleContactSubmit} className="space-y-6">
+                    <div className="form-group">
+                      <Input type="text" placeholder=" " className="floating-input" required />
+                      <label className="floating-label">Nombre completo</label>
+                    </div>
+                    <div className="form-group">
+                      <Input type="email" placeholder=" " className="floating-input" required />
+                      <label className="floating-label">Email</label>
+                    </div>
+                    <div className="form-group">
+                      <Input type="tel" placeholder=" " className="floating-input" required />
+                      <label className="floating-label">Teléfono</label>
+                    </div>
+                    <div className="form-group">
+                      <Textarea placeholder=" " className="floating-input min-h-[120px]" required />
+                      <label className="floating-label">Mensaje</label>
+                    </div>
+                    <Button type="submit" className="w-full btn-premium text-lg py-3">
+                      Enviar Mensaje
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
             </div>
 
-            <Card className="p-8">
-              <h3 className="text-fluid-2xl font-bold text-gray-900 mb-6">Envíanos un Mensaje</h3>
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="form-group">
-                    <Input type="text" placeholder=" " className="floating-input peer" />
-                    <label className="floating-label">Nombre</label>
+            <div className="space-y-8">
+              <Card className="border-0 shadow-xl p-8">
+                <CardContent>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-6 w-6 text-orange-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">Nuestra Oficina</h3>
+                      <p className="text-gray-600">
+                        Av. Santa Fe 1234, Piso 5<br />
+                        Palermo, Buenos Aires
+                        <br />
+                        Argentina
+                      </p>
+                    </div>
                   </div>
-                  <div className="form-group">
-                    <Input type="email" placeholder=" " className="floating-input peer" />
-                    <label className="floating-label">Email</label>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 shadow-xl p-8">
+                <CardContent>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Phone className="h-6 w-6 text-orange-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">Teléfono</h3>
+                      <p className="text-gray-600">
+                        +54 11 4567-8900
+                        <br />
+                        +54 9 11 2345-6789
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="form-group">
-                  <Input type="tel" placeholder=" " className="floating-input peer" />
-                  <label className="floating-label">Teléfono</label>
-                </div>
-                <div className="form-group">
-                  <Textarea placeholder=" " rows={4} className="floating-input peer resize-none" />
-                  <label className="floating-label">Mensaje</label>
-                </div>
-                <Button type="submit" className="w-full btn-premium">
-                  Enviar Mensaje
-                </Button>
-              </form>
-            </Card>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 shadow-xl p-8">
+                <CardContent>
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Mail className="h-6 w-6 text-orange-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg mb-2">Email</h3>
+                      <p className="text-gray-600">
+                        info@marconiinmobiliaria.com
+                        <br />
+                        ventas@marconiinmobiliaria.com
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <div className="flex items-center space-x-2 mb-4">
+              <div className="flex items-center space-x-2 mb-6">
                 <Home className="h-8 w-8 text-orange-500" />
-                <span className="text-fluid-xl font-black">Marconi</span>
+                <span className="text-2xl font-black">Marconi</span>
               </div>
               <p className="text-gray-400 mb-4">
-                Tu socio de confianza en bienes raíces. Encontramos el hogar perfecto para ti.
+                Tu socio de confianza en el mercado inmobiliario argentino desde 2008.
               </p>
+              <div className="flex space-x-4">
+                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors cursor-pointer">
+                  <span className="text-sm font-bold">f</span>
+                </div>
+                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors cursor-pointer">
+                  <span className="text-sm font-bold">ig</span>
+                </div>
+                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-orange-500 transition-colors cursor-pointer">
+                  <span className="text-sm font-bold">in</span>
+                </div>
+              </div>
             </div>
 
             <div>
-              <h4 className="font-bold mb-4">Enlaces Rápidos</h4>
-              <ul className="space-y-2 text-gray-400">
-                <li>
-                  <a href="#inicio" className="hover:text-orange-500 transition-colors">
-                    Inicio
-                  </a>
-                </li>
-                <li>
-                  <a href="#propiedades" className="hover:text-orange-500 transition-colors">
-                    Propiedades
-                  </a>
-                </li>
-                <li>
-                  <a href="#nosotros" className="hover:text-orange-500 transition-colors">
-                    Nosotros
-                  </a>
-                </li>
-                <li>
-                  <a href="#contacto" className="hover:text-orange-500 transition-colors">
-                    Contacto
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold mb-4">Servicios</h4>
+              <h3 className="font-bold text-lg mb-4">Servicios</h3>
               <ul className="space-y-2 text-gray-400">
                 <li>
                   <a href="#" className="hover:text-orange-500 transition-colors">
-                    Venta de Propiedades
+                    Venta
                   </a>
                 </li>
                 <li>
@@ -548,28 +602,55 @@ export default function HomePage() {
                 </li>
                 <li>
                   <a href="#" className="hover:text-orange-500 transition-colors">
-                    Asesoría Legal
+                    Inversiones
                   </a>
                 </li>
                 <li>
                   <a href="#" className="hover:text-orange-500 transition-colors">
-                    Valuaciones
+                    Tasaciones
                   </a>
                 </li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-bold mb-4">Contacto</h4>
+              <h3 className="font-bold text-lg mb-4">Propiedades</h3>
               <ul className="space-y-2 text-gray-400">
-                <li>+1 (555) 123-4567</li>
-                <li>info@marconipropiedades.com</li>
-                <li>Av. Principal 123, Ciudad</li>
+                <li>
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Casas
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Departamentos
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Terrenos
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Comerciales
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-4">Contacto</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li>Av. Santa Fe 1234, Piso 5</li>
+                <li>Palermo, Buenos Aires</li>
+                <li>+54 11 4567-8900</li>
+                <li>info@marconiinmobiliaria.com</li>
               </ul>
             </div>
           </div>
 
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
             <p>&copy; 2024 Marconi Inmobiliaria. Todos los derechos reservados.</p>
           </div>
         </div>

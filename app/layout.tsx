@@ -2,15 +2,16 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { ScrollProgress } from "@/components/ui/scroll-progress"
 import { Toaster } from "@/components/ui/toaster"
+import { ScrollProgress } from "@/components/ui/scroll-progress"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Marconi Inmobiliaria - Tu hogar ideal te espera",
+  title: "Marconi Inmobiliaria - Propiedades Premium en Argentina",
   description:
-    "Encuentra la propiedad perfecta con Marconi Inmobiliaria. Especialistas en venta y alquiler de propiedades en las mejores ubicaciones.",
+    "Descubre las mejores propiedades en Argentina con Marconi Inmobiliaria. Casas, departamentos y terrenos de lujo.",
+  keywords: "inmobiliaria, propiedades, casas, departamentos, Argentina, bienes raíces",
     generator: 'v0.dev'
 }
 
@@ -20,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="es" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+    <html lang="es">
+      <body className={inter.className}>
         <ScrollProgress />
         {children}
         <Toaster />
