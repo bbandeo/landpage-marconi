@@ -25,24 +25,59 @@ export const uploadToCloudinary = async (
 	} = {}
 ) => {
 	try {
-		const result = await cloudinary.uploader.upload(file, {
+		const uploadOptions = {
 			folder: options.folder || "marconi/properties",
 			transformation: options.transformation || [{ width: 1200, height: 800, crop: "fill", quality: "auto" }, { format: "auto" }],
 			public_id: options.public_id,
 			overwrite: true,
 			resource_type: "auto"
-		});
-
-		return {
-			url: result.secure_url,
-			public_id: result.public_id,
-			width: result.width,
-			height: result.height,
-			format: result.format,
-			bytes: result.bytes
 		};
+
+		// Usamos una promesa para manejar el stream de subida
+		return new Promise((resolve, reject) => {
+			if (Buffer.isBuffer(file)) {
+				const stream = cloudinary.uploader.upload_stream(
+					uploadOptions,
+					(error, result) => {
+						if (error) {
+							console.error("Cloudinary upload stream error:", error);
+							return reject(new Error("Failed to upload image via stream"));
+						}
+						if (result) {
+							resolve({
+								url: result.secure_url,
+								public_id: result.public_id,
+								width: result.width,
+								height: result.height,
+								format: result.format,
+								bytes: result.bytes
+							});
+						}
+					}
+				);
+				// Escribimos el buffer al stream y lo cerramos
+				stream.end(file);
+			} else {
+				// Si es un string (ruta o URL), usamos el método de upload normal
+				cloudinary.uploader.upload(file, uploadOptions)
+					.then(result => {
+						resolve({
+							url: result.secure_url,
+							public_id: result.public_id,
+							width: result.width,
+							height: result.height,
+							format: result.format,
+							bytes: result.bytes
+						});
+					})
+					.catch(error => {
+						console.error("Cloudinary upload error:", error);
+						reject(new Error("Failed to upload image"));
+					});
+			}
+		});
 	} catch (error) {
-		console.error("Error uploading to Cloudinary:", error);
+		console.error("Error preparing upload to Cloudinary:", error);
 		throw new Error("Failed to upload image");
 	}
 };

@@ -129,7 +129,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <span className="sr-only">Abrir sidebar</span>
             </Button>
           </SheetTrigger>
-
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1 items-center">
               <h1 className="text-lg font-semibold text-gray-900">Panel de Administración</h1>
