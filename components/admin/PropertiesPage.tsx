@@ -2,41 +2,69 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import {
+  Building2,
+  Plus,
+  Search,
+  Eye,
+  Edit,
+  Trash2,
+  MoreHorizontal,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  Car,
+  Star,
+  DollarSign,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Card, CardContent } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { toast } from "@/hooks/use-toast"
-import { Plus, Search, MoreHorizontal, Edit, Eye, Trash2, Building2 } from "lucide-react"
 
 interface Property {
   id: number
   title: string
-  type: string
-  operation: string
+  description: string
   price: number
-  currency: string
+  type: "sale" | "rent"
+  propertyType: "house" | "apartment" | "commercial" | "land"
+  address: string
+  neighborhood: string
+  city: string
   bedrooms: number
   bathrooms: number
   area: number
-  address: string
-  neighborhood: string
-  status: string
-  featured: boolean
+  parking: number
   images: string[]
+  status: "active" | "inactive" | "sold" | "rented"
+  featured: boolean
   createdAt: string
+  updatedAt: string
 }
 
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
-  const [filterType, setFilterType] = useState("all")
-  const [filterOperation, setFilterOperation] = useState("all")
-  const [filterStatus, setFilterStatus] = useState("all")
+  const [typeFilter, setTypeFilter] = useState("all")
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [propertyTypeFilter, setPropertyTypeFilter] = useState("all")
 
   useEffect(() => {
     fetchProperties()
@@ -50,60 +78,68 @@ export default function PropertiesPage() {
         setProperties(data)
       } else {
         // Mock data for development
-        const mockProperties: Property[] = [
+        setProperties([
           {
             id: 1,
-            title: "Casa familiar en Barrio Norte",
-            type: "Casa",
-            operation: "Venta",
-            price: 120000,
-            currency: "USD",
-            bedrooms: 3,
+            title: "Hermoso departamento en Palermo",
+            description: "Moderno departamento con excelente ubicación",
+            price: 250000,
+            type: "sale",
+            propertyType: "apartment",
+            address: "Av. Santa Fe 1234",
+            neighborhood: "Palermo",
+            city: "Buenos Aires",
+            bedrooms: 2,
             bathrooms: 2,
-            area: 180,
-            address: "San Martín 1234",
-            neighborhood: "Barrio Norte",
-            status: "Disponible",
-            featured: true,
+            area: 85,
+            parking: 1,
             images: ["/placeholder.jpg"],
+            status: "active",
+            featured: true,
             createdAt: "2024-01-15T10:00:00Z",
+            updatedAt: "2024-01-20T14:30:00Z",
           },
           {
             id: 2,
-            title: "Departamento moderno en Centro",
-            type: "Departamento",
-            operation: "Alquiler",
-            price: 800,
-            currency: "USD",
-            bedrooms: 2,
-            bathrooms: 1,
-            area: 85,
-            address: "Rivadavia 567",
-            neighborhood: "Centro",
-            status: "Disponible",
-            featured: false,
+            title: "Casa familiar en Belgrano",
+            description: "Amplia casa con jardín y garage",
+            price: 180000,
+            type: "rent",
+            propertyType: "house",
+            address: "Calle Falsa 456",
+            neighborhood: "Belgrano",
+            city: "Buenos Aires",
+            bedrooms: 3,
+            bathrooms: 2,
+            area: 120,
+            parking: 2,
             images: ["/placeholder.jpg"],
-            createdAt: "2024-01-14T15:30:00Z",
+            status: "active",
+            featured: false,
+            createdAt: "2024-01-10T09:00:00Z",
+            updatedAt: "2024-01-18T16:45:00Z",
           },
           {
             id: 3,
-            title: "PH con terraza en Palermo",
-            type: "PH",
-            operation: "Venta",
-            price: 95000,
-            currency: "USD",
-            bedrooms: 2,
+            title: "Local comercial en Microcentro",
+            description: "Excelente ubicación para negocio",
+            price: 120000,
+            type: "rent",
+            propertyType: "commercial",
+            address: "Florida 789",
+            neighborhood: "Microcentro",
+            city: "Buenos Aires",
+            bedrooms: 0,
             bathrooms: 1,
-            area: 120,
-            address: "Honduras 890",
-            neighborhood: "Palermo",
-            status: "Reservado",
-            featured: true,
+            area: 60,
+            parking: 0,
             images: ["/placeholder.jpg"],
-            createdAt: "2024-01-13T09:15:00Z",
+            status: "rented",
+            featured: false,
+            createdAt: "2024-01-05T11:00:00Z",
+            updatedAt: "2024-01-25T12:00:00Z",
           },
-        ]
-        setProperties(mockProperties)
+        ])
       }
     } catch (error) {
       console.error("Error fetching properties:", error)
@@ -117,11 +153,7 @@ export default function PropertiesPage() {
     }
   }
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("¿Estás seguro de que quieres eliminar esta propiedad?")) {
-      return
-    }
-
+  const handleDeleteProperty = async (id: number) => {
     try {
       const response = await fetch(`/api/properties/${id}`, {
         method: "DELETE",
@@ -134,7 +166,7 @@ export default function PropertiesPage() {
           description: "La propiedad se eliminó correctamente.",
         })
       } else {
-        throw new Error("Error al eliminar la propiedad")
+        throw new Error("Failed to delete property")
       }
     } catch (error) {
       console.error("Error deleting property:", error)
@@ -152,84 +184,148 @@ export default function PropertiesPage() {
       property.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
       property.neighborhood.toLowerCase().includes(searchTerm.toLowerCase())
 
-    const matchesType = filterType === "all" || property.type === filterType
-    const matchesOperation = filterOperation === "all" || property.operation === filterOperation
-    const matchesStatus = filterStatus === "all" || property.status === filterStatus
+    const matchesType = typeFilter === "all" || property.type === typeFilter
+    const matchesStatus = statusFilter === "all" || property.status === statusFilter
+    const matchesPropertyType = propertyTypeFilter === "all" || property.propertyType === propertyTypeFilter
 
-    return matchesSearch && matchesType && matchesOperation && matchesStatus
+    return matchesSearch && matchesType && matchesStatus && matchesPropertyType
   })
 
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-      Disponible: "default",
-      Reservado: "secondary",
-      Vendido: "destructive",
-      Alquilado: "outline",
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-green-100 text-green-800"
+      case "inactive":
+        return "bg-gray-100 text-gray-800"
+      case "sold":
+        return "bg-blue-100 text-blue-800"
+      case "rented":
+        return "bg-purple-100 text-purple-800"
+      default:
+        return "bg-gray-100 text-gray-800"
     }
-    return <Badge variant={variants[status] || "default"}>{status}</Badge>
+  }
+
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "active":
+        return "Activa"
+      case "inactive":
+        return "Inactiva"
+      case "sold":
+        return "Vendida"
+      case "rented":
+        return "Alquilada"
+      default:
+        return status
+    }
+  }
+
+  const getTypeLabel = (type: string) => {
+    return type === "sale" ? "Venta" : "Alquiler"
+  }
+
+  const getPropertyTypeLabel = (type: string) => {
+    switch (type) {
+      case "apartment":
+        return "Departamento"
+      case "house":
+        return "Casa"
+      case "commercial":
+        return "Comercial"
+      case "land":
+        return "Terreno"
+      default:
+        return type
+    }
   }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <div>
+            <div className="h-8 w-48 bg-gray-200 rounded animate-pulse mb-2" />
+            <div className="h-4 w-64 bg-gray-200 rounded animate-pulse" />
+          </div>
+          <div className="h-10 w-32 bg-gray-200 rounded animate-pulse" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-80 bg-gray-200 rounded-lg animate-pulse" />
+          ))}
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Propiedades</h1>
-          <p className="text-gray-600 mt-2">Gestiona tu catálogo de propiedades</p>
+          <h1 className="text-2xl font-bold text-gray-900">Propiedades</h1>
+          <p className="text-gray-600">Gestiona tu portafolio de propiedades</p>
         </div>
-        <Link href="/admin/properties/new">
-          <Button>
-            <Plus className="h-4 w-4 mr-2" />
+        <Button asChild>
+          <Link href="/admin/properties/new">
+            <Plus className="w-4 h-4 mr-2" />
             Nueva Propiedad
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total</CardTitle>
-            <Building2 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{properties.length}</div>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total</p>
+                <p className="text-2xl font-bold">{properties.length}</p>
+              </div>
+              <Building2 className="w-8 h-8 text-blue-500" />
+            </div>
           </CardContent>
         </Card>
+
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Disponibles</CardTitle>
-            <Building2 className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{properties.filter((p) => p.status === "Disponible").length}</div>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Activas</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {properties.filter((p) => p.status === "active").length}
+                </p>
+              </div>
+              <Eye className="w-8 h-8 text-green-500" />
+            </div>
           </CardContent>
         </Card>
+
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Destacadas</CardTitle>
-            <Building2 className="h-4 w-4 text-orange-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{properties.filter((p) => p.featured).length}</div>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Vendidas/Alquiladas</p>
+                <p className="text-2xl font-bold text-blue-600">
+                  {properties.filter((p) => p.status === "sold" || p.status === "rented").length}
+                </p>
+              </div>
+              <DollarSign className="w-8 h-8 text-blue-500" />
+            </div>
           </CardContent>
         </Card>
+
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Vendidas/Alquiladas</CardTitle>
-            <Building2 className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {properties.filter((p) => p.status === "Vendido" || p.status === "Alquilado").length}
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Destacadas</p>
+                <p className="text-2xl font-bold text-yellow-600">{properties.filter((p) => p.featured).length}</p>
+              </div>
+              <Star className="w-8 h-8 text-yellow-500" />
             </div>
           </CardContent>
         </Card>
@@ -237,146 +333,191 @@ export default function PropertiesPage() {
 
       {/* Filters */}
       <Card>
-        <CardHeader>
-          <CardTitle>Filtros</CardTitle>
-          <CardDescription>Filtra y busca propiedades</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Buscar propiedades..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            <div className="lg:col-span-2">
+              <div className="relative">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Input
+                  placeholder="Buscar propiedades..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
             </div>
-            <Select value={filterType} onValueChange={setFilterType}>
+
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
               <SelectTrigger>
-                <SelectValue placeholder="Tipo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos los tipos</SelectItem>
-                <SelectItem value="Casa">Casa</SelectItem>
-                <SelectItem value="Departamento">Departamento</SelectItem>
-                <SelectItem value="PH">PH</SelectItem>
-                <SelectItem value="Oficina">Oficina</SelectItem>
-                <SelectItem value="Local">Local</SelectItem>
-                <SelectItem value="Terreno">Terreno</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={filterOperation} onValueChange={setFilterOperation}>
-              <SelectTrigger>
-                <SelectValue placeholder="Operación" />
+                <SelectValue placeholder="Tipo de operación" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todas las operaciones</SelectItem>
-                <SelectItem value="Venta">Venta</SelectItem>
-                <SelectItem value="Alquiler">Alquiler</SelectItem>
-                <SelectItem value="Alquiler Temporal">Alquiler Temporal</SelectItem>
+                <SelectItem value="sale">Venta</SelectItem>
+                <SelectItem value="rent">Alquiler</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
+
+            <Select value={propertyTypeFilter} onValueChange={setPropertyTypeFilter}>
+              <SelectTrigger>
+                <SelectValue placeholder="Tipo de propiedad" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos los tipos</SelectItem>
+                <SelectItem value="apartment">Departamento</SelectItem>
+                <SelectItem value="house">Casa</SelectItem>
+                <SelectItem value="commercial">Comercial</SelectItem>
+                <SelectItem value="land">Terreno</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="Estado" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos los estados</SelectItem>
-                <SelectItem value="Disponible">Disponible</SelectItem>
-                <SelectItem value="Reservado">Reservado</SelectItem>
-                <SelectItem value="Vendido">Vendido</SelectItem>
-                <SelectItem value="Alquilado">Alquilado</SelectItem>
+                <SelectItem value="active">Activa</SelectItem>
+                <SelectItem value="inactive">Inactiva</SelectItem>
+                <SelectItem value="sold">Vendida</SelectItem>
+                <SelectItem value="rented">Alquilada</SelectItem>
               </SelectContent>
             </Select>
           </div>
         </CardContent>
       </Card>
 
-      {/* Properties Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Lista de Propiedades</CardTitle>
-          <CardDescription>{filteredProperties.length} propiedades encontradas</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Propiedad</TableHead>
-                  <TableHead>Tipo</TableHead>
-                  <TableHead>Operación</TableHead>
-                  <TableHead>Precio</TableHead>
-                  <TableHead>Ubicación</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead>Destacada</TableHead>
-                  <TableHead className="text-right">Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredProperties.map((property) => (
-                  <TableRow key={property.id}>
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={property.images[0] || "/placeholder.jpg"}
-                          alt={property.title}
-                          className="w-12 h-12 rounded-lg object-cover"
-                        />
-                        <div>
-                          <div className="font-medium">{property.title}</div>
-                          <div className="text-sm text-gray-500">
-                            {property.bedrooms} dorm • {property.bathrooms} baños • {property.area}m²
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{property.type}</TableCell>
-                    <TableCell>{property.operation}</TableCell>
-                    <TableCell>
-                      {property.currency} {property.price.toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{property.neighborhood}</div>
-                        <div className="text-sm text-gray-500">{property.address}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(property.status)}</TableCell>
-                    <TableCell>{property.featured && <Badge variant="outline">Destacada</Badge>}</TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Eye className="h-4 w-4 mr-2" />
-                            Ver detalles
-                          </DropdownMenuItem>
-                          <Link href={`/admin/properties/${property.id}/edit`}>
-                            <DropdownMenuItem>
-                              <Edit className="h-4 w-4 mr-2" />
-                              Editar
-                            </DropdownMenuItem>
-                          </Link>
-                          <DropdownMenuItem onClick={() => handleDelete(property.id)} className="text-red-600">
-                            <Trash2 className="h-4 w-4 mr-2" />
+      {/* Properties Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredProperties.map((property) => (
+          <Card key={property.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+            <div className="relative">
+              <img
+                src={property.images[0] || "/placeholder.jpg"}
+                alt={property.title}
+                className="w-full h-48 object-cover"
+              />
+              {property.featured && (
+                <Badge className="absolute top-2 left-2 bg-yellow-500">
+                  <Star className="w-3 h-3 mr-1" />
+                  Destacada
+                </Badge>
+              )}
+              <Badge className={`absolute top-2 right-2 ${getStatusColor(property.status)}`}>
+                {getStatusLabel(property.status)}
+              </Badge>
+            </div>
+
+            <CardContent className="p-4">
+              <div className="space-y-3">
+                <div>
+                  <h3 className="font-semibold text-lg line-clamp-2">{property.title}</h3>
+                  <div className="flex items-center text-sm text-gray-500 mt-1">
+                    <MapPin className="w-3 h-3 mr-1" />
+                    {property.address}, {property.neighborhood}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="text-2xl font-bold text-blue-600">${property.price.toLocaleString()}</div>
+                  <Badge variant="outline">{getTypeLabel(property.type)}</Badge>
+                </div>
+
+                <div className="flex items-center space-x-4 text-sm text-gray-600">
+                  {property.bedrooms > 0 && (
+                    <div className="flex items-center">
+                      <Bed className="w-4 h-4 mr-1" />
+                      {property.bedrooms}
+                    </div>
+                  )}
+                  {property.bathrooms > 0 && (
+                    <div className="flex items-center">
+                      <Bath className="w-4 h-4 mr-1" />
+                      {property.bathrooms}
+                    </div>
+                  )}
+                  <div className="flex items-center">
+                    <Square className="w-4 h-4 mr-1" />
+                    {property.area}m²
+                  </div>
+                  {property.parking > 0 && (
+                    <div className="flex items-center">
+                      <Car className="w-4 h-4 mr-1" />
+                      {property.parking}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t">
+                  <span className="text-xs text-gray-500">{getPropertyTypeLabel(property.propertyType)}</span>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem asChild>
+                        <Link href={`/admin/properties/${property.id}/edit`}>
+                          <Edit className="w-4 h-4 mr-2" />
+                          Editar
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Eye className="w-4 h-4 mr-2" />
+                        Ver detalles
+                      </DropdownMenuItem>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                            <Trash2 className="w-4 h-4 mr-2" />
                             Eliminar
                           </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Esta acción no se puede deshacer. La propiedad será eliminada permanentemente.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteProperty(property.id)}
+                              className="bg-red-600 hover:bg-red-700"
+                            >
+                              Eliminar
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {filteredProperties.length === 0 && (
+        <div className="text-center py-12">
+          <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron propiedades</h3>
+          <p className="text-gray-500 mb-4">
+            {searchTerm || typeFilter !== "all" || statusFilter !== "all" || propertyTypeFilter !== "all"
+              ? "Intenta ajustar los filtros de búsqueda"
+              : "Comienza agregando tu primera propiedad"}
+          </p>
+          <Button asChild>
+            <Link href="/admin/properties/new">
+              <Plus className="w-4 h-4 mr-2" />
+              Agregar Propiedad
+            </Link>
+          </Button>
+        </div>
+      )}
     </div>
   )
 }
