@@ -1,141 +1,62 @@
 "use client"
 
 import { useState } from "react"
-import {
-  MessageSquare,
-  Phone,
-  Mail,
-  Calendar,
-  Search,
-  Eye,
-  MoreHorizontal,
-  Users,
-  TrendingUp,
-  Clock,
-  Star,
-  Grid3X3,
-  List,
-  Plus,
-} from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Users, Search, Filter, Download, Grid, List } from "lucide-react"
 import { useContacts } from "@/hooks/useContacts"
 import { useContactFilters } from "@/hooks/useContactFilters"
-import { useContactActions } from "@/hooks/useContactActions"
 import ContactDetailModal from "@/components/admin/ContactDetailModal"
 import ContactKanban from "@/components/admin/ContactKanban"
+import type { Contact } from "@/hooks/useContacts"
 
 export default function ContactsPage() {
-  const { contacts, loading, updateContact, deleteContact } = useContacts()
-  const { openWhatsApp, openEmail, callContact } = useContactActions()
-  const {
-    searchTerm,
-    setSearchTerm,
-    statusFilter,
-    setStatusFilter,
-    sourceFilter,
-    setSourceFilter,
-    priorityFilter,
-    setPriorityFilter,
-    dateFilter,
-    setDateFilter,
-    filteredContacts,
-  } = useContactFilters(contacts)
-
-  const [selectedContact, setSelectedContact] = useState<any>(null)
+  const { contacts, loading, updateContact } = useContacts()
+  const { filters, filteredContacts, updateFilter, clearFilters, getFilterStats } = useContactFilters(contacts)
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [viewMode, setViewMode] = useState<"table" | "kanban">("table")
+  const [viewMode, setViewMode] = useState<"kanban" | "list">("kanban")
 
-  const handleContactClick = (contact: any) => {
+  const stats = getFilterStats()
+
+  const handleContactClick = (contact: Contact) => {
     setSelectedContact(contact)
     setIsModalOpen(true)
   }
 
-  const handleStatusChange = async (contactId: number, newStatus: any) => {
-    try {
-      await updateContact(contactId, { status: newStatus })
-    } catch (error) {
-      console.error("Error updating contact status:", error)
-    }
+  const handleModalClose = () => {
+    setIsModalOpen(false)
+    setSelectedContact(null)
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "new":
-        return "bg-blue-100 text-blue-800"
-      case "contacted":
-        return "bg-yellow-100 text-yellow-800"
-      case "qualified":
-        return "bg-purple-100 text-purple-800"
-      case "converted":
-        return "bg-green-100 text-green-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
+  const exportContacts = () => {
+    const csvContent = [
+      ["Nombre", "Email", "Teléfono", "Propiedad", "Estado", "Prioridad", "Fuente", "Fecha"],
+      ...filteredContacts.map((contact) => [
+        contact.name,
+        contact.email,
+        contact.phone,
+        contact.property,
+        contact.status,
+        contact.priority,
+        contact.source,
+        new Date(contact.createdAt).toLocaleDateString("es-AR"),
+      ]),
+    ]
+      .map((row) => row.join(","))
+      .join("\n")
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case "new":
-        return "Nuevo"
-      case "contacted":
-        return "Contactado"
-      case "qualified":
-        return "Calificado"
-      case "converted":
-        return "Convertido"
-      default:
-        return status
-    }
-  }
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-800"
-      case "medium":
-        return "bg-yellow-100 text-yellow-800"
-      case "low":
-        return "bg-green-100 text-green-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
-
-  const getPriorityLabel = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "Alta"
-      case "medium":
-        return "Media"
-      case "low":
-        return "Baja"
-      default:
-        return priority
-    }
-  }
-
-  const getScoreStars = (score: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-3 h-3 ${i < Math.floor(score / 2) ? "text-yellow-400 fill-current" : "text-gray-300"}`}
-      />
-    ))
-  }
-
-  const stats = {
-    total: contacts.length,
-    new: contacts.filter((c) => c.status === "new").length,
-    contacted: contacts.filter((c) => c.status === "contacted").length,
-    qualified: contacts.filter((c) => c.status === "qualified").length,
-    converted: contacts.filter((c) => c.status === "converted").length,
-    highPriority: contacts.filter((c) => c.priority === "high").length,
+    const blob = new Blob([csvContent], { type: "text/csv" })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = "contactos.csv"
+    a.click()
+    window.URL.revokeObjectURL(url)
   }
 
   if (loading) {
@@ -150,9 +71,11 @@ export default function ContactsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 bg-gray-200 rounded animate-pulse" />
+            <div key={i} className="h-24 bg-gray-200 rounded-lg animate-pulse" />
           ))}
         </div>
+
+        <div className="h-96 bg-gray-200 rounded-lg animate-pulse" />
       </div>
     )
   }
@@ -162,94 +85,127 @@ export default function ContactsPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Contactos y Leads</h1>
-          <p className="text-gray-600">Gestiona todas las consultas y potenciales clientes</p>
+          <h1 className="text-2xl font-bold text-gray-900">Contactos</h1>
+          <p className="text-gray-600">Gestiona tus leads y consultas</p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant={viewMode === "table" ? "default" : "outline"} size="sm" onClick={() => setViewMode("table")}>
-            <List className="w-4 h-4 mr-2" />
-            Tabla
+        <div className="flex space-x-2">
+          <Button variant="outline" onClick={exportContacts}>
+            <Download className="w-4 h-4 mr-2" />
+            Exportar
           </Button>
-          <Button
-            variant={viewMode === "kanban" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode("kanban")}
-          >
-            <Grid3X3 className="w-4 h-4 mr-2" />
-            Pipeline
-          </Button>
+          <div className="flex border rounded-lg">
+            <Button
+              variant={viewMode === "kanban" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("kanban")}
+            >
+              <Grid className="w-4 h-4" />
+            </Button>
+            <Button variant={viewMode === "list" ? "default" : "ghost"} size="sm" onClick={() => setViewMode("list")}>
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Enhanced Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-        {[
-          { label: "Total Contactos", value: stats.total, color: "bg-blue-500", icon: Users },
-          { label: "Nuevos", value: stats.new, color: "bg-blue-500", icon: Plus },
-          { label: "Contactados", value: stats.contacted, color: "bg-yellow-500", icon: Phone },
-          { label: "Calificados", value: stats.qualified, color: "bg-purple-500", icon: Star },
-          { label: "Convertidos", value: stats.converted, color: "bg-green-500", icon: TrendingUp },
-          { label: "Alta Prioridad", value: stats.highPriority, color: "bg-red-500", icon: Clock },
-        ].map((stat, index) => (
-          <Card key={index}>
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-gray-600">{stat.label}</p>
-                  <p className="text-xl font-bold text-gray-900">{stat.value}</p>
-                </div>
-                <div className={`${stat.color} p-2 rounded-lg`}>
-                  <stat.icon className="w-4 h-4 text-white" />
-                </div>
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total</p>
+                <p className="text-2xl font-bold">{stats.total}</p>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+              <Users className="w-8 h-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Nuevos</p>
+                <p className="text-2xl font-bold text-blue-600">{stats.new}</p>
+              </div>
+              <Badge className="bg-blue-100 text-blue-800">Nuevo</Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Contactados</p>
+                <p className="text-2xl font-bold text-yellow-600">{stats.contacted}</p>
+              </div>
+              <Badge className="bg-yellow-100 text-yellow-800">En proceso</Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Calificados</p>
+                <p className="text-2xl font-bold text-purple-600">{stats.qualified}</p>
+              </div>
+              <Badge className="bg-purple-100 text-purple-800">Calificado</Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Convertidos</p>
+                <p className="text-2xl font-bold text-green-600">{stats.converted}</p>
+              </div>
+              <Badge className="bg-green-100 text-green-800">Convertido</Badge>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Enhanced Filters */}
+      {/* Filters */}
       <Card>
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
-            <div className="lg:col-span-2">
-              <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                <Input
-                  placeholder="Buscar contactos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Filter className="w-5 h-5 mr-2" />
+            Filtros
+          </CardTitle>
+          <CardDescription>Filtra y busca contactos</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Input
+                placeholder="Buscar contactos..."
+                value={filters.search}
+                onChange={(e) => updateFilter("search", e.target.value)}
+                className="pl-10"
+              />
             </div>
 
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={filters.status} onValueChange={(value) => updateFilter("status", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Estado" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos los estados</SelectItem>
-                <SelectItem value="new">Nuevo</SelectItem>
-                <SelectItem value="contacted">Contactado</SelectItem>
-                <SelectItem value="qualified">Calificado</SelectItem>
-                <SelectItem value="converted">Convertido</SelectItem>
+                <SelectItem value="new">Nuevos</SelectItem>
+                <SelectItem value="contacted">Contactados</SelectItem>
+                <SelectItem value="qualified">Calificados</SelectItem>
+                <SelectItem value="converted">Convertidos</SelectItem>
               </SelectContent>
             </Select>
 
-            <Select value={sourceFilter} onValueChange={setSourceFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Fuente" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas las fuentes</SelectItem>
-                <SelectItem value="Website">Website</SelectItem>
-                <SelectItem value="WhatsApp">WhatsApp</SelectItem>
-                <SelectItem value="Instagram">Instagram</SelectItem>
-                <SelectItem value="Facebook">Facebook</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+            <Select value={filters.priority} onValueChange={(value) => updateFilter("priority", value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Prioridad" />
               </SelectTrigger>
@@ -261,185 +217,109 @@ export default function ContactsPage() {
               </SelectContent>
             </Select>
 
-            <Select value={dateFilter} onValueChange={setDateFilter}>
+            <Select value={filters.source} onValueChange={(value) => updateFilter("source", value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Fecha" />
+                <SelectValue placeholder="Fuente" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Todas las fechas</SelectItem>
-                <SelectItem value="today">Hoy</SelectItem>
-                <SelectItem value="week">Esta semana</SelectItem>
-                <SelectItem value="month">Este mes</SelectItem>
+                <SelectItem value="all">Todas las fuentes</SelectItem>
+                <SelectItem value="Sitio Web">Sitio Web</SelectItem>
+                <SelectItem value="Facebook">Facebook</SelectItem>
+                <SelectItem value="WhatsApp">WhatsApp</SelectItem>
+                <SelectItem value="Referido">Referido</SelectItem>
+                <SelectItem value="Llamada">Llamada</SelectItem>
               </SelectContent>
             </Select>
+
+            <Button variant="outline" onClick={clearFilters}>
+              Limpiar filtros
+            </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Content */}
-      {viewMode === "kanban" ? (
-        <ContactKanban
-          contacts={filteredContacts}
-          onContactClick={handleContactClick}
-          onStatusChange={handleStatusChange}
-        />
-      ) : (
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="text-left py-3 px-6 font-medium text-gray-900">Contacto</th>
-                    <th className="text-left py-3 px-6 font-medium text-gray-900">Propiedad</th>
-                    <th className="text-left py-3 px-6 font-medium text-gray-900">Estado</th>
-                    <th className="text-left py-3 px-6 font-medium text-gray-900">Prioridad</th>
-                    <th className="text-left py-3 px-6 font-medium text-gray-900">Puntuación</th>
-                    <th className="text-left py-3 px-6 font-medium text-gray-900">Fuente</th>
-                    <th className="text-left py-3 px-6 font-medium text-gray-900">Fecha</th>
-                    <th className="text-left py-3 px-6 font-medium text-gray-900">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {filteredContacts.map((contact) => (
-                    <tr
-                      key={contact.id}
-                      className="hover:bg-gray-50 cursor-pointer"
-                      onClick={() => handleContactClick(contact)}
-                    >
-                      <td className="py-4 px-6">
-                        <div>
-                          <h3 className="font-medium text-gray-900">{contact.name}</h3>
-                          <div className="text-sm text-gray-500 space-y-1">
-                            <div className="flex items-center">
-                              <Mail className="w-3 h-3 mr-1" />
-                              {contact.email}
-                            </div>
-                            <div className="flex items-center">
-                              <Phone className="w-3 h-3 mr-1" />
-                              {contact.phone}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <p className="text-sm font-medium text-gray-900">{contact.property}</p>
-                        <p className="text-xs text-gray-500 mt-1 max-w-xs truncate">{contact.message}</p>
-                      </td>
-                      <td className="py-4 px-6">
-                        <Badge className={getStatusColor(contact.status)}>{getStatusLabel(contact.status)}</Badge>
-                      </td>
-                      <td className="py-4 px-6">
-                        <Badge className={getPriorityColor(contact.priority)}>
-                          {getPriorityLabel(contact.priority)}
-                        </Badge>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center space-x-1">
-                          {getScoreStars(contact.score)}
-                          <span className="text-xs text-gray-500 ml-2">({contact.score}/10)</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <span className="text-sm text-gray-900">{contact.source}</span>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="text-sm text-gray-500">
-                          <span>{new Date(contact.createdAt).toLocaleDateString("es-AR")}</span>
-                          {contact.nextActionDate && (
-                            <div className="flex items-center text-orange-600 mt-1">
-                              <Calendar className="w-3 h-3 mr-1" />
-                              <span className="text-xs">
-                                {new Date(contact.nextActionDate).toLocaleDateString("es-AR")}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="p-1"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              callContact(contact)
-                            }}
-                          >
-                            <Phone className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="p-1"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              openEmail(contact)
-                            }}
-                          >
-                            <Mail className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="p-1"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              openWhatsApp(contact)
-                            }}
-                          >
-                            <MessageSquare className="w-4 h-4" />
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button size="sm" variant="ghost" className="p-1" onClick={(e) => e.stopPropagation()}>
-                                <MoreHorizontal className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => handleContactClick(contact)}>
-                                <Eye className="w-4 h-4 mr-2" />
-                                Ver detalle
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => deleteContact(contact.id)} className="text-red-600">
-                                <MessageSquare className="w-4 h-4 mr-2" />
-                                Eliminar
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+      <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as "kanban" | "list")}>
+        <TabsList className="hidden">
+          <TabsTrigger value="kanban">Kanban</TabsTrigger>
+          <TabsTrigger value="list">Lista</TabsTrigger>
+        </TabsList>
 
-            {filteredContacts.length === 0 && (
-              <div className="text-center py-12">
-                <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron contactos</h3>
-                <p className="text-gray-500 mb-4">
-                  {searchTerm ||
-                  statusFilter !== "all" ||
-                  sourceFilter !== "all" ||
-                  priorityFilter !== "all" ||
-                  dateFilter !== "all"
-                    ? "Intenta ajustar los filtros de búsqueda"
-                    : "Los contactos aparecerán aquí cuando lleguen consultas"}
-                </p>
+        <TabsContent value="kanban">
+          <ContactKanban
+            contacts={filteredContacts}
+            onContactUpdate={updateContact}
+            onContactClick={handleContactClick}
+          />
+        </TabsContent>
+
+        <TabsContent value="list">
+          <Card>
+            <CardHeader>
+              <CardTitle>Lista de Contactos</CardTitle>
+              <CardDescription>{filteredContacts.length} contactos encontrados</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {filteredContacts.map((contact) => (
+                  <div
+                    key={contact.id}
+                    className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                    onClick={() => handleContactClick(contact)}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <h3 className="font-semibold">{contact.name}</h3>
+                          <Badge
+                            variant={
+                              contact.status === "new"
+                                ? "default"
+                                : contact.status === "converted"
+                                  ? "secondary"
+                                  : "outline"
+                            }
+                          >
+                            {contact.status === "new"
+                              ? "Nuevo"
+                              : contact.status === "contacted"
+                                ? "Contactado"
+                                : contact.status === "qualified"
+                                  ? "Calificado"
+                                  : "Convertido"}
+                          </Badge>
+                          <Badge
+                            variant={contact.priority === "high" ? "destructive" : "secondary"}
+                            className="text-xs"
+                          >
+                            {contact.priority === "high" ? "Alta" : contact.priority === "medium" ? "Media" : "Baja"}
+                          </Badge>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm text-gray-600">
+                          <div>📧 {contact.email}</div>
+                          <div>📱 {contact.phone}</div>
+                          <div>🏠 {contact.property}</div>
+                        </div>
+                        <p className="text-sm text-gray-600 mt-2 line-clamp-2">{contact.message}</p>
+                      </div>
+                      <div className="text-right text-sm text-gray-500">
+                        <div>{contact.source}</div>
+                        <div>{new Date(contact.createdAt).toLocaleDateString("es-AR")}</div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
 
       {/* Contact Detail Modal */}
       <ContactDetailModal
         contact={selectedContact}
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleModalClose}
         onUpdate={updateContact}
       />
     </div>

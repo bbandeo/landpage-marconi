@@ -1,57 +1,56 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
+import { DragDropContext, Droppable, Draggable, type DropResult } from "@hello-pangea/dnd"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Phone, Mail, MessageCircle, User, Calendar, Star } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Phone, Mail, MessageCircle, Calendar, Star, MoreHorizontal } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import type { Contact } from "@/hooks/useContacts"
 import { useContactActions } from "@/hooks/useContactActions"
 
 interface ContactKanbanProps {
   contacts: Contact[]
+  onContactUpdate: (id: number, updates: Partial<Contact>) => Promise<void>
   onContactClick: (contact: Contact) => void
-  onStatusChange: (contactId: number, newStatus: Contact["status"]) => void
 }
 
-const statusConfig = {
-  new: { label: "Nuevos", color: "bg-blue-500", count: 0 },
-  contacted: { label: "Contactados", color: "bg-yellow-500", count: 0 },
-  qualified: { label: "Calificados", color: "bg-purple-500", count: 0 },
-  converted: { label: "Convertidos", color: "bg-green-500", count: 0 },
-}
+const COLUMNS = [
+  { id: "new", title: "Nuevos", color: "bg-blue-100 border-blue-200" },
+  { id: "contacted", title: "Contactados", color: "bg-yellow-100 border-yellow-200" },
+  { id: "qualified", title: "Calificados", color: "bg-purple-100 border-purple-200" },
+  { id: "converted", title: "Convertidos", color: "bg-green-100 border-green-200" },
+]
 
-export default function ContactKanban({ contacts, onContactClick, onStatusChange }: ContactKanbanProps) {
-  const [draggedContact, setDraggedContact] = useState<Contact | null>(null)
+export default function ContactKanban({ contacts, onContactUpdate, onContactClick }: ContactKanbanProps) {
+  const [contactsState, setContactsState] = useState(contacts)
   const { openWhatsApp, openEmail, callContact } = useContactActions()
 
-  const contactsByStatus = contacts.reduce(
-    (acc, contact) => {
-      if (!acc[contact.status]) acc[contact.status] = []
-      acc[contact.status].push(contact)
-      return acc
-    },
-    {} as Record<Contact["status"], Contact[]>,
-  )
+  const handleDragEnd = async (result: DropResult) => {
+    if (!result.destination) return
 
-  const handleDragStart = (e: React.DragEvent, contact: Contact) => {
-    setDraggedContact(contact)
-    e.dataTransfer.effectAllowed = "move"
-  }
+    const { source, destination, draggableId } = result
+    const contactId = Number.parseInt(draggableId)
+    const newStatus = destination.droppableId as Contact["status"]
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = "move"
-  }
+    // Update local state immediately for better UX
+    setContactsState((prev) =>
+      prev.map((contact) => (contact.id === contactId ? { ...contact, status: newStatus } : contact)),
+    )
 
-  const handleDrop = (e: React.DragEvent, newStatus: Contact["status"]) => {
-    e.preventDefault()
-    if (draggedContact && draggedContact.status !== newStatus) {
-      onStatusChange(draggedContact.id, newStatus)
+    try {
+      await onContactUpdate(contactId, { status: newStatus })
+    } catch (error) {
+      console.error("Error updating contact status:", error)
+      // Revert local state on error
+      setContactsState(contacts)
     }
-    setDraggedContact(null)
+  }
+
+  const getContactsByStatus = (status: string) => {
+    return contactsState.filter((contact) => contact.status === status)
   }
 
   const getPriorityColor = (priority: string) => {
@@ -77,112 +76,164 @@ export default function ContactKanban({ contacts, onContactClick, onStatusChange
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {Object.entries(statusConfig).map(([status, config]) => {
-        const statusContacts = contactsByStatus[status as Contact["status"]] || []
-
-        return (
-          <div
-            key={status}
-            className="space-y-4"
-            onDragOver={handleDragOver}
-            onDrop={(e) => handleDrop(e, status as Contact["status"])}
-          >
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="flex items-center justify-between text-sm">
-                  <span>{config.label}</span>
-                  <Badge variant="secondary">{statusContacts.length}</Badge>
-                </CardTitle>
-                <div className={`h-1 ${config.color} rounded-full`} />
-              </CardHeader>
-            </Card>
-
-            <div className="space-y-3 min-h-[400px]">
-              {statusContacts.map((contact) => (
-                <Card
-                  key={contact.id}
-                  className={`cursor-pointer hover:shadow-md transition-shadow border-l-4 ${getPriorityColor(contact.priority)}`}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, contact)}
-                  onClick={() => onContactClick(contact)}
-                >
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center space-x-2">
-                          <User className="w-4 h-4 text-gray-400" />
-                          <h3 className="font-medium text-sm">{contact.name}</h3>
-                        </div>
-                        <div className="flex items-center space-x-1">{getScoreStars(contact.score)}</div>
-                      </div>
-
-                      <div className="space-y-1 text-xs text-gray-500">
-                        <div className="flex items-center space-x-1">
-                          <Mail className="w-3 h-3" />
-                          <span className="truncate">{contact.email}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Phone className="w-3 h-3" />
-                          <span>{contact.phone}</span>
-                        </div>
-                      </div>
-
-                      <div className="text-xs">
-                        <p className="font-medium text-gray-700 truncate">{contact.property}</p>
-                        <p className="text-gray-500">{new Date(contact.createdAt).toLocaleDateString("es-AR")}</p>
-                      </div>
-
-                      {contact.nextActionDate && (
-                        <div className="flex items-center space-x-1 text-xs text-orange-600">
-                          <Calendar className="w-3 h-3" />
-                          <span>{new Date(contact.nextActionDate).toLocaleDateString("es-AR")}</span>
-                        </div>
-                      )}
-
-                      <div className="flex space-x-1 pt-2">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 w-6 p-0"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            callContact(contact)
-                          }}
-                        >
-                          <Phone className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 w-6 p-0"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            openEmail(contact)
-                          }}
-                        >
-                          <Mail className="w-3 h-3" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-6 w-6 p-0"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            openWhatsApp(contact)
-                          }}
-                        >
-                          <MessageCircle className="w-3 h-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {COLUMNS.map((column) => (
+          <div key={column.id} className="space-y-4">
+            <div className={`p-4 rounded-lg ${column.color}`}>
+              <h3 className="font-semibold text-lg">{column.title}</h3>
+              <p className="text-sm text-gray-600">{getContactsByStatus(column.id).length} contactos</p>
             </div>
+
+            <Droppable droppableId={column.id}>
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={`min-h-[200px] space-y-3 p-2 rounded-lg transition-colors ${
+                    snapshot.isDraggingOver ? "bg-gray-50" : ""
+                  }`}
+                >
+                  {getContactsByStatus(column.id).map((contact, index) => (
+                    <Draggable key={contact.id} draggableId={contact.id.toString()} index={index}>
+                      {(provided, snapshot) => (
+                        <Card
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={`cursor-pointer transition-shadow hover:shadow-md border-l-4 ${getPriorityColor(
+                            contact.priority,
+                          )} ${snapshot.isDragging ? "shadow-lg rotate-2" : ""}`}
+                          onClick={() => onContactClick(contact)}
+                        >
+                          <CardHeader className="pb-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-center space-x-2">
+                                <Avatar className="w-8 h-8">
+                                  <AvatarImage src={`https://api.dicebear.com/7.x/initials/svg?seed=${contact.name}`} />
+                                  <AvatarFallback>
+                                    {contact.name
+                                      .split(" ")
+                                      .map((n) => n[0])
+                                      .join("")
+                                      .toUpperCase()}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <CardTitle className="text-sm font-medium">{contact.name}</CardTitle>
+                                  <p className="text-xs text-gray-500">{contact.email}</p>
+                                </div>
+                              </div>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
+                                    <MoreHorizontal className="w-4 h-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuItem
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      callContact(contact)
+                                    }}
+                                  >
+                                    <Phone className="w-4 h-4 mr-2" />
+                                    Llamar
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      openEmail(contact)
+                                    }}
+                                  >
+                                    <Mail className="w-4 h-4 mr-2" />
+                                    Email
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      openWhatsApp(contact)
+                                    }}
+                                  >
+                                    <MessageCircle className="w-4 h-4 mr-2" />
+                                    WhatsApp
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+                          </CardHeader>
+                          <CardContent className="pt-0">
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <Badge variant="outline" className="text-xs">
+                                  {contact.property}
+                                </Badge>
+                                <div className="flex items-center">{getScoreStars(contact.score)}</div>
+                              </div>
+
+                              <p className="text-xs text-gray-600 line-clamp-2">{contact.message}</p>
+
+                              <div className="flex items-center justify-between text-xs text-gray-500">
+                                <span>{contact.source}</span>
+                                <span>{new Date(contact.createdAt).toLocaleDateString("es-AR")}</span>
+                              </div>
+
+                              {contact.nextAction && (
+                                <div className="flex items-center text-xs text-orange-600 bg-orange-50 p-1 rounded">
+                                  <Calendar className="w-3 h-3 mr-1" />
+                                  <span className="truncate">{contact.nextAction}</span>
+                                </div>
+                              )}
+
+                              <div className="flex items-center justify-between pt-2">
+                                <Badge
+                                  variant={contact.priority === "high" ? "destructive" : "secondary"}
+                                  className="text-xs"
+                                >
+                                  {contact.priority === "high"
+                                    ? "Alta"
+                                    : contact.priority === "medium"
+                                      ? "Media"
+                                      : "Baja"}
+                                </Badge>
+                                <div className="flex space-x-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      callContact(contact)
+                                    }}
+                                  >
+                                    <Phone className="w-3 h-3" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      openWhatsApp(contact)
+                                    }}
+                                  >
+                                    <MessageCircle className="w-3 h-3" />
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
           </div>
-        )
-      })}
-    </div>
+        ))}
+      </div>
+    </DragDropContext>
   )
 }

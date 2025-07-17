@@ -3,60 +3,104 @@
 import { useState, useMemo } from "react"
 import type { Contact } from "./useContacts"
 
+export interface ContactFilters {
+  search: string
+  status: string
+  priority: string
+  source: string
+  dateRange: {
+    from?: Date
+    to?: Date
+  }
+}
+
 export function useContactFilters(contacts: Contact[]) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState<string>("all")
-  const [sourceFilter, setSourceFilter] = useState<string>("all")
-  const [priorityFilter, setPriorityFilter] = useState<string>("all")
-  const [dateFilter, setDateFilter] = useState<string>("all")
+  const [filters, setFilters] = useState<ContactFilters>({
+    search: "",
+    status: "all",
+    priority: "all",
+    source: "all",
+    dateRange: {},
+  })
 
   const filteredContacts = useMemo(() => {
     return contacts.filter((contact) => {
-      const matchesSearch =
-        contact.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.property.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        contact.phone.includes(searchTerm)
+      // Search filter
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase()
+        const matchesSearch =
+          contact.name.toLowerCase().includes(searchTerm) ||
+          contact.email.toLowerCase().includes(searchTerm) ||
+          contact.phone.includes(searchTerm) ||
+          contact.property.toLowerCase().includes(searchTerm) ||
+          contact.message.toLowerCase().includes(searchTerm)
 
-      const matchesStatus = statusFilter === "all" || contact.status === statusFilter
-      const matchesSource = sourceFilter === "all" || contact.source === sourceFilter
-      const matchesPriority = priorityFilter === "all" || contact.priority === priorityFilter
+        if (!matchesSearch) return false
+      }
 
-      let matchesDate = true
-      if (dateFilter !== "all") {
+      // Status filter
+      if (filters.status !== "all" && contact.status !== filters.status) {
+        return false
+      }
+
+      // Priority filter
+      if (filters.priority !== "all" && contact.priority !== filters.priority) {
+        return false
+      }
+
+      // Source filter
+      if (filters.source !== "all" && contact.source !== filters.source) {
+        return false
+      }
+
+      // Date range filter
+      if (filters.dateRange.from || filters.dateRange.to) {
         const contactDate = new Date(contact.createdAt)
-        const now = new Date()
 
-        switch (dateFilter) {
-          case "today":
-            matchesDate = contactDate.toDateString() === now.toDateString()
-            break
-          case "week":
-            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
-            matchesDate = contactDate >= weekAgo
-            break
-          case "month":
-            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
-            matchesDate = contactDate >= monthAgo
-            break
+        if (filters.dateRange.from && contactDate < filters.dateRange.from) {
+          return false
+        }
+
+        if (filters.dateRange.to && contactDate > filters.dateRange.to) {
+          return false
         }
       }
 
-      return matchesSearch && matchesStatus && matchesSource && matchesPriority && matchesDate
+      return true
     })
-  }, [contacts, searchTerm, statusFilter, sourceFilter, priorityFilter, dateFilter])
+  }, [contacts, filters])
+
+  const updateFilter = (key: keyof ContactFilters, value: any) => {
+    setFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      search: "",
+      status: "all",
+      priority: "all",
+      source: "all",
+      dateRange: {},
+    })
+  }
+
+  const getFilterStats = () => {
+    return {
+      total: contacts.length,
+      filtered: filteredContacts.length,
+      new: filteredContacts.filter((c) => c.status === "new").length,
+      contacted: filteredContacts.filter((c) => c.status === "contacted").length,
+      qualified: filteredContacts.filter((c) => c.status === "qualified").length,
+      converted: filteredContacts.filter((c) => c.status === "converted").length,
+      highPriority: filteredContacts.filter((c) => c.priority === "high").length,
+    }
+  }
 
   return {
-    searchTerm,
-    setSearchTerm,
-    statusFilter,
-    setStatusFilter,
-    sourceFilter,
-    setSourceFilter,
-    priorityFilter,
-    setPriorityFilter,
-    dateFilter,
-    setDateFilter,
+    filters,
     filteredContacts,
+    updateFilter,
+    clearFilters,
+    getFilterStats,
   }
 }
