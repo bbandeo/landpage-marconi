@@ -1,607 +1,616 @@
-// app/page.tsx - Landing Page Conectada con Backend
 "use client"
 
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { AnimatedCounter } from "@/components/ui/animated-counter"
+import { ParticleBackground } from "@/components/ui/particle-background"
 import {
-  Phone,
-  MessageCircle,
-  Instagram,
+  Menu,
+  X,
   Home,
-  Star,
-  Play,
-  Send,
-  ArrowRight,
-  Users,
-  Award,
-  Clock,
-  Eye,
+  MapPin,
+  Phone,
+  Mail,
   Bed,
   Bath,
   Square,
-  MapPin
+  Heart,
+  Search,
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
 } from "lucide-react"
 
-// Importar servicios
-import { useIsClient } from "@/hooks/use-is-client"
-import { PropertyService } from "@/services/properties"
-import { LeadsService } from "@/services/leads"
-import type { Property } from "@/lib/supabase"
-
-export default function MarconiInmobiliaria() {
-  const [currentStat, setCurrentStat] = useState(0)
-  const [scrolled, setScrolled] = useState(false)
-  const isClient = useIsClient()
-
-  // Estados para datos del backend
-  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
-  const [loadingProperties, setLoadingProperties] = useState(true)
-  const [contactForm, setContactForm] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: '',
-    propertyId: null as number | null
-  })
-  const [submitLoading, setSubmitLoading] = useState(false)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
-
-  const stats = [
-    { number: "200+", label: "Propiedades Vendidas" },
-    { number: "98%", label: "Clientes Satisfechos" },
-    { number: "5", label: "Años de Experiencia" },
-    { number: "24/7", label: "Atención Disponible" },
-  ]
-
-  // Cargar propiedades destacadas al montar el componente
-  useEffect(() => {
-    const loadFeaturedProperties = async () => {
-      try {
-        setLoadingProperties(true)
-        const properties = await PropertyService.getFeaturedProperties()
-        setFeaturedProperties(properties)
-      } catch (error) {
-        console.error('Error loading featured properties:', error)
-      } finally {
-        setLoadingProperties(false)
-      }
-    }
-
-    loadFeaturedProperties()
-  }, [])
+export default function HomePage() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [activeFilter, setActiveFilter] = useState("todos")
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentStat((prev) => (prev + 1) % stats.length)
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    if (!isClient) {
-      return
-    }
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
+      setIsScrolled(window.scrollY > 50)
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [isClient])
+  }, [])
 
-  // Formatear precio
-  const formatPrice = (price: number, currency: string) => {
-    return `$${price.toLocaleString()} ${currency}`
-  }
+  const properties = [
+    {
+      id: 1,
+      title: "Casa Moderna en Zona Norte",
+      price: 450000,
+      type: "venta",
+      location: "Zona Norte",
+      bedrooms: 4,
+      bathrooms: 3,
+      area: 280,
+      image: "/placeholder.svg?height=300&width=400&text=Casa+Moderna",
+      featured: true,
+    },
+    {
+      id: 2,
+      title: "Departamento Céntrico",
+      price: 1200,
+      type: "alquiler",
+      location: "Centro",
+      bedrooms: 2,
+      bathrooms: 2,
+      area: 85,
+      image: "/placeholder.svg?height=300&width=400&text=Departamento+Céntrico",
+      featured: false,
+    },
+    {
+      id: 3,
+      title: "Casa con Jardín",
+      price: 320000,
+      type: "venta",
+      location: "Zona Oeste",
+      bedrooms: 3,
+      bathrooms: 2,
+      area: 220,
+      image: "/placeholder.svg?height=300&width=400&text=Casa+con+Jardín",
+      featured: true,
+    },
+    {
+      id: 4,
+      title: "Loft Industrial",
+      price: 1800,
+      type: "alquiler",
+      location: "Zona Este",
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 120,
+      image: "/placeholder.svg?height=300&width=400&text=Loft+Industrial",
+      featured: false,
+    },
+  ]
 
-  // Manejar envío del formulario de contacto
-  const handleContactSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!contactForm.name || !contactForm.message) {
-      alert('Por favor completa al menos tu nombre y mensaje')
-      return
-    }
-
-    setSubmitLoading(true)
-    
-    try {
-      await LeadsService.createLead({
-        name: contactForm.name,
-        email: contactForm.email || null,
-        phone: contactForm.phone || null,
-        message: contactForm.message,
-        property_id: contactForm.propertyId,
-        lead_source: 'website'
-      })
-
-      setSubmitSuccess(true)
-      setContactForm({
-        name: '',
-        email: '',
-        phone: '',
-        message: '',
-        propertyId: null
-      })
-      
-      setTimeout(() => setSubmitSuccess(false), 5000)
-    } catch (error) {
-      console.error('Error sending contact form:', error)
-      alert('Error al enviar el mensaje. Intenta nuevamente.')
-    } finally {
-      setSubmitLoading(false)
-    }
-  }
-
-  // Manejar interés en una propiedad específica
-  const handlePropertyInterest = (property: Property) => {
-    setContactForm(prev => ({
-      ...prev,
-      message: `Hola, me interesa la propiedad: ${property.title} (${formatPrice(property.price, property.currency)}). Me gustaría recibir más información.`,
-      propertyId: property.id
-    }))
-    
-    // Scroll al formulario de contacto
-    document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })
-  }
+  const filteredProperties = properties.filter((property) => activeFilter === "todos" || property.type === activeFilter)
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
       <header
-        className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${scrolled ? "bg-black bg-opacity-90 py-2" : "py-4"}`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? "bg-white/95 backdrop-blur-lg shadow-lg" : "bg-transparent"
+        }`}
       >
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className={`transition-all duration-300 ${scrolled ? "text-lg" : "text-xl"}`}>
-            <span className="font-bold text-white">MARCONI</span>
-            <span className="text-orange-500 font-bold"> INMOBILIARIA</span>
-          </div>
-          <div className="flex gap-2">
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white">
-              <Phone className="w-4 h-4 mr-1" /> (03482) 15-123456
-            </Button>
-            <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white">
-              <MessageCircle className="w-4 h-4 mr-1" /> WhatsApp
-            </Button>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-2">
+              <Home className="h-8 w-8 text-orange-500" />
+              <span className="text-2xl font-black text-gray-900">Marconi</span>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-8">
+              <a href="#inicio" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+                Inicio
+              </a>
+              <a href="#propiedades" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+                Propiedades
+              </a>
+              <a href="#nosotros" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+                Nosotros
+              </a>
+              <a href="#contacto" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+                Contacto
+              </a>
+            </nav>
+
+            <div className="hidden md:flex items-center space-x-4">
+              <Button variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent">
+                <Phone className="h-4 w-4 mr-2" />
+                Llamar
+              </Button>
+              <Button className="bg-orange-500 hover:bg-orange-600 btn-premium">Consultar</Button>
+            </div>
+
+            {/* Mobile menu button */}
+            <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t shadow-lg">
+            <div className="px-4 py-6 space-y-4">
+              <a href="#inicio" className="block text-gray-700 hover:text-orange-500 font-medium">
+                Inicio
+              </a>
+              <a href="#propiedades" className="block text-gray-700 hover:text-orange-500 font-medium">
+                Propiedades
+              </a>
+              <a href="#nosotros" className="block text-gray-700 hover:text-orange-500 font-medium">
+                Nosotros
+              </a>
+              <a href="#contacto" className="block text-gray-700 hover:text-orange-500 font-medium">
+                Contacto
+              </a>
+              <div className="pt-4 space-y-2">
+                <Button variant="outline" className="w-full border-orange-500 text-orange-500 bg-transparent">
+                  <Phone className="h-4 w-4 mr-2" />
+                  Llamar
+                </Button>
+                <Button className="w-full bg-orange-500 hover:bg-orange-600">Consultar</Button>
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-black via-gray-900 to-orange-900">
-        {/* Stats flotantes */}
-        <div className="absolute top-20 right-8 bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-4 text-white z-20 border border-white border-opacity-20">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-orange-500">{stats[currentStat].number}</div>
-            <div className="text-xs">{stats[currentStat].label}</div>
+      <section
+        id="inicio"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-orange-50"
+      >
+        <ParticleBackground />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="animate-slide-up">
+            <h1 className="text-fluid-7xl font-black text-gray-900 mb-6 tracking-tight">
+              Tu hogar ideal
+              <span className="block gradient-text">te espera</span>
+            </h1>
+
+            <p className="text-fluid-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Descubre propiedades excepcionales con Marconi Inmobiliaria. Más de 15 años conectando familias con sus
+              hogares perfectos.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 btn-premium text-lg px-8 py-4">
+                <Search className="h-5 w-5 mr-2" />
+                Explorar Propiedades
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-2 border-gray-300 hover:border-orange-500 text-lg px-8 py-4 bg-transparent"
+              >
+                <Phone className="h-5 w-5 mr-2" />
+                Contactar Ahora
+              </Button>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+              <div className="text-center animate-float" style={{ animationDelay: "0s" }}>
+                <div className="text-fluid-4xl font-black text-orange-500 mb-2">
+                  <AnimatedCounter end={500} suffix="+" />
+                </div>
+                <p className="text-gray-600 font-medium">Propiedades Vendidas</p>
+              </div>
+              <div className="text-center animate-float" style={{ animationDelay: "0.5s" }}>
+                <div className="text-fluid-4xl font-black text-orange-500 mb-2">
+                  <AnimatedCounter end={15} suffix="+" />
+                </div>
+                <p className="text-gray-600 font-medium">Años de Experiencia</p>
+              </div>
+              <div className="text-center animate-float" style={{ animationDelay: "1s" }}>
+                <div className="text-fluid-4xl font-black text-orange-500 mb-2">
+                  <AnimatedCounter end={98} suffix="%" />
+                </div>
+                <p className="text-gray-600 font-medium">Clientes Satisfechos</p>
+              </div>
+              <div className="text-center animate-float" style={{ animationDelay: "1.5s" }}>
+                <div className="text-fluid-4xl font-black text-orange-500 mb-2">
+                  <AnimatedCounter end={24} suffix="/7" />
+                </div>
+                <p className="text-gray-600 font-medium">Atención Disponible</p>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        <div className="relative z-20 text-center text-white px-4 max-w-5xl">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Tu próximo
-            <span className="block text-orange-500">hogar perfecto</span>
-          </h1>
-          <p className="text-lg md:text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            La inmobiliaria que está revolucionando Reconquista con tecnología y confianza local
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-orange-500 hover:bg-orange-600 text-white"
-              onClick={() => document.getElementById('propiedades')?.scrollIntoView({ behavior: 'smooth' })}
+      {/* Properties Section */}
+      <section id="propiedades" className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
+              Propiedades <span className="gradient-text">Destacadas</span>
+            </h2>
+            <p className="text-fluid-lg text-gray-600 max-w-3xl mx-auto">
+              Descubre nuestra selección de propiedades premium, cuidadosamente elegidas para ofrecerte las mejores
+              opciones del mercado.
+            </p>
+          </div>
+
+          {/* Filters */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <Button
+              variant={activeFilter === "todos" ? "default" : "outline"}
+              onClick={() => setActiveFilter("todos")}
+              className={activeFilter === "todos" ? "bg-orange-500 hover:bg-orange-600" : "hover:border-orange-500"}
             >
-              Ver propiedades <ArrowRight className="w-4 h-4 ml-1" />
+              Todas
             </Button>
+            <Button
+              variant={activeFilter === "venta" ? "default" : "outline"}
+              onClick={() => setActiveFilter("venta")}
+              className={activeFilter === "venta" ? "bg-orange-500 hover:bg-orange-600" : "hover:border-orange-500"}
+            >
+              En Venta
+            </Button>
+            <Button
+              variant={activeFilter === "alquiler" ? "default" : "outline"}
+              onClick={() => setActiveFilter("alquiler")}
+              className={activeFilter === "alquiler" ? "bg-orange-500 hover:bg-orange-600" : "hover:border-orange-500"}
+            >
+              En Alquiler
+            </Button>
+          </div>
+
+          {/* Properties Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {filteredProperties.map((property) => (
+              <Card key={property.id} className="card-hover overflow-hidden border-0 shadow-lg">
+                <div className="relative">
+                  <img
+                    src={property.image || "/placeholder.svg"}
+                    alt={property.title}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    <Badge
+                      className={`${
+                        property.type === "venta" ? "bg-green-500 hover:bg-green-600" : "bg-blue-500 hover:bg-blue-600"
+                      } text-white`}
+                    >
+                      {property.type === "venta" ? "Venta" : "Alquiler"}
+                    </Badge>
+                    {property.featured && (
+                      <Badge className="bg-orange-500 hover:bg-orange-600 text-white">Destacada</Badge>
+                    )}
+                  </div>
+                  <button className="absolute top-4 right-4 p-2 bg-white/90 rounded-full hover:bg-white transition-colors">
+                    <Heart className="h-4 w-4 text-gray-600 hover:text-red-500" />
+                  </button>
+                </div>
+
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{property.title}</h3>
+                  <p className="text-gray-600 mb-4 flex items-center">
+                    <MapPin className="h-4 w-4 mr-1" />
+                    {property.location}
+                  </p>
+
+                  <div className="flex items-center justify-between mb-4 text-sm text-gray-600">
+                    <div className="flex items-center">
+                      <Bed className="h-4 w-4 mr-1" />
+                      {property.bedrooms}
+                    </div>
+                    <div className="flex items-center">
+                      <Bath className="h-4 w-4 mr-1" />
+                      {property.bathrooms}
+                    </div>
+                    <div className="flex items-center">
+                      <Square className="h-4 w-4 mr-1" />
+                      {property.area}m²
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="text-2xl font-black text-orange-500">
+                      ${property.price.toLocaleString()}
+                      {property.type === "alquiler" && <span className="text-sm text-gray-600">/mes</span>}
+                    </div>
+                    <Button size="sm" className="bg-orange-500 hover:bg-orange-600 btn-premium">
+                      Ver Más
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
             <Button
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white hover:text-black bg-transparent"
+              className="border-2 border-orange-500 text-orange-500 hover:bg-orange-50 btn-premium bg-transparent"
             >
-              <Play className="w-4 h-4 mr-1" /> Ver video
+              Ver Todas las Propiedades
             </Button>
           </div>
         </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white animate-bounce">
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
-          </div>
-        </div>
       </section>
 
-      {/* Trust Indicators */}
-      <section className="py-8 bg-gray-900 border-b border-orange-500 border-opacity-30">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            {stats.map((stat, index) => (
-              <div key={index} className="group cursor-pointer">
-                <div className="text-2xl md:text-3xl font-bold text-orange-500 group-hover:scale-110 transition-transform">
-                  {stat.number}
-                </div>
-                <div className="text-sm text-gray-300">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Propiedades Destacadas - CONECTADO CON BACKEND */}
-      <section id="propiedades" className="py-16 bg-gradient-to-b from-gray-900 to-black relative overflow-hidden">
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-              PROPIEDADES <span className="text-orange-500">DESTACADAS</span>
-            </h2>
-            <p className="text-lg text-gray-300 mb-8">Las mejores oportunidades de inversión en Reconquista</p>
-          </div>
-
-          {loadingProperties ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500 mx-auto"></div>
-              <p className="text-white mt-4">Cargando propiedades...</p>
-            </div>
-          ) : (
-            <>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {featuredProperties.map((property) => (
-                  <Card
-                    key={property.id}
-                    className="bg-black border-orange-500 border-2 overflow-hidden group hover:scale-105 transition-all duration-300"
-                  >
-                    <div className="relative overflow-hidden">
-                      {property.images && property.images.length > 0 ? (
-                        <img 
-                          src={property.images[0]} 
-                          alt={property.title}
-                          className="w-full h-48 object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-48 bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center text-white">
-                          <Home className="w-8 h-8 mr-2" /> Sin imagen
-                        </div>
-                      )}
-
-                      <div className="absolute top-4 left-4 bg-orange-500 text-white px-3 py-1 rounded-full font-bold text-sm">
-                        {property.operation_type.toUpperCase()}
-                      </div>
-
-                      {property.featured && (
-                        <div className="absolute top-4 right-4 bg-yellow-500 text-black px-2 py-1 rounded-full text-xs flex items-center gap-1">
-                          <Star className="w-3 h-3" />
-                          DESTACADA
-                        </div>
-                      )}
-
-                      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black to-transparent p-4">
-                        <div className="text-2xl font-bold text-white mb-1">
-                          {formatPrice(property.price, property.currency)}
-                        </div>
-                        <div className="text-orange-500 font-semibold text-sm flex items-center">
-                          <MapPin className="w-3 h-3 mr-1" />
-                          {property.neighborhood}, Reconquista
-                        </div>
-                      </div>
-                    </div>
-
-                    <CardContent className="p-4">
-                      <h3 className="font-bold text-white mb-2">{property.title}</h3>
-                      
-                      {(property.bedrooms || property.bathrooms || property.area_m2) && (
-                        <div className="flex items-center gap-4 text-white mb-3 text-sm">
-                          {property.bedrooms && (
-                            <span className="flex items-center">
-                              <Bed className="w-4 h-4 mr-1" />
-                              {property.bedrooms}
-                            </span>
-                          )}
-                          {property.bathrooms && (
-                            <span className="flex items-center">
-                              <Bath className="w-4 h-4 mr-1" />
-                              {property.bathrooms}
-                            </span>
-                          )}
-                          <span className="flex items-center">
-                            <Square className="w-4 h-4 mr-1" />
-                            {property.area_m2}m²
-                          </span>
-                        </div>
-                      )}
-
-                      {property.features && property.features.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mb-4">
-                          {property.features.slice(0, 3).map((feature, i) => (
-                            <span key={i} className="bg-orange-500 bg-opacity-20 text-orange-500 px-2 py-1 rounded text-xs">
-                              {feature}
-                            </span>
-                          ))}
-                          {property.features.length > 3 && (
-                            <span className="text-gray-400 text-xs">+{property.features.length - 3} más</span>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="flex gap-2">
-                        <Button 
-                          className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-sm"
-                          onClick={() => handlePropertyInterest(property)}
-                        >
-                          Me interesa <ArrowRight className="w-3 h-3 ml-1" />
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white bg-transparent"
-                          onClick={() => handlePropertyInterest(property)}
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              {featuredProperties.length === 0 && (
-                <div className="text-center py-12">
-                  <Home className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <p className="text-white text-lg">No hay propiedades destacadas disponibles</p>
-                  <p className="text-gray-400">Próximamente agregaremos nuevas propiedades</p>
-                </div>
-              )}
-
-              <div className="text-center mt-8">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white bg-transparent"
-                  onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })}
-                >
-                  Ver todas las propiedades <ArrowRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            </>
-          )}
-        </div>
-      </section>
-
-      {/* Resto de las secciones existentes... */}
-      {/* Quiénes Somos */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      {/* About Section */}
+      <section id="nosotros" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <div className="inline-block bg-orange-500 bg-opacity-10 text-orange-500 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                Conocé nuestro equipo
-              </div>
-
-              <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-                ¿Quiénes <span className="text-orange-500">somos?</span>
+              <h2 className="text-fluid-5xl font-black text-gray-900 mb-6">
+                Conoce a <span className="gradient-text">Floriana Marconi</span>
               </h2>
+              <p className="text-fluid-lg text-gray-600 mb-6 leading-relaxed">
+                Con más de 15 años de experiencia en el mercado inmobiliario, Floriana Marconi se ha consolidado como
+                una de las profesionales más confiables y exitosas del sector.
+              </p>
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                Su enfoque personalizado y su profundo conocimiento del mercado local han ayudado a cientos de familias
+                a encontrar su hogar ideal. Floriana no solo vende propiedades, construye sueños y crea hogares.
+              </p>
 
-              <div className="space-y-4 text-gray-700 mb-6">
-                <p>
-                  Somos <strong>Marconi Inmobiliaria</strong>, una empresa local que entiende tus necesidades.
-                  Conocemos Reconquista como la palma de nuestra mano y te acompañamos en cada paso.
-                </p>
-                <p>
-                  Con un enfoque joven y dinámico, nos especializamos en encontrar la propiedad perfecta para cada
-                  cliente. Desde casas familiares hasta inversiones estratégicas.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {[
-                  { icon: Star, text: "Confianza local" },
-                  { icon: Home, text: "Conocimiento del mercado" },
-                  { icon: Users, text: "Atención personalizada" },
-                  { icon: Award, text: "Experiencia comprobada" },
-                ].map((feature, index) => (
-                  <div key={index} className="flex items-center gap-2 group">
-                    <div className="bg-orange-500 bg-opacity-10 p-2 rounded-full group-hover:bg-orange-500 transition-colors">
-                      <feature.icon className="w-4 h-4" />
-                    </div>
-                    <span className="font-semibold text-gray-800 text-sm">{feature.text}</span>
+              <div className="grid grid-cols-2 gap-6 mb-8">
+                <div className="text-center p-4 bg-orange-50 rounded-lg">
+                  <div className="text-3xl font-black text-orange-500 mb-2">
+                    <AnimatedCounter end={500} suffix="+" />
                   </div>
-                ))}
+                  <p className="text-gray-700 font-medium">Ventas Exitosas</p>
+                </div>
+                <div className="text-center p-4 bg-orange-50 rounded-lg">
+                  <div className="text-3xl font-black text-orange-500 mb-2">
+                    <AnimatedCounter end={98} suffix="%" />
+                  </div>
+                  <p className="text-gray-700 font-medium">Satisfacción</p>
+                </div>
               </div>
 
-              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white">
-                Conocé más <ArrowRight className="w-4 h-4 ml-1" />
+              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 btn-premium">
+                <Mail className="h-5 w-5 mr-2" />
+                Contactar a Floriana
               </Button>
             </div>
 
             <div className="relative">
-              <div className="bg-orange-500 bg-opacity-20 rounded-3xl p-6 transform rotate-3">
-                <div className="bg-gray-300 rounded-2xl h-80 flex items-center justify-center text-gray-600">
-                  <Users className="w-16 h-16 mr-2" /> Foto de Floriana Marconi
-                </div>
+              <div className="relative z-10">
+                <img
+                  src="/placeholder.svg?height=600&width=500&text=Floriana+Marconi"
+                  alt="Floriana Marconi"
+                  className="w-full rounded-2xl shadow-2xl"
+                />
               </div>
-              <div className="absolute -bottom-4 -left-4 bg-black text-white p-4 rounded-xl">
-                <p className="font-bold text-orange-500">Floriana Marconi</p>
-                <p className="text-sm">Fundadora & Agente Principal</p>
-                <div className="flex gap-1 mt-1">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Star key={i} className="w-3 h-3 fill-orange-500 text-orange-500" />
-                  ))}
-                </div>
-              </div>
+              <div className="absolute -top-4 -right-4 w-full h-full bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl -z-10"></div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Formulario de Contacto - CONECTADO CON BACKEND */}
-      <section id="contact-form" className="py-16 bg-gray-900">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div>
-              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
-                Contacto <span className="text-orange-500">Rápido</span>
-              </h2>
-              <p className="text-lg text-gray-300 mb-8">¿Tenés una consulta? Te respondemos al toque.</p>
+      {/* Contact Section */}
+      <section id="contacto" className="py-24 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-fluid-5xl font-black mb-6">
+              ¿Listo para encontrar tu <span className="gradient-text">hogar ideal</span>?
+            </h2>
+            <p className="text-fluid-lg text-gray-300 max-w-3xl mx-auto">
+              Contáctanos hoy mismo y comienza el camino hacia la propiedad de tus sueños. Estamos aquí para ayudarte en
+              cada paso del proceso.
+            </p>
+          </div>
 
-              <div className="space-y-4">
-                {[
-                  { icon: Phone, label: "Teléfono", value: "(03482) 15-123456", color: "bg-orange-500" },
-                  { icon: MessageCircle, label: "WhatsApp", value: "+54 9 3482 123456", color: "bg-green-600" },
-                  { icon: Instagram, label: "Instagram", value: "@marconi.inmobiliarios", color: "bg-pink-600" },
-                ].map((contact, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-4 text-white p-4 rounded-xl hover:bg-gray-800 transition-all cursor-pointer group"
-                  >
-                    <div className={`${contact.color} p-4 rounded-full group-hover:scale-110 transition-transform`}>
-                      <contact.icon className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-semibold">{contact.label}</p>
-                      <p className="text-gray-300">{contact.value}</p>
-                    </div>
-                    <ArrowRight className="w-4 h-4" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div>
+              <h3 className="text-2xl font-bold mb-8">Información de Contacto</h3>
+
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <Phone className="h-6 w-6 text-white" />
                   </div>
-                ))}
+                  <div>
+                    <p className="font-semibold">Teléfono</p>
+                    <p className="text-gray-300">+54 11 1234-5678</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <Mail className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Email</p>
+                    <p className="text-gray-300">info@marconipropiedades.com</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Dirección</p>
+                    <p className="text-gray-300">Av. Principal 1234, Ciudad</p>
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-6 p-4 bg-orange-500 bg-opacity-10 rounded-xl border border-orange-500 border-opacity-30">
-                <div className="flex items-center gap-3 text-orange-500">
-                  <Clock className="w-5 h-5" />
-                  <span className="font-semibold">Tiempo de respuesta: 15 minutos</span>
+              <div className="mt-8">
+                <h4 className="text-lg font-semibold mb-4">Síguenos en redes sociales</h4>
+                <div className="flex space-x-4">
+                  <a
+                    href="#"
+                    className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors"
+                  >
+                    <Facebook className="h-5 w-5 text-white" />
+                  </a>
+                  <a
+                    href="#"
+                    className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors"
+                  >
+                    <Instagram className="h-5 w-5 text-white" />
+                  </a>
+                  <a
+                    href="#"
+                    className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors"
+                  >
+                    <Twitter className="h-5 w-5 text-white" />
+                  </a>
+                  <a
+                    href="#"
+                    className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors"
+                  >
+                    <Linkedin className="h-5 w-5 text-white" />
+                  </a>
                 </div>
               </div>
             </div>
 
-            <Card className="bg-black border-orange-500 border-2">
-              <CardContent className="p-6">
-                {submitSuccess && (
-                  <div className="mb-6 p-4 bg-green-500 bg-opacity-20 border border-green-500 rounded-lg">
-                    <p className="text-green-400 text-center">
-                      ¡Mensaje enviado! Te contactaremos pronto.
-                    </p>
-                  </div>
-                )}
-
-                <div onSubmit={handleContactSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-white text-sm font-medium mb-2">
-                        Nombre *
-                      </label>
-                      <Input
-                        value={contactForm.name}
-                        onChange={(e) => setContactForm(prev => ({ ...prev, name: e.target.value }))}
-                        className="bg-gray-800 border-gray-700 text-white"
-                        placeholder="Tu nombre"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-white text-sm font-medium mb-2">
-                        Email
-                      </label>
-                      <Input
-                        type="email"
-                        value={contactForm.email}
-                        onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
-                        className="bg-gray-800 border-gray-700 text-white"
-                        placeholder="tu@email.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      Teléfono
-                    </label>
+            <div>
+              <form className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="form-group">
                     <Input
-                      value={contactForm.phone}
-                      onChange={(e) => setContactForm(prev => ({ ...prev, phone: e.target.value }))}
-                      className="bg-gray-800 border-gray-700 text-white"
-                      placeholder="+54 9 3482 123456"
+                      type="text"
+                      placeholder=" "
+                      className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500"
                     />
+                    <label className="floating-label">Nombre</label>
                   </div>
-
-                  <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      Mensaje *
-                    </label>
-                    <Textarea
-                      value={contactForm.message}
-                      onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
-                      className="bg-gray-800 border-gray-700 text-white min-h-24"
-                      placeholder="Contanos qué propiedad te interesa o qué necesitas..."
-                      required
+                  <div className="form-group">
+                    <Input
+                      type="email"
+                      placeholder=" "
+                      className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500"
                     />
+                    <label className="floating-label">Email</label>
                   </div>
-
-                  <Button 
-                    className="w-full bg-orange-500 hover:bg-orange-600 text-white"
-                    onClick={handleContactSubmit}
-                    disabled={submitLoading}
-                  >
-                    {submitLoading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Enviando...
-                      </>
-                    ) : (
-                      <>
-                        <Send className="w-4 h-4 mr-2" /> 
-                        Enviar mensaje
-                      </>
-                    )}
-                  </Button>
                 </div>
-              </CardContent>
-            </Card>
+
+                <div className="form-group">
+                  <Input
+                    type="tel"
+                    placeholder=" "
+                    className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500"
+                  />
+                  <label className="floating-label">Teléfono</label>
+                </div>
+
+                <div className="form-group">
+                  <Textarea
+                    placeholder=" "
+                    rows={4}
+                    className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500 resize-none"
+                  />
+                  <label className="floating-label">Mensaje</label>
+                </div>
+
+                <Button size="lg" className="w-full bg-orange-500 hover:bg-orange-600 btn-premium">
+                  Enviar Mensaje
+                </Button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-black py-12">
-        <div className="container mx-auto px-4 text-center">
-          <div className="mb-8">
-            <h3 className="text-2xl font-bold text-white mb-2">
-              <span className="text-orange-500">MARCONI</span> INMOBILIARIA
-            </h3>
-            <p className="text-gray-400">Tu socio inmobiliario en Reconquista, Santa Fe</p>
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center space-x-2 mb-4">
+                <Home className="h-8 w-8 text-orange-500" />
+                <span className="text-2xl font-black">Marconi Inmobiliaria</span>
+              </div>
+              <p className="text-gray-400 mb-4 max-w-md">
+                Tu socio de confianza en el mercado inmobiliario. Conectamos sueños con realidades desde hace más de 15
+                años.
+              </p>
+              <div className="flex space-x-4">
+                <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                  <Facebook className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                  <Instagram className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                  <Twitter className="h-5 w-5" />
+                </a>
+                <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                  <Linkedin className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Enlaces Rápidos</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a href="#inicio" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Inicio
+                  </a>
+                </li>
+                <li>
+                  <a href="#propiedades" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Propiedades
+                  </a>
+                </li>
+                <li>
+                  <a href="#nosotros" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Nosotros
+                  </a>
+                </li>
+                <li>
+                  <a href="#contacto" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Contacto
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Servicios</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Venta de Propiedades
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Alquiler
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Tasaciones
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-gray-400 hover:text-orange-500 transition-colors">
+                    Asesoramiento
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
-          <div className="flex justify-center gap-6 mb-8">
-            {[
-              { icon: Instagram, href: "#" },
-              { icon: MessageCircle, href: "#" },
-              { icon: Phone, href: "#" },
-            ].map((social, index) => (
-              <a
-                key={index}
-                href={social.href}
-                className="text-gray-400 hover:text-orange-500 transition-colors p-3 bg-gray-800 rounded-full hover:bg-gray-700"
-              >
-                <social.icon className="w-5 h-5" />
-              </a>
-            ))}
-          </div>
-
-          <div className="border-t border-gray-800 pt-6">
-            <p className="text-gray-500 text-sm mb-2">© 2024 Marconi Inmobiliaria. Todos los derechos reservados.</p>
-            <p className="text-gray-600 text-xs">
-              Matrícula profesional N° XXXXX - CUCICBA | Hecho con ❤️ en Reconquista
-            </p>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center">
+            <p className="text-gray-400">© 2024 Marconi Inmobiliaria. Todos los derechos reservados.</p>
           </div>
         </div>
       </footer>
-
-      {/* WhatsApp Flotante */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button className="bg-green-600 hover:bg-green-700 text-white rounded-full w-14 h-14 animate-pulse hover:animate-none">
-          <MessageCircle className="w-6 h-6" />
-        </Button>
-      </div>
     </div>
   )
 }
