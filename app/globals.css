@@ -216,7 +216,7 @@
   }
 
   .glass-effect {
-    @apply backdrop-blur-lg bg-white/10 border border-white/20;
+    @apply bg-white/95 border-b border-gray-200/80 shadow-lg;
   }
 
   .form-group {
