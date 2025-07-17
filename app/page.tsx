@@ -97,34 +97,37 @@ export default function HomePage() {
       {/* Header */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "bg-white/95 backdrop-blur-lg shadow-lg" : "bg-transparent"
+          isScrolled ? "bg-black/50 backdrop-blur-lg shadow-lg" : "bg-black/20"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
               <Home className="h-8 w-8 text-orange-500" />
-              <span className="text-2xl font-black text-gray-900">Marconi</span>
+              <span className="text-2xl font-black text-white">Marconi</span>
             </div>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#inicio" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+              <a href="#inicio" className="text-gray-200 hover:text-orange-500 transition-colors font-medium">
                 Inicio
               </a>
-              <a href="#propiedades" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+              <a href="#propiedades" className="text-gray-200 hover:text-orange-500 transition-colors font-medium">
                 Propiedades
               </a>
-              <a href="#nosotros" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+              <a href="#nosotros" className="text-gray-200 hover:text-orange-500 transition-colors font-medium">
                 Nosotros
               </a>
-              <a href="#contacto" className="text-gray-700 hover:text-orange-500 transition-colors font-medium">
+              <a href="#contacto" className="text-gray-200 hover:text-orange-500 transition-colors font-medium">
                 Contacto
               </a>
             </nav>
 
             <div className="hidden md:flex items-center space-x-4">
-              <Button variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-50 bg-transparent">
+              <Button
+                variant="outline"
+                className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white bg-transparent"
+              >
                 <Phone className="h-4 w-4 mr-2" />
                 Llamar
               </Button>
@@ -133,29 +136,32 @@ export default function HomePage() {
 
             {/* Mobile menu button */}
             <button className="md:hidden p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? <X className="h-6 w-6 text-white" /> : <Menu className="h-6 w-6 text-white" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white border-t shadow-lg">
+          <div className="md:hidden bg-black/80 backdrop-blur-lg border-t border-gray-700 shadow-lg">
             <div className="px-4 py-6 space-y-4">
-              <a href="#inicio" className="block text-gray-700 hover:text-orange-500 font-medium">
+              <a href="#inicio" className="block text-gray-200 hover:text-orange-500 font-medium">
                 Inicio
               </a>
-              <a href="#propiedades" className="block text-gray-700 hover:text-orange-500 font-medium">
+              <a href="#propiedades" className="block text-gray-200 hover:text-orange-500 font-medium">
                 Propiedades
               </a>
-              <a href="#nosotros" className="block text-gray-700 hover:text-orange-500 font-medium">
+              <a href="#nosotros" className="block text-gray-200 hover:text-orange-500 font-medium">
                 Nosotros
               </a>
-              <a href="#contacto" className="block text-gray-700 hover:text-orange-500 font-medium">
+              <a href="#contacto" className="block text-gray-200 hover:text-orange-500 font-medium">
                 Contacto
               </a>
               <div className="pt-4 space-y-2">
-                <Button variant="outline" className="w-full border-orange-500 text-orange-500 bg-transparent">
+                <Button
+                  variant="outline"
+                  className="w-full border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white bg-transparent"
+                >
                   <Phone className="h-4 w-4 mr-2" />
                   Llamar
                 </Button>
