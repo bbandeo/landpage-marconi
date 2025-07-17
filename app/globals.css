@@ -212,7 +212,7 @@
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent;
+    @apply text-orange-600 bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent;
   }
 
   .glass-effect {
