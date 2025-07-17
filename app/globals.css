@@ -216,7 +216,15 @@
   }
 
   .glass-effect {
-    @apply bg-white/95 border-b border-gray-200/80 shadow-lg;
+    /* Fallback for browsers without backdrop-filter */
+    @apply bg-gray-900/90 border-b border-gray-700 shadow-lg;
+  }
+
+  @supports (backdrop-filter: blur(1.5rem)) or (-webkit-backdrop-filter: blur(1.5rem)) {
+    /* Enhancement for modern browsers */
+    .glass-effect {
+      @apply bg-black/30 backdrop-blur-lg border-b border-white/20;
+    }
   }
 
   .form-group {
