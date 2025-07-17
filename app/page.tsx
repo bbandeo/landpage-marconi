@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import Image from "next/image"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -309,9 +309,11 @@ export default function HomePage() {
             {properties.map((property) => (
               <Card key={property.id} className="card-hover overflow-hidden border-0 shadow-lg">
                 <div className="relative">
-                  <img
+                  <Image
                     src={property.image || "/placeholder.svg"}
                     alt={property.title}
+                    width={400}
+                    height={300}
                     className="w-full h-64 object-cover"
                   />
                   {property.featured && (
@@ -421,9 +423,11 @@ export default function HomePage() {
             <Card className="border-0 shadow-xl p-8">
               <CardContent className="text-center">
                 <div className="flex justify-center mb-6">
-                  <img
+                  <Image
                     src={testimonials[currentTestimonial].image || "/placeholder.svg"}
                     alt={testimonials[currentTestimonial].name}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 rounded-full object-cover"
                   />
                 </div>
@@ -433,7 +437,7 @@ export default function HomePage() {
                   ))}
                 </div>
                 <blockquote className="text-fluid-lg text-gray-700 mb-6 italic">
-                  "{testimonials[currentTestimonial].content}"
+                  &quot;{testimonials[currentTestimonial].content}&quot;
                 </blockquote>
                 <div>
                   <p className="font-bold text-gray-900">{testimonials[currentTestimonial].name}</p>

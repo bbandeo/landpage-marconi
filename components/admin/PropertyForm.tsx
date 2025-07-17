@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-
+import Image from "next/image"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -390,9 +390,11 @@ export default function PropertyForm({ property, mode }: PropertyFormProps) {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {formData.images.map((image, index) => (
                   <div key={index} className="relative group">
-                    <img
+                    <Image
                       src={image || "/placeholder.svg"}
                       alt={`Imagen ${index + 1}`}
+                      width={150}
+                      height={96}
                       className="w-full h-24 object-cover rounded-lg"
                     />
                     <Button

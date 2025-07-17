@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -195,10 +196,11 @@ export default function PropertiesPage() {
         {filteredProperties.map((property) => (
           <Card key={property.id} className="overflow-hidden">
             <div className="aspect-video bg-gray-200 relative">
-              <img
+              <Image
                 src={property.images[0] || "/placeholder.jpg"}
                 alt={property.title}
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
               />
               {property.featured && <Badge className="absolute top-2 left-2 bg-orange-600">Destacada</Badge>}
               <Badge
