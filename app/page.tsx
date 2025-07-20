@@ -172,70 +172,81 @@ export default function HomePage() {
         )}
       </header>
 
-      {/* Hero Section */}
-      <section
-        id="inicio"
-        className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 via-white to-orange-50"
-      >
-        <ParticleBackground />
+// Fragmento corregido de la sección Hero en page.tsx
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="animate-slide-up">
-            <h1 className="text-fluid-7xl font-black text-gray-900 mb-6 tracking-tight">
-              Tu hogar ideal
-              <span className="block gradient-text">te espera</span>
-            </h1>
+{/* Hero Section */}
+<section
+  id="inicio"
+  className="relative min-h-screen flex items-center justify-center overflow-hidden hero-bg-dark"
+>
+  {/* Overlay para garantizar consistencia */}
+  <div className="absolute inset-0 bg-black/40 z-[1]"></div>
+  
+  {/* Patrón de partículas adicional para mejorar el fondo */}
+  <div className="absolute inset-0 opacity-20 z-[2]">
+    <div className="absolute inset-0" style={{
+      backgroundImage: `radial-gradient(circle at 25% 25%, #f97316 0%, transparent 50%),
+                       radial-gradient(circle at 75% 75%, #ea580c 0%, transparent 50%),
+                       radial-gradient(circle at 50% 50%, #9a3412 0%, transparent 50%)`,
+      backgroundSize: '200px 200px, 300px 300px, 150px 150px',
+      backgroundPosition: '0 0, 100px 100px, 50px 50px',
+      animation: 'particleFloat 30s linear infinite'
+    }}></div>
+  </div>
 
-            <p className="text-fluid-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Descubre propiedades excepcionales con Marconi Inmobiliaria. Más de 15 años conectando familias con sus
-              hogares perfectos.
-            </p>
+  <ParticleBackground />
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 btn-premium text-lg px-8 py-4">
-                <Search className="h-5 w-5 mr-2" />
-                Explorar Propiedades
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-2 border-gray-300 hover:border-orange-500 text-lg px-8 py-4 bg-transparent"
-              >
-                <Phone className="h-5 w-5 mr-2" />
-                Contactar Ahora
-              </Button>
-            </div>
+  <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div className="animate-slide-up">
+      <h1 className="text-fluid-7xl font-black text-white mb-6 tracking-tight">
+        Tu hogar ideal
+        <span className="block gradient-text">te espera</span>
+      </h1>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-              <div className="text-center animate-float" style={{ animationDelay: "0s" }}>
-                <div className="text-fluid-4xl font-black text-orange-500 mb-2">
-                  <AnimatedCounter end={500} suffix="+" />
-                </div>
-                <p className="text-gray-600 font-medium">Propiedades Vendidas</p>
-              </div>
-              <div className="text-center animate-float" style={{ animationDelay: "0.5s" }}>
-                <div className="text-fluid-4xl font-black text-orange-500 mb-2">
-                  <AnimatedCounter end={15} suffix="+" />
-                </div>
-                <p className="text-gray-600 font-medium">Años de Experiencia</p>
-              </div>
-              <div className="text-center animate-float" style={{ animationDelay: "1s" }}>
-                <div className="text-fluid-4xl font-black text-orange-500 mb-2">
-                  <AnimatedCounter end={98} suffix="%" />
-                </div>
-                <p className="text-gray-600 font-medium">Clientes Satisfechos</p>
-              </div>
-              <div className="text-center animate-float" style={{ animationDelay: "1.5s" }}>
-                <div className="text-fluid-4xl font-black text-orange-500 mb-2">
-                  <AnimatedCounter end={24} suffix="/7" />
-                </div>
-                <p className="text-gray-600 font-medium">Atención Disponible</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <p className="text-fluid-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+        Descubre propiedades excepcionales con Marconi Inmobiliaria. Más de 15 años conectando familias con sus
+        hogares perfectos.
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+        <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white btn-premium">
+          <Search className="h-5 w-5 mr-2" />
+          Explorar Propiedades
+        </Button>
+        <Button
+          size="lg"
+          variant="outline"
+          className="border-2 border-white text-white hover:bg-white hover:text-gray-900 btn-premium bg-transparent"
+        >
+          <Phone className="h-5 w-5 mr-2" />
+          Contactar Ahora
+        </Button>
+      </div>
+    </div>
+  </div>
+
+  {/* Estadísticas flotantes */}
+  <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div className="text-white">
+        <div className="text-3xl font-black text-orange-500 mb-1">500+</div>
+        <p className="text-sm text-gray-300">Propiedades Vendidas</p>
+      </div>
+      <div className="text-white">
+        <div className="text-3xl font-black text-orange-500 mb-1">15+</div>
+        <p className="text-sm text-gray-300">Años de Experiencia</p>
+      </div>
+      <div className="text-white">
+        <div className="text-3xl font-black text-orange-500 mb-1">98%</div>
+        <p className="text-sm text-gray-300">Clientes Satisfechos</p>
+      </div>
+      <div className="text-white">
+        <div className="text-3xl font-black text-orange-500 mb-1">24/7</div>
+        <p className="text-sm text-gray-300">Atención Disponible</p>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Properties Section */}
       <section id="propiedades" className="py-24 bg-gray-50">
