@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { AnimatedCounter } from "@/components/ui/animated-counter"
 import { ParticleBackground } from "@/components/ui/particle-background"
+import { ContactForm } from "@/components/ContactForm"
 import {
   Menu,
   X,
@@ -493,49 +494,10 @@ export default function HomePage() {
               </div>
             </div>
 
+            import { ContactForm } from "@/components/ContactForm"
+
             <div>
-              <form className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div className="form-group">
-                    <Input
-                      type="text"
-                      placeholder=" "
-                      className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500"
-                    />
-                    <label className="floating-label">Nombre</label>
-                  </div>
-                  <div className="form-group">
-                    <Input
-                      type="email"
-                      placeholder=" "
-                      className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500"
-                    />
-                    <label className="floating-label">Email</label>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <Input
-                    type="tel"
-                    placeholder=" "
-                    className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500"
-                  />
-                  <label className="floating-label">Teléfono</label>
-                </div>
-
-                <div className="form-group">
-                  <Textarea
-                    placeholder=" "
-                    rows={4}
-                    className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500 resize-none"
-                  />
-                  <label className="floating-label">Mensaje</label>
-                </div>
-
-                <Button size="lg" className="w-full bg-orange-500 hover:bg-orange-600 btn-premium">
-                  Enviar Mensaje
-                </Button>
-              </form>
+              <ContactForm />
             </div>
           </div>
         </div>
