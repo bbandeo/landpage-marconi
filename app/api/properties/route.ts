@@ -1,80 +1,87 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { supabaseAdmin } from "@/lib/supabase"
-import { STATUS_MAP_REVERSE } from "@/lib/supabase"
+import { createClient } from "@supabase/supabase-js"
+
+const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 export async function GET(request: NextRequest) {
   try {
-    if (!supabaseAdmin) {
-      return NextResponse.json({ error: "Supabase admin client not configured" }, { status: 500 })
-    }
-
     const { searchParams } = new URL(request.url)
     const page = Number.parseInt(searchParams.get("page") || "1")
     const limit = Number.parseInt(searchParams.get("limit") || "10")
-    const offset = (page - 1) * limit
+    const search = searchParams.get("search")
+    const operation = searchParams.get("operation")
+    const type = searchParams.get("type")
+    const minPrice = searchParams.get("minPrice")
+    const maxPrice = searchParams.get("maxPrice")
 
-    const {
-      data: properties,
-      error,
-      count,
-    } = await supabaseAdmin
+    let query = supabase
       .from("properties")
       .select("*", { count: "exact" })
+      .eq("status", "active")
       .order("created_at", { ascending: false })
-      .range(offset, offset + limit - 1)
+
+    // Apply filters
+    if (search) {
+      query = query.or(`title.ilike.%${search}%,address.ilike.%${search}%,neighborhood.ilike.%${search}%`)
+    }
+
+    if (operation) {
+      query = query.eq("operation_type", operation)
+    }
+
+    if (type) {
+      query = query.eq("property_type", type)
+    }
+
+    if (minPrice) {
+      query = query.gte("price", Number.parseInt(minPrice))
+    }
+
+    if (maxPrice) {
+      query = query.lte("price", Number.parseInt(maxPrice))
+    }
+
+    // Apply pagination
+    const from = (page - 1) * limit
+    const to = from + limit - 1
+    query = query.range(from, to)
+
+    const { data, error, count } = await query
 
     if (error) {
-      console.error("Error fetching properties:", error)
-      return NextResponse.json({ error: "Error fetching properties" }, { status: 500 })
+      console.error("Database error:", error)
+      return NextResponse.json({ error: "Failed to fetch properties" }, { status: 500 })
     }
 
     return NextResponse.json({
-      properties: properties || [],
-      total: count || 0,
-      page,
-      limit,
-      totalPages: Math.ceil((count || 0) / limit),
+      properties: data,
+      pagination: {
+        page,
+        limit,
+        total: count || 0,
+        totalPages: Math.ceil((count || 0) / limit),
+      },
     })
   } catch (error) {
-    console.error("Error in GET /api/properties:", error)
+    console.error("API error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    if (!supabaseAdmin) {
-      return NextResponse.json({ error: "Supabase admin client not configured" }, { status: 500 })
-    }
-
     const body = await request.json()
 
-    // Convertir el status del frontend al valor de la base de datos
-    const propertyData = {
-      ...body,
-      status:
-        body.status && STATUS_MAP_REVERSE[body.status as keyof typeof STATUS_MAP_REVERSE]
-          ? STATUS_MAP_REVERSE[body.status as keyof typeof STATUS_MAP_REVERSE]
-          : "available",
-      currency: body.currency || "USD",
-      city: body.city || "Reconquista",
-      province: body.province || "Santa Fe",
-      images: body.images || [],
-      features: body.features || [],
-      featured: body.featured || false,
-      views: 0,
-    }
-
-    const { data, error } = await supabaseAdmin.from("properties").insert([propertyData]).select().single()
+    const { data, error } = await supabase.from("properties").insert([body]).select().single()
 
     if (error) {
-      console.error("Error creating property:", error)
-      return NextResponse.json({ error: "Error creating property", details: error.message }, { status: 400 })
+      console.error("Database error:", error)
+      return NextResponse.json({ error: "Failed to create property" }, { status: 500 })
     }
 
     return NextResponse.json(data, { status: 201 })
   } catch (error) {
-    console.error("Error in POST /api/properties:", error)
+    console.error("API error:", error)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
