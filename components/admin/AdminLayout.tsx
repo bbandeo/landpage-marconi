@@ -26,35 +26,6 @@ export default function AdminLayout({
 
   return (
     <div className="min-h-screen bg-gray-900">
-      {/* Mobile sidebar */}
-      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="w-64 bg-gray-800 border-gray-700">
-          <div className="flex flex-col h-full">
-            <div className="flex items-center px-4 py-6">
-              <h1 className="text-xl font-bold text-white">Admin Panel</h1>
-            </div>
-            <nav className="flex-1 px-4 space-y-2">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      isActive ? "bg-brand-orange text-white" : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                    }`}
-                    onClick={() => setSidebarOpen(false)}
-                  >
-                    <item.icon className="w-5 h-5 mr-3" />
-                    {item.name}
-                  </Link>
-                )
-              })}
-            </nav>
-          </div>
-        </SheetContent>
-      </Sheet>
-
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex flex-col flex-grow bg-gray-800 border-r border-gray-700">
@@ -87,15 +58,46 @@ export default function AdminLayout({
         <div className="sticky top-0 z-40 bg-gray-800/95 backdrop-blur-sm border-b border-gray-700">
           <div className="flex items-center justify-between px-4 py-4">
             <div className="flex items-center">
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="lg:hidden text-gray-300 hover:text-white hover:bg-gray-700"
-                >
-                  <Menu className="w-5 h-5" />
-                </Button>
-              </SheetTrigger>
+              {/* Mobile menu */}
+              <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="lg:hidden text-gray-300 hover:text-white hover:bg-gray-700"
+                  >
+                    <Menu className="w-5 h-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-64 bg-gray-800 border-gray-700">
+                  <div className="flex flex-col h-full">
+                    <div className="flex items-center px-4 py-6">
+                      <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+                    </div>
+                    <nav className="flex-1 px-4 space-y-2">
+                      {navigation.map((item) => {
+                        const isActive = pathname === item.href
+                        return (
+                          <Link
+                            key={item.name}
+                            href={item.href}
+                            className={`flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                              isActive
+                                ? "bg-brand-orange text-white"
+                                : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                            }`}
+                            onClick={() => setSidebarOpen(false)}
+                          >
+                            <item.icon className="w-5 h-5 mr-3" />
+                            {item.name}
+                          </Link>
+                        )
+                      })}
+                    </nav>
+                  </div>
+                </SheetContent>
+              </Sheet>
+
               <h2 className="ml-4 text-lg font-semibold text-white lg:ml-0">
                 {navigation.find((item) => item.href === pathname)?.name || "Admin"}
               </h2>
