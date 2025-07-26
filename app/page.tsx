@@ -76,6 +76,7 @@ export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [operationType, setOperationType] = useState("")
   const [propertyType, setPropertyType] = useState("")
+  const [textStyle, setTextStyle] = useState("neon") // Estado para cambiar estilos
 
   const handleSearch = () => {
     const params = new URLSearchParams()
@@ -112,8 +113,197 @@ export default function HomePage() {
     }
   }
 
+  // Función para obtener las clases CSS según el estilo seleccionado
+  const getTextStyleClasses = () => {
+    switch (textStyle) {
+      case "neon":
+        return "text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight neon-text"
+      case "gradient":
+        return "text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight gradient-text"
+      case "shadow3d":
+        return "text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight shadow-3d-text"
+      case "metallic":
+        return "text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight metallic-text"
+      case "glitch":
+        return "text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight glitch-text"
+      default:
+        return "text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-900">
+      {/* Estilos CSS personalizados */}
+      <style jsx>{`
+        /* Efecto Neón */
+        .neon-text {
+          text-shadow: 
+            0 0 5px #fff,
+            0 0 10px #fff,
+            0 0 15px #F97316,
+            0 0 20px #F97316,
+            0 0 35px #F97316,
+            0 0 40px #F97316;
+          animation: neon-flicker 2s infinite alternate;
+        }
+
+        @keyframes neon-flicker {
+          0%, 18%, 22%, 25%, 53%, 57%, 100% {
+            text-shadow: 
+              0 0 5px #fff,
+              0 0 10px #fff,
+              0 0 15px #F97316,
+              0 0 20px #F97316,
+              0 0 35px #F97316,
+              0 0 40px #F97316;
+          }
+          20%, 24%, 55% {
+            text-shadow: none;
+          }
+        }
+
+        /* Efecto Gradiente */
+        .gradient-text {
+          background: linear-gradient(45deg, #F97316, #FCD34D, #F97316, #DC2626);
+          background-size: 400% 400%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        /* Efecto Sombra 3D */
+        .shadow-3d-text {
+          text-shadow: 
+            1px 1px 0px #F97316,
+            2px 2px 0px #E85D04,
+            3px 3px 0px #DC2F02,
+            4px 4px 0px #D00000,
+            5px 5px 0px #9D0208,
+            6px 6px 0px #6A040F,
+            7px 7px 0px #370617,
+            8px 8px 15px rgba(0,0,0,0.8);
+          transform: perspective(500px) rotateX(15deg);
+        }
+
+        /* Efecto Metálico */
+        .metallic-text {
+          background: linear-gradient(135deg, 
+            #C0C0C0 0%, 
+            #F97316 25%, 
+            #FFD700 50%, 
+            #F97316 75%, 
+            #C0C0C0 100%);
+          background-size: 200% 200%;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          animation: metallic-shine 2s linear infinite;
+          filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+        }
+
+        @keyframes metallic-shine {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 200% 200%; }
+        }
+
+        /* Efecto Glitch */
+        .glitch-text {
+          position: relative;
+          animation: glitch-skew 1s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::before,
+        .glitch-text::after {
+          content: 'SOMOS LA INMOBILIARIA #1 DE RECONQUISTA';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        }
+
+        .glitch-text::before {
+          animation: glitch-anim 2s infinite linear alternate-reverse;
+          color: #F97316;
+          z-index: -1;
+        }
+
+        .glitch-text::after {
+          animation: glitch-anim2 1s infinite linear alternate-reverse;
+          color: #DC2626;
+          z-index: -2;
+        }
+
+        @keyframes glitch-anim {
+          0% { clip: rect(42px, 9999px, 44px, 0); }
+          5% { clip: rect(12px, 9999px, 59px, 0); }
+          10% { clip: rect(48px, 9999px, 29px, 0); }
+          15% { clip: rect(42px, 9999px, 73px, 0); }
+          20% { clip: rect(63px, 9999px, 27px, 0); }
+          25% { clip: rect(34px, 9999px, 55px, 0); }
+          30% { clip: rect(86px, 9999px, 73px, 0); }
+          35% { clip: rect(20px, 9999px, 20px, 0); }
+          40% { clip: rect(26px, 9999px, 60px, 0); }
+          45% { clip: rect(25px, 9999px, 66px, 0); }
+          50% { clip: rect(57px, 9999px, 98px, 0); }
+          55% { clip: rect(5px, 9999px, 46px, 0); }
+          60% { clip: rect(82px, 9999px, 31px, 0); }
+          65% { clip: rect(54px, 9999px, 27px, 0); }
+          70% { clip: rect(28px, 9999px, 99px, 0); }
+          75% { clip: rect(45px, 9999px, 69px, 0); }
+          80% { clip: rect(23px, 9999px, 85px, 0); }
+          85% { clip: rect(54px, 9999px, 84px, 0); }
+          90% { clip: rect(45px, 9999px, 47px, 0); }
+          95% { clip: rect(37px, 9999px, 20px, 0); }
+          100% { clip: rect(4px, 9999px, 91px, 0); }
+        }
+
+        @keyframes glitch-anim2 {
+          0% { clip: rect(65px, 9999px, 100px, 0); }
+          5% { clip: rect(52px, 9999px, 74px, 0); }
+          10% { clip: rect(79px, 9999px, 85px, 0); }
+          15% { clip: rect(75px, 9999px, 5px, 0); }
+          20% { clip: rect(67px, 9999px, 61px, 0); }
+          25% { clip: rect(14px, 9999px, 79px, 0); }
+          30% { clip: rect(1px, 9999px, 66px, 0); }
+          35% { clip: rect(86px, 9999px, 30px, 0); }
+          40% { clip: rect(23px, 9999px, 98px, 0); }
+          45% { clip: rect(85px, 9999px, 72px, 0); }
+          50% { clip: rect(71px, 9999px, 75px, 0); }
+          55% { clip: rect(2px, 9999px, 48px, 0); }
+          60% { clip: rect(30px, 9999px, 16px, 0); }
+          65% { clip: rect(59px, 9999px, 50px, 0); }
+          70% { clip: rect(41px, 9999px, 62px, 0); }
+          75% { clip: rect(2px, 9999px, 82px, 0); }
+          80% { clip: rect(47px, 9999px, 73px, 0); }
+          85% { clip: rect(3px, 9999px, 27px, 0); }
+          90% { clip: rect(26px, 9999px, 55px, 0); }
+          95% { clip: rect(42px, 9999px, 97px, 0); }
+          100% { clip: rect(38px, 9999px, 49px, 0); }
+        }
+
+        @keyframes glitch-skew {
+          0% { transform: skew(0deg); }
+          10% { transform: skew(-2deg); }
+          20% { transform: skew(1deg); }
+          30% { transform: skew(-1deg); }
+          40% { transform: skew(2deg); }
+          50% { transform: skew(-1deg); }
+          60% { transform: skew(0deg); }
+          70% { transform: skew(1deg); }
+          80% { transform: skew(-2deg); }
+          90% { transform: skew(2deg); }
+          100% { transform: skew(0deg); }
+        }
+      `}</style>
+
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
         <div className="container mx-auto px-4">
@@ -138,6 +328,22 @@ export default function HomePage() {
                 CONTACTO
               </Link>
             </nav>
+
+            {/* Selector de Estilo de Texto (Solo para demo) */}
+            <div className="hidden lg:flex items-center space-x-2">
+              <span className="text-gray-400 text-sm">Estilo:</span>
+              <select
+                value={textStyle}
+                onChange={(e) => setTextStyle(e.target.value)}
+                className="bg-gray-800 text-white text-sm rounded px-2 py-1 border border-gray-700"
+              >
+                <option value="neon">Neón</option>
+                <option value="gradient">Gradiente</option>
+                <option value="shadow3d">Sombra 3D</option>
+                <option value="metallic">Metálico</option>
+                <option value="glitch">Glitch</option>
+              </select>
+            </div>
 
             {/* Mobile Search Bar */}
             <div className="md:hidden flex-1 max-w-xs ml-4">
@@ -190,7 +396,7 @@ export default function HomePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.8 }}
-                  className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+                  className={getTextStyleClasses()}
                 >
                   SOMOS LA
                   <br />
