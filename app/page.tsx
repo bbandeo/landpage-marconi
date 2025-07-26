@@ -156,6 +156,19 @@ export default function HomePage() {
       <section className="relative h-screen flex flex-col overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
+          <Image
+            src={getOptimizedImageUrl("gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy", {
+              width: 1920,
+              height: 1080,
+              crop: "fill",
+              quality: "auto",
+              format: "auto",\
+             || "/placeholder.svg\"}, "/placeholder.svg\")}\
+            alt=\"Vista aérea de Reconquista - Marconi Inmobiliaria"\
+            fill\
+            className="object-cover"\
+            priority
+          />
           <div className="absolute inset-0 bg-black/30" />\
         </div>
 
@@ -201,8 +214,8 @@ export default function HomePage() {
             >
               <div className="inline-flex items-center justify-center w-24 h-24 md:w-32 md:h-32">
                 <div className="relative">
-                  {/* House outline */}
-                  <div className="w-20 h-20 md:w-24 md:h-24 border-4 border-white relative" style={{
+                  {/* House outline using CSS border */}
+                  <div className="w-20 h-20 md:w-24 md:h-24 border-4 border-white relative bg-transparent" style={{
                     clipPath: 'polygon(50% 0%, 0% 40%, 0% 100%, 100% 100%, 100% 40%)'
                   }}>
                     {/* Heart inside */}
@@ -278,10 +291,10 @@ export default function HomePage() {
                           crop: "fill",
                           quality: "auto",
                           format: "auto",\
-                         || \"/placeholder.svg\"})}\
-                        alt={property.title}\
-                        fill\
-                        className=\"object-cover group-hover:scale-105 transition-transform duration-300"
+                         || \"/placeholder.svg\"}, \"/placeholder.svg")}
+                        alt={property.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
 
@@ -295,6 +308,7 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
+
                   <CardContent className="p-6">
                     <div className="space-y-4">
                       <div>
@@ -341,7 +355,7 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
-\
+
           <div className="text-center">
             <Link href="/propiedades">
               <Button
@@ -352,7 +366,7 @@ export default function HomePage() {
                 Ver todas las propiedades
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>\
+            </Link>
           </div>
         </div>
       </section>
