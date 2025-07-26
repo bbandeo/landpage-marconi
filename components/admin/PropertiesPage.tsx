@@ -62,7 +62,7 @@ export default function PropertiesPage() {
       const response = await fetch("/api/properties")
       if (response.ok) {
         const data = await response.json()
-        setProperties(data)
+        setProperties(data.properties || [])
       }
     } catch (error) {
       console.error("Error fetching properties:", error)
