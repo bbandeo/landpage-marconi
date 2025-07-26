@@ -157,23 +157,17 @@ export default function HomePage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src={getOptimizedImageUrl("gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy", {
-              width: 1920,
-              height: 1080,
-              crop: "fill",
-              quality: "auto",
-              format: "auto",\
-             || \"/placeholder.svg\"})}\
-            alt=\"Vista aérea de Reconquista - Marconi Inmobiliaria"\
-            fill\
-            className="object-cover"\
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot_2025-07-26-10-01-45-726_com.instagram.android-edit.jpg-iuNK6U9fvJsE1mKEPsPsLCYSPc103O.jpeg"
+            alt="Vista aérea de Reconquista - Marconi Inmobiliaria"
+            fill
+            className="object-cover"
             priority
           />
-          <div className="absolute inset-0 bg-black/30" />\
+          <div className="absolute inset-0 bg-black/20" />
         </div>
 
         {/* Orange Gradient Overlay at Bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-orange-500/80 via-orange-400/40 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-orange-500/90 via-orange-400/60 to-transparent" />
 
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
@@ -185,7 +179,7 @@ export default function HomePage() {
               transition={{ duration: 0.8 }}
               className="mb-8"
             >
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-white leading-tight mb-6" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-normal text-white leading-tight mb-6" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                 No esperes más,
                 <br />
                 <span className="font-semibold">encuentra el hogar ideal</span>
@@ -214,7 +208,7 @@ export default function HomePage() {
             >
               <div className="inline-flex items-center justify-center w-24 h-24 md:w-32 md:h-32">
                 <div className="relative">
-                  {/* House outline using CSS border */}
+                  {/* House outline */}
                   <div className="w-20 h-20 md:w-24 md:h-24 border-4 border-white relative bg-transparent" style={{
                     clipPath: 'polygon(50% 0%, 0% 40%, 0% 100%, 100% 100%, 100% 40%)'
                   }}>
@@ -234,7 +228,7 @@ export default function HomePage() {
               transition={{ delay: 0.6, duration: 0.8 }}
               className="text-center"
             >
-              <div className="text-5xl md:text-7xl font-bold text-blue-700 mb-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+              <div className="text-5xl md:text-7xl font-bold text-blue-600 mb-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                 Marconi
               </div>
               <div className="text-lg md:text-xl text-white font-light tracking-wider" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
@@ -291,7 +285,7 @@ export default function HomePage() {
                           crop: "fill",
                           quality: "auto",
                           format: "auto",\
-                         || \"/placeholder.svg\"})}\
+                         || \"/placeholder.svg\"}) || "/placeholder.svg"}\
                         alt={property.title}\
                         fill\
                         className=\"object-cover group-hover:scale-105 transition-transform duration-300"
@@ -491,5 +485,5 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
-  )\
+  )
 }
