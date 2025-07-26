@@ -163,7 +163,7 @@ export default function HomePage() {
               crop: "fill",
               quality: "auto",
               format: "auto",\
-             || "/placeholder.svg\"}, "/placeholder.svg\")}\
+             || \"/placeholder.svg\"})}\
             alt=\"Vista aérea de Reconquista - Marconi Inmobiliaria"\
             fill\
             className="object-cover"\
@@ -291,10 +291,10 @@ export default function HomePage() {
                           crop: "fill",
                           quality: "auto",
                           format: "auto",\
-                         || \"/placeholder.svg\"}, \"/placeholder.svg")}
-                        alt={property.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                         || \"/placeholder.svg\"})}\
+                        alt={property.title}\
+                        fill\
+                        className=\"object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
 
@@ -308,7 +308,6 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-
                   <CardContent className="p-6">
                     <div className="space-y-4">
                       <div>
@@ -355,7 +354,7 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
-
+\
           <div className="text-center">
             <Link href="/propiedades">
               <Button
@@ -366,7 +365,7 @@ export default function HomePage() {
                 Ver todas las propiedades
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>
+            </Link>\
           </div>
         </div>
       </section>
