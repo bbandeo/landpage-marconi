@@ -30,6 +30,7 @@ import type { Property } from "@/lib/supabase"
 import { motion, AnimatePresence } from "framer-motion"
 import { useToast } from "@/hooks/use-toast"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { getOptimizedImageUrl } from "@/lib/cloudinary"
 
 // Property Card Component with CORE-style design
 const PropertyCard = ({ property, onInterest }: { property: Property; onInterest: (property: Property) => void }) => {
@@ -402,7 +403,17 @@ export default function MarconiInmobiliaria() {
         {/* Hero Section */}
         <section className="relative h-screen flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 bg-black">
-            <img src="/placeholder.jpg" alt="Reconquista skyline" className="w-full h-full object-cover opacity-60" />
+            <img
+              src={getOptimizedImageUrl("gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy", {
+                width: 1920,
+                height: 1080,
+                quality: "auto",
+                format: "auto",
+                crop: "fill" || "/placeholder.svg",
+              })}
+              alt="Vista panorámica de Reconquista - Marconi Inmobiliaria"
+              className="w-full h-full object-cover opacity-60"
+            />
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
           </div>
 
