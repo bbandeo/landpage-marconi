@@ -419,7 +419,7 @@ export default function MarconiInmobiliaria() {
             </motion.h1>
 
             <motion.div
-              className="absolute bottom-16 md:bottom-20 left-1/2 transform -translate-x-1/2 text-center"
+              className="absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2 text-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1 }}
