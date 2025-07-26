@@ -1,165 +1,163 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
-import { Search, MapPin, Phone, Mail, Star, Bed, Bath, Square, ArrowRight, ChevronDown } from "lucide-react"
+import { Search, MapPin, Bed, Bath, Square, ArrowRight, Star, Users, Home, Award, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { PropertyService } from "@/services/properties"
 import { getOptimizedImageUrl } from "@/lib/cloudinary"
-import type { Property } from "@/lib/supabase"
 import Link from "next/link"
+import Image from "next/image"
 
-interface PropertyCardProps {
-  property: Property
+interface Property {
+  id: string
+  title: string
+  price: number
+  operation_type: "sale" | "rent"
+  property_type: "house" | "apartment" | "commercial" | "land"
+  bedrooms: number
+  bathrooms: number
+  area: number
+  address: string
+  neighborhood: string
+  images: string[]
+  featured: boolean
 }
 
-function PropertyCard({ property }: PropertyCardProps) {
-  const [imageError, setImageError] = useState(false)
-  const firstImage = property.images && property.images.length > 0 ? property.images[0] : null
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("es-AR", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price)
-  }
-
-  const getOperationTypeLabel = (type: string) => {
-    return type === "venta" ? "Venta" : "Alquiler"
-  }
-
-  const getPropertyTypeLabel = (type: string) => {
-    const typeMap: { [key: string]: string } = {
-      casa: "Casa",
-      departamento: "Departamento",
-      terreno: "Terreno",
-      local: "Local",
-    }
-    return typeMap[type] || type
-  }
-
-  return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-      <Card className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
-        <div className="relative">
-          <div className="aspect-[4/3] overflow-hidden bg-gray-100">
-            {!imageError && firstImage ? (
-              <img
-                src={getOptimizedImageUrl(firstImage, {
-                  width: 400,
-                  height: 300,
-                  crop: "fill",
-                  quality: "auto" || "/placeholder.svg",
-                })}
-                alt={property.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                onError={() => setImageError(true)}
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                <MapPin className="w-12 h-12 text-gray-400" />
-              </div>
-            )}
-          </div>
-
-          {property.featured && (
-            <Badge className="absolute top-3 left-3 bg-yellow-500 text-white">
-              <Star className="w-3 h-3 mr-1" />
-              Destacada
-            </Badge>
-          )}
-
-          <Badge className="absolute top-3 right-3 bg-orange-600 text-white">
-            {getOperationTypeLabel(property.operation_type)}
-          </Badge>
-        </div>
-
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="text-2xl font-bold text-gray-900">{formatPrice(property.price)}</div>
-          </div>
-
-          <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">
-            {property.title}
-          </h3>
-
-          <div className="flex items-center text-gray-600 mb-3">
-            <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-            <span className="text-sm truncate">
-              {property.neighborhood}, {property.city}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4 text-sm text-gray-600 mb-3">
-            <span className="font-medium">{getPropertyTypeLabel(property.property_type)}</span>
-            {property.bedrooms && (
-              <div className="flex items-center gap-1">
-                <Bed className="w-4 h-4" />
-                <span>{property.bedrooms}</span>
-              </div>
-            )}
-            {property.bathrooms && (
-              <div className="flex items-center gap-1">
-                <Bath className="w-4 h-4" />
-                <span>{property.bathrooms}</span>
-              </div>
-            )}
-            {property.area_m2 && (
-              <div className="flex items-center gap-1">
-                <Square className="w-4 h-4" />
-                <span>{property.area_m2}m²</span>
-              </div>
-            )}
-          </div>
-
-          <Button className="w-full bg-orange-600 hover:bg-orange-700">Ver detalles</Button>
-        </CardContent>
-      </Card>
-    </motion.div>
-  )
-}
+const featuredProperties: Property[] = [
+  {
+    id: "1",
+    title: "Casa moderna en centro",
+    price: 85000,
+    operation_type: "sale",
+    property_type: "house",
+    bedrooms: 3,
+    bathrooms: 2,
+    area: 120,
+    address: "San Martín 1234",
+    neighborhood: "Centro",
+    images: ["gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy"],
+    featured: true,
+  },
+  {
+    id: "2",
+    title: "Departamento luminoso",
+    price: 45000,
+    operation_type: "rent",
+    property_type: "apartment",
+    bedrooms: 2,
+    bathrooms: 1,
+    area: 65,
+    address: "Rivadavia 567",
+    neighborhood: "Norte",
+    images: ["gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy"],
+    featured: true,
+  },
+  {
+    id: "3",
+    title: "Local comercial estratégico",
+    price: 120000,
+    operation_type: "sale",
+    property_type: "commercial",
+    bedrooms: 0,
+    bathrooms: 1,
+    area: 80,
+    address: "Belgrano 890",
+    neighborhood: "Centro",
+    images: ["gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy"],
+    featured: true,
+  },
+]
 
 export default function HomePage() {
-  const [featuredProperties, setFeaturedProperties] = useState<Property[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [operationType, setOperationType] = useState("")
   const [propertyType, setPropertyType] = useState("")
 
-  useEffect(() => {
-    const fetchFeaturedProperties = async () => {
-      try {
-        const properties = await PropertyService.getFeaturedProperties(6)
-        setFeaturedProperties(properties)
-      } catch (error) {
-        console.error("Error fetching featured properties:", error)
-      }
-    }
-
-    fetchFeaturedProperties()
-  }, [])
-
   const handleSearch = () => {
     const params = new URLSearchParams()
     if (searchTerm) params.set("search", searchTerm)
-    if (operationType) params.set("operation_type", operationType)
-    if (propertyType) params.set("property_type", propertyType)
+    if (operationType) params.set("operation", operationType)
+    if (propertyType) params.set("type", propertyType)
 
     window.location.href = `/propiedades?${params.toString()}`
   }
 
+  const formatPrice = (price: number, operation: string) => {
+    return (
+      new Intl.NumberFormat("es-AR", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(price) + (operation === "rent" ? "/mes" : "")
+    )
+  }
+
+  const getPropertyTypeLabel = (type: string) => {
+    switch (type) {
+      case "house":
+        return "Casa"
+      case "apartment":
+        return "Departamento"
+      case "commercial":
+        return "Comercial"
+      case "land":
+        return "Terreno"
+      default:
+        return type
+    }
+  }
+
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-900">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16 md:h-20">
+            {/* Logo */}
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="text-2xl font-bold">
+                <span className="text-white">MARCONI</span>
+                <span className="text-brand-orange block text-sm font-normal tracking-wider">INMOBILIARIA</span>
+              </div>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-8">
+              <Link href="/propiedades" className="text-gray-300 hover:text-white transition-colors">
+                PROPIEDADES
+              </Link>
+              <Link href="/agentes" className="text-gray-300 hover:text-white transition-colors">
+                AGENTES
+              </Link>
+              <Link href="/contacto" className="text-gray-300 hover:text-white transition-colors">
+                CONTACTO
+              </Link>
+            </nav>
+
+            {/* Mobile Search Bar */}
+            <div className="md:hidden flex-1 max-w-xs ml-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Buscar propiedades..."
+                  className="pl-10 h-10 bg-gray-800 border-gray-700 text-white placeholder:text-gray-400 text-sm"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen flex flex-col">
         {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <img
+        <div className="absolute inset-0">
+          <Image
             src={getOptimizedImageUrl("gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy", {
               width: 1920,
               height: 1080,
@@ -167,280 +165,372 @@ export default function HomePage() {
               quality: "auto",
               format: "auto" || "/placeholder.svg",
             })}
-            alt="Vista panorámica de Reconquista - Marconi Inmobiliaria"
-            className="w-full h-full object-cover"
+            alt="Reconquista - Marconi Inmobiliaria"
+            fill
+            className="object-cover"
+            priority
           />
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/60" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-          <div className="h-full flex flex-col">
-            {/* Main content area */}
-            <div className="pt-32 md:pt-0 md:flex-1 md:flex md:flex-col md:justify-center">
-              <motion.h1
+        <div className="relative z-10 h-full flex flex-col">
+          {/* Main Content Area */}
+          <div className="flex-1 flex flex-col justify-center pt-32 md:pt-0 md:flex-1 md:justify-center">
+            <div className="container mx-auto px-4 text-center">
+              <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
-                className="text-4xl md:text-6xl font-bold mb-6 leading-tight"
+                className="max-w-4xl mx-auto"
               >
-                SOMOS LA INMOBILIARIA <span className="text-orange-500">#1</span>
-                <br />
-                <span className="text-orange-500">DE RECONQUISTA</span>
-              </motion.h1>
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.8 }}
+                  className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+                >
+                  SOMOS LA
+                  <br />
+                  INMOBILIARIA #1
+                  <br />
+                  <span className="text-brand-orange">DE RECONQUISTA</span>
+                </motion.h1>
 
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-xl md:text-2xl mb-8 text-gray-200"
-              >
-                Encuentra la propiedad de tus sueños con más de 20 años de experiencia
-              </motion.p>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.8 }}
+                  className="text-xl md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto"
+                >
+                  La inmobiliaria que está revolucionando Reconquista con tecnología y confianza local.
+                </motion.p>
 
-              {/* Search Bar */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="bg-white/95 backdrop-blur-sm rounded-lg p-6 max-w-4xl mx-auto"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <Input
-                      placeholder="Buscar propiedades..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-12 border-0 bg-white"
-                    />
+                {/* Search Bar */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6, duration: 0.8 }}
+                  className="hidden md:block max-w-4xl mx-auto"
+                >
+                  <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div className="md:col-span-2">
+                        <div className="relative">
+                          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                          <Input
+                            placeholder="Buscar propiedades por dirección, barrio..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-12 h-12 bg-white/20 border-white/30 text-white placeholder:text-gray-300 focus:bg-white/30 focus:border-white/50"
+                          />
+                        </div>
+                      </div>
+
+                      <Select value={operationType} onValueChange={setOperationType}>
+                        <SelectTrigger className="h-12 bg-white/20 border-white/30 text-white focus:bg-white/30 focus:border-white/50">
+                          <SelectValue placeholder="Operación" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-gray-800 border-gray-700">
+                          <SelectItem value="sale" className="text-white hover:bg-gray-700">
+                            Venta
+                          </SelectItem>
+                          <SelectItem value="rent" className="text-white hover:bg-gray-700">
+                            Alquiler
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <Select value={propertyType} onValueChange={setPropertyType}>
+                        <SelectTrigger className="h-12 bg-white/20 border-white/30 text-white focus:bg-white/30 focus:border-white/50">
+                          <SelectValue placeholder="Tipo" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-gray-800 border-gray-700">
+                          <SelectItem value="house" className="text-white hover:bg-gray-700">
+                            Casa
+                          </SelectItem>
+                          <SelectItem value="apartment" className="text-white hover:bg-gray-700">
+                            Departamento
+                          </SelectItem>
+                          <SelectItem value="commercial" className="text-white hover:bg-gray-700">
+                            Comercial
+                          </SelectItem>
+                          <SelectItem value="land" className="text-white hover:bg-gray-700">
+                            Terreno
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="mt-4 flex justify-center">
+                      <Button
+                        onClick={handleSearch}
+                        size="lg"
+                        className="bg-brand-orange hover:bg-orange-600 text-white px-8 h-12 text-lg font-semibold"
+                      >
+                        <Search className="mr-2 h-5 w-5" />
+                        Buscar Propiedades
+                      </Button>
+                    </div>
                   </div>
-
-                  <Select value={operationType} onValueChange={setOperationType}>
-                    <SelectTrigger className="h-12 border-0 bg-white">
-                      <SelectValue placeholder="Operación" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="venta">Venta</SelectItem>
-                      <SelectItem value="alquiler">Alquiler</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Select value={propertyType} onValueChange={setPropertyType}>
-                    <SelectTrigger className="h-12 border-0 bg-white">
-                      <SelectValue placeholder="Tipo de propiedad" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="casa">Casa</SelectItem>
-                      <SelectItem value="departamento">Departamento</SelectItem>
-                      <SelectItem value="terreno">Terreno</SelectItem>
-                      <SelectItem value="local">Local</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Button
-                    onClick={handleSearch}
-                    className="h-12 bg-orange-600 hover:bg-orange-700 text-white font-semibold"
-                  >
-                    Buscar
-                  </Button>
-                </div>
+                </motion.div>
               </motion.div>
             </div>
+          </div>
 
-            {/* Scroll indicator */}
+          {/* Scroll Indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.8 }}
+            className="mt-auto pb-8 flex justify-center"
+          >
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="mt-auto pb-8 flex flex-col items-center"
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
+              className="flex flex-col items-center text-white/70"
             >
-              <span className="text-sm text-gray-300 mb-2">Descubre más</span>
-              <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}>
-                <ChevronDown className="w-6 h-6 text-gray-300" />
-              </motion.div>
+              <span className="text-sm mb-2">Descubre más</span>
+              <ChevronDown className="h-6 w-6" />
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Featured Properties Section */}
-      <section className="py-16 bg-gray-50">
+      {/* Featured Properties */}
+      <section className="py-20 bg-gray-800">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
-            >
-              Propiedades Destacadas
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-lg text-gray-600 max-w-2xl mx-auto"
-            >
-              Descubre nuestra selección de propiedades premium en las mejores ubicaciones de Reconquista
-            </motion.p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold text-white mb-4">Propiedades Destacadas</h2>
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Descubre las mejores oportunidades inmobiliarias en Reconquista
+            </p>
+          </motion.div>
 
-          {featuredProperties.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                {featuredProperties.map((property, index) => (
-                  <motion.div
-                    key={property.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                  >
-                    <PropertyCard property={property} />
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="text-center">
-                <Link href="/propiedades">
-                  <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
-                    Ver todas las propiedades
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </>
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-600">Cargando propiedades destacadas...</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
-            >
-              Nuestros Servicios
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-lg text-gray-600 max-w-2xl mx-auto"
-            >
-              Ofrecemos servicios integrales para todas tus necesidades inmobiliarias
-            </motion.p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Venta de Propiedades",
-                description: "Te ayudamos a vender tu propiedad al mejor precio del mercado",
-                icon: "🏠",
-              },
-              {
-                title: "Alquiler",
-                description: "Encuentra el hogar perfecto para alquilar o pon tu propiedad en alquiler",
-                icon: "🔑",
-              },
-              {
-                title: "Asesoramiento",
-                description: "Recibe asesoramiento profesional en todas tus decisiones inmobiliarias",
-                icon: "💼",
-              },
-            ].map((service, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            {featuredProperties.map((property, index) => (
               <motion.div
-                key={index}
+                key={property.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
               >
-                <Card className="text-center p-8 hover:shadow-lg transition-shadow">
-                  <CardContent className="p-0">
-                    <div className="text-4xl mb-4">{service.icon}</div>
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{service.title}</h3>
-                    <p className="text-gray-600">{service.description}</p>
+                <Card className="bg-gray-700 border-gray-600 hover:border-brand-orange transition-all duration-300 overflow-hidden group">
+                  <div className="relative">
+                    <div className="aspect-video relative overflow-hidden">
+                      <Image
+                        src={getOptimizedImageUrl(property.images[0], {
+                          width: 400,
+                          height: 250,
+                          crop: "fill",
+                          quality: "auto",
+                          format: "auto" || "/placeholder.svg",
+                        })}
+                        alt={property.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+
+                    <div className="absolute top-3 left-3">
+                      <Badge className="bg-brand-orange hover:bg-orange-600 text-white">Destacada</Badge>
+                    </div>
+
+                    <div className="absolute bottom-3 left-3">
+                      <div className="bg-black/70 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        {formatPrice(property.price, property.operation_type)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="font-semibold text-white text-xl mb-2">{property.title}</h3>
+                        <div className="flex items-center text-gray-400">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {property.address}, {property.neighborhood}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span className="bg-gray-600 text-gray-200 px-3 py-1 rounded-full text-sm">
+                          {getPropertyTypeLabel(property.property_type)}
+                        </span>
+                        <div className="flex items-center gap-4 text-gray-300">
+                          {property.bedrooms > 0 && (
+                            <div className="flex items-center gap-1">
+                              <Bed className="h-4 w-4" />
+                              {property.bedrooms}
+                            </div>
+                          )}
+                          {property.bathrooms > 0 && (
+                            <div className="flex items-center gap-1">
+                              <Bath className="h-4 w-4" />
+                              {property.bathrooms}
+                            </div>
+                          )}
+                          <div className="flex items-center gap-1">
+                            <Square className="h-4 w-4" />
+                            {property.area}m²
+                          </div>
+                        </div>
+                      </div>
+
+                      <Link href={`/propiedades/${property.id}`}>
+                        <Button className="w-full bg-brand-orange hover:bg-orange-600 text-white">
+                          Ver detalles
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
             ))}
           </div>
+
+          <div className="text-center">
+            <Link href="/propiedades">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-white bg-transparent"
+              >
+                Ver todas las propiedades
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-16 bg-orange-600 text-white">
+      {/* Stats Section */}
+      <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-3xl md:text-4xl font-bold mb-4"
-            >
-              ¿Listo para encontrar tu próximo hogar?
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-xl text-orange-100 max-w-2xl mx-auto"
-            >
-              Contáctanos hoy mismo y déjanos ayudarte a encontrar la propiedad perfecta
-            </motion.p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="flex flex-col items-center"
-            >
-              <Phone className="w-8 h-8 mb-3" />
-              <h3 className="font-semibold mb-2">Teléfono</h3>
-              <p className="text-orange-100">+54 3482 123456</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="flex flex-col items-center"
-            >
-              <Mail className="w-8 h-8 mb-3" />
-              <h3 className="font-semibold mb-2">Email</h3>
-              <p className="text-orange-100">info@marconiinmobiliaria.com</p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="flex flex-col items-center"
-            >
-              <MapPin className="w-8 h-8 mb-3" />
-              <h3 className="font-semibold mb-2">Ubicación</h3>
-              <p className="text-orange-100">Reconquista, Santa Fe</p>
-            </motion.div>
-          </div>
-
-          <div className="text-center mt-12">
-            <Button size="lg" variant="secondary" className="bg-white text-orange-600 hover:bg-gray-100">
-              Contactar ahora
-            </Button>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-8"
+          >
+            {[
+              { icon: Home, number: "500+", label: "Propiedades Vendidas" },
+              { icon: Users, number: "1000+", label: "Clientes Satisfechos" },
+              { icon: Award, number: "15+", label: "Años de Experiencia" },
+              { icon: Star, number: "4.9", label: "Calificación Promedio" },
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="text-center"
+              >
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-orange/20 rounded-full mb-4">
+                  <stat.icon className="h-8 w-8 text-brand-orange" />
+                </div>
+                <div className="text-3xl font-bold text-white mb-2">{stat.number}</div>
+                <div className="text-gray-400">{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-brand-orange">
+        <div className="container mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-3xl mx-auto"
+          >
+            <h2 className="text-4xl font-bold text-white mb-6">¿Listo para encontrar tu próximo hogar?</h2>
+            <p className="text-xl text-orange-100 mb-8">
+              Nuestro equipo de expertos está aquí para ayudarte en cada paso del camino
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/propiedades">
+                <Button size="lg" variant="secondary" className="bg-white text-brand-orange hover:bg-gray-100">
+                  Explorar Propiedades
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/contacto">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white text-white hover:bg-white hover:text-brand-orange bg-transparent"
+                >
+                  Contactar Agente
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-800 border-t border-gray-700 py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="text-2xl font-bold">
+                  <span className="text-white">MARCONI</span>
+                  <span className="text-brand-orange block text-sm font-normal tracking-wider">INMOBILIARIA</span>
+                </div>
+              </div>
+              <p className="text-gray-400 mb-4">
+                La inmobiliaria líder en Reconquista, comprometida con encontrar el hogar perfecto para cada familia.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-white font-semibold mb-4">Enlaces</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li>
+                  <Link href="/propiedades" className="hover:text-white transition-colors">
+                    Propiedades
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/agentes" className="hover:text-white transition-colors">
+                    Agentes
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contacto" className="hover:text-white transition-colors">
+                    Contacto
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-white font-semibold mb-4">Contacto</h3>
+              <ul className="space-y-2 text-gray-400">
+                <li>Reconquista, Santa Fe</li>
+                <li>+54 9 3482 123456</li>
+                <li>info@marconiinmobiliaria.com</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 Marconi Inmobiliaria. Todos los derechos reservados.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
