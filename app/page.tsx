@@ -153,18 +153,27 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative h-screen flex flex-col">
+      <section className="relative h-screen flex flex-col overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="/hero-background.jpg"
-            alt="Vista aérea de Reconquista - Marconi Inmobiliaria"
-            fill
-            className="object-cover"
+            src={getOptimizedImageUrl("gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy", {
+              width: 1920,
+              height: 1080,
+              crop: "fill",
+              quality: "auto",
+              format: "auto",\
+             || "/placeholder.svg\"}, "/placeholder.svg\")}\
+            alt=\"Vista aérea de Reconquista - Marconi Inmobiliaria"\
+            fill\
+            className="object-cover"\
             priority
           />
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/30" />\
         </div>
+
+        {/* Orange Gradient Overlay at Bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-orange-500/80 via-orange-400/40 to-transparent" />
 
         {/* Content */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center px-4">
@@ -176,7 +185,7 @@ export default function HomePage() {
               transition={{ duration: 0.8 }}
               className="mb-8"
             >
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-normal text-white leading-tight mb-6">
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-light text-white leading-tight mb-6" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
                 No esperes más,
                 <br />
                 <span className="font-semibold">encuentra el hogar ideal</span>
@@ -186,15 +195,23 @@ export default function HomePage() {
 
               {/* Orange curved line */}
               <div className="flex justify-center mb-12">
-                <svg width="200" height="20" viewBox="0 0 200 20" className="text-brand-orange">
-                  <path
+                <motion.svg 
+                  width="200" 
+                  height="20" 
+                  viewBox="0 0 200 20" 
+                  className="text-orange-500"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 1.5, delay: 0.5 }}
+                >
+                  <motion.path
                     d="M10 15 Q100 5 190 15"
                     stroke="currentColor"
-                    strokeWidth="3"
+                    strokeWidth="4"
                     fill="none"
                     strokeLinecap="round"
                   />
-                </svg>
+                </motion.svg>
               </div>
             </motion.div>
 
@@ -208,18 +225,18 @@ export default function HomePage() {
               <div className="inline-flex items-center justify-center w-24 h-24 md:w-32 md:h-32">
                 <div className="relative">
                   {/* House outline */}
-                  <svg width="80" height="80" viewBox="0 0 80 80" className="text-white" fill="none">
+                  <svg width="100" height="100" viewBox="0 0 100 100" className="text-white" fill="none">
                     <path
-                      d="M8 35L40 8L72 35V70C72 71.1046 71.1046 72 70 72H50V52C50 50.8954 49.1046 50 48 50H32C30.8954 50 30 50.8954 30 52V72H10C8.89543 72 8 71.1046 8 70V35Z"
+                      d="M10 43.75L50 10L90 43.75V87.5C90 88.8807 88.8807 90 87.5 90H62.5V65C62.5 63.6193 61.3807 62.5 60 62.5H40C38.6193 62.5 37.5 63.6193 37.5 65V90H12.5C11.1193 90 10 88.8807 10 87.5V43.75Z"
                       stroke="currentColor"
-                      strokeWidth="2.5"
+                      strokeWidth="3"
                       strokeLinejoin="round"
                     />
-                    <path d="M30 72V52H50V72" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" />
+                    <path d="M37.5 90V65H62.5V90" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
                   </svg>
                   {/* Heart inside */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Heart className="w-8 h-8 text-white fill-white" />
+                    <Heart className="w-10 h-10 text-white fill-white" />
                   </div>
                 </div>
               </div>
@@ -232,8 +249,12 @@ export default function HomePage() {
               transition={{ delay: 0.6, duration: 0.8 }}
               className="text-center"
             >
-              <div className="text-5xl md:text-7xl font-bold text-blue-600 mb-2">Marconi</div>
-              <div className="text-lg md:text-xl text-white font-light tracking-wider">Negocios Inmobiliarios</div>
+              <div className="text-5xl md:text-7xl font-bold text-blue-700 mb-2" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+                Marconi
+              </div>
+              <div className="text-lg md:text-xl text-white font-light tracking-wider" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+                Negocios Inmobiliarios
+              </div>
             </motion.div>
           </div>
 
@@ -244,7 +265,7 @@ export default function HomePage() {
             transition={{ delay: 0.8, duration: 0.6 }}
             className="absolute bottom-8 right-8"
           >
-            <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-black/50 rounded-full flex items-center justify-center backdrop-blur-sm">
               <VolumeX className="w-6 h-6 text-white" />
             </div>
           </motion.div>
@@ -279,15 +300,13 @@ export default function HomePage() {
                   <div className="relative">
                     <div className="aspect-video relative overflow-hidden">
                       <Image
-                        src={
-                          getOptimizedImageUrl(property.images[0], {
-                            width: 400,
-                            height: 250,
-                            crop: "fill",
-                            quality: "auto",
-                            format: "auto" || "/placeholder.svg",
-                          }) || "/placeholder.svg"
-                        }
+                        src={getOptimizedImageUrl(property.images[0], {
+                          width: 400,
+                          height: 250,
+                          crop: "fill",
+                          quality: "auto",
+                          format: "auto",\
+                         || \"/placeholder.svg\"}, \"/placeholder.svg")}
                         alt={property.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -304,7 +323,6 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-
                   <CardContent className="p-6">
                     <div className="space-y-4">
                       <div>
@@ -488,5 +506,5 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
-  )
+  )\
 }
