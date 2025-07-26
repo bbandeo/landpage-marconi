@@ -156,19 +156,6 @@ export default function HomePage() {
       <section className="relative h-screen flex flex-col overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
-          <Image
-            src={getOptimizedImageUrl("gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy", {
-              width: 1920,
-              height: 1080,
-              crop: "fill",
-              quality: "auto",
-              format: "auto",\
-             || \"/placeholder.svg\"})}\
-            alt=\"Vista aérea de Reconquista - Marconi Inmobiliaria"\
-            fill\
-            className="object-cover"\
-            priority
-          />
           <div className="absolute inset-0 bg-black/30" />\
         </div>
 
