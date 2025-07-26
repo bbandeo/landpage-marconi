@@ -1,32 +1,27 @@
 "use client"
 
+import type React from "react"
+
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/components/ui/use-toast"
-import { Loader2 } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
 export function ContactForm() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [phone, setPhone] = useState("")
-  const [message, setMessage] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setIsLoading(true)
+    setIsSubmitting(true)
 
-    if (!name || !email || !message) {
-      toast({
-        title: "Error de validación",
-        description: "Por favor, completa los campos obligatorios (Nombre, Email y Mensaje).",
-        variant: "destructive",
-      })
-      setIsLoading(false)
-      return
+    const formData = new FormData(e.currentTarget)
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      message: formData.get("message") as string,
     }
 
     try {
@@ -35,32 +30,26 @@ export function ContactForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, phone, message, status: "new" }),
+        body: JSON.stringify(data),
       })
 
-      if (!response.ok) {
-        throw new Error("No se pudo enviar el mensaje. Inténtalo de nuevo más tarde.")
+      if (response.ok) {
+        toast({
+          title: "Mensaje enviado",
+          description: "Gracias por contactarnos. Te responderemos pronto.",
+        })
+        e.currentTarget.reset()
+      } else {
+        throw new Error("Error al enviar el mensaje")
       }
-
-      toast({
-        title: "¡Mensaje Enviado!",
-        description: "Gracias por contactarnos. Te responderemos a la brevedad.",
-      })
-
-      // Reset form
-      setName("")
-      setEmail("")
-      setPhone("")
-      setMessage("")
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Ocurrió un error inesperado."
       toast({
-        title: "Error al enviar",
-        description: errorMessage,
+        title: "Error",
+        description: "Hubo un problema al enviar tu mensaje. Inténtalo de nuevo.",
         variant: "destructive",
       })
     } finally {
-      setIsLoading(false)
+      setIsSubmitting(false)
     }
   }
 
@@ -69,64 +58,55 @@ export function ContactForm() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="form-group">
           <Input
-            id="name"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
             placeholder=" "
             className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500"
             required
           />
-          <label htmlFor="name" className="floating-label">Nombre</label>
+          <label className="floating-label">Nombre</label>
         </div>
         <div className="form-group">
           <Input
-            id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
             placeholder=" "
             className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500"
             required
           />
-          <label htmlFor="email" className="floating-label">Email</label>
+          <label className="floating-label">Email</label>
         </div>
       </div>
 
       <div className="form-group">
         <Input
-          id="phone"
           type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          name="phone"
           placeholder=" "
           className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500"
+          required
         />
-        <label htmlFor="phone" className="floating-label">Teléfono (Opcional)</label>
+        <label className="floating-label">Teléfono</label>
       </div>
 
       <div className="form-group">
         <Textarea
-          id="message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          name="message"
           placeholder=" "
           rows={4}
           className="peer bg-gray-800 border-gray-700 text-white placeholder-transparent focus:border-orange-500 resize-none"
           required
         />
-        <label htmlFor="message" className="floating-label">Mensaje</label>
+        <label className="floating-label">Mensaje</label>
       </div>
 
-      <Button type="submit" size="lg" className="w-full bg-orange-500 hover:bg-orange-600 btn-premium" disabled={isLoading}>
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Enviando...
-          </>
-        ) : (
-          "Enviar Mensaje"
-        )}
+      <Button
+        type="submit"
+        size="lg"
+        className="w-full bg-orange-500 hover:bg-orange-600 btn-premium"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
       </Button>
     </form>
   )
