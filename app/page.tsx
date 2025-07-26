@@ -406,9 +406,9 @@ export default function MarconiInmobiliaria() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
           </div>
 
-          <div className="relative z-10 text-center text-white px-4 md:px-6 max-w-4xl mx-auto">
+          <div className="relative z-10 text-center text-white px-4 md:px-6 max-w-4xl mx-auto flex flex-col justify-center min-h-screen">
             <motion.h1
-              className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light mb-6 md:mb-8 tracking-[0.05em] md:tracking-[0.1em] leading-tight"
+              className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light mb-16 md:mb-8 tracking-[0.05em] md:tracking-[0.1em] leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
@@ -419,7 +419,7 @@ export default function MarconiInmobiliaria() {
             </motion.h1>
 
             <motion.div
-              className="absolute bottom-8 md:bottom-12 left-1/2 transform -translate-x-1/2 text-center"
+              className="mt-auto mb-8 md:mb-12 text-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1 }}
