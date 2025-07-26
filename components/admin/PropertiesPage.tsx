@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { getOptimizedImageUrl } from "@/lib/cloudinary"
 import type { Property } from "@/lib/supabase"
 
 interface PropertyWithStats extends Property {
@@ -27,16 +28,19 @@ function PropertyImage({ images, title }: PropertyImageProps) {
 
   if (!firstImage || imageError) {
     return (
-      <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
+      <div className="w-12 h-12 bg-gray-700 rounded-lg flex items-center justify-center">
         <Home className="w-6 h-6 text-gray-400" />
       </div>
     )
   }
 
   return (
-    <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100">
+    <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-700">
       <img
-        src={firstImage || "/placeholder.svg"}
+        src={
+          getOptimizedImageUrl(firstImage, { width: 48, height: 48, crop: "fill" || "/placeholder.svg" }) ||
+          "/placeholder.svg"
+        }
         alt={title}
         className="w-full h-full object-cover"
         onError={() => setImageError(true)}
@@ -115,18 +119,18 @@ export default function PropertiesPage() {
     switch (status) {
       case "available":
       case "Disponible":
-        return "bg-green-100 text-green-800"
+        return "bg-green-500 text-white"
       case "sold":
       case "Vendido":
-        return "bg-red-100 text-red-800"
+        return "bg-red-500 text-white"
       case "rented":
       case "Alquilado":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-500 text-white"
       case "reserved":
       case "Reservado":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-500 text-white"
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-500 text-white"
     }
   }
 
@@ -174,16 +178,24 @@ export default function PropertiesPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <div className="h-8 w-48 bg-gray-200 rounded animate-pulse mb-2" />
-            <div className="h-4 w-64 bg-gray-200 rounded animate-pulse" />
+            <div className="h-8 w-48 bg-gray-700 rounded animate-pulse mb-2" />
+            <div className="h-4 w-64 bg-gray-700 rounded animate-pulse" />
           </div>
-          <div className="h-10 w-32 bg-gray-200 rounded animate-pulse" />
+          <div className="h-10 w-32 bg-gray-700 rounded animate-pulse" />
         </div>
 
-        <div className="grid gap-4">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-20 bg-gray-200 rounded animate-pulse" />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="h-24 bg-gray-800 rounded-lg animate-pulse" />
           ))}
+        </div>
+
+        <div className="bg-gray-800 rounded-lg p-6">
+          <div className="grid gap-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-16 bg-gray-700 rounded animate-pulse" />
+            ))}
+          </div>
         </div>
       </div>
     )
@@ -194,10 +206,13 @@ export default function PropertiesPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestión de Propiedades</h1>
-          <p className="text-gray-600">Administra todas las propiedades del sistema</p>
+          <h1 className="text-2xl font-bold text-white">Gestión de Propiedades</h1>
+          <p className="text-gray-300">Administra todas las propiedades del sistema</p>
         </div>
-        <Button onClick={() => router.push("/admin/properties/new")}>
+        <Button
+          onClick={() => router.push("/admin/properties/new")}
+          className="bg-brand-orange hover:bg-brand-orange/90 text-white"
+        >
           <Plus className="w-4 h-4 mr-2" />
           Nueva Propiedad
         </Button>
@@ -210,32 +225,36 @@ export default function PropertiesPage() {
             label: "Total Propiedades",
             value: properties.length.toString(),
             color: "bg-blue-500",
+            icon: Home,
           },
           {
             label: "Disponibles",
             value: properties.filter((p) => p.status === "available").length.toString(),
             color: "bg-green-500",
+            icon: Home,
           },
           {
             label: "Vendidas",
             value: properties.filter((p) => p.status === "sold").length.toString(),
             color: "bg-red-500",
+            icon: Home,
           },
           {
             label: "Destacadas",
             value: properties.filter((p) => p.featured).length.toString(),
-            color: "bg-yellow-500",
+            color: "bg-brand-orange",
+            icon: Star,
           },
         ].map((stat, index) => (
-          <Card key={index}>
+          <Card key={index} className="bg-gray-800 border-gray-700">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">{stat.label}</p>
-                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                  <p className="text-sm text-gray-300">{stat.label}</p>
+                  <p className="text-2xl font-bold text-white">{stat.value}</p>
                 </div>
                 <div className={`${stat.color} p-3 rounded-lg`}>
-                  <Home className="w-6 h-6 text-white" />
+                  <stat.icon className="w-6 h-6 text-white" />
                 </div>
               </div>
             </CardContent>
@@ -244,7 +263,7 @@ export default function PropertiesPage() {
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="bg-gray-800 border-gray-700">
         <CardContent className="p-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 gap-4">
             <div className="flex items-center space-x-4">
@@ -254,65 +273,86 @@ export default function PropertiesPage() {
                   placeholder="Buscar propiedades..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 w-64"
+                  className="pl-10 w-64 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-brand-orange focus:ring-brand-orange"
                 />
               </div>
 
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-40 bg-gray-700 border-gray-600 text-white focus:border-brand-orange focus:ring-brand-orange">
                   <SelectValue placeholder="Estado" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="available">Disponible</SelectItem>
-                  <SelectItem value="sold">Vendido</SelectItem>
-                  <SelectItem value="rented">Alquilado</SelectItem>
-                  <SelectItem value="reserved">Reservado</SelectItem>
+                <SelectContent className="bg-gray-700 border-gray-600">
+                  <SelectItem value="all" className="text-white hover:bg-gray-600">
+                    Todos
+                  </SelectItem>
+                  <SelectItem value="available" className="text-white hover:bg-gray-600">
+                    Disponible
+                  </SelectItem>
+                  <SelectItem value="sold" className="text-white hover:bg-gray-600">
+                    Vendido
+                  </SelectItem>
+                  <SelectItem value="rented" className="text-white hover:bg-gray-600">
+                    Alquilado
+                  </SelectItem>
+                  <SelectItem value="reserved" className="text-white hover:bg-gray-600">
+                    Reservado
+                  </SelectItem>
                 </SelectContent>
               </Select>
 
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-40 bg-gray-700 border-gray-600 text-white focus:border-brand-orange focus:ring-brand-orange">
                   <SelectValue placeholder="Tipo" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="casa">Casa</SelectItem>
-                  <SelectItem value="departamento">Departamento</SelectItem>
-                  <SelectItem value="terreno">Terreno</SelectItem>
-                  <SelectItem value="local">Local</SelectItem>
+                <SelectContent className="bg-gray-700 border-gray-600">
+                  <SelectItem value="all" className="text-white hover:bg-gray-600">
+                    Todos
+                  </SelectItem>
+                  <SelectItem value="casa" className="text-white hover:bg-gray-600">
+                    Casa
+                  </SelectItem>
+                  <SelectItem value="departamento" className="text-white hover:bg-gray-600">
+                    Departamento
+                  </SelectItem>
+                  <SelectItem value="terreno" className="text-white hover:bg-gray-600">
+                    Terreno
+                  </SelectItem>
+                  <SelectItem value="local" className="text-white hover:bg-gray-600">
+                    Local
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
+            <p className="text-sm text-gray-400">{filteredProperties.length} propiedades encontradas</p>
           </div>
         </CardContent>
       </Card>
 
       {/* Properties Table */}
-      <Card>
+      <Card className="bg-gray-800 border-gray-700">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-700/50">
                 <tr>
-                  <th className="text-left py-3 px-6 font-medium text-gray-900">Propiedad</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-900">Tipo</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-900">Precio</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-900">Estado</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-900">Ubicación</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-900">Estadísticas</th>
-                  <th className="text-left py-3 px-6 font-medium text-gray-900">Acciones</th>
+                  <th className="text-left py-4 px-6 font-medium text-gray-200">Propiedad</th>
+                  <th className="text-left py-4 px-6 font-medium text-gray-200">Tipo</th>
+                  <th className="text-left py-4 px-6 font-medium text-gray-200">Precio</th>
+                  <th className="text-left py-4 px-6 font-medium text-gray-200">Estado</th>
+                  <th className="text-left py-4 px-6 font-medium text-gray-200">Ubicación</th>
+                  <th className="text-left py-4 px-6 font-medium text-gray-200">Estadísticas</th>
+                  <th className="text-left py-4 px-6 font-medium text-gray-200">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-gray-700">
                 {filteredProperties.map((property) => (
-                  <tr key={property.id} className="hover:bg-gray-50">
+                  <tr key={property.id} className="hover:bg-gray-700/30 transition-colors">
                     <td className="py-4 px-6">
                       <div className="flex items-center space-x-3">
                         <PropertyImage images={property.images || []} title={property.title} />
                         <div>
-                          <h3 className="font-medium text-gray-900">{property.title}</h3>
-                          <div className="flex items-center text-sm text-gray-500 space-x-4">
+                          <h3 className="font-medium text-white">{property.title}</h3>
+                          <div className="flex items-center text-sm text-gray-400 space-x-4">
                             {property.bedrooms && (
                               <span className="flex items-center">
                                 <Bed className="w-3 h-3 mr-1" />
@@ -337,26 +377,24 @@ export default function PropertiesPage() {
                     </td>
                     <td className="py-4 px-6">
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          {getPropertyTypeLabel(property.property_type)}
-                        </p>
-                        <p className="text-xs text-gray-500">{getOperationTypeLabel(property.operation_type)}</p>
+                        <p className="text-sm font-medium text-white">{getPropertyTypeLabel(property.property_type)}</p>
+                        <p className="text-xs text-gray-400">{getOperationTypeLabel(property.operation_type)}</p>
                       </div>
                     </td>
                     <td className="py-4 px-6">
-                      <span className="text-sm font-medium text-gray-900">{formatPrice(property.price)}</span>
+                      <span className="text-sm font-medium text-white">{formatPrice(property.price)}</span>
                     </td>
                     <td className="py-4 px-6">
                       <Badge className={getStatusColor(property.status)}>{property.status}</Badge>
                     </td>
                     <td className="py-4 px-6">
-                      <div className="flex items-center text-sm text-gray-500">
+                      <div className="flex items-center text-sm text-gray-400">
                         <MapPin className="w-3 h-3 mr-1" />
                         <span>{property.neighborhood || property.city}</span>
                       </div>
                     </td>
                     <td className="py-4 px-6">
-                      <div className="text-sm text-gray-500 space-y-1">
+                      <div className="text-sm text-gray-400 space-y-1">
                         <div className="flex items-center">
                           <Eye className="w-3 h-3 mr-1" />
                           {property.views || 0} vistas
@@ -370,27 +408,33 @@ export default function PropertiesPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => toggleFeatured(property.id, property.featured)}
-                          className="p-1"
+                          className="p-1 hover:bg-gray-600"
                         >
                           <Star
                             className={`w-4 h-4 ${
-                              property.featured ? "text-yellow-500 fill-current" : "text-gray-400"
+                              property.featured ? "text-brand-orange fill-current" : "text-gray-400"
                             }`}
                           />
                         </Button>
 
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="p-1">
+                            <Button variant="ghost" size="sm" className="p-1 hover:bg-gray-600 text-gray-300">
                               <MoreHorizontal className="w-4 h-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => router.push(`/admin/properties/${property.id}/edit`)}>
+                          <DropdownMenuContent align="end" className="bg-gray-700 border-gray-600">
+                            <DropdownMenuItem
+                              onClick={() => router.push(`/admin/properties/${property.id}/edit`)}
+                              className="text-white hover:bg-gray-600"
+                            >
                               <Edit className="w-4 h-4 mr-2" />
                               Editar
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => deleteProperty(property.id)} className="text-red-600">
+                            <DropdownMenuItem
+                              onClick={() => deleteProperty(property.id)}
+                              className="text-red-400 hover:bg-gray-600 hover:text-red-300"
+                            >
                               <Trash2 className="w-4 h-4 mr-2" />
                               Eliminar
                             </DropdownMenuItem>
@@ -407,14 +451,17 @@ export default function PropertiesPage() {
           {filteredProperties.length === 0 && (
             <div className="text-center py-12">
               <Home className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron propiedades</h3>
-              <p className="text-gray-500 mb-4">
+              <h3 className="text-lg font-medium text-white mb-2">No se encontraron propiedades</h3>
+              <p className="text-gray-400 mb-4">
                 {searchTerm || statusFilter !== "all" || typeFilter !== "all"
                   ? "Intenta ajustar los filtros de búsqueda"
                   : "Comienza agregando tu primera propiedad"}
               </p>
               {!searchTerm && statusFilter === "all" && typeFilter === "all" && (
-                <Button onClick={() => router.push("/admin/properties/new")}>
+                <Button
+                  onClick={() => router.push("/admin/properties/new")}
+                  className="bg-brand-orange hover:bg-brand-orange/90 text-white"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Nueva Propiedad
                 </Button>
