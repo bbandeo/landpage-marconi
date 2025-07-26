@@ -195,23 +195,13 @@ export default function HomePage() {
 
               {/* Orange curved line */}
               <div className="flex justify-center mb-12">
-                <motion.svg 
-                  width="200" 
-                  height="20" 
-                  viewBox="0 0 200 20" 
-                  className="text-orange-500"
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
+                <motion.div 
+                  className="w-48 h-1 bg-orange-500 rounded-full"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
                   transition={{ duration: 1.5, delay: 0.5 }}
-                >
-                  <motion.path
-                    d="M10 15 Q100 5 190 15"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                    fill="none"
-                    strokeLinecap="round"
-                  />
-                </motion.svg>
+                  style={{ transformOrigin: 'left' }}
+                />
               </div>
             </motion.div>
 
@@ -225,18 +215,13 @@ export default function HomePage() {
               <div className="inline-flex items-center justify-center w-24 h-24 md:w-32 md:h-32">
                 <div className="relative">
                   {/* House outline */}
-                  <svg width="100" height="100" viewBox="0 0 100 100" className="text-white" fill="none">
-                    <path
-                      d="M10 43.75L50 10L90 43.75V87.5C90 88.8807 88.8807 90 87.5 90H62.5V65C62.5 63.6193 61.3807 62.5 60 62.5H40C38.6193 62.5 37.5 63.6193 37.5 65V90H12.5C11.1193 90 10 88.8807 10 87.5V43.75Z"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinejoin="round"
-                    />
-                    <path d="M37.5 90V65H62.5V90" stroke="currentColor" strokeWidth="3" strokeLinejoin="round" />
-                  </svg>
-                  {/* Heart inside */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Heart className="w-10 h-10 text-white fill-white" />
+                  <div className="w-20 h-20 md:w-24 md:h-24 border-4 border-white relative" style={{
+                    clipPath: 'polygon(50% 0%, 0% 40%, 0% 100%, 100% 100%, 100% 40%)'
+                  }}>
+                    {/* Heart inside */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Heart className="w-8 h-8 md:w-10 md:h-10 text-white fill-white" />
+                    </div>
                   </div>
                 </div>
               </div>
