@@ -406,7 +406,7 @@ export default function MarconiInmobiliaria() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
           </div>
 
-          <div className="relative z-10 text-center text-white px-4 md:px-6 max-w-4xl mx-auto flex flex-col justify-center min-h-screen">
+          <div className="relative z-10 text-center text-white px-4 md:px-6 max-w-4xl mx-auto flex flex-col justify-center min-h-screen pt-32 md:pt-24">
             <motion.h1
               className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light mb-16 md:mb-8 tracking-[0.05em] md:tracking-[0.1em] leading-tight"
               initial={{ opacity: 0, y: 30 }}
