@@ -74,70 +74,72 @@ const PropertyCard = ({ property, onInterest }: { property: Property; onInterest
           </CarouselContent>
           {property.images && property.images.length > 1 && (
             <>
-              <CarouselPrevious className="absolute left-4 bg-black/50 border-white/20 text-white hover:bg-black/70" />
-              <CarouselNext className="absolute right-4 bg-black/50 border-white/20 text-white hover:bg-black/70" />
+              <CarouselPrevious className="absolute left-2 md:left-4 bg-black/50 border-white/20 text-white hover:bg-black/70 w-8 h-8 md:w-10 md:h-10" />
+              <CarouselNext className="absolute right-2 md:right-4 bg-black/50 border-white/20 text-white hover:bg-black/70 w-8 h-8 md:w-10 md:h-10" />
             </>
           )}
         </Carousel>
 
-        <div className="absolute top-4 left-4 flex gap-2">
-          <div className="bg-black/70 backdrop-blur-sm text-white px-3 py-1 text-xs font-medium tracking-wider">
+        <div className="absolute top-3 md:top-4 left-3 md:left-4 flex gap-2">
+          <div className="bg-black/70 backdrop-blur-sm text-white px-2 md:px-3 py-1 text-xs font-medium tracking-wider">
             {property.operation_type === "venta" ? "VENTA" : "ALQUILER"}
           </div>
           {property.featured && (
-            <div className="bg-orange-500 text-white px-3 py-1 text-xs font-medium tracking-wider flex items-center gap-1">
+            <div className="bg-orange-500 text-white px-2 md:px-3 py-1 text-xs font-medium tracking-wider flex items-center gap-1">
               <Star className="w-3 h-3" />
-              DESTACADA
+              <span className="hidden sm:inline">DESTACADA</span>
             </div>
           )}
         </div>
 
         <button
           onClick={() => setIsFavorited(!isFavorited)}
-          className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm p-2 text-white hover:text-orange-500 transition-colors"
+          className="absolute top-3 md:top-4 right-3 md:right-4 bg-black/50 backdrop-blur-sm p-2 text-white hover:text-orange-500 transition-colors"
           aria-label="Marcar como favorito"
         >
-          <Heart className={`w-5 h-5 ${isFavorited ? "fill-orange-500 text-orange-500" : ""}`} />
+          <Heart className={`w-4 h-4 md:w-5 md:h-5 ${isFavorited ? "fill-orange-500 text-orange-500" : ""}`} />
         </button>
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
           <Button
             onClick={() => onInterest(property)}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-10 md:h-12 text-sm md:text-base"
           >
             VER DETALLES
           </Button>
         </div>
       </div>
 
-      <div className="p-6 bg-white">
-        <div className="flex justify-between items-start mb-4">
+      <div className="p-4 md:p-6 bg-white">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-2">
           <div className="flex-1">
-            <h3 className="font-medium text-lg text-gray-900 mb-2 tracking-wide">{property.title}</h3>
+            <h3 className="font-medium text-base md:text-lg text-gray-900 mb-2 tracking-wide leading-tight">
+              {property.title}
+            </h3>
             <div className="text-gray-600 text-sm flex items-center tracking-wide">
-              <MapPin className="w-4 h-4 mr-2" />
-              {property.neighborhood}, Reconquista
+              <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
+              <span className="truncate">{property.neighborhood}, Reconquista</span>
             </div>
           </div>
-          <div className="text-xl font-light text-gray-900 text-right shrink-0 ml-4">
+          <div className="text-lg md:text-xl font-light text-gray-900 sm:text-right sm:shrink-0 sm:ml-4">
             {formatPrice(property.price, property.currency)}
           </div>
         </div>
 
-        <div className="flex items-center gap-6 text-gray-600 text-sm pt-4 border-t border-gray-100">
+        <div className="flex items-center gap-4 md:gap-6 text-gray-600 text-sm pt-4 border-t border-gray-100 overflow-x-auto">
           {property.bedrooms && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 whitespace-nowrap">
               <Bed className="w-4 h-4" /> {property.bedrooms}
             </span>
           )}
           {property.bathrooms && (
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2 whitespace-nowrap">
               <Bath className="w-4 h-4" /> {property.bathrooms}
             </span>
           )}
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-2 whitespace-nowrap">
             <Ruler className="w-4 h-4" /> {property.area_m2}m²
           </span>
         </div>
@@ -237,73 +239,105 @@ export default function MarconiInmobiliaria() {
       {/* Header */}
       <header
         className={`fixed top-0 right-0 left-0 z-50 transition-all duration-300 ${
-          scrolled ? "bg-white/95 backdrop-blur-lg shadow-sm py-4" : "bg-transparent py-6"
+          scrolled ? "bg-white/95 backdrop-blur-lg shadow-sm py-3 md:py-4" : "bg-transparent py-4 md:py-6"
         }`}
       >
-        <div className="container mx-auto px-6 flex justify-between items-center">
-          {/* Search Bar */}
-          <div className="flex-1 max-w-md">
+        <div className="container mx-auto px-4 md:px-6">
+          {/* Mobile Header */}
+          <div className="flex md:hidden justify-between items-center">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+              <a href="#" className="text-lg font-light tracking-[0.15em]">
+                <span className={scrolled ? "text-gray-900" : "text-white"}>MARCONI</span>
+                <span className="text-orange-500"> INMOBILIARIA</span>
+              </a>
+            </motion.div>
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`p-2 ${scrolled ? "text-gray-900" : "text-white"}`}
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
+          {/* Desktop Header */}
+          <div className="hidden md:flex justify-between items-center">
+            {/* Search Bar */}
+            <div className="flex-1 max-w-md">
+              <div className="relative">
+                <Search
+                  className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 ${scrolled ? "text-gray-400" : "text-white/70"}`}
+                />
+                <Input
+                  type="text"
+                  placeholder="Buscar propiedades por dirección, barrio..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className={`pl-12 pr-4 py-3 w-full border-0 ${
+                    scrolled
+                      ? "bg-gray-50 text-gray-900 placeholder-gray-500"
+                      : "bg-white/10 backdrop-blur-sm text-white placeholder-white/70"
+                  } focus:ring-2 focus:ring-orange-500 transition-all`}
+                />
+              </div>
+            </div>
+
+            {/* Logo */}
+            <motion.div
+              className="flex-1 flex justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <a href="#" className="text-2xl font-light tracking-[0.2em]">
+                <span className={scrolled ? "text-gray-900" : "text-white"}>MARCONI</span>
+                <span className="text-orange-500"> INMOBILIARIA</span>
+              </a>
+            </motion.div>
+
+            {/* Navigation */}
+            <div className="flex-1 flex justify-end">
+              <nav className="flex items-center space-x-8">
+                <a
+                  href="#propiedades"
+                  className={`text-sm font-medium tracking-wider hover:text-orange-500 transition-colors ${scrolled ? "text-gray-700" : "text-white"}`}
+                >
+                  PROPIEDADES
+                </a>
+                <a
+                  href="#agentes"
+                  className={`text-sm font-medium tracking-wider hover:text-orange-500 transition-colors ${scrolled ? "text-gray-700" : "text-white"}`}
+                >
+                  AGENTES
+                </a>
+                <a
+                  href="#contact-form"
+                  className={`text-sm font-medium tracking-wider hover:text-orange-500 transition-colors ${scrolled ? "text-gray-700" : "text-white"}`}
+                >
+                  CONTACTO
+                </a>
+              </nav>
+            </div>
+          </div>
+
+          {/* Mobile Search Bar */}
+          <div className="md:hidden mt-4">
             <div className="relative">
               <Search
-                className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 ${scrolled ? "text-gray-400" : "text-white/70"}`}
+                className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${scrolled ? "text-gray-400" : "text-white/70"}`}
               />
               <Input
                 type="text"
-                placeholder="Buscar propiedades por dirección, barrio..."
+                placeholder="Buscar propiedades..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={`pl-12 pr-4 py-3 w-full border-0 ${
+                className={`pl-10 pr-4 py-3 w-full border-0 text-sm ${
                   scrolled
                     ? "bg-gray-50 text-gray-900 placeholder-gray-500"
                     : "bg-white/10 backdrop-blur-sm text-white placeholder-white/70"
                 } focus:ring-2 focus:ring-orange-500 transition-all`}
               />
             </div>
-          </div>
-
-          {/* Logo */}
-          <motion.div
-            className="flex-1 flex justify-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <a href="#" className="text-2xl font-light tracking-[0.2em]">
-              <span className={scrolled ? "text-gray-900" : "text-white"}>MARCONI</span>
-              <span className="text-orange-500"> INMOBILIARIA</span>
-            </a>
-          </motion.div>
-
-          {/* Navigation */}
-          <div className="flex-1 flex justify-end">
-            <nav className="hidden md:flex items-center space-x-8">
-              <a
-                href="#propiedades"
-                className={`text-sm font-medium tracking-wider hover:text-orange-500 transition-colors ${scrolled ? "text-gray-700" : "text-white"}`}
-              >
-                PROPIEDADES
-              </a>
-              <a
-                href="#agentes"
-                className={`text-sm font-medium tracking-wider hover:text-orange-500 transition-colors ${scrolled ? "text-gray-700" : "text-white"}`}
-              >
-                AGENTES
-              </a>
-              <a
-                href="#contact-form"
-                className={`text-sm font-medium tracking-wider hover:text-orange-500 transition-colors ${scrolled ? "text-gray-700" : "text-white"}`}
-              >
-                CONTACTO
-              </a>
-            </nav>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`md:hidden p-2 ${scrolled ? "text-gray-900" : "text-white"}`}
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
           </div>
         </div>
 
@@ -314,21 +348,50 @@ export default function MarconiInmobiliaria() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-t border-gray-200"
+              className="md:hidden bg-white border-t border-gray-200 shadow-lg"
             >
-              <nav className="container mx-auto px-6 py-4 space-y-4">
-                <a href="#propiedades" className="block text-gray-700 font-medium tracking-wider hover:text-orange-500">
+              <nav className="container mx-auto px-4 py-6 space-y-6">
+                <a
+                  href="#propiedades"
+                  className="block text-gray-700 font-medium tracking-wider hover:text-orange-500 text-lg"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   PROPIEDADES
                 </a>
-                <a href="#agentes" className="block text-gray-700 font-medium tracking-wider hover:text-orange-500">
+                <a
+                  href="#agentes"
+                  className="block text-gray-700 font-medium tracking-wider hover:text-orange-500 text-lg"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   AGENTES
                 </a>
                 <a
                   href="#contact-form"
-                  className="block text-gray-700 font-medium tracking-wider hover:text-orange-500"
+                  className="block text-gray-700 font-medium tracking-wider hover:text-orange-500 text-lg"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   CONTACTO
                 </a>
+
+                {/* Mobile Contact Buttons */}
+                <div className="pt-4 border-t border-gray-200 space-y-3">
+                  <a
+                    href="tel:+5403482123456"
+                    className="flex items-center justify-center bg-gray-900 text-white py-3 px-4 font-medium tracking-wide hover:bg-gray-800 transition-colors"
+                  >
+                    <Phone className="w-4 h-4 mr-2" />
+                    LLAMAR AHORA
+                  </a>
+                  <a
+                    href="https://wa.me/5403482123456"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center bg-green-600 text-white py-3 px-4 font-medium tracking-wide hover:bg-green-700 transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    WHATSAPP
+                  </a>
+                </div>
               </nav>
             </motion.div>
           )}
@@ -343,9 +406,9 @@ export default function MarconiInmobiliaria() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
           </div>
 
-          <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
+          <div className="relative z-10 text-center text-white px-4 md:px-6 max-w-4xl mx-auto">
             <motion.h1
-              className="text-4xl md:text-6xl lg:text-7xl font-light mb-8 tracking-[0.1em] leading-tight"
+              className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light mb-6 md:mb-8 tracking-[0.05em] md:tracking-[0.1em] leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
@@ -356,46 +419,46 @@ export default function MarconiInmobiliaria() {
             </motion.h1>
 
             <motion.div
-              className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-center"
+              className="absolute bottom-16 md:bottom-20 left-1/2 transform -translate-x-1/2 text-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1 }}
             >
-              <p className="text-sm font-medium tracking-[0.2em] mb-4">SCROLL</p>
-              <div className="w-px h-12 bg-white mx-auto animate-pulse" />
-              <ChevronDown className="w-6 h-6 mx-auto mt-2 animate-bounce" />
+              <p className="text-xs md:text-sm font-medium tracking-[0.2em] mb-4">SCROLL</p>
+              <div className="w-px h-8 md:h-12 bg-white mx-auto animate-pulse" />
+              <ChevronDown className="w-5 h-5 md:w-6 md:h-6 mx-auto mt-2 animate-bounce" />
             </motion.div>
           </div>
         </section>
 
         {/* Properties Section */}
-        <section id="propiedades" className="py-24 bg-gray-50">
-          <div className="container mx-auto px-6">
+        <section id="propiedades" className="py-16 md:py-24 bg-gray-50">
+          <div className="container mx-auto px-4 md:px-6">
             <motion.div
-              className="text-center mb-16"
+              className="text-center mb-12 md:mb-16"
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.5 }}
               variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6 tracking-[0.1em]">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 mb-4 md:mb-6 tracking-[0.05em] md:tracking-[0.1em]">
                 PROPIEDADES DESTACADAS
               </h2>
-              <div className="w-24 h-px bg-orange-500 mx-auto mb-8" />
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              <div className="w-16 md:w-24 h-px bg-orange-500 mx-auto mb-6 md:mb-8" />
+              <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed px-4">
                 Descubrí las mejores oportunidades inmobiliarias en Reconquista y la región
               </p>
             </motion.div>
 
             {loadingProperties ? (
-              <div className="text-center py-20">
+              <div className="text-center py-16 md:py-20">
                 <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-gray-600 font-medium tracking-wide">CARGANDO PROPIEDADES</p>
+                <p className="text-gray-600 font-medium tracking-wide text-sm md:text-base">CARGANDO PROPIEDADES</p>
               </div>
             ) : (
               <motion.div
-                className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.1 }}
@@ -410,9 +473,9 @@ export default function MarconiInmobiliaria() {
         </section>
 
         {/* Stats Section */}
-        <section className="py-24 bg-black text-white">
-          <div className="container mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <section className="py-16 md:py-24 bg-black text-white">
+          <div className="container mx-auto px-4 md:px-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
               {[
                 { number: "200+", label: "PROPIEDADES VENDIDAS" },
                 { number: "98%", label: "CLIENTES SATISFECHOS" },
@@ -427,8 +490,12 @@ export default function MarconiInmobiliaria() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                 >
-                  <div className="text-4xl md:text-5xl font-light text-orange-500 mb-4">{stat.number}</div>
-                  <div className="text-sm font-medium tracking-[0.15em] text-gray-300">{stat.label}</div>
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-light text-orange-500 mb-3 md:mb-4">
+                    {stat.number}
+                  </div>
+                  <div className="text-xs md:text-sm font-medium tracking-[0.1em] md:tracking-[0.15em] text-gray-300 leading-tight">
+                    {stat.label}
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -436,25 +503,27 @@ export default function MarconiInmobiliaria() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact-form" className="py-24 bg-white">
-          <div className="container mx-auto px-6">
+        <section id="contact-form" className="py-16 md:py-24 bg-white">
+          <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-4xl mx-auto">
               <motion.div
-                className="text-center mb-16"
+                className="text-center mb-12 md:mb-16"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.5 }}
                 variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0 } }}
                 transition={{ duration: 0.8 }}
               >
-                <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-6 tracking-[0.1em]">CONTACTANOS</h2>
-                <div className="w-24 h-px bg-orange-500 mx-auto mb-8" />
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-900 mb-4 md:mb-6 tracking-[0.05em] md:tracking-[0.1em]">
+                  CONTACTANOS
+                </h2>
+                <div className="w-16 md:w-24 h-px bg-orange-500 mx-auto mb-6 md:mb-8" />
+                <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
                   Nuestro equipo de expertos está listo para ayudarte a encontrar tu próximo hogar
                 </p>
               </motion.div>
 
-              <div className="grid lg:grid-cols-2 gap-16">
+              <div className="grid lg:grid-cols-2 gap-12 md:gap-16">
                 <motion.div
                   initial="hidden"
                   whileInView="visible"
@@ -464,13 +533,15 @@ export default function MarconiInmobiliaria() {
                 >
                   <div className="space-y-8">
                     <div>
-                      <h3 className="text-xl font-medium text-gray-900 mb-4 tracking-wide">INFORMACIÓN DE CONTACTO</h3>
-                      <div className="space-y-4">
+                      <h3 className="text-lg md:text-xl font-medium text-gray-900 mb-4 md:mb-6 tracking-wide">
+                        INFORMACIÓN DE CONTACTO
+                      </h3>
+                      <div className="space-y-4 md:space-y-6">
                         <a
                           href="tel:+5403482123456"
                           className="flex items-center text-gray-600 hover:text-orange-500 transition-colors"
                         >
-                          <Phone className="w-5 h-5 mr-4" />
+                          <Phone className="w-5 h-5 mr-4 flex-shrink-0" />
                           <span className="font-medium">(03482) 15-123456</span>
                         </a>
                         <a
@@ -479,18 +550,20 @@ export default function MarconiInmobiliaria() {
                           rel="noopener noreferrer"
                           className="flex items-center text-gray-600 hover:text-green-600 transition-colors"
                         >
-                          <MessageCircle className="w-5 h-5 mr-4" />
+                          <MessageCircle className="w-5 h-5 mr-4 flex-shrink-0" />
                           <span className="font-medium">WhatsApp</span>
                         </a>
                         <div className="flex items-center text-gray-600">
-                          <MapPin className="w-5 h-5 mr-4" />
+                          <MapPin className="w-5 h-5 mr-4 flex-shrink-0" />
                           <span className="font-medium">Reconquista, Santa Fe</span>
                         </div>
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="text-xl font-medium text-gray-900 mb-4 tracking-wide">HORARIOS DE ATENCIÓN</h3>
+                      <h3 className="text-lg md:text-xl font-medium text-gray-900 mb-4 md:mb-6 tracking-wide">
+                        HORARIOS DE ATENCIÓN
+                      </h3>
                       <div className="space-y-2 text-gray-600">
                         <p>Lunes a Viernes: 9:00 - 18:00</p>
                         <p>Sábados: 9:00 - 13:00</p>
@@ -508,14 +581,14 @@ export default function MarconiInmobiliaria() {
                   transition={{ duration: 0.8 }}
                 >
                   <form onSubmit={handleContactSubmit} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <Input
                           type="text"
                           placeholder="NOMBRE"
                           value={contactForm.name}
                           onChange={(e) => setContactForm((prev) => ({ ...prev, name: e.target.value }))}
-                          className="bg-gray-50 border-0 text-gray-900 placeholder-gray-500 font-medium tracking-wide focus:ring-2 focus:ring-orange-500"
+                          className="bg-gray-50 border-0 text-gray-900 placeholder-gray-500 font-medium tracking-wide focus:ring-2 focus:ring-orange-500 h-12 md:h-14"
                           required
                         />
                       </div>
@@ -525,7 +598,7 @@ export default function MarconiInmobiliaria() {
                           placeholder="EMAIL"
                           value={contactForm.email}
                           onChange={(e) => setContactForm((prev) => ({ ...prev, email: e.target.value }))}
-                          className="bg-gray-50 border-0 text-gray-900 placeholder-gray-500 font-medium tracking-wide focus:ring-2 focus:ring-orange-500"
+                          className="bg-gray-50 border-0 text-gray-900 placeholder-gray-500 font-medium tracking-wide focus:ring-2 focus:ring-orange-500 h-12 md:h-14"
                         />
                       </div>
                     </div>
@@ -536,7 +609,7 @@ export default function MarconiInmobiliaria() {
                         placeholder="TELÉFONO"
                         value={contactForm.phone}
                         onChange={(e) => setContactForm((prev) => ({ ...prev, phone: e.target.value }))}
-                        className="bg-gray-50 border-0 text-gray-900 placeholder-gray-500 font-medium tracking-wide focus:ring-2 focus:ring-orange-500"
+                        className="bg-gray-50 border-0 text-gray-900 placeholder-gray-500 font-medium tracking-wide focus:ring-2 focus:ring-orange-500 h-12 md:h-14"
                       />
                     </div>
 
@@ -545,14 +618,14 @@ export default function MarconiInmobiliaria() {
                         placeholder="MENSAJE"
                         value={contactForm.message}
                         onChange={(e) => setContactForm((prev) => ({ ...prev, message: e.target.value }))}
-                        className="bg-gray-50 border-0 text-gray-900 placeholder-gray-500 font-medium tracking-wide min-h-32 focus:ring-2 focus:ring-orange-500 resize-none"
+                        className="bg-gray-50 border-0 text-gray-900 placeholder-gray-500 font-medium tracking-wide min-h-32 md:min-h-40 focus:ring-2 focus:ring-orange-500 resize-none"
                         required
                       />
                     </div>
 
                     <Button
                       type="submit"
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium tracking-[0.1em] py-4 transition-all duration-300"
+                      className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium tracking-[0.1em] py-4 md:py-6 transition-all duration-300 text-sm md:text-base"
                       disabled={submitLoading}
                     >
                       {submitLoading ? (
@@ -570,17 +643,17 @@ export default function MarconiInmobiliaria() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-black py-16 text-white">
-        <div className="container mx-auto px-6">
+      <footer className="bg-black py-12 md:py-16 text-white">
+        <div className="container mx-auto px-4 md:px-6">
           <div className="text-center">
-            <div className="mb-8">
-              <a href="#" className="text-3xl font-light tracking-[0.2em]">
+            <div className="mb-6 md:mb-8">
+              <a href="#" className="text-2xl md:text-3xl font-light tracking-[0.15em] md:tracking-[0.2em]">
                 <span className="text-white">MARCONI</span>
                 <span className="text-orange-500"> INMOBILIARIA</span>
               </a>
             </div>
 
-            <div className="flex justify-center space-x-8 mb-8">
+            <div className="flex justify-center space-x-6 md:space-x-8 mb-6 md:mb-8">
               {[
                 { icon: Instagram, href: "#", label: "Instagram" },
                 { icon: MessageCircle, href: "https://wa.me/5403482123456", label: "WhatsApp" },
@@ -589,7 +662,7 @@ export default function MarconiInmobiliaria() {
                 <a
                   key={index}
                   href={social.href}
-                  className="text-gray-400 hover:text-orange-500 transition-colors"
+                  className="text-gray-400 hover:text-orange-500 transition-colors p-2"
                   aria-label={social.label}
                 >
                   <social.icon className="w-6 h-6" />
@@ -597,8 +670,8 @@ export default function MarconiInmobiliaria() {
               ))}
             </div>
 
-            <div className="border-t border-gray-800 pt-8">
-              <p className="text-gray-400 font-medium tracking-wide">
+            <div className="border-t border-gray-800 pt-6 md:pt-8">
+              <p className="text-gray-400 font-medium tracking-wide text-sm md:text-base">
                 © {new Date().getFullYear()} MARCONI INMOBILIARIA. TODOS LOS DERECHOS RESERVADOS.
               </p>
             </div>
