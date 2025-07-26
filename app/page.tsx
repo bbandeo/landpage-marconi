@@ -406,18 +406,22 @@ export default function MarconiInmobiliaria() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/60" />
           </div>
 
-          <div className="relative z-10 text-center text-white px-4 md:px-6 max-w-4xl mx-auto flex flex-col justify-center min-h-screen pt-32 md:pt-0">
-            <motion.h1
-              className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light mb-16 md:mb-8 tracking-[0.05em] md:tracking-[0.1em] leading-tight"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.2 }}
-            >
-              SOMOS LA INMOBILIARIA #1
-              <br />
-              <span className="text-orange-500">DE RECONQUISTA</span>
-            </motion.h1>
+          <div className="relative z-10 text-center text-white px-4 md:px-6 max-w-4xl mx-auto h-full flex flex-col">
+            {/* Mobile: Add top padding, Desktop: No padding */}
+            <div className="pt-32 md:pt-0 md:flex-1 md:flex md:flex-col md:justify-center">
+              <motion.h1
+                className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-light mb-16 md:mb-8 tracking-[0.05em] md:tracking-[0.1em] leading-tight"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.2 }}
+              >
+                SOMOS LA INMOBILIARIA #1
+                <br />
+                <span className="text-orange-500">DE RECONQUISTA</span>
+              </motion.h1>
+            </div>
 
+            {/* Scroll indicator - always at bottom */}
             <motion.div
               className="mt-auto mb-8 md:mb-12 text-center"
               initial={{ opacity: 0 }}
