@@ -10,51 +10,6 @@ import Image from "next/image"
 import type { Property } from "@/lib/types"
 import type { ElementType } from "react"
 
-const featuredProperties: Property[] = [
-  {
-    id: "1",
-    title: "Casa moderna en centro",
-    price: 85000,
-    operation_type: "sale",
-    property_type: "house",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 120,
-    address: "San Martín 1234",
-    neighborhood: "Centro",
-    images: ["gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy"],
-    featured: true,
-  },
-  {
-    id: "2",
-    title: "Departamento luminoso",
-    price: 45000,
-    operation_type: "rent",
-    property_type: "apartment",
-    bedrooms: 2,
-    bathrooms: 1,
-    area: 65,
-    address: "Rivadavia 567",
-    neighborhood: "Norte",
-    images: ["gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy"],
-    featured: true,
-  },
-  {
-    id: "3",
-    title: "Local comercial estratégico",
-    price: 120000,
-    operation_type: "sale",
-    property_type: "commercial",
-    bedrooms: 0,
-    bathrooms: 1,
-    area: 80,
-    address: "Belgrano 890",
-    neighborhood: "Centro",
-    images: ["gustavo-papasergio-emoKYb99CRI-unsplash_w6gipy"],
-    featured: true,
-  },
-]
-
 const formatPrice = (price: number, operation: string) => {
   return (
     new Intl.NumberFormat("es-AR", {
@@ -67,8 +22,13 @@ const formatPrice = (price: number, operation: string) => {
 }
 
 const getPropertyTypeLabel = (type: string) => {
-  const labels = { house: "Casa", apartment: "Departamento", commercial: "Comercial", land: "Terreno" }
-  return labels[type as keyof typeof labels] || type
+  const labels: { [key: string]: string } = {
+    house: "Casa",
+    apartment: "Departamento",
+    commercial: "Comercial",
+    land: "Terreno",
+  }
+  return labels[type] || type
 }
 
 const PropertyFeature = ({ icon: Icon, value }: { icon: ElementType; value: string | number }) => (
@@ -95,7 +55,7 @@ const PropertyCard = ({ property, index }: { property: Property; index: number }
               crop: "fill",
               quality: "auto",
               format: "auto",\
-             || \"/placeholder.svg\"}) || placeholder}\
+             || "/placeholder.svg\"}) || \"/placeholder.svg\"}\
             alt={property.title}\
             fill\
             className=\"object-cover group-hover:scale-105 transition-transform duration-300"
@@ -138,8 +98,8 @@ const PropertyCard = ({ property, index }: { property: Property; index: number }
     </Card>
   </motion.div>
 )
-
-export function FeaturedPropertiesSection() {\
+\
+export function FeaturedPropertiesSection({ featuredProperties }: { featuredProperties: Property[] }) {\
   return (
     <section className="py-20 bg-gray-800">
       <div className="container mx-auto px-4">

@@ -20,11 +20,7 @@ export function CtaSection() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/propiedades">
-              <Button
-                size="lg"
-                variant="secondary"
-                className="bg-white text-brand-orange hover:bg-gray-100 w-full sm:w-auto"
-              >
+              <Button size="lg" variant="secondary" className="bg-white text-brand-orange hover:bg-gray-100">
                 Explorar Propiedades
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -33,7 +29,7 @@ export function CtaSection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white text-white hover:bg-white hover:text-brand-orange bg-transparent w-full sm:w-auto"
+                className="border-white text-white hover:bg-white hover:text-brand-orange bg-transparent"
               >
                 Contactar Agente
               </Button>

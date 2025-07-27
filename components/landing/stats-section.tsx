@@ -1,8 +1,9 @@
 "use client"
 import { motion } from "framer-motion"
 import { Home, Users, Award, Star } from "lucide-react"
+import type { ElementType } from "react"
 
-const stats = [
+const stats: { icon: ElementType; number: string; label: string }[] = [
   { icon: Home, number: "500+", label: "Propiedades Vendidas" },
   { icon: Users, number: "1000+", label: "Clientes Satisfechos" },
   { icon: Award, number: "15+", label: "Años de Experiencia" },
