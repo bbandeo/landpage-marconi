@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getOptimizedImageUrl } from "@/lib/cloudinary"
-import { MobileNav } from "@/components/MobileNav"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -115,9 +114,6 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      {/* Mobile Navigation */}
-      <MobileNav />
-
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
         <div className="container mx-auto px-4">
@@ -144,7 +140,7 @@ export default function HomePage() {
             </nav>
 
             {/* Mobile Search Bar */}
-            <div className="md:hidden flex-1 max-w-xs ml-4 mr-16">
+            <div className="md:hidden flex-1 max-w-xs ml-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input
@@ -168,174 +164,155 @@ export default function HomePage() {
               crop: "fill",
               quality: "auto",
               format: "auto",\
-             || \"/placeholder.svg\"})}\
+             || "/placeholder.svg\"}) || "/placeholder.svg\"}\
             alt=\"Reconquista - Marconi Inmobiliaria"\
             fill\
             className="object-cover"\
             priority
           />
-          <div className="absolute inset-0 bg-black/50" />
-\
-          {/* Orange Blur Effect - Enhanced */}\
-          <div className="absolute inset-0">
-            <div
-              className="absolute bottom-0 left-0 right-0 h-3/4"
-              style={{
-                background: `linear-gradient(
-                  to top,
-                  rgba(255, 107, 53, 0.6) 0%,
-                  rgba(255, 140, 0, 0.5) 15%,
-                  rgba(255, 165, 0, 0.4) 30%,
-                  rgba(255, 140, 0, 0.3) 45%,
-                  rgba(255, 107, 53, 0.2) 60%,
-                  rgba(255, 140, 0, 0.1) 75%,
-                  transparent 100%
-                )`,
-                backdropFilter: "blur(2px)",
-              }}
-            />\
-          </div>
+          {/* Subtle dark overlay for better text readability */}\
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 h-full flex flex-col">
-          {/* Main Content Area */}
-          <div className="flex-1 flex flex-col justify-center px-4 pt-20 md:pt-0">
-            <div className="container mx-auto text-center max-w-4xl">
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-                {/* Main Text - Mobile Optimized */}
-                <motion.h1
+        <div className="relative z-10 h-full flex flex-col justify-center items-center px-4 pt-20 md:pt-0">
+          <div className="container mx-auto text-center max-w-6xl">
+            {/* Main Impactful Text */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className="mb-16 md:mb-24"
+            >
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-light text-white leading-tight tracking-wide">
+                <motion.span
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.8 }}
-                  className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-12 sm:mb-16 md:mb-20 leading-tight px-2"
+                  transition={{ delay: 0.3, duration: 0.8 }}
+                  className="block mb-4 md:mb-6"
                 >
-                  <span className="block text-xl sm:text-2xl md:text-4xl lg:text-5xl mb-2">No esperes más,</span>
-                  <span className="block text-2xl sm:text-3xl md:text-5xl lg:text-6xl mb-2">
-                    encuentra el hogar ideal
-                  </span>
-                  <span className="block text-xl sm:text-2xl md:text-4xl lg:text-5xl">con nosotros.</span>
-                </motion.h1>
-
-                {/* Marconi Branding - Mobile Responsive */}
-                <motion.div
+                  No esperes más,
+                </motion.span>
+                <motion.span
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1, duration: 0.8 }}
-                  className="text-center mb-8 sm:mb-12"
+                  transition={{ delay: 0.6, duration: 0.8 }}
+                  className="block mb-4 md:mb-6 font-normal"
                 >
-                  <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-blue-600 mb-1 sm:mb-2 tracking-wider leading-none">
-                    Marconi
-                  </div>
-                  <div className="text-sm sm:text-base md:text-xl lg:text-2xl text-white font-light tracking-widest">
-                    Negocios Inmobiliarios
-                  </div>
-                </motion.div>
-
-                {/* Mobile CTA Button */}
-                <motion.div
+                  encuentra el hogar ideal
+                </motion.span>
+                <motion.span
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2, duration: 0.8 }}
-                  className="px-4"
+                  transition={{ delay: 0.9, duration: 0.8 }}
+                  className="block text-gray-200"
                 >
-                  <Link href="/propiedades">
-                    <Button
-                      size="lg"
-                      className="bg-brand-orange hover:bg-orange-600 text-white px-6 sm:px-8 h-12 sm:h-14 text-base sm:text-lg font-semibold w-full max-w-xs mx-auto shadow-lg"
-                    >
-                      <Search className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                      Buscar Propiedades
-                    </Button>
-                  </Link>
-                </motion.div>
+                  con nosotros.
+                </motion.span>
+              </h1>
+            </motion.div>
 
-                {/* Desktop Search Bar - Hidden on mobile, shown on larger screens */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2, duration: 0.8 }}
-                  className="hidden lg:block mt-8"
-                >
-                  <div className="bg-gray-800/90 backdrop-blur-md rounded-2xl p-6 border border-gray-700 max-w-4xl mx-auto">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                      <div className="md:col-span-2">
-                        <div className="relative">
-                          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                          <Input
-                            placeholder="Buscar propiedades por dirección, barrio..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="pl-12 h-12 bg-gray-700 border-gray-600 text-white placeholder:text-gray-400 focus:border-brand-orange"
-                          />
-                        </div>
-                      </div>
-
-                      <Select value={operationType} onValueChange={setOperationType}>
-                        <SelectTrigger className="h-12 bg-gray-700 border-gray-600 text-white focus:border-brand-orange">
-                          <SelectValue placeholder="Operación" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-800 border-gray-700">
-                          <SelectItem value="sale" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                            Venta
-                          </SelectItem>
-                          <SelectItem value="rent" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                            Alquiler
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      <Select value={propertyType} onValueChange={setPropertyType}>
-                        <SelectTrigger className="h-12 bg-gray-700 border-gray-600 text-white focus:border-brand-orange">
-                          <SelectValue placeholder="Tipo" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-800 border-gray-700">
-                          <SelectItem value="house" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                            Casa
-                          </SelectItem>
-                          <SelectItem value="apartment" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                            Departamento
-                          </SelectItem>
-                          <SelectItem value="commercial" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                            Comercial
-                          </SelectItem>
-                          <SelectItem value="land" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                            Terreno
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    <div className="mt-4 flex justify-center">
-                      <Button
-                        onClick={handleSearch}
-                        size="lg"
-                        className="bg-brand-orange hover:bg-orange-600 text-white px-8 h-12 text-lg font-semibold"
-                      >
-                        <Search className="mr-2 h-5 w-5" />
-                        Buscar Propiedades
-                      </Button>
+            {/* Desktop Search Bar - Minimalist Design */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.4, duration: 0.8 }}
+              className="hidden lg:block mb-16"
+            >
+              <div className="bg-white/10 backdrop-blur-md rounded-lg p-8 border border-white/20 max-w-4xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                  <div className="md:col-span-2">
+                    <div className="relative">
+                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-300" />
+                      <Input
+                        placeholder="Buscar propiedades por dirección, barrio..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-12 h-14 bg-white/10 border-white/20 text-white placeholder:text-gray-300 focus:border-white/40 focus:bg-white/15"
+                      />
                     </div>
                   </div>
-                </motion.div>
-              </motion.div>
-            </div>
+
+                  <Select value={operationType} onValueChange={setOperationType}>
+                    <SelectTrigger className="h-14 bg-white/10 border-white/20 text-white focus:border-white/40">
+                      <SelectValue placeholder="Operación" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-800 border-gray-700">
+                      <SelectItem value="sale" className="text-white hover:bg-gray-700 focus:bg-gray-700">
+                        Venta
+                      </SelectItem>
+                      <SelectItem value="rent" className="text-white hover:bg-gray-700 focus:bg-gray-700">
+                        Alquiler
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={propertyType} onValueChange={setPropertyType}>
+                    <SelectTrigger className="h-14 bg-white/10 border-white/20 text-white focus:border-white/40">
+                      <SelectValue placeholder="Tipo" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-gray-800 border-gray-700">
+                      <SelectItem value="house" className="text-white hover:bg-gray-700 focus:bg-gray-700">
+                        Casa
+                      </SelectItem>
+                      <SelectItem value="apartment" className="text-white hover:bg-gray-700 focus:bg-gray-700">
+                        Departamento
+                      </SelectItem>
+                      <SelectItem value="commercial" className="text-white hover:bg-gray-700 focus:bg-gray-700">
+                        Comercial
+                      </SelectItem>
+                      <SelectItem value="land" className="text-white hover:bg-gray-700 focus:bg-gray-700">
+                        Terreno
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="mt-6 flex justify-center">
+                  <Button
+                    onClick={handleSearch}
+                    size="lg"
+                    className="bg-white/20 hover:bg-white/30 text-white border border-white/30 hover:border-white/40 px-12 h-14 text-lg font-light backdrop-blur-sm"
+                  >
+                    <Search className="mr-3 h-5 w-5" />
+                    Buscar
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
           </div>
 
-          {/* Scroll Indicator - Only on larger screens */}
+          {/* Company Branding at Bottom - Minimalist */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.8, duration: 0.8 }}
+            className="mt-auto mb-8 md:mb-12 text-center"
+          >
+            <div className="text-white">
+              <div className="text-3xl md:text-4xl lg:text-5xl font-extralight tracking-[0.2em] mb-2">
+                MARCONI
+              </div>
+              <div className="text-sm md:text-base text-gray-300 font-light tracking-[0.3em] uppercase">
+                Negocios Inmobiliarios
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Scroll Indicator - Minimalist */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.4, duration: 0.8 }}
-            className="hidden md:flex mt-auto pb-8 justify-center"
+            transition={{ delay: 2.2, duration: 0.8 }}
+            className="hidden md:flex absolute bottom-6 left-1/2 transform -translate-x-1/2"
           >
             <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-              className="flex flex-col items-center text-white/70"
+              animate={{ y: [0, 8, 0] }}
+              transition={{ duration: 2.5, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+              className="flex flex-col items-center text-white/60"
             >
-              <span className="text-sm mb-2">Descubre más</span>
-              <ChevronDown className="h-6 w-6" />
+              <div className="w-px h-8 bg-white/30 mb-2"></div>
+              <ChevronDown className="h-4 w-4" />
             </motion.div>
           </motion.div>
         </div>
@@ -364,7 +341,6 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="text-center"
               >
                 <Card className="bg-gray-700 border-gray-600 hover:border-brand-orange transition-all duration-300 overflow-hidden group">
                   <div className="relative">
@@ -376,10 +352,10 @@ export default function HomePage() {
                           crop: "fill",
                           quality: "auto",
                           format: "auto",
-                         || \"/placeholder.svg"})}\
-                        alt={property.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                         || \"/placeholder.svg\"}) || "/placeholder.svg"}\
+                        alt={property.title}\
+                        fill\
+                        className=\"object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
 
@@ -393,7 +369,6 @@ export default function HomePage() {
                       </div>
                     </div>
                   </div>
-
                   <CardContent className="p-6">
                     <div className="space-y-4">
                       <div>
@@ -440,7 +415,7 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
-
+\
           <div className="text-center">
             <Link href="/propiedades">
               <Button
@@ -451,7 +426,7 @@ export default function HomePage() {
                 Ver todas las propiedades
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>
+            </Link>\
           </div>
         </div>
       </section>
@@ -577,5 +552,5 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
-  )
+  )\
 }
