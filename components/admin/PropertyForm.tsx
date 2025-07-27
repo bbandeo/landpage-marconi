@@ -16,7 +16,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "@/hooks/use-toast"
-import { X, Plus, Upload } from "lucide-react"
+import { X, Plus, Upload, Loader2 } from "lucide-react"
+import { compressImage, validateImageFile, formatFileSize } from "@/lib/image-utils"
 
 const propertySchema = z.object({
   title: z.string().min(1, "El título es requerido"),
@@ -91,14 +92,68 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
     const files = event.target.files
     if (!files || files.length === 0) return
 
-    setUploadingImages(true)
-    const formData = new FormData()
+    // Check if we would exceed the maximum of 10 images
+    if (images.length + files.length > 10) {
+      toast({
+        title: "Error",
+        description: `No puedes subir más de 10 imágenes. Actualmente tienes ${images.length} imagen(es).`,
+        variant: "destructive",
+      })
+      return
+    }
 
+    setUploadingImages(true)
+    const validFiles: File[] = []
+    const errors: string[] = []
+
+    // Validate each file
     Array.from(files).forEach((file) => {
-      formData.append("files", file)
+      const validation = validateImageFile(file)
+      if (validation.valid) {
+        validFiles.push(file)
+      } else {
+        errors.push(`${file.name}: ${validation.error}`)
+      }
     })
 
+    if (errors.length > 0) {
+      toast({
+        title: "Error de validación",
+        description: errors.join('\n'),
+        variant: "destructive",
+      })
+      setUploadingImages(false)
+      return
+    }
+
     try {
+      // Compress images before upload
+      const compressionPromises = validFiles.map(async (file) => {
+        try {
+          const result = await compressImage(file, {
+            maxWidth: 1200,
+            maxHeight: 800,
+            quality: 0.9,
+            maxSizeKB: 500
+          })
+          
+          console.log(`Compressed ${file.name}: ${formatFileSize(result.originalSize)} → ${formatFileSize(result.compressedSize)} (${result.compressionRatio}% reduction)`)
+          
+          return result.file
+        } catch (error) {
+          console.warn(`Failed to compress ${file.name}, using original:`, error)
+          return file // Fall back to original file if compression fails
+        }
+      })
+
+      const compressedFiles = await Promise.all(compressionPromises)
+
+      // Upload compressed images
+      const formData = new FormData()
+      compressedFiles.forEach((file) => {
+        formData.append("files", file)
+      })
+
       const response = await fetch("/api/upload/multiple", {
         method: "POST",
         body: formData,
@@ -113,9 +168,15 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
       // Check if the response has urls and it's an array
       if (data.success && Array.isArray(data.urls)) {
         setImages((prev) => [...prev, ...data.urls])
+        
+        const totalCompression = compressedFiles.reduce((acc, file, index) => {
+          const original = validFiles[index]
+          return acc + ((original.size - file.size) / original.size) * 100
+        }, 0) / compressedFiles.length
+
         toast({
           title: "Éxito",
-          description: `${data.urls.length} imagen(es) subida(s) correctamente`,
+          description: `${data.urls.length} imagen(es) subida(s) correctamente${totalCompression > 0 ? ` (${Math.round(totalCompression)}% de compresión promedio)` : ''}`,
         })
       } else {
         throw new Error("Respuesta inválida del servidor")
@@ -136,7 +197,31 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
     }
   }
 
-  const removeImage = (index: number) => {
+  const removeImage = async (index: number) => {
+    const imageToRemove = images[index]
+    
+    // Only attempt to delete from Cloudinary if it's a Cloudinary URL
+    if (imageToRemove && imageToRemove.includes('cloudinary.com')) {
+      try {
+        const response = await fetch(`/api/upload/delete?url=${encodeURIComponent(imageToRemove)}`, {
+          method: 'DELETE',
+        })
+        
+        if (!response.ok) {
+          console.warn('Failed to delete image from Cloudinary, but continuing with local removal')
+        } else {
+          const result = await response.json()
+          if (result.success) {
+            console.log('Image deleted from Cloudinary successfully')
+          }
+        }
+      } catch (error) {
+        console.warn('Error deleting image from Cloudinary:', error)
+        // Continue with local removal even if Cloudinary deletion fails
+      }
+    }
+    
+    // Remove from local state regardless of Cloudinary deletion result
     setImages((prev) => prev.filter((_, i) => i !== index))
   }
 
@@ -393,8 +478,8 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
               </div>
               {uploadingImages && (
                 <p className="text-sm text-blue-600 mt-2 flex items-center gap-2">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                  Subiendo imágenes...
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Comprimiendo y subiendo imágenes...
                 </p>
               )}
             </div>
