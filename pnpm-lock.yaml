@@ -155,9 +155,6 @@ importers:
       recharts:
         specifier: latest
         version: 3.1.0(@types/react@19.0.0)(react-dom@19.0.0(react@19.0.0))(react-is@16.13.1)(react@19.0.0)(redux@5.0.1)
-      some-module:
-        specifier: latest
-        version: 0.0.3
       sonner:
         specifier: latest
         version: 2.0.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -2748,10 +2745,6 @@ packages:
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
-
-  some-module@0.0.3:
-    resolution: {integrity: sha512-Ek6uk9umSl84zS9J7gmh9Ub0soPuq87/IyOqyRT+iecSO3af8oJpO+N0kO4/nHKCBeFEMm04iEIPolIfWXCzpA==}
-    deprecated: Module turned out to be not as useful as might have been expected
 
   sonner@2.0.6:
     resolution: {integrity: sha512-yHFhk8T/DK3YxjFQXIrcHT1rGEeTLliVzWbO0xN8GberVun2RiBnxAjXAYpZrqwEVHBG9asI/Li8TAAhN9m59Q==}
@@ -5805,8 +5798,6 @@ snapshots:
     optional: true
 
   slash@3.0.0: {}
-
-  some-module@0.0.3: {}
 
   sonner@2.0.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
