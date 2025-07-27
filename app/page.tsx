@@ -1,11 +1,8 @@
 "use client"
-
-import { useState } from "react"
 import { motion } from "framer-motion"
 import { Search, MapPin, Bed, Bath, Square, ArrowRight, Star, Users, Home, Award, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getOptimizedImageUrl } from "@/lib/cloudinary"
@@ -73,19 +70,6 @@ const featuredProperties: Property[] = [
 ]
 
 export default function HomePage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [operationType, setOperationType] = useState("")
-  const [propertyType, setPropertyType] = useState("")
-
-  const handleSearch = () => {
-    const params = new URLSearchParams()
-    if (searchTerm) params.set("search", searchTerm)
-    if (operationType) params.set("operation", operationType)
-    if (propertyType) params.set("type", propertyType)
-
-    window.location.href = `/propiedades?${params.toString()}`
-  }
-
   const formatPrice = (price: number, operation: string) => {
     return (
       new Intl.NumberFormat("es-AR", {
@@ -163,15 +147,34 @@ export default function HomePage() {
               height: 1080,
               crop: "fill",
               quality: "auto",
-              format: "auto",
-            }) || "/placeholder.svg"}
-            alt="Reconquista - Marconi Inmobiliaria"
-            fill
-            className="object-cover"
+              format: "auto",\
+             || "/placeholder.svg\"}) || "/placeholder.svg\"}\
+            alt=\"Reconquista - Marconi Inmobiliaria"\
+            fill\
+            className="object-cover"\
             priority
           />
-          {/* Subtle dark overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-0 bg-black/50" />
+\
+          {/* Orange Blur Effect - Enhanced */}\
+          <div className="absolute inset-0">
+            <div
+              className="absolute bottom-0 left-0 right-0 h-3/4"
+              style={{
+                background: `linear-gradient(
+                  to top,
+                  rgba(255, 107, 53, 0.6) 0%,
+                  rgba(255, 140, 0, 0.5) 15%,
+                  rgba(255, 165, 0, 0.4) 30%,
+                  rgba(255, 140, 0, 0.3) 45%,
+                  rgba(255, 107, 53, 0.2) 60%,
+                  rgba(255, 140, 0, 0.1) 75%,
+                  transparent 100%
+                )`,
+                backdropFilter: "blur(2px)",
+              }}
+            />\
+          </div>
         </div>
 
         {/* Content */}
@@ -211,82 +214,13 @@ export default function HomePage() {
                 </motion.span>
               </h1>
             </motion.div>
-
-            {/* Desktop Search Bar - Minimalist Design */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.4, duration: 0.8 }}
-              className="hidden lg:block mb-16"
-            >
-              <div className="bg-white/10 backdrop-blur-md rounded-lg p-8 border border-white/20 max-w-4xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  <div className="md:col-span-2">
-                    <div className="relative">
-                      <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-300" />
-                      <Input
-                        placeholder="Buscar propiedades por dirección, barrio..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-12 h-14 bg-white/10 border-white/20 text-white placeholder:text-gray-300 focus:border-white/40 focus:bg-white/15"
-                      />
-                    </div>
-                  </div>
-
-                  <Select value={operationType} onValueChange={setOperationType}>
-                    <SelectTrigger className="h-14 bg-white/10 border-white/20 text-white focus:border-white/40">
-                      <SelectValue placeholder="Operación" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-800 border-gray-700">
-                      <SelectItem value="sale" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                        Venta
-                      </SelectItem>
-                      <SelectItem value="rent" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                        Alquiler
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Select value={propertyType} onValueChange={setPropertyType}>
-                    <SelectTrigger className="h-14 bg-white/10 border-white/20 text-white focus:border-white/40">
-                      <SelectValue placeholder="Tipo" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-gray-800 border-gray-700">
-                      <SelectItem value="house" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                        Casa
-                      </SelectItem>
-                      <SelectItem value="apartment" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                        Departamento
-                      </SelectItem>
-                      <SelectItem value="commercial" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                        Comercial
-                      </SelectItem>
-                      <SelectItem value="land" className="text-white hover:bg-gray-700 focus:bg-gray-700">
-                        Terreno
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="mt-6 flex justify-center">
-                  <Button
-                    onClick={handleSearch}
-                    size="lg"
-                    className="bg-white/20 hover:bg-white/30 text-white border border-white/30 hover:border-white/40 px-12 h-14 text-lg font-light backdrop-blur-sm"
-                  >
-                    <Search className="mr-3 h-5 w-5" />
-                    Buscar
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
           </div>
 
           {/* Company Branding at Bottom - Minimalist */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.8, duration: 0.8 }}
+            transition={{ delay: 1.4, duration: 0.8 }}
             className="mt-auto mb-8 md:mb-12 text-center"
           >
             <div className="text-white">
@@ -303,7 +237,7 @@ export default function HomePage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2.2, duration: 0.8 }}
+            transition={{ delay: 1.8, duration: 0.8 }}
             className="hidden md:flex absolute bottom-6 left-1/2 transform -translate-x-1/2"
           >
             <motion.div
@@ -351,11 +285,11 @@ export default function HomePage() {
                           height: 250,
                           crop: "fill",
                           quality: "auto",
-                          format: "auto",
-                        }) || "/placeholder.svg"}
-                        alt={property.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          format: "auto",\
+                         || "/placeholder.svg\"}) || "/placeholder.svg\"}\
+                        alt={property.title}\
+                        fill\
+                        className=\"object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
 
@@ -415,7 +349,7 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
-
+\
           <div className="text-center">
             <Link href="/propiedades">
               <Button
@@ -426,7 +360,7 @@ export default function HomePage() {
                 Ver todas las propiedades
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>
+            </Link>\
           </div>
         </div>
       </section>
