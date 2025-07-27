@@ -163,14 +163,14 @@ export default function HomePage() {
               height: 1080,
               crop: "fill",
               quality: "auto",
-              format: "auto",\
-             || "/placeholder.svg\"}) || "/placeholder.svg\"}\
-            alt=\"Reconquista - Marconi Inmobiliaria"\
-            fill\
-            className="object-cover"\
+              format: "auto",
+            }) || "/placeholder.svg"}
+            alt="Reconquista - Marconi Inmobiliaria"
+            fill
+            className="object-cover"
             priority
           />
-          {/* Subtle dark overlay for better text readability */}\
+          {/* Subtle dark overlay for better text readability */}
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
@@ -352,10 +352,10 @@ export default function HomePage() {
                           crop: "fill",
                           quality: "auto",
                           format: "auto",
-                         || \"/placeholder.svg\"}) || "/placeholder.svg"}\
-                        alt={property.title}\
-                        fill\
-                        className=\"object-cover group-hover:scale-105 transition-transform duration-300"
+                        }) || "/placeholder.svg"}
+                        alt={property.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
 
@@ -415,7 +415,7 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
-\
+
           <div className="text-center">
             <Link href="/propiedades">
               <Button
@@ -426,7 +426,7 @@ export default function HomePage() {
                 Ver todas las propiedades
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>\
+            </Link>
           </div>
         </div>
       </section>
@@ -552,5 +552,5 @@ export default function HomePage() {
         </div>
       </footer>
     </div>
-  )\
+  )
 }
