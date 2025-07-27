@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Menu, X, Home, Building, Phone, Info } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import Link from "next/link"
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
@@ -17,8 +18,6 @@ export function MobileNav() {
 
   const handleNavClick = (href: string) => {
     setIsOpen(false)
-    // Handle navigation - you can use Next.js router here
-    window.location.href = href
   }
 
   return (
@@ -56,7 +55,8 @@ export function MobileNav() {
               <ul className="space-y-4">
                 {navigationItems.map((item) => (
                   <li key={item.name}>
-                    <button
+                    <Link
+                      href={item.href}
                       onClick={() => handleNavClick(item.href)}
                       className="w-full flex items-center space-x-4 px-4 py-3 rounded-xl text-left transition-all duration-200 hover:bg-orange-50 hover:text-orange-700 group"
                     >
@@ -66,7 +66,7 @@ export function MobileNav() {
                       <div>
                         <span className="font-medium text-gray-900 group-hover:text-orange-700">{item.name}</span>
                       </div>
-                    </button>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -86,12 +86,14 @@ export function MobileNav() {
               </div>
 
               {/* CTA Button */}
-              <Button
-                className="w-full mt-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg"
-                onClick={() => handleNavClick("/contacto")}
-              >
-                Contactar Ahora
-              </Button>
+              <Link href="/contacto">
+                <Button
+                  className="w-full mt-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-lg"
+                  onClick={() => handleNavClick("/contacto")}
+                >
+                  Contactar Ahora
+                </Button>
+              </Link>
             </div>
           </div>
         </SheetContent>
