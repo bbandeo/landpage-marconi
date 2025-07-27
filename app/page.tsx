@@ -168,7 +168,7 @@ export default function HomePage() {
               crop: "fill",
               quality: "auto",
               format: "auto",\
-             || "/placeholder.svg\"}) || "/placeholder.svg\"}\
+             || \"/placeholder.svg\"})}\
             alt=\"Reconquista - Marconi Inmobiliaria"\
             fill\
             className="object-cover"\
@@ -364,6 +364,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
+                className="text-center"
               >
                 <Card className="bg-gray-700 border-gray-600 hover:border-brand-orange transition-all duration-300 overflow-hidden group">
                   <div className="relative">
@@ -375,9 +376,9 @@ export default function HomePage() {
                           crop: "fill",
                           quality: "auto",
                           format: "auto",
-                         || \"/placeholder.svg\"}) || "/placeholder.svg"}\
+                         || \"/placeholder.svg"})}\
                         alt={property.title}
-                        fill\
+                        fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
@@ -439,7 +440,7 @@ export default function HomePage() {
               </motion.div>
             ))}
           </div>
-\
+
           <div className="text-center">
             <Link href="/propiedades">
               <Button
@@ -450,8 +451,8 @@ export default function HomePage() {
                 Ver todas las propiedades
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </Link>\
-          </div>\
+            </Link>
+          </div>
         </div>
       </section>
 
