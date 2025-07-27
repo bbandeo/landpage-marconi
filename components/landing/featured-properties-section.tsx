@@ -38,13 +38,14 @@ const PropertyFeature = ({ icon: Icon, value }: { icon: ElementType; value: stri
   </div>
 )
 
-const PropertyCard = ({ property, index }: { property: Property; index: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay: index * 0.1 }}
-  >
+const PropertyCard = ({ property, index }: { property: Property; index: number }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+    >
     <Card className="bg-gray-700 border-gray-600 hover:border-brand-orange transition-all duration-300 overflow-hidden group">
       <div className="relative">
         <div className="aspect-video relative overflow-hidden">
@@ -96,10 +97,11 @@ const PropertyCard = ({ property, index }: { property: Property; index: number }
         </div>
       </CardContent>
     </Card>
-  </motion.div>
-)
-\
-export function FeaturedPropertiesSection({ featuredProperties }: { featuredProperties: Property[] }) {\
+    </motion.div>
+  )
+}
+
+export function FeaturedPropertiesSection({ featuredProperties }: { featuredProperties: Property[] }) {
   return (
     <section className="py-20 bg-gray-800">
       <div className="container mx-auto px-4">

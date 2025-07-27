@@ -14,14 +14,14 @@ export function HeroSection() {
             height: 1080,
             crop: "fill",
             quality: "auto",
-            format: "auto",\
-           || "/placeholder.svg\"})}\
-          alt=\"Reconquista - Marconi Inmobiliaria"\
-          fill\
-          className="object-cover"\
+            format: "auto",
+          }) || "/placeholder.svg"}
+          alt="Reconquista - Marconi Inmobiliaria"
+          fill
+          className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/50" />\
+        <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0">
           <div
             className="absolute bottom-0 left-0 right-0 h-3/4"
@@ -29,7 +29,7 @@ export function HeroSection() {
               background: `linear-gradient(to top, rgba(255, 107, 53, 0.6) 0%, rgba(255, 140, 0, 0.5) 15%, rgba(255, 165, 0, 0.4) 30%, rgba(255, 140, 0, 0.3) 45%, rgba(255, 107, 53, 0.2) 60%, rgba(255, 140, 0, 0.1) 75%, transparent 100%)`,
               backdropFilter: "blur(2px)",
             }}
-          />\
+          />
         </div>
       </div>
       <div className="relative z-10 h-full flex flex-col justify-center items-center px-4 pt-20 md:pt-0">
