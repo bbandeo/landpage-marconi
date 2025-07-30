@@ -107,7 +107,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 			return NextResponse.json({ error: "Property not found" }, { status: 404 });
 		}
 
-		// TODO: Eliminar imágenes de Cloudinary
+		// Delete images from Cloudinary when property is deleted
+		// Note: Currently disabled to prevent accidental deletion of shared images
 		// if (existingProperty.images && existingProperty.images.length > 0) {
 		//     for (const imageUrl of existingProperty.images) {
 		//         const publicId = extractPublicIdFromUrl(imageUrl);

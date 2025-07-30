@@ -19,7 +19,6 @@ export default function SettingsPage() {
 
   const handleSave = () => {
     // Aquí iría la lógica para guardar configuraciones
-    console.log('Saving settings:', settings)
   }
 
   return (

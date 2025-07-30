@@ -159,10 +159,8 @@ const PropertyForm = ({ property, mode = "create" }: PropertyFormProps) => {
 			// Aquí iría la llamada a la API
 			if (mode === "create") {
 				// await createProperty(submitData)
-				console.log("Creating property:", submitData);
 			} else {
 				// await updateProperty(property.id, submitData)
-				console.log("Updating property:", submitData);
 			}
 
 			// Redirect después del éxito

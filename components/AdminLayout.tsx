@@ -23,7 +23,6 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
 
 	const handleLogout = async () => {
 		// Aquí irá la lógica de logout con Supabase
-		console.log("Logout...");
 		router.push("/admin/login");
 	};
 
