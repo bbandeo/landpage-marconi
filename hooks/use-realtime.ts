@@ -73,7 +73,7 @@ export function useRealtime<T>(config: RealtimeConfig, initialData: T[] = []) {
 /**
  * Hook for real-time property updates
  */
-export const useRealtimeProperties = (initialProperties: Property[] = []) => {
+export function useRealtimeProperties(initialProperties: Property[] = []) {
   return useRealtime<Property>(
     {
       table: "properties",
@@ -86,7 +86,7 @@ export const useRealtimeProperties = (initialProperties: Property[] = []) => {
 /**
  * Hook for real-time lead updates
  */
-export const useRealtimeLeads = (initialLeads: Lead[] = []) => {
+export function useRealtimeLeads(initialLeads: Lead[] = []) {
   return useRealtime<Lead>(
     {
       table: "leads",
@@ -99,7 +99,7 @@ export const useRealtimeLeads = (initialLeads: Lead[] = []) => {
 /**
  * Hook for real-time notifications
  */
-export const useRealtimeNotifications = () => {
+export function useRealtimeNotifications() {
   const [notifications, setNotifications] = useState<
     Array<{
       id: string
@@ -193,7 +193,7 @@ export const useRealtimeNotifications = () => {
 }
 
 // Helper functions for notification messages
-const getPropertyNotificationTitle = (eventType: string): string => {
+function getPropertyNotificationTitle(eventType: string): string {
   switch (eventType) {
     case "INSERT":
       return "Nueva Propiedad"
@@ -206,7 +206,7 @@ const getPropertyNotificationTitle = (eventType: string): string => {
   }
 }
 
-const getPropertyNotificationMessage = (eventType: string, title?: string): string => {
+function getPropertyNotificationMessage(eventType: string, title?: string): string {
   const propertyName = title ? `"${title}"` : "Una propiedad"
 
   switch (eventType) {
@@ -221,7 +221,7 @@ const getPropertyNotificationMessage = (eventType: string, title?: string): stri
   }
 }
 
-const getLeadNotificationTitle = (eventType: string): string => {
+function getLeadNotificationTitle(eventType: string): string {
   switch (eventType) {
     case "INSERT":
       return "Nuevo Lead"
@@ -234,7 +234,7 @@ const getLeadNotificationTitle = (eventType: string): string => {
   }
 }
 
-const getLeadNotificationMessage = (eventType: string, name?: string): string => {
+function getLeadNotificationMessage(eventType: string, name?: string): string {
   const leadName = name ? `"${name}"` : "Un lead"
 
   switch (eventType) {
