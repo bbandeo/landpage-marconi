@@ -4,24 +4,24 @@ import { Button } from "@/components/ui/button"
 
 export function AboutUsSection() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-brand-orange font-medium mb-4">
               Conocé nuestro equipo
             </p>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-8">
               ¿Quiénes <span className="text-brand-orange">somos?</span>
             </h2>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
               <div className="space-y-6">
-                <p className="text-lg text-gray-700 leading-relaxed">
+                <p className="text-lg text-muted-foreground leading-relaxed">
                   Somos <strong>Marconi Inmobiliaria</strong>, una empresa local que entiende tus necesidades.
                 </p>
-                <p className="text-lg text-gray-700 leading-relaxed">
+                <p className="text-lg text-muted-foreground leading-relaxed">
                   Con un enfoque dinámico, nos especializamos en conectar personas con sus propiedades ideales, 
                   ofreciendo un servicio cercano y profesional que marca la diferencia.
                 </p>
@@ -29,29 +29,29 @@ export function AboutUsSection() {
                   <div className="flex items-start space-x-3">
                     <Shield className="h-6 w-6 text-brand-orange mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Confianza local</h4>
-                      <p className="text-gray-600 text-sm">Conocimiento profundo del mercado local</p>
+                      <h4 className="font-semibold text-foreground mb-1">Confianza local</h4>
+                      <p className="text-muted-foreground text-sm">Conocimiento profundo del mercado local</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <TrendingUp className="h-6 w-6 text-brand-orange mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Conocimiento del mercado</h4>
-                      <p className="text-gray-600 text-sm">Análisis actualizado de tendencias</p>
+                      <h4 className="font-semibold text-foreground mb-1">Conocimiento del mercado</h4>
+                      <p className="text-muted-foreground text-sm">Análisis actualizado de tendencias</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <UserCheck className="h-6 w-6 text-brand-orange mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Atención personalizada</h4>
-                      <p className="text-gray-600 text-sm">Servicio adaptado a cada cliente</p>
+                      <h4 className="font-semibold text-foreground mb-1">Atención personalizada</h4>
+                      <p className="text-muted-foreground text-sm">Servicio adaptado a cada cliente</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="h-6 w-6 text-brand-orange mt-1 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">Experiencia comprobada</h4>
-                      <p className="text-gray-600 text-sm">Años de éxito en el sector</p>
+                      <h4 className="font-semibold text-foreground mb-1">Experiencia comprobada</h4>
+                      <p className="text-muted-foreground text-sm">Años de éxito en el sector</p>
                     </div>
                   </div>
                 </div>
@@ -77,7 +77,7 @@ export function AboutUsSection() {
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="bg-gray-900 text-white rounded-xl p-4">
                     <h4 className="font-bold text-lg mb-1">Floriana Marconi</h4>
-                    <p className="text-gray-300 text-sm mb-3">Fundadora & Agente Principal</p>
+                    <p className="text-primary-foreground/80 text-sm mb-3">Fundadora & Agente Principal</p>
                     <div className="flex items-center space-x-1">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />

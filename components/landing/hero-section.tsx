@@ -16,10 +16,11 @@ export function HeroSection() {
             quality: "auto",
             format: "auto",
           }) || "/placeholder.svg"}
-          alt="Reconquista - Marconi Inmobiliaria"
+          alt="Vista panorámica de Reconquista, la ciudad donde Marconi Inmobiliaria ayuda a encontrar tu hogar ideal"
           fill
           className="object-cover"
           priority
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0">

@@ -9,26 +9,10 @@ import Link from "next/link"
 import Image from "next/image"
 import type { Property } from "@/lib/types"
 import type { ElementType } from "react"
-
-const formatPrice = (price: number, operation: string) => {
-  return (
-    new Intl.NumberFormat("es-AR", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(price) + (operation === "rent" ? "/mes" : "")
-  )
-}
+import { formatPrice, PROPERTY_TYPES, IMAGE_OPTIMIZATION } from "@/lib/constants"
 
 const getPropertyTypeLabel = (type: string) => {
-  const labels: { [key: string]: string } = {
-    house: "Casa",
-    apartment: "Departamento",
-    commercial: "Comercial",
-    land: "Terreno",
-  }
-  return labels[type] || type
+  return PROPERTY_TYPES[type as keyof typeof PROPERTY_TYPES] || type
 }
 
 const PropertyFeature = ({ icon: Icon, value }: { icon: ElementType; value: string | number }) => (
@@ -46,20 +30,20 @@ const PropertyCard = ({ property, index }: { property: Property; index: number }
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
     >
-    <Card className="bg-gray-700 border-gray-600 hover:border-brand-orange transition-all duration-300 overflow-hidden group">
+    <Card className="bg-card border-border hover:border-brand-orange transition-all duration-300 overflow-hidden group shadow-lg">
       <div className="relative">
         <div className="aspect-video relative overflow-hidden">
           <Image
             src={getOptimizedImageUrl(property.images[0], {
-              width: 400,
-              height: 250,
+              width: IMAGE_OPTIMIZATION.PROPERTY_CARD.width,
+              height: IMAGE_OPTIMIZATION.PROPERTY_CARD.height,
               crop: "fill",
-              quality: "auto",
-              format: "auto",\
-             || "/placeholder.svg\"}) || \"/placeholder.svg\"}\
-            alt={property.title}\
-            fill\
-            className=\"object-cover group-hover:scale-105 transition-transform duration-300"
+              quality: IMAGE_OPTIMIZATION.QUALITY,
+              format: IMAGE_OPTIMIZATION.FORMAT,
+            }) || "/placeholder.svg"}
+            alt={property.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
         <Badge className="absolute top-3 left-3 bg-brand-orange hover:bg-orange-600 text-white">
@@ -72,17 +56,17 @@ const PropertyCard = ({ property, index }: { property: Property; index: number }
       <CardContent className="p-6">
         <div className="space-y-4">
           <div>
-            <h3 className="font-semibold text-white text-xl mb-2">{property.title}</h3>
-            <div className="flex items-center text-gray-400 text-sm">
+            <h3 className="font-semibold text-card-foreground text-xl mb-2">{property.title}</h3>
+            <div className="flex items-center text-muted-foreground text-sm">
               <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
               {property.address}, {property.neighborhood}
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <span className="bg-gray-600 text-gray-200 px-3 py-1 rounded-full text-sm">
+            <span className="bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm">
               {getPropertyTypeLabel(property.property_type)}
             </span>
-            <div className="flex items-center gap-4 text-gray-300">
+            <div className="flex items-center gap-4 text-muted-foreground">
               {property.bedrooms > 0 && <PropertyFeature icon={Bed} value={property.bedrooms} />}
               {property.bathrooms > 0 && <PropertyFeature icon={Bath} value={property.bathrooms} />}
               <PropertyFeature icon={Square} value={`${property.area}m²`} />
@@ -101,9 +85,9 @@ const PropertyCard = ({ property, index }: { property: Property; index: number }
   )
 }
 
-export function FeaturedPropertiesSection({ featuredProperties }: { featuredProperties: Property[] }) {
+export function FeaturedPropertiesSection({ properties }: { properties: Property[] }) {
   return (
-    <section className="py-20 bg-gray-800">
+    <section className="py-20 bg-muted/20">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -111,13 +95,13 @@ export function FeaturedPropertiesSection({ featuredProperties }: { featuredProp
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl font-bold text-white mb-4">Propiedades Destacadas</h2>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          <h2 className="text-4xl font-bold text-foreground mb-4">Propiedades Destacadas</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Descubre las mejores oportunidades inmobiliarias en Reconquista
           </p>
         </motion.div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {featuredProperties.map((property, index) => (
+          {properties.map((property, index) => (
             <PropertyCard key={property.id} property={property} index={index} />
           ))}
         </div>
@@ -135,5 +119,5 @@ export function FeaturedPropertiesSection({ featuredProperties }: { featuredProp
         </div>
       </div>
     </section>
-  )\
+  )
 }

@@ -53,12 +53,12 @@ export default function Dashboard() {
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-32 bg-gray-800 rounded-lg animate-pulse" />
+            <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-64 bg-gray-800 rounded-lg animate-pulse" />
+            <div key={i} className="h-64 bg-muted rounded-lg animate-pulse" />
           ))}
         </div>
       </div>
@@ -69,61 +69,61 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Main Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Propiedades Activas</p>
-                <p className="text-2xl font-bold text-white">{properties.length}</p>
-                <p className="text-xs text-green-400">{properties.filter((p: any) => p.featured).length} destacadas</p>
+                <p className="text-sm text-muted-foreground">Propiedades Activas</p>
+                <p className="text-2xl font-bold text-card-foreground">{properties.length}</p>
+                <p className="text-xs text-green-600 dark:text-green-400">{properties.filter((p: any) => p.featured).length} destacadas</p>
               </div>
               <div className="bg-blue-500 p-3 rounded-lg">
-                <Home className="w-6 h-6 text-white" />
+                <Home className="w-6 h-6 text-card-foreground" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Total Contactos</p>
-                <p className="text-2xl font-bold text-white">{metrics.totalContacts}</p>
-                <p className="text-xs text-blue-400">+{metrics.contactsThisWeek} esta semana</p>
+                <p className="text-sm text-muted-foreground">Total Contactos</p>
+                <p className="text-2xl font-bold text-card-foreground">{metrics.totalContacts}</p>
+                <p className="text-xs text-blue-600 dark:text-blue-400">+{metrics.contactsThisWeek} esta semana</p>
               </div>
               <div className="bg-green-500 p-3 rounded-lg">
-                <Users className="w-6 h-6 text-white" />
+                <Users className="w-6 h-6 text-card-foreground" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Tasa de Conversión</p>
-                <p className="text-2xl font-bold text-white">{metrics.conversionRate.toFixed(1)}%</p>
-                <p className="text-xs text-purple-400">{metrics.convertedContacts} convertidos</p>
+                <p className="text-sm text-muted-foreground">Tasa de Conversión</p>
+                <p className="text-2xl font-bold text-card-foreground">{metrics.conversionRate.toFixed(1)}%</p>
+                <p className="text-xs text-purple-600 dark:text-purple-600 dark:text-purple-400">{metrics.convertedContacts} convertidos</p>
               </div>
               <div className="bg-purple-500 p-3 rounded-lg">
-                <TrendingUp className="w-6 h-6 text-white" />
+                <TrendingUp className="w-6 h-6 text-card-foreground" />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Puntuación Promedio</p>
-                <p className="text-2xl font-bold text-white">{metrics.averageScore.toFixed(1)}/10</p>
-                <p className="text-xs text-orange-400">{metrics.overdueActions} acciones vencidas</p>
+                <p className="text-sm text-muted-foreground">Puntuación Promedio</p>
+                <p className="text-2xl font-bold text-card-foreground">{metrics.averageScore.toFixed(1)}/10</p>
+                <p className="text-xs text-orange-600 dark:text-orange-400">{metrics.overdueActions} acciones vencidas</p>
               </div>
               <div className="bg-orange-500 p-3 rounded-lg">
-                <Target className="w-6 h-6 text-white" />
+                <Target className="w-6 h-6 text-card-foreground" />
               </div>
             </div>
           </CardContent>
@@ -132,47 +132,47 @@ export default function Dashboard() {
 
       {/* Pipeline Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Nuevos</p>
-                <p className="text-xl font-bold text-blue-400">{metrics.newContacts}</p>
+                <p className="text-sm text-muted-foreground">Nuevos</p>
+                <p className="text-xl font-bold text-blue-600 dark:text-blue-400">{metrics.newContacts}</p>
               </div>
               <MessageSquare className="w-5 h-5 text-blue-400" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Contactados</p>
-                <p className="text-xl font-bold text-yellow-400">{metrics.contactedContacts}</p>
+                <p className="text-sm text-muted-foreground">Contactados</p>
+                <p className="text-xl font-bold text-yellow-600 dark:text-yellow-400">{metrics.contactedContacts}</p>
               </div>
-              <Phone className="w-5 h-5 text-yellow-400" />
+              <Phone className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Calificados</p>
-                <p className="text-xl font-bold text-purple-400">{metrics.qualifiedContacts}</p>
+                <p className="text-sm text-muted-foreground">Calificados</p>
+                <p className="text-xl font-bold text-purple-600 dark:text-purple-400">{metrics.qualifiedContacts}</p>
               </div>
-              <Mail className="w-5 h-5 text-purple-400" />
+              <Mail className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Convertidos</p>
+                <p className="text-sm text-muted-foreground">Convertidos</p>
                 <p className="text-xl font-bold text-green-400">{metrics.convertedContacts}</p>
               </div>
               <TrendingUp className="w-5 h-5 text-green-400" />
@@ -184,9 +184,9 @@ export default function Dashboard() {
       {/* Charts and Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weekly Activity Chart */}
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="flex items-center text-white">
+            <CardTitle className="flex items-center text-card-foreground">
               <BarChart3 className="w-5 h-5 mr-2" />
               Actividad Semanal
             </CardTitle>
@@ -195,9 +195,9 @@ export default function Dashboard() {
             <div className="space-y-2">
               {metrics.weeklyData.map((day, index) => (
                 <div key={index} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-400">{day.date}</span>
+                  <span className="text-sm text-muted-foreground">{day.date}</span>
                   <div className="flex space-x-4">
-                    <span className="text-sm text-gray-300">Contactos: {day.contacts}</span>
+                    <span className="text-sm text-muted-foreground">Contactos: {day.contacts}</span>
                     <span className="text-sm text-green-400">Convertidos: {day.converted}</span>
                   </div>
                 </div>
@@ -207,9 +207,9 @@ export default function Dashboard() {
         </Card>
 
         {/* Sources Distribution */}
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="flex items-center text-white">
+            <CardTitle className="flex items-center text-card-foreground">
               <Users className="w-5 h-5 mr-2" />
               Fuentes de Contacto
             </CardTitle>
@@ -218,8 +218,8 @@ export default function Dashboard() {
             <div className="space-y-3">
               {Object.entries(metrics.sourceStats).map(([source, count]) => (
                 <div key={source} className="flex items-center justify-between">
-                  <span className="text-sm text-gray-300">{source}</span>
-                  <Badge variant="secondary" className="bg-gray-700 text-gray-300">
+                  <span className="text-sm text-muted-foreground">{source}</span>
+                  <Badge variant="secondary" className="bg-muted text-muted-foreground">
                     {count}
                   </Badge>
                 </div>
@@ -231,9 +231,9 @@ export default function Dashboard() {
 
       {/* Priority and Recent Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="flex items-center text-white">
+            <CardTitle className="flex items-center text-card-foreground">
               <AlertCircle className="w-5 h-5 mr-2" />
               Distribución por Prioridad
             </CardTitle>
@@ -248,9 +248,9 @@ export default function Dashboard() {
                         priority === "high" ? "bg-red-500" : priority === "medium" ? "bg-yellow-500" : "bg-green-500"
                       }`}
                     />
-                    <span className="capitalize text-gray-300">{priority}</span>
+                    <span className="capitalize text-muted-foreground">{priority}</span>
                   </div>
-                  <Badge variant="secondary" className="bg-gray-700 text-gray-300">
+                  <Badge variant="secondary" className="bg-muted text-muted-foreground">
                     {count}
                   </Badge>
                 </div>
@@ -262,7 +262,7 @@ export default function Dashboard() {
         {/* Recent Activity */}
         <Card className="lg:col-span-2 bg-gray-800 border-gray-700">
           <CardHeader>
-            <CardTitle className="flex items-center text-white">
+            <CardTitle className="flex items-center text-card-foreground">
               <Clock className="w-5 h-5 mr-2" />
               Actividad Reciente
             </CardTitle>
@@ -270,10 +270,10 @@ export default function Dashboard() {
           <CardContent>
             <div className="space-y-3">
               {contacts.slice(0, 5).map((contact) => (
-                <div key={contact.id} className="flex items-center justify-between p-3 bg-gray-700 rounded-lg">
+                <div key={contact.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                   <div>
-                    <p className="font-medium text-white">{contact.name}</p>
-                    <p className="text-sm text-gray-400">{contact.property}</p>
+                    <p className="font-medium text-card-foreground">{contact.name}</p>
+                    <p className="text-sm text-muted-foreground">{contact.property}</p>
                   </div>
                   <div className="text-right">
                     <Badge
@@ -281,15 +281,15 @@ export default function Dashboard() {
                         contact.status === "new"
                           ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
                           : contact.status === "contacted"
-                            ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/30"
+                            ? "bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 border-yellow-500/30"
                             : contact.status === "qualified"
-                              ? "bg-purple-500/20 text-purple-400 border-purple-500/30"
+                              ? "bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-500/30"
                               : "bg-green-500/20 text-green-400 border-green-500/30"
                       }
                     >
                       {contact.status}
                     </Badge>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-muted-foreground mt-1">
                       {new Date(contact.createdAt).toLocaleDateString("es-AR")}
                     </p>
                   </div>
@@ -303,7 +303,7 @@ export default function Dashboard() {
       {/* Quick Actions */}
       <Card className="bg-gray-800 border-gray-700">
         <CardHeader>
-          <CardTitle className="text-white">Acciones Rápidas</CardTitle>
+          <CardTitle className="text-card-foreground">Acciones Rápidas</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -313,14 +313,14 @@ export default function Dashboard() {
             </Button>
             <Button
               variant="outline"
-              className="h-16 flex-col space-y-2 bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+              className="h-16 flex-col space-y-2 bg-transparent border-gray-600 text-muted-foreground hover:bg-muted hover:text-card-foreground"
             >
               <Home className="w-6 h-6" />
               <span>Gestionar Propiedades</span>
             </Button>
             <Button
               variant="outline"
-              className="h-16 flex-col space-y-2 bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+              className="h-16 flex-col space-y-2 bg-transparent border-gray-600 text-muted-foreground hover:bg-muted hover:text-card-foreground"
             >
               <Calendar className="w-6 h-6" />
               <span>Programar Seguimientos</span>

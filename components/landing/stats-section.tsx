@@ -12,7 +12,7 @@ const stats: { icon: ElementType; number: string; label: string }[] = [
 
 export function StatsSection() {
   return (
-    <section className="py-20 bg-gray-900">
+    <section className="py-20 bg-primary">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -32,8 +32,8 @@ export function StatsSection() {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-orange/20 rounded-full mb-4">
                 <stat.icon className="h-8 w-8 text-brand-orange" />
               </div>
-              <div className="text-3xl font-bold text-white mb-2">{stat.number}</div>
-              <div className="text-gray-400">{stat.label}</div>
+              <div className="text-3xl font-bold text-primary-foreground mb-2">{stat.number}</div>
+              <div className="text-primary-foreground/70">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>

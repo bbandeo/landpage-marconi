@@ -1,5 +1,11 @@
 "use client"
+import { Header } from "@/components/landing/header"
+import { HeroSection } from "@/components/landing/hero-section"
 import { AboutUsSection } from "@/components/landing/about-us-section"
+import { FeaturedPropertiesSection } from "@/components/landing/featured-properties-section"
+import { StatsSection } from "@/components/landing/stats-section"
+import { CtaSection } from "@/components/landing/cta-section"
+import { Footer } from "@/components/landing/footer"
 
 interface Property {
   id: string
@@ -63,10 +69,16 @@ const featuredProperties: Property[] = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
+      <Header />
       <main>
+        <HeroSection />
         <AboutUsSection />
+        <FeaturedPropertiesSection properties={featuredProperties} />
+        <StatsSection />
+        <CtaSection />
       </main>
+      <Footer />
     </div>
   )
 }
