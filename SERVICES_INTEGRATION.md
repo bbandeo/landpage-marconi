@@ -14,7 +14,7 @@ The application has been enhanced with robust integrations for:
 
 Copy `.env.example` to `.env.local` and fill in your credentials:
 
-```bash
+\`\`\`bash
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -25,7 +25,7 @@ NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
 CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_upload_preset_name
-```
+\`\`\`
 
 ### Getting Credentials
 
@@ -44,7 +44,7 @@ NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=your_upload_preset_name
 
 ### File Structure
 
-```
+\`\`\`
 lib/
 ├── supabase.ts          # Supabase client configuration
 ├── cloudinary.ts        # Client-side Cloudinary utilities
@@ -62,7 +62,7 @@ app/api/
 │   ├── multiple/route.ts # Multiple image upload
 │   └── delete/route.ts  # Image deletion
 └── properties/          # Property CRUD operations
-```
+\`\`\`
 
 ## 🔧 Key Features
 
@@ -87,18 +87,18 @@ app/api/
 ### 2. Real-time Updates
 
 #### Property Updates
-```typescript
+\`\`\`typescript
 import { useRealtimeProperties } from '@/hooks/use-realtime'
 
 const { data: properties } = useRealtimeProperties(initialProperties)
-```
+\`\`\`
 
 #### Lead Notifications
-```typescript
+\`\`\`typescript
 import { useRealtimeNotifications } from '@/hooks/use-realtime'
 
 const { notifications, unreadCount } = useRealtimeNotifications()
-```
+\`\`\`
 
 ### 3. Error Handling
 
@@ -116,7 +116,7 @@ const { notifications, unreadCount } = useRealtimeNotifications()
 
 ### Image Upload with Compression
 
-```typescript
+\`\`\`typescript
 import { compressImage } from '@/lib/image-utils'
 
 const handleUpload = async (file: File) => {
@@ -137,11 +137,11 @@ const handleUpload = async (file: File) => {
     body: formData
   })
 }
-```
+\`\`\`
 
 ### Property CRUD with Real-time
 
-```typescript
+\`\`\`typescript
 import { PropertyService } from '@/services/properties'
 import { useRealtimeProperties } from '@/hooks/use-realtime'
 
@@ -156,11 +156,11 @@ const PropertiesPage = () => {
     // Real-time will automatically update the UI
   }
 }
-```
+\`\`\`
 
 ### Optimized Image Display
 
-```typescript
+\`\`\`typescript
 import { getOptimizedImageUrl } from '@/lib/cloudinary'
 
 const PropertyCard = ({ property }) => {
@@ -173,7 +173,7 @@ const PropertyCard = ({ property }) => {
   
   return <img src={imageUrl} alt={property.title} />
 }
-```
+\`\`\`
 
 ## 🔒 Security Features
 
@@ -215,11 +215,11 @@ const PropertyCard = ({ property }) => {
 ### Common Issues
 
 #### Environment Variables Not Loading
-```bash
+\`\`\`bash
 # Check if .env.local exists and has correct format
 # Restart development server after changes
 npm run dev
-```
+\`\`\`
 
 #### Cloudinary Upload Fails
 - Verify upload preset exists and is unsigned
@@ -234,10 +234,10 @@ npm run dev
 ### Debug Mode
 
 Enable detailed logging:
-```typescript
+\`\`\`typescript
 // In development
 localStorage.setItem('debug', 'marconi:*')
-```
+\`\`\`
 
 ## 🚀 Deployment Checklist
 
@@ -266,7 +266,7 @@ localStorage.setItem('debug', 'marconi:*')
 ### Response Formats
 
 #### Upload Response
-```json
+\`\`\`json
 {
   "success": true,
   "urls": ["https://res.cloudinary.com/..."],
@@ -281,7 +281,7 @@ localStorage.setItem('debug', 'marconi:*')
     }
   ]
 }
-```
+\`\`\`
 
 ## 🔄 Continuous Integration
 
