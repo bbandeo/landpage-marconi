@@ -219,7 +219,7 @@ export default function AgentesPage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <Image
-            src="/assets/hero/agents.png"
+            src="/assets/hero/agentsc.png"
             alt="Agentes - Marconi Inmobiliaria"
             fill
             className="object-cover object-top scale-90"
