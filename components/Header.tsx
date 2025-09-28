@@ -1,5 +1,4 @@
-"use client";
-
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Search, Menu, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -130,41 +129,49 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
       </div>
 
       {/* Mobile Navigation Menu - PREMIUM STYLED */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-premium-main border-b border-support-gray/20">
-          <div className="container-premium py-premium-md">
-            <nav className="flex flex-col space-y-premium-sm">
-              <Link
-                href="/propiedades"
-                className={`${getLinkClassName("/propiedades")} block py-premium-sm px-premium-md rounded-lg hover:bg-premium-card transition-colors`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <span className="body-md font-medium tracking-wide">
-                  PROPIEDADES
-                </span>
-              </Link>
-              <Link
-                href="/agentes"
-                className={`${getAgentesLinkClassName()} block py-premium-sm px-premium-md rounded-lg hover:bg-premium-card transition-colors`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <span className="body-md font-medium tracking-wide">
-                  AGENTES
-                </span>
-              </Link>
-              <Link
-                href="/contacto"
-                className={`${getContactLinkClassName()} block py-premium-sm px-premium-md rounded-lg hover:bg-premium-card transition-colors`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <span className="body-md font-medium tracking-wide">
-                  CONTACTO
-                </span>
-              </Link>
-            </nav>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            className="md:hidden bg-premium-main border-b border-support-gray/20 fixed top-[5rem] left-0 right-0"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+          >
+            <div className="container-premium py-premium-md">
+              <nav className="flex flex-col space-y-premium-sm">
+                <Link
+                  href="/propiedades"
+                  className={`${getLinkClassName("/propiedades")} block py-premium-sm px-premium-md rounded-lg hover:bg-premium-card transition-colors`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="text-sm font-medium tracking-wide">
+                    PROPIEDADES
+                  </span>
+                </Link>
+                <Link
+                  href="/agentes"
+                  className={`${getAgentesLinkClassName()} block py-premium-sm px-premium-md rounded-lg hover:bg-premium-card transition-colors`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="text-sm font-medium tracking-wide">
+                    AGENTES
+                  </span>
+                </Link>
+                <Link
+                  href="/contacto"
+                  className={`${getContactLinkClassName()} block py-premium-sm px-premium-md rounded-lg hover:bg-premium-card transition-colors`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <span className="text-sm font-medium tracking-wide">
+                    CONTACTO
+                  </span>
+                </Link>
+              </nav>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Decorative divider line - PREMIUM GRADIENT */}
       <div className="w-full h-1 bg-gradient-to-r from-transparent via-vibrant-orange to-transparent shadow-lg opacity-80"></div>
