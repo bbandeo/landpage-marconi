@@ -9,14 +9,19 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { FaqSection } from "@/components/contact/FaqSection";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import ContactHero from "@/components/contact/contact-hero";
+import Hero from "@/components/Hero";
 
 export default function ContactoPage() {
   return (
     <div className="min-h-screen bg-premium-main text-white">
       <Header />
 
-      <ContactHero />
+      <Hero
+        backgroundImage="/assets/hero/contact-hero-glow.png"
+        alt="Contacto - Marconi Inmobiliaria"
+        title="CONTACTANOS"
+        description="Estamos aquí para ayudarte a encontrar la propiedad perfecta o responder cualquier consulta sobre nuestros servicios."
+      />
 
       {/* Contact Details Section */}
       <section className="section-premium">
