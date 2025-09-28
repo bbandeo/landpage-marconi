@@ -274,11 +274,18 @@ export default function HomePage() {
           </div>
           
           {/* CONTENIDO INFERIOR - BUSCADOR HERO */}
-          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-8 sm:pb-12 lg:pb-16 px-4">
+          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-4 sm:pb-6 lg:pb-8 px-4">
             <HeroSearchBar />
           </div>
         </div>
       </section>
+
+      {/* Barra separadora estética */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-600/30 to-transparent h-px"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/20 to-transparent h-px top-1"></div>
+      </div>
+
       {/* Propiedades Destacadas - PREMIUM DESIGN */}
       <section
         id="propiedades"
@@ -291,32 +298,30 @@ export default function HomePage() {
         </div>
 
         <div className="container-premium relative z-10">
-          {/* Header Premium - JERARQUÍA TIPOGRÁFICA LIMPIA */}
-          <div className="text-center component-spacing group">
-            {/* Título aplicando la nueva jerarquía */}
+          {/* Header Premium - JERARQUÍA TIPOGRÁFICA OPTIMIZADA */}
+          <div className="text-center mb-12">
+            {/* Título principal */}
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="section-title"
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6"
             >
               PROPIEDADES DESTACADAS
             </motion.h2>
-            
-            {/* Subtítulo mejorado con nueva jerarquía */}
+
+            {/* Subtítulo simplificado */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="max-w-3xl mx-auto"
+              className="max-w-2xl mx-auto"
             >
-              <div className="bg-gray-800/40 backdrop-blur-sm rounded-2xl px-8 py-4 border border-gray-700/30">
-                <p className="body-text text-center">
-                  Hogares seleccionados con estándares de excelencia para tu familia.
-                </p>
-              </div>
+              <p className="text-gray-300 text-lg leading-relaxed">
+                Hogares seleccionados con estándares de excelencia para tu familia.
+              </p>
             </motion.div>
           </div>
 

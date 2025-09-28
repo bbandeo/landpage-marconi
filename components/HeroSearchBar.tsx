@@ -43,7 +43,7 @@ export function HeroSearchBar() {
         </h3>
       </div>
 
-      <div className="bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+      <div className="bg-gray-900 rounded-xl p-4 border border-gray-700/30">
         <div className="flex flex-col sm:flex-row gap-3 items-stretch">
           {/* Operación */}
           <div className="flex-1">
