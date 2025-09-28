@@ -16,7 +16,8 @@ interface RouteParams {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    const propertyId = parseInt(params.id)
+    const resolvedParams = await params
+    const propertyId = parseInt(resolvedParams.id)
     
     if (!propertyId || propertyId <= 0) {
       return NextResponse.json(
