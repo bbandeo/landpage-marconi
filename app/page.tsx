@@ -428,21 +428,23 @@ export default function HomePage() {
               </div>
             </div>
 
-            <Link href="/agentes">
-              <Button
-                size="lg"
-                className="mt-8 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold px-12 py-6 rounded-full shadow-2xl shadow-orange-600/30 hover:shadow-orange-600/50 transition-all duration-300 group border-0 w-fit text-lg"
-              >
-                Conocé más
-                <motion.div
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ repeat: Infinity, duration: 1.5 }}
-                  className="ml-4"
+            <div className="flex justify-center">
+              <Link href="/agentes">
+                <Button
+                  size="lg"
+                  className="mt-8 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold px-12 py-6 rounded-full shadow-2xl shadow-orange-600/30 hover:shadow-orange-600/50 transition-all duration-300 group border-0 w-fit text-lg"
                 >
-                  <ArrowRight className="w-6 h-6" />
-                </motion.div>
-              </Button>
-            </Link>
+                  Conocé más
+                  <motion.div
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                    className="ml-4"
+                  >
+                    <ArrowRight className="w-6 h-6" />
+                  </motion.div>
+                </Button>
+              </Link>
+            </div>
           </motion.div>
 
           {/* Columna imagen */}
@@ -533,22 +535,22 @@ export default function HomePage() {
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="section-title text-center mb-element-spacing"
+              className="section-title text-center mb-8"
             >
               COMENZÁ TU BÚSQUEDA HOY MISMO
             </motion.h2>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
               viewport={{ once: true }}
-              className="subtitle text-center text-white mb-component-spacing max-w-3xl mx-auto"
+              className="subtitle text-center text-white mb-12 max-w-3xl mx-auto"
             >
               Acompañamiento profesional premium para encontrar la propiedad perfecta que transforme tu vida
             </motion.p>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
