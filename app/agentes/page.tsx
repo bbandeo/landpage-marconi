@@ -221,7 +221,7 @@ export default function AgentesPage() {
         title={<>NUESTROS <span className="text-orange-400">AGENTES</span></>}
         description="Conocé al equipo de profesionales inmobiliarios que te acompañará en cada paso para encontrar tu próxima propiedad en Reconquista"
         withAnimation={true}
-        imageClassName="object-cover object-top scale-90"
+        imageClassName="object-cover object-top"
       />
 
       {/* Team Section - PREMIUM DESIGN */}
