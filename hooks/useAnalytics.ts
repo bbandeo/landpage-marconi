@@ -262,7 +262,7 @@ export function useAnalytics(options: UseAnalyticsOptions = {}) {
 
     try {
       const response = await fetch('/api/analytics/lead-generation', {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
