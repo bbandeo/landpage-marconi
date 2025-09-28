@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Save, X, Upload, Camera, Trash2, ArrowLeft, MapPin, DollarSign, Home as HomeIcon, Info } from "lucide-react";
+import Image from "next/image";
 
 interface PropertyFormData {
 	title: string;
@@ -467,10 +468,12 @@ const PropertyForm = ({ property, mode = "create" }: PropertyFormProps) => {
 									<div className="grid grid-cols-2 gap-2">
 										{imagePreview.map((src, index) => (
 											<div key={index} className="relative group">
-												<img
+												<Image
 													src={src}
 													alt={`Preview ${index + 1}`}
-													className="w-full h-24 object-cover rounded-lg border border-gray-200"
+													width={96}
+													height={96}
+													className="object-cover rounded-lg border border-gray-200"
 												/>
 												<button
 													type="button"

@@ -218,7 +218,7 @@ export function PropertyLocationPicker({
       <div className="text-sm text-premium-secondary bg-premium-card/30 rounded-lg p-3 border border-support-gray/20">
         <p className="mb-1"><strong>Instrucciones:</strong></p>
         <ul className="list-disc list-inside space-y-1 text-xs">
-          <li>Haga clic en "Sincronizar desde dirección" para ubicar automáticamente la propiedad</li>
+          <li>Haga clic en &quot;Sincronizar desde dirección&quot; para ubicar automáticamente la propiedad</li>
           <li>O haga clic directamente en el mapa para seleccionar una ubicación específica</li>
           <li>Solo se permiten ubicaciones dentro de Argentina</li>
         </ul>

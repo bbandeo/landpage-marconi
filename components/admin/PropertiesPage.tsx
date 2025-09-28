@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   Home,
@@ -45,6 +45,7 @@ import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import { PropertyService } from "@/services/properties";
 import type { Property } from "@/lib/supabase";
 import { STATUS_MAP } from "@/lib/supabase";
+import Image from "next/image";
 
 interface PropertyWithStats extends Property {
   views?: number;
@@ -92,10 +93,12 @@ function PropertyImage({ images, title }: PropertyImageProps) {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <img
+        <Image
           src={firstImage}
           alt={`Imagen de ${title}`}
-          className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
+          width={48}
+          height={48}
+          className="object-cover transition-all duration-300 group-hover:scale-110"
           onError={() => setImageError(true)}
           loading="lazy"
         />
@@ -106,12 +109,13 @@ function PropertyImage({ images, title }: PropertyImageProps) {
         <div className="absolute z-50 left-16 top-0 bg-gray-800 border border-gray-600 rounded-lg shadow-2xl animate-in fade-in-0 zoom-in-95 duration-200 pointer-events-none">
           <div className="w-80 sm:w-96 lg:w-[28rem] p-2">
             <div className="relative w-full">
-              <img
+              <Image
                 src={firstImage}
                 alt={`Vista previa de ${title}`}
-                className="w-full h-auto max-h-64 sm:max-h-72 lg:max-h-80 object-contain rounded bg-gray-900"
+                width={320}
+                height={256}
+                className="object-contain rounded bg-gray-900"
                 onError={() => setImageError(true)}
-                style={{ aspectRatio: 'auto' }}
               />
             </div>
             <div className="px-1 py-2">
@@ -134,11 +138,7 @@ export default function PropertiesPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
 
-  useEffect(() => {
-    fetchProperties();
-  }, [searchTerm, statusFilter, typeFilter]);
-
-  const fetchProperties = async () => {
+  const fetchProperties = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -167,7 +167,11 @@ export default function PropertiesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter, typeFilter, searchTerm]);
+
+  useEffect(() => {
+    fetchProperties();
+  }, [fetchProperties]);
 
   const handleDeleteProperty = async (id: number) => {
     if (!confirm("¿Estás seguro de que quieres eliminar esta propiedad?")) {

@@ -150,7 +150,7 @@ export default function HomePage() {
       setCurrentStat((prev) => (prev + 1) % stats.length);
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [stats.length]);
 
 
   /* 

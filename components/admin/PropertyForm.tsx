@@ -37,6 +37,7 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { PropertyLocationPicker } from './PropertyLocationPicker'
+import Image from "next/image";
 
 const propertySchema = z.object({
   title: z.string().min(1, "El título es requerido"),
@@ -96,10 +97,12 @@ function SortableImageItem({ id, image, index, onRemove, isFirst }: SortableImag
       className="relative group bg-white rounded-lg border shadow-sm"
     >
       <div className="relative">
-        <img
+        <Image
           src={image || "/placeholder.svg"}
           alt={`Imagen ${index + 1}`}
-          className="w-full h-32 object-cover rounded-t-lg"
+          width={128}
+          height={128}
+          className="object-cover rounded-t-lg"
         />
         <div
           {...attributes}

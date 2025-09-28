@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Home, TrendingUp, MessageSquare, Settings, LogOut, Menu, X } from "lucide-react";
+import Image from "next/image";
 
 interface AdminLayoutProps {
 	children: React.ReactNode;
@@ -49,10 +50,11 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
 								<Home className="w-5 h-5 text-white" />
 							</div>
 							<div>
-								<img 
+								<Image 
 									src="/assets/logos/marconi_title.svg" 
 									alt="Marconi Inmobiliaria" 
-									className="h-6 w-auto"
+									width={144}
+									height={24}
 								/>
 								<p className="text-xs text-gray-500">Admin Panel</p>
 							</div>
