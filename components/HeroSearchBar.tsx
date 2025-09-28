@@ -36,6 +36,13 @@ export function HeroSearchBar() {
       transition={{ duration: 0.5, delay: 0.3 }}
       className="w-full max-w-3xl mx-auto"
     >
+      {/* Título - Solo desktop */}
+      <div className="hidden lg:block text-center mb-3">
+        <h3 className="text-white/90 text-lg font-medium">
+          Encontrá tu propiedad ideal
+        </h3>
+      </div>
+
       <div className="bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/10">
         <div className="flex flex-col sm:flex-row gap-3 items-stretch">
           {/* Operación */}
