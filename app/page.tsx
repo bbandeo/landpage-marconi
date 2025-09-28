@@ -280,8 +280,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Separador minimalista */}
-      <div className="h-16 bg-gradient-to-b from-black via-orange-600/20 to-slate-900"></div>
+      {/* Barra separadora fluida naranja */}
+      <div className="h-2 w-full bg-gradient-to-b from-orange-500/70 via-orange-600/30 to-[#0d0f1a]" />
 
       {/* Propiedades Destacadas - PREMIUM DESIGN */}
       <section
@@ -367,6 +367,9 @@ export default function HomePage() {
           )}
         </div>
       </section>
+
+      {/* Separador minimalista entre secciones */}
+      <div className="my-12 h-px w-3/4 mx-auto bg-gradient-to-r from-transparent via-gray-500/40 to-transparent" />
 
       {/* QUIÉNES SOMOS - Sección informativa con diseño consistente */}
       <section className="section-spacing bg-gray-900 relative overflow-hidden">

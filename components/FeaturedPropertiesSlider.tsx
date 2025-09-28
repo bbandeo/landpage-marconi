@@ -126,7 +126,7 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
                 viewport={{ once: true }}
                 className="h-full"
               >
-                <Card className="group overflow-hidden bg-gray-800/50 border border-gray-700/30 backdrop-blur-sm hover:border-orange-500/40 transition-all duration-500 hover:shadow-2xl hover:shadow-orange-500/10 hover:-translate-y-2 cursor-pointer h-full">
+                <Card className="group overflow-hidden bg-[#12141f] border border-gray-700/20 backdrop-blur-sm hover:border-orange-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/20 hover:scale-[1.02] cursor-pointer h-full rounded-2xl">
                   {/* IMAGEN CON OVERLAYS ESTRATÉGICOS */}
                   <Link href={`/propiedades/${property.id}`}>
                     <div className="relative overflow-hidden h-64 md:h-72">
@@ -160,65 +160,65 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
                         </div>
                       </div>
 
-                      {/* PRECIO EN OVERLAY - TIPOGRAFÍA BOLD */}
-                      <motion.div 
+                      {/* PRECIO EN OVERLAY - BADGE NARANJA */}
+                      <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
                         className="absolute bottom-4 right-4 text-right"
                       >
-                        <div className="bg-black/70 backdrop-blur-md rounded-lg px-3 py-2 border border-white/10">
-                          <div className="text-lg font-bold text-white mb-0.5">
-                            {property.currency}$ {property.price.toLocaleString()}
-                          </div>
-                          {property.operation_type === "alquiler" && (
-                            <div className="text-xs text-gray-300 font-medium">
-                              por mes
-                            </div>
-                          )}
+                        <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-sm font-bold">
+                          {property.currency}$ {property.price.toLocaleString()}
                         </div>
                       </motion.div>
                     </div>
                   </Link>
 
                   {/* INFORMACIÓN CON MÁS AIRE - PADDING GENEROSO */}
-                  <CardContent className="p-6 flex-1">
+                  <CardContent className="p-4 flex-1">
                     <Link href={`/propiedades/${property.id}`}>
-                      {/* TÍTULO CON JERARQUÍA CLARA */}
-                      <h3 className="text-lg font-bold text-white mb-3 hover:text-orange-400 transition-colors cursor-pointer line-clamp-2 leading-tight">
-                        {property.title}
-                      </h3>
-                      
-                      {/* UBICACIÓN - GRIS CLARO LEGIBLE */}
-                      <div className="flex items-center text-gray-300 mb-4">
-                        <MapPin className="w-4 h-4 mr-2 text-orange-400" />
-                        <span className="text-sm font-medium">{property.neighborhood}, Reconquista</span>
-                      </div>
-
-                      
-                      {/* CARACTERÍSTICAS SI ESTÁN DISPONIBLES */}
-                      {(property.bedrooms || property.bathrooms || property.area_m2) && (
-                        <div className="flex items-center gap-2 text-gray-400 text-xs flex-wrap">
-                          {property.bedrooms && (
-                            <div className="flex items-center bg-gray-700/50 px-2 py-1.5 rounded-lg">
-                              <Bed className="w-3 h-3 mr-1.5 text-orange-400" />
-                              <span className="font-medium">{property.bedrooms}</span>
-                            </div>
-                          )}
-                          {property.bathrooms && (
-                            <div className="flex items-center bg-gray-700/50 px-2 py-1.5 rounded-lg">
-                              <Bath className="w-3 h-3 mr-1.5 text-orange-400" />
-                              <span className="font-medium">{property.bathrooms}</span>
-                            </div>
-                          )}
-                          {property.area_m2 && (
-                            <div className="flex items-center bg-gray-700/50 px-2 py-1.5 rounded-lg">
-                              <Square className="w-3 h-3 mr-1.5 text-orange-400" />
-                              <span className="font-medium">{property.area_m2}m²</span>
-                            </div>
-                          )}
+                      <div className="space-y-3">
+                        {/* TÍTULO CON JERARQUÍA CLARA */}
+                        <div className="flex justify-between items-center">
+                          <h3 className="text-lg font-semibold text-white hover:text-orange-400 transition-colors cursor-pointer line-clamp-1 leading-tight">
+                            {property.title}
+                          </h3>
+                          <span className="px-3 py-1 rounded-full bg-orange-500 text-white text-sm font-bold">
+                            {property.currency}$ {property.price.toLocaleString()}
+                          </span>
                         </div>
-                      )}
+
+                        {/* UBICACIÓN - GRIS CLARO LEGIBLE */}
+                        <div className="flex items-center text-gray-400 text-sm">
+                          <MapPin size={16} className="mr-2" />
+                          {property.neighborhood}, Reconquista
+                        </div>
+
+
+                        {/* CARACTERÍSTICAS SI ESTÁN DISPONIBLES */}
+                        {(property.bedrooms || property.bathrooms || property.area_m2) && (
+                          <div className="flex gap-4 text-gray-300 text-sm">
+                            {property.bedrooms && (
+                              <span className="flex items-center gap-1">
+                                <Home size={16} />
+                                {property.bedrooms}
+                              </span>
+                            )}
+                            {property.bathrooms && (
+                              <span className="flex items-center gap-1">
+                                <Bath size={16} />
+                                {property.bathrooms}
+                              </span>
+                            )}
+                            {property.area_m2 && (
+                              <span className="flex items-center gap-1">
+                                <Square size={16} />
+                                {property.area_m2} m²
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </Link>
                   </CardContent>
                 </Card>
