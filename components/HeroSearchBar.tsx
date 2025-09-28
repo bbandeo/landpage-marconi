@@ -29,42 +29,30 @@ export function HeroSearchBar() {
     router.push(url);
   };
 
-  const getPropertyIcon = (type: string) => {
-    switch (type) {
-      case "house":
-        return <Home className="w-4 h-4" />;
-      case "apartment":
-        return <Building className="w-4 h-4" />;
-      case "terreno":
-        return <TreePine className="w-4 h-4" />;
-      default:
-        return <Home className="w-4 h-4" />;
-    }
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.5 }}
-      className="w-full max-w-4xl mx-auto"
+      transition={{ duration: 0.5, delay: 0.3 }}
+      className="w-full max-w-3xl mx-auto"
     >
-      <div className="bg-night-blue/60 backdrop-blur-md rounded-2xl p-6 border border-white/10 shadow-2xl">
-        <div className="flex flex-col lg:flex-row gap-4 items-end">
+      <div className="bg-black/20 backdrop-blur-sm rounded-xl p-4 border border-white/10">
+        <div className="flex flex-col sm:flex-row gap-3 items-stretch">
           {/* Operación */}
-          <div className="flex-1 min-w-0">
-            <label className="block text-white/90 text-sm font-medium mb-2">
-              Operación
-            </label>
+          <div className="flex-1">
             <Select value={operation} onValueChange={setOperation}>
-              <SelectTrigger className="bg-white/10 border-white/20 text-white backdrop-blur-sm rounded-xl h-12 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300">
-                <SelectValue placeholder="Seleccionar operación" />
+              <SelectTrigger className="bg-white/5 border-white/15 text-white/90 rounded-lg h-10 text-sm focus:border-orange-400/50 focus:ring-1 focus:ring-orange-400/20 transition-colors">
+                <SelectValue placeholder="Operación" />
               </SelectTrigger>
-              <SelectContent className="bg-gray-900 border-gray-700">
-                <SelectItem value="sale" className="text-white hover:bg-gray-800">
+              <SelectContent
+                className="bg-gray-900/95 border-gray-700/50 backdrop-blur-md"
+                position="popper"
+                sideOffset={4}
+              >
+                <SelectItem value="sale" className="text-white/90 hover:bg-gray-800/80 focus:bg-gray-800/80 cursor-pointer">
                   Venta
                 </SelectItem>
-                <SelectItem value="rent" className="text-white hover:bg-gray-800">
+                <SelectItem value="rent" className="text-white/90 hover:bg-gray-800/80 focus:bg-gray-800/80 cursor-pointer">
                   Alquiler
                 </SelectItem>
               </SelectContent>
@@ -72,30 +60,31 @@ export function HeroSearchBar() {
           </div>
 
           {/* Tipo de Propiedad */}
-          <div className="flex-1 min-w-0">
-            <label className="block text-white/90 text-sm font-medium mb-2">
-              Tipo de propiedad
-            </label>
+          <div className="flex-1">
             <Select value={propertyType} onValueChange={setPropertyType}>
-              <SelectTrigger className="bg-white/10 border-white/20 text-white backdrop-blur-sm rounded-xl h-12 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300">
-                <SelectValue placeholder="Seleccionar tipo" />
+              <SelectTrigger className="bg-white/5 border-white/15 text-white/90 rounded-lg h-10 text-sm focus:border-orange-400/50 focus:ring-1 focus:ring-orange-400/20 transition-colors">
+                <SelectValue placeholder="Tipo de propiedad" />
               </SelectTrigger>
-              <SelectContent className="bg-gray-900 border-gray-700">
-                <SelectItem value="house" className="text-white hover:bg-gray-800">
+              <SelectContent
+                className="bg-gray-900/95 border-gray-700/50 backdrop-blur-md"
+                position="popper"
+                sideOffset={4}
+              >
+                <SelectItem value="house" className="text-white/90 hover:bg-gray-800/80 focus:bg-gray-800/80 cursor-pointer">
                   <div className="flex items-center gap-2">
-                    <Home className="w-4 h-4" />
+                    <Home className="w-3.5 h-3.5" />
                     Casa
                   </div>
                 </SelectItem>
-                <SelectItem value="apartment" className="text-white hover:bg-gray-800">
+                <SelectItem value="apartment" className="text-white/90 hover:bg-gray-800/80 focus:bg-gray-800/80 cursor-pointer">
                   <div className="flex items-center gap-2">
-                    <Building className="w-4 h-4" />
+                    <Building className="w-3.5 h-3.5" />
                     Departamento
                   </div>
                 </SelectItem>
-                <SelectItem value="terreno" className="text-white hover:bg-gray-800">
+                <SelectItem value="terreno" className="text-white/90 hover:bg-gray-800/80 focus:bg-gray-800/80 cursor-pointer">
                   <div className="flex items-center gap-2">
-                    <TreePine className="w-4 h-4" />
+                    <TreePine className="w-3.5 h-3.5" />
                     Terreno
                   </div>
                 </SelectItem>
@@ -104,23 +93,13 @@ export function HeroSearchBar() {
           </div>
 
           {/* Botón de Búsqueda */}
-          <div className="w-full lg:w-auto">
-            <Button
-              onClick={handleSearch}
-              size="lg"
-              className="w-full lg:w-auto bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold px-8 py-3 h-12 text-base rounded-xl shadow-2xl shadow-orange-600/40 hover:shadow-orange-600/60 transition-all duration-300 hover:scale-105 border-0 min-w-[180px]"
-            >
-              <Search className="w-5 h-5 mr-2" />
-              BUSCAR
-            </Button>
-          </div>
-        </div>
-
-        {/* Mensaje informativo */}
-        <div className="mt-4 text-center">
-          <p className="text-white/70 text-sm">
-            Encontrá la propiedad perfecta con nuestros filtros especializados
-          </p>
+          <Button
+            onClick={handleSearch}
+            className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-medium px-6 h-10 text-sm rounded-lg transition-all duration-200 hover:scale-[1.02] border-0 shadow-lg"
+          >
+            <Search className="w-4 h-4 mr-1.5" />
+            Buscar
+          </Button>
         </div>
       </div>
     </motion.div>
