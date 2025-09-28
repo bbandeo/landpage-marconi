@@ -404,7 +404,7 @@ export default function PropiedadesPage() {
                       <SelectValue placeholder="Hab." />
                     </SelectTrigger>
                     <SelectContent className="bg-night-blue border-support-gray/30">
-                      <SelectItem value="all">Todas</SelectItem>
+                      <SelectItem value="all">Hab.</SelectItem>
                       <SelectItem value="1">1+</SelectItem>
                       <SelectItem value="2">2+</SelectItem>
                       <SelectItem value="3">3+</SelectItem>
@@ -418,7 +418,7 @@ export default function PropiedadesPage() {
                       <SelectValue placeholder="Baños" />
                     </SelectTrigger>
                     <SelectContent className="bg-night-blue border-support-gray/30">
-                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="all">Baños</SelectItem>
                       <SelectItem value="1">1+</SelectItem>
                       <SelectItem value="2">2+</SelectItem>
                       <SelectItem value="3">3+</SelectItem>
@@ -447,17 +447,6 @@ export default function PropiedadesPage() {
                     <Filter className="w-4 h-4" />
                     Menos filtros
                     <ChevronUp className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                {/* Clear Filters Button - Below the grid */}
-                <div className="flex justify-center pt-4">
-                  <Button
-                    onClick={clearFilters}
-                    variant="outline"
-                    className="bg-night-blue/60 border-support-gray/30 text-bone-white hover:bg-vibrant-orange hover:text-white hover:border-vibrant-orange transition-all duration-300 rounded-xl px-6 py-2 font-medium"
-                  >
-                    Limpiar filtros
                   </Button>
                 </div>
               </div>
