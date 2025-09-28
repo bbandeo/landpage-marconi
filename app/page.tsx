@@ -23,6 +23,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FeaturedPropertiesSlider } from "@/components/FeaturedPropertiesSlider";
+import { HeroSearchBar } from "@/components/HeroSearchBar";
 import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import Link from "next/link";
 import Image from "next/image";
@@ -272,32 +273,10 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* CONTENIDO INFERIOR - LOGO + CTA POSICIONADO EN EL FONDO ABSOLUTO */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            style={{ y: bottomY }}
-            className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-8 sm:pb-12 lg:pb-16"
-          >
-            {/* CTA PRIMARIO ÚNICO PARA TODOS LOS TAMAÑOS */}
-            <Link href="/propiedades">
-              <Button 
-                size="lg"
-                className="group bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold px-10 sm:px-11 lg:px-12 py-5 sm:py-5.5 lg:py-6 text-lg sm:text-xl rounded-full shadow-2xl shadow-orange-600/40 hover:shadow-orange-600/60 transition-all duration-300 hover:scale-105 border-0 min-w-[300px] sm:min-w-[320px] lg:min-w-[350px]"
-              >
-                <Search className="w-5 sm:w-5.5 lg:w-6 h-5 sm:h-5.5 lg:h-6 mr-3 sm:mr-3.5 lg:mr-4" />
-                EXPLORAR PROPIEDADES
-                <motion.div
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  className="ml-3 sm:ml-3.5 lg:ml-4"
-                >
-                  <ArrowRight className="w-5 sm:w-5.5 lg:w-6 h-5 sm:h-5.5 lg:h-6" />
-                </motion.div>
-              </Button>
-            </Link>
-          </motion.div>
+          {/* CONTENIDO INFERIOR - BUSCADOR HERO */}
+          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-8 sm:pb-12 lg:pb-16 px-4">
+            <HeroSearchBar />
+          </div>
         </div>
       </section>
       {/* Propiedades Destacadas - PREMIUM DESIGN */}
