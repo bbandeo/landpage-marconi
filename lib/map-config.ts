@@ -55,6 +55,31 @@ export const geocodeAddress = async (address: string): Promise<[number, number] 
   return RECONQUISTA_CENTER
 }
 
+// Reverse geocoding service - get address from coordinates
+export const reverseGeocodeCoordinates = async (lat: number, lng: number): Promise<{
+  address: string
+  neighborhood: string
+  city: string
+  province: string
+  country: string
+  display_name: string
+  formatted_address: string
+} | null> => {
+  try {
+    const response = await fetch(`/api/reverse-geocode?lat=${lat}&lng=${lng}`)
+
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`)
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Reverse geocoding error:', error)
+    return null
+  }
+}
+
 // Format address for display
 export const formatAddress = (property: {
   address?: string | null
@@ -62,10 +87,10 @@ export const formatAddress = (property: {
   city?: string
 }) => {
   const parts = []
-  
+
   if (property.address) parts.push(property.address)
   if (property.neighborhood) parts.push(property.neighborhood)
   if (property.city) parts.push(property.city)
-  
+
   return parts.join(', ')
 }

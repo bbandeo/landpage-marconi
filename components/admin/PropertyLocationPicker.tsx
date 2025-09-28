@@ -3,8 +3,8 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
-import { geocodeAddress, formatAddress, createPropertyMarkerIcon, RECONQUISTA_CENTER, ARGENTINA_BOUNDS } from '@/lib/map-config'
-import { MapPin, RotateCcw } from 'lucide-react'
+import { geocodeAddress, reverseGeocodeCoordinates, formatAddress, createPropertyMarkerIcon, RECONQUISTA_CENTER, ARGENTINA_BOUNDS } from '@/lib/map-config'
+import { MapPin, RotateCcw, Navigation } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
 import 'leaflet/dist/leaflet.css'
 
@@ -19,6 +19,7 @@ interface PropertyLocationPickerProps {
   latitude?: number
   longitude?: number
   onLocationChange?: (lat: number, lng: number) => void
+  onAddressChange?: (address: string, neighborhood: string, city: string, province: string) => void
   className?: string
 }
 
@@ -31,6 +32,7 @@ export function PropertyLocationPicker({
   latitude,
   longitude,
   onLocationChange,
+  onAddressChange,
   className = "h-80"
 }: PropertyLocationPickerProps) {
   const [coordinates, setCoordinates] = useState<[number, number] | null>(
@@ -39,6 +41,7 @@ export function PropertyLocationPicker({
   const [isClient, setIsClient] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isSyncing, setIsSyncing] = useState(false)
+  const [isReverseSyncing, setIsReverseSyncing] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -107,6 +110,53 @@ export function PropertyLocationPicker({
     }
   }
 
+  const handleSyncFromMap = async () => {
+    if (!coordinates) {
+      toast({
+        title: "Sin ubicación seleccionada",
+        description: "Primero seleccione una ubicación en el mapa",
+        variant: "destructive"
+      })
+      return
+    }
+
+    setIsReverseSyncing(true)
+
+    try {
+      const [lat, lng] = coordinates
+      const addressData = await reverseGeocodeCoordinates(lat, lng)
+
+      if (addressData && onAddressChange) {
+        onAddressChange(
+          addressData.address,
+          addressData.neighborhood,
+          addressData.city,
+          addressData.province
+        )
+
+        toast({
+          title: "Dirección sincronizada",
+          description: `Dirección actualizada: ${addressData.formatted_address}`,
+        })
+      } else {
+        toast({
+          title: "No se pudo obtener la dirección",
+          description: "No se encontró información de dirección para esta ubicación",
+          variant: "destructive"
+        })
+      }
+    } catch (error) {
+      console.error('Error syncing from map:', error)
+      toast({
+        title: "Error al sincronizar",
+        description: "Hubo un error al obtener la dirección desde el mapa",
+        variant: "destructive"
+      })
+    } finally {
+      setIsReverseSyncing(false)
+    }
+  }
+
   const handleResetLocation = () => {
     setCoordinates(RECONQUISTA_CENTER)
     onLocationChange?.(RECONQUISTA_CENTER[0], RECONQUISTA_CENTER[1])
@@ -148,6 +198,17 @@ export function PropertyLocationPicker({
 
         <Button
           type="button"
+          onClick={handleSyncFromMap}
+          disabled={isReverseSyncing || !coordinates}
+          className="flex items-center gap-2"
+          variant="outline"
+        >
+          <Navigation className="w-4 h-4" />
+          {isReverseSyncing ? "Sincronizando..." : "Sincronizar desde mapa"}
+        </Button>
+
+        <Button
+          type="button"
           onClick={handleResetLocation}
           variant="outline"
           className="flex items-center gap-2"
@@ -161,8 +222,9 @@ export function PropertyLocationPicker({
       <div className="text-sm text-premium-secondary bg-premium-card/30 rounded-lg p-3 border border-support-gray/20">
         <p className="mb-1"><strong>Instrucciones:</strong></p>
         <ul className="list-disc list-inside space-y-1 text-xs">
-          <li>Haga clic en "Sincronizar desde dirección" para ubicar automáticamente la propiedad</li>
-          <li>O haga clic directamente en el mapa para seleccionar una ubicación específica</li>
+          <li><strong>Sincronizar desde dirección:</strong> Usa los campos de dirección para ubicar en el mapa</li>
+          <li><strong>Selección manual:</strong> Haz clic directamente en el mapa para seleccionar ubicación</li>
+          <li><strong>Sincronizar desde mapa:</strong> Completa los campos de dirección desde la ubicación del mapa</li>
           <li>Solo se permiten ubicaciones dentro de Argentina</li>
         </ul>
       </div>

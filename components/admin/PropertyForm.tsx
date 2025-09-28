@@ -269,6 +269,13 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
     setValue("longitude", lng)
   }
 
+  const handleAddressChange = (address: string, neighborhood: string, city: string, province: string) => {
+    setValue("address", address)
+    setValue("neighborhood", neighborhood)
+    setValue("city", city)
+    setValue("province", province)
+  }
+
   const onFormSubmit = async (data: PropertyFormData) => {
     setIsSubmitting(true)
 
@@ -494,6 +501,7 @@ const PropertyForm = ({ property, onSubmit }: PropertyFormProps) => {
               latitude={watch("latitude")}
               longitude={watch("longitude")}
               onLocationChange={handleLocationChange}
+              onAddressChange={handleAddressChange}
               className="h-96"
             />
           </div>
