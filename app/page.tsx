@@ -280,13 +280,47 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Barra separadora estética */}
-      <div className="relative py-4">
-        <div className="container mx-auto px-4">
-          <div className="relative h-1">
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-500/60 to-transparent h-0.5"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/40 to-transparent h-0.5 top-0.5"></div>
+      {/* Barra separadora artística */}
+      <div className="relative py-12 overflow-hidden">
+        {/* Fondo con gradiente sutil */}
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/30 via-transparent to-gray-900/30"></div>
+
+        <div className="container mx-auto px-4 relative">
+          {/* Línea principal artística */}
+          <div className="relative flex items-center justify-center">
+            {/* Elementos decorativos izquierda */}
+            <div className="flex-1 flex items-center">
+              <div className="h-px bg-gradient-to-r from-transparent via-gray-600/40 to-orange-500/60 flex-1"></div>
+              <div className="w-2 h-2 bg-gradient-to-br from-orange-500 to-red-500 rounded-full mx-3 shadow-lg shadow-orange-500/50"></div>
+              <div className="h-px bg-gradient-to-r from-orange-500/60 via-orange-400/80 to-orange-300/60 w-16"></div>
+            </div>
+
+            {/* Elemento central */}
+            <div className="relative mx-8">
+              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 via-orange-400 to-red-500 rounded-full flex items-center justify-center shadow-xl shadow-orange-500/30">
+                <div className="w-3 h-3 bg-white/90 rounded-full"></div>
+              </div>
+              {/* Resplandor central */}
+              <div className="absolute inset-0 w-8 h-8 bg-orange-400/30 rounded-full blur-lg animate-pulse"></div>
+            </div>
+
+            {/* Elementos decorativos derecha */}
+            <div className="flex-1 flex items-center">
+              <div className="h-px bg-gradient-to-l from-orange-500/60 via-orange-400/80 to-orange-300/60 w-16"></div>
+              <div className="w-2 h-2 bg-gradient-to-br from-orange-500 to-red-500 rounded-full mx-3 shadow-lg shadow-orange-500/50"></div>
+              <div className="h-px bg-gradient-to-l from-transparent via-gray-600/40 to-orange-500/60 flex-1"></div>
+            </div>
           </div>
+
+          {/* Línea secundaria sutil */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full">
+            <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+          </div>
+
+          {/* Partículas decorativas */}
+          <div className="absolute top-0 left-1/4 w-1 h-1 bg-orange-400/60 rounded-full animate-pulse"></div>
+          <div className="absolute bottom-0 right-1/3 w-1 h-1 bg-orange-300/40 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+          <div className="absolute top-2 right-1/4 w-0.5 h-0.5 bg-orange-500/50 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
         </div>
       </div>
 

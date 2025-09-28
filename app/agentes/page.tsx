@@ -222,7 +222,7 @@ export default function AgentesPage() {
             src="/assets/hero/agents.png"
             alt="Agentes - Marconi Inmobiliaria"
             fill
-            className="object-cover"
+            className="object-cover object-top scale-90"
             priority
           />
           {/* Premium overlay */}
