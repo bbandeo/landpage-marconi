@@ -421,4 +421,16 @@
   .hero-text-primary { color: #FFFFFF; }
   .hero-text-secondary { color: rgba(245, 245, 245, 0.85); }
   .hero-text-subtle { color: rgba(245, 245, 245, 0.7); }
+
+  /* Hero viewport height - resta la altura del header dinámicamente */
+  .hero-viewport-height {
+    height: calc(100vh - 5.25rem); /* Móvil: 100vh - header (h-20 = 5rem + border = 0.25rem) */
+    min-height: calc(100vh - 5.25rem);
+  }
+  @media (min-width: 768px) {
+    .hero-viewport-height {
+      height: calc(100vh - 6.25rem); /* Desktop: 100vh - header (h-24 = 6rem + border = 0.25rem) */
+      min-height: calc(100vh - 6.25rem);
+    }
+  }
 }

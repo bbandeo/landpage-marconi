@@ -32,7 +32,7 @@ export default function Hero({
   const ContentWrapper = withAnimation ? motion.div : 'div'
 
   return (
-    <section className="relative min-h-screen section-premium overflow-hidden">
+    <section className="relative section-premium overflow-hidden hero-viewport-height">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
