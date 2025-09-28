@@ -56,18 +56,20 @@ export default function Hero({
             animate: { opacity: 1, y: 0 },
             transition: { duration: 0.8 }
           })}
-          className="text-center py-16 md:py-24"
+          className="text-center py-12 md:py-16"
         >
           <h1 className="hero-title mb-8 text-white">
             {title}
           </h1>
-          <div className="mb-6 max-w-4xl mx-auto">
-            <div className="bg-black/30 backdrop-blur-sm rounded-2xl px-8 py-6 border border-white/10">
-              <p className="body-text text-white text-center font-medium">
-                {description}
-              </p>
+          {description && description.trim() !== "" && (
+            <div className="mb-6 max-w-4xl mx-auto">
+              <div className="bg-black/30 backdrop-blur-sm rounded-2xl px-8 py-6 border border-white/10">
+                <p className="body-text text-white text-center font-medium">
+                  {description}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
           {showCounter && counterValue !== undefined && (
             <div className="secondary-text text-center mb-8">
               <p className="text-white/80">{counterValue} {counterText}</p>

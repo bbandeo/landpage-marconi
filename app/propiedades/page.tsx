@@ -273,9 +273,7 @@ export default function PropiedadesPage() {
         alt="Casa con llaves - Marconi Inmobiliaria"
         title="NUESTRAS PROPIEDADES"
         description=""
-        showCounter={true}
-        counterText="propiedades disponibles"
-        counterValue={filteredProperties.length}
+        showCounter={false}
       >
         {/* Filters - Compact with Expandable Design */}
         <div className="max-w-6xl mx-auto">
@@ -453,15 +451,25 @@ export default function PropiedadesPage() {
         </div>
       </Hero>
 
+      {/* Properties Counter - Below filters */}
+      <div className="bg-premium-main py-6">
+        <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="bg-premium-card/50 backdrop-blur-sm rounded-xl px-6 py-4 border border-support-gray/20 shadow-lg inline-block">
+              <p className="text-vibrant-orange font-semibold text-lg">
+                {filteredProperties.length} propiedades disponibles
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Results - PREMIUM DESIGN */}
       <section className="section-spacing bg-premium-main">
         <div className="container-premium">
-          {/* Results count and summary */}
-          <div className="flex items-center justify-between component-spacing">
-            <div>
-              <h2 className="component-title mb-2">Resultados</h2>
-              <p className="secondary-text">{filteredProperties.length} propiedades encontradas</p>
-            </div>
+          {/* Results header */}
+          <div className="component-spacing">
+            <h2 className="component-title mb-2">Resultados</h2>
           </div>
 
           {/* Properties List - DISEÑO VERTICAL CON IMÁGENES PROMINENTES */}
