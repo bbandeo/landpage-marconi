@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { MapPin, Globe } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { PageHero } from "@/components/PageHero";
+import Hero from "@/components/Hero";
 import { ContactDetails } from "@/components/contact/ContactDetails";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { FaqSection } from "@/components/contact/FaqSection";
@@ -16,11 +16,13 @@ export default function ContactoPage() {
     <div className="min-h-screen bg-premium-main text-white">
       <Header />
 
-      <PageHero
-        title={<>Hablemos</>}
-        description="Estamos listos para ayudarte. Contactanos a través de tu canal preferido o visitanos en nuestra oficina."
+      <Hero
         backgroundImage="v1721008691/marconi/contact/contact-hero_gq82gs.jpg"
         alt="Oficina de Marconi Inmobiliaria"
+        title={<><span className="text-orange-400">CONTACTANOS</span></>}
+        description="Estamos aquí para ayudarte a encontrar la propiedad perfecta o responder cualquier consulta sobre nuestros servicios"
+        withAnimation={true}
+        imageClassName="object-cover object-top"
       />
 
       {/* Contact Details Section */}
