@@ -321,18 +321,20 @@ export default function PropiedadesPage() {
               </Select>
             </div>
 
-            {/* Expand/Collapse Button */}
-            <div className="flex justify-center mb-4">
-              <Button
-                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                variant="outline"
-                className="bg-night-blue/60 border-support-gray/30 text-bone-white hover:bg-vibrant-orange hover:border-vibrant-orange hover:text-white transition-all duration-300 rounded-xl px-4 py-2 flex items-center gap-2"
-              >
-                <Filter className="w-4 h-4" />
-                {showAdvancedFilters ? "Menos filtros" : "Más filtros"}
-                {showAdvancedFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              </Button>
-            </div>
+            {/* Expand/Collapse Button - Only show when collapsed */}
+            {!showAdvancedFilters && (
+              <div className="flex justify-center mb-4">
+                <Button
+                  onClick={() => setShowAdvancedFilters(true)}
+                  variant="outline"
+                  className="bg-night-blue/60 border-support-gray/30 text-bone-white hover:bg-vibrant-orange hover:border-vibrant-orange hover:text-white transition-all duration-300 rounded-xl px-4 py-2 flex items-center gap-2"
+                >
+                  <Filter className="w-4 h-4" />
+                  Más filtros
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+              </div>
+            )}
 
             {/* Advanced Filters - Collapsible */}
             {showAdvancedFilters && (
