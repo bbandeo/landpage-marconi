@@ -33,7 +33,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
   // Special case for contacto page - uses vibrant orange ONLY when active
   const getContactLinkClassName = () => {
     if (isActivePage("/contacto")) {
-      return "interactive-element font-semibold";
+      return "interactive-element border-b-2 border-vibrant-orange pb-1 font-medium";
     }
     return "text-bone-white/80 hover:text-vibrant-orange transition-colors";
   };
@@ -41,7 +41,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
   // Special case for agentes page - uses vibrant orange ONLY when active
   const getAgentesLinkClassName = () => {
     if (isActivePage("/agentes")) {
-      return "interactive-element font-semibold";
+      return "interactive-element border-b-2 border-vibrant-orange pb-1 font-medium";
     }
     return "text-bone-white/80 hover:text-vibrant-orange transition-colors";
   };
