@@ -367,11 +367,8 @@ export default function HomePage() {
       </section>
 
       {/* Separador decorativo minimalista entre secciones */}
-      <div className="relative w-full flex justify-center my-12">
-        <div className="h-px w-3/4 bg-gradient-to-r from-transparent via-gray-600/40 to-transparent" />
-        <span className="absolute -top-3 bg-[#0d0f1a] px-3 text-gray-500 text-sm">
-          • • •
-        </span>
+      <div className="my-16 md:my-24">
+        <div className="w-full max-w-4xl mx-auto h-px bg-gradient-to-r from-transparent via-support-gray/30 to-transparent" />
       </div>
 
       {/* QUIÉNES SOMOS - Sección informativa con diseño consistente */}
