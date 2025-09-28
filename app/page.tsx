@@ -274,16 +274,20 @@ export default function HomePage() {
           </div>
           
           {/* CONTENIDO INFERIOR - BUSCADOR HERO */}
-          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-4 sm:pb-6 lg:pb-8 px-4">
+          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-2 sm:pb-3 lg:pb-4 px-4">
             <HeroSearchBar />
           </div>
         </div>
       </section>
 
       {/* Barra separadora estética */}
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-600/30 to-transparent h-px"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/20 to-transparent h-px top-1"></div>
+      <div className="relative py-4">
+        <div className="container mx-auto px-4">
+          <div className="relative h-1">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-500/60 to-transparent h-0.5"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/40 to-transparent h-0.5 top-0.5"></div>
+          </div>
+        </div>
       </div>
 
       {/* Propiedades Destacadas - PREMIUM DESIGN */}

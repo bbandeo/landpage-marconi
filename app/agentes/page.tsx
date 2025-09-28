@@ -215,20 +215,39 @@ export default function AgentesPage() {
       <Header />
 
       {/* Hero Section - PREMIUM DESIGN */}
-      <section className="section-premium bg-premium-main">
-        <div className="container-premium text-center">
+      <section className="relative section-premium overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="/assets/hero/agents.png"
+            alt="Agentes - Marconi Inmobiliaria"
+            fill
+            className="object-cover"
+            priority
+          />
+          {/* Premium overlay */}
+          <div className="absolute inset-0 bg-night-blue/50" />
+          {/* Orange fade overlay - Enhanced overlay for better text contrast */}
+          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/85 via-orange-500/50 to-transparent" />
+        </div>
+
+        <div className="container-premium relative z-10 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="display-lg text-premium-primary mb-premium-lg">
-              NUESTROS <span className="accent-premium">AGENTES</span>
+            <h1 className="hero-title mb-element-spacing text-white">
+              NUESTROS <span className="text-orange-400">AGENTES</span>
             </h1>
-            <p className="body-xl text-premium-secondary max-w-4xl mx-auto mb-premium-xl">
-              Conocé al equipo de profesionales inmobiliarios que te acompañará 
-              en cada paso para encontrar tu próxima propiedad en Reconquista
-            </p>
+            <div className="element-spacing max-w-4xl mx-auto">
+              <div className="bg-black/30 backdrop-blur-sm rounded-2xl px-8 py-6 border border-white/10">
+                <p className="body-text text-white text-center font-medium">
+                  Conocé al equipo de profesionales inmobiliarios que te acompañará
+                  en cada paso para encontrar tu próxima propiedad en Reconquista
+                </p>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
