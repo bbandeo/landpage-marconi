@@ -295,75 +295,74 @@ export default function HomePage() {
         </div>
 
         <div className="container-premium relative z-10">
-          {/* CONTENEDOR PREMIUM UNIFICADO PARA PROPIEDADES */}
-          <div className="relative bg-[#141826] rounded-3xl shadow-xl shadow-black/40 px-8 py-10 mt-10">
-            {/* Header Premium - JERARQUÍA TIPOGRÁFICA OPTIMIZADA */}
-            <div className="text-center mb-12">
-              {/* Título principal */}
-              <motion.h2
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6"
-              >
-                Propiedades destacadas
-              </motion.h2>
+          {/* Header Premium - JERARQUÍA TIPOGRÁFICA OPTIMIZADA */}
+          <div className="text-center mb-12">
+            {/* Título principal */}
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6"
+            >
+              Propiedades destacadas
+            </motion.h2>
 
-              {/* Subtítulo simplificado */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                viewport={{ once: true }}
-                className="max-w-2xl mx-auto"
-              >
-                <p className="text-gray-400 text-lg leading-relaxed">
-                  Hogares seleccionados con estándares de excelencia para tu familia.
-                </p>
-              </motion.div>
+            {/* Subtítulo simplificado */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="max-w-2xl mx-auto"
+            >
+              <p className="text-gray-400 text-lg leading-relaxed">
+                Hogares seleccionados con estándares de excelencia para tu familia.
+              </p>
+            </motion.div>
+          </div>
+
+          {loadingProperties ? (
+            <div className="text-center py-premium-lg">
+              <div className="animate-spin rounded-full h-20 w-20 border-4 border-support-gray/20 border-t-vibrant-orange mx-auto shadow-xl"></div>
+              <p className="text-premium-primary mt-premium-md body-lg pulse-premium">Cargando propiedades...</p>
             </div>
-
-            {loadingProperties ? (
-              <div className="text-center py-premium-lg">
-                <div className="animate-spin rounded-full h-20 w-20 border-4 border-support-gray/20 border-t-vibrant-orange mx-auto shadow-xl"></div>
-                <p className="text-premium-primary mt-premium-md body-lg pulse-premium">Cargando propiedades...</p>
-              </div>
-            ) : (
-              <>
-                {/* SLIDER PROPIEDADES - DISEÑO ESTRATÉGICO PREMIUM */}
+          ) : (
+            <>
+              {/* CONTENEDOR PREMIUM SOLO PARA CARDS Y NAVEGACIÓN */}
+              <div className="relative bg-[#141826] rounded-3xl shadow-xl shadow-black/40 px-8 py-10">
                 <div className="max-w-7xl mx-auto">
                   <FeaturedPropertiesSlider properties={featuredProperties} />
                 </div>
+              </div>
 
-                {/* CTA PREMIUM - BOTÓN CON GLOW Y FLECHA ANIMADA */}
-                {featuredProperties.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true }}
-                    className="text-center mt-16"
-                  >
-                    <Link href="/propiedades">
-                      <Button
-                        size="lg"
-                        className="w-full max-w-md bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-4 px-8 rounded-2xl shadow-2xl shadow-orange-600/30 hover:shadow-[0_0_15px_rgba(249,115,22,0.6)] transition-all duration-300 hover:scale-105 group border-0 flex items-center justify-center gap-2"
-                      >
-                        VER TODO EL CATÁLOGO
-                        <span className="transform transition-transform group-hover:translate-x-1">
-                          →
-                        </span>
-                      </Button>
-                    </Link>
-                    <p className="text-secondary mt-4 text-lg font-medium">
-                      Encontrá la propiedad perfecta para vos.
-                    </p>
-                  </motion.div>
-                )}
-              </>
-            )}
-          </div>
+              {/* CTA PREMIUM - BOTÓN CON GLOW Y FLECHA ANIMADA (FUERA DEL CONTENEDOR) */}
+              {featuredProperties.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  viewport={{ once: true }}
+                  className="text-center mt-16"
+                >
+                  <Link href="/propiedades">
+                    <Button
+                      size="lg"
+                      className="w-full max-w-md bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-4 px-8 rounded-2xl shadow-2xl shadow-orange-600/30 hover:shadow-[0_0_15px_rgba(249,115,22,0.6)] transition-all duration-300 hover:scale-105 group border-0 flex items-center justify-center gap-2"
+                    >
+                      VER TODO EL CATÁLOGO
+                      <span className="transform transition-transform group-hover:translate-x-1">
+                        →
+                      </span>
+                    </Button>
+                  </Link>
+                  <p className="text-secondary mt-4 text-lg font-medium">
+                    Encontrá la propiedad perfecta para vos.
+                  </p>
+                </motion.div>
+              )}
+            </>
+          )}
         </div>
       </section>
 
