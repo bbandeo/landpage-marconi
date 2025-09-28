@@ -343,12 +343,12 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6 }}
                   viewport={{ once: true }}
-                  className="text-center mt-16"
+                  className="flex flex-col items-center mt-16"
                 >
                   <Link href="/propiedades">
                     <Button
                       size="lg"
-                      className="w-full max-w-md bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-4 px-8 rounded-2xl shadow-2xl shadow-orange-600/30 hover:shadow-[0_0_15px_rgba(249,115,22,0.6)] transition-all duration-300 hover:scale-105 group border-0 flex items-center justify-center gap-2"
+                      className="max-w-md bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-4 px-8 rounded-2xl shadow-2xl shadow-orange-600/30 hover:shadow-[0_0_15px_rgba(249,115,22,0.6)] transition-all duration-300 hover:scale-105 group border-0 flex items-center justify-center gap-2"
                     >
                       VER TODO EL CATÁLOGO
                       <span className="transform transition-transform group-hover:translate-x-1">
@@ -356,7 +356,7 @@ export default function HomePage() {
                       </span>
                     </Button>
                   </Link>
-                  <p className="text-secondary mt-4 text-lg font-medium">
+                  <p className="text-secondary mt-4 text-lg font-medium text-center">
                     Encontrá la propiedad perfecta para vos.
                   </p>
                 </motion.div>
