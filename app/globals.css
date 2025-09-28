@@ -433,4 +433,271 @@
       min-height: calc(100vh - 6.25rem);
     }
   }
+
+  /* ========================================
+     ANALYTICS & DATA VISUALIZATION UTILITIES
+     ======================================== */
+
+  /* GRID SYSTEMS FOR ANALYTICS */
+  .analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--widget-gap, 1.5rem);
+    padding: 1.5rem;
+  }
+
+  .analytics-grid-dense {
+    grid-auto-rows: minmax(180px, auto);
+  }
+
+  .analytics-grid-responsive {
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .analytics-grid-responsive {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .analytics-grid-responsive {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (min-width: 1440px) {
+    .analytics-grid-responsive {
+      grid-template-columns: repeat(6, 1fr);
+    }
+  }
+
+  /* WIDGET LAYOUTS */
+  .widget-container {
+    @apply bg-night-blue/95 border border-support-gray/20 rounded-2xl p-widget-md backdrop-blur-sm;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .widget-container:hover {
+    @apply border-support-gray/40;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  .widget-header {
+    @apply flex items-center justify-between mb-4;
+  }
+
+  .widget-title {
+    @apply text-data-md font-medium text-bone-white;
+  }
+
+  .widget-content {
+    @apply space-y-3;
+  }
+
+  /* KPI & METRICS STYLING */
+  .kpi-number {
+    font-family: var(--font-mono);
+    @apply text-data-xl font-bold text-bone-white tracking-tight;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.025em;
+  }
+
+  .kpi-number-large {
+    font-family: var(--font-mono);
+    @apply text-data-xxl font-extrabold text-bone-white tracking-tight;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.05em;
+  }
+
+  .kpi-label {
+    @apply text-data-sm text-support-gray font-medium uppercase tracking-wide;
+  }
+
+  .kpi-description {
+    @apply text-data-xs text-subtle-gray;
+  }
+
+  /* TREND INDICATORS */
+  .trend-positive {
+    @apply text-trend-positive;
+  }
+
+  .trend-negative {
+    @apply text-trend-negative;
+  }
+
+  .trend-neutral {
+    @apply text-trend-neutral;
+  }
+
+  .trend-indicator {
+    @apply inline-flex items-center gap-1 text-data-xs font-medium;
+  }
+
+  .trend-arrow-up::before {
+    content: "↗";
+    @apply text-trend-positive font-bold;
+  }
+
+  .trend-arrow-down::before {
+    content: "↘";
+    @apply text-trend-negative font-bold;
+  }
+
+  .trend-arrow-neutral::before {
+    content: "→";
+    @apply text-trend-neutral font-bold;
+  }
+
+  /* STATUS INDICATORS */
+  .status-success {
+    @apply bg-status-success/10 text-status-success border border-status-success/30 rounded-lg px-2 py-1 text-data-xs font-medium;
+  }
+
+  .status-warning {
+    @apply bg-status-warning/10 text-status-warning border border-status-warning/30 rounded-lg px-2 py-1 text-data-xs font-medium;
+  }
+
+  .status-error {
+    @apply bg-status-error/10 text-status-error border border-status-error/30 rounded-lg px-2 py-1 text-data-xs font-medium;
+  }
+
+  .status-info {
+    @apply bg-status-info/10 text-status-info border border-status-info/30 rounded-lg px-2 py-1 text-data-xs font-medium;
+  }
+
+  .status-neutral {
+    @apply bg-status-neutral/10 text-status-neutral border border-status-neutral/30 rounded-lg px-2 py-1 text-data-xs font-medium;
+  }
+
+  /* CHART CONTAINERS */
+  .chart-container {
+    @apply w-full h-full p-chart-padding;
+    min-height: 200px;
+  }
+
+  .chart-tooltip {
+    @apply bg-night-blue/95 border border-support-gray/30 rounded-lg p-3 shadow-xl backdrop-blur-sm;
+    @apply text-data-sm text-bone-white;
+  }
+
+  .chart-legend {
+    @apply flex flex-wrap gap-4 text-data-xs text-support-gray;
+  }
+
+  .chart-legend-item {
+    @apply flex items-center gap-2;
+  }
+
+  .chart-legend-dot {
+    @apply w-3 h-3 rounded-full;
+  }
+
+  /* DATA TABLES */
+  .data-table {
+    @apply w-full border-collapse;
+  }
+
+  .data-table th {
+    @apply text-data-xs font-medium text-support-gray uppercase tracking-wide py-3 px-4 text-left border-b border-support-gray/20;
+  }
+
+  .data-table td {
+    @apply text-data-sm text-bone-white py-3 px-4 border-b border-support-gray/10;
+  }
+
+  .data-table tr:hover td {
+    @apply bg-support-gray/5;
+  }
+
+  /* PROGRESS INDICATORS */
+  .progress-ring {
+    @apply relative inline-flex items-center justify-center;
+  }
+
+  .progress-bar {
+    @apply w-full bg-support-gray/20 rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-2 bg-gradient-to-r from-chart-primary to-chart-secondary transition-all duration-700 ease-out;
+  }
+
+  /* LOADING STATES FOR ANALYTICS */
+  .analytics-skeleton {
+    @apply bg-support-gray/10 rounded-lg animate-pulse;
+  }
+
+  .analytics-skeleton-text {
+    @apply bg-support-gray/10 rounded h-4 animate-pulse;
+  }
+
+  .analytics-skeleton-number {
+    @apply bg-support-gray/10 rounded h-8 w-24 animate-pulse;
+  }
+
+  /* FILTER PANELS */
+  .filter-panel {
+    @apply bg-night-blue/80 border border-support-gray/20 rounded-xl p-widget-sm backdrop-blur-sm;
+  }
+
+  .filter-section {
+    @apply space-y-3;
+  }
+
+  .filter-label {
+    @apply text-data-sm font-medium text-bone-white;
+  }
+
+  .filter-input {
+    @apply bg-night-blue/60 border border-support-gray/30 rounded-lg px-3 py-2 text-data-sm text-bone-white;
+    @apply focus:border-vibrant-orange focus:ring-1 focus:ring-vibrant-orange/30 transition-colors;
+  }
+
+  /* RESPONSIVE ANALYTICS UTILITIES */
+  .analytics-responsive-hide-mobile {
+    @apply hidden sm:block;
+  }
+
+  .analytics-responsive-show-mobile {
+    @apply block sm:hidden;
+  }
+
+  .analytics-compact-mobile {
+    @apply text-data-xs sm:text-data-sm;
+  }
+
+  /* ACCESSIBILITY ENHANCEMENTS */
+  .analytics-focus-visible:focus-visible {
+    @apply outline-2 outline-vibrant-orange outline-offset-2;
+  }
+
+  .analytics-screen-reader-only {
+    @apply sr-only;
+  }
+
+  /* HIGH CONTRAST MODE SUPPORT */
+  @media (prefers-contrast: high) {
+    .widget-container {
+      @apply border-2 border-bone-white/30;
+    }
+
+    .kpi-number, .kpi-number-large {
+      @apply text-bone-white;
+    }
+
+    .chart-tooltip {
+      @apply border-2 border-bone-white/50;
+    }
+  }
+
+  /* REDUCED MOTION SUPPORT */
+  @media (prefers-reduced-motion: reduce) {
+    .widget-container, .progress-fill, .analytics-skeleton {
+      transition: none;
+      animation: none;
+    }
+  }
 }

@@ -205,9 +205,8 @@ export class AnalyticsService {
       // Validate required fields
       this.validatePropertyView(viewData)
 
-      // TEMPORARY FIX: Get the real session UUID from analytics_sessions
-      // This resolves the foreign key constraint issue - using admin client to bypass RLS
-      const { data: sessionData, error: sessionError } = await supabaseAdmin
+      // Get the real session UUID from analytics_sessions using admin client
+      const { data: sessionData, error: sessionError } = await this.ADMIN_CLIENT
         .from('analytics_sessions')
         .select('id')
         .eq('session_id', viewData.session_id)
@@ -220,22 +219,20 @@ export class AnalyticsService {
 
       const realSessionUUID = sessionData.id
 
-      // Use the database function for 2-hour debouncing with the real session UUID
-      const { data, error } = await supabase.rpc('track_property_view', {
-        p_property_id: viewData.property_id,
-        p_session_id: realSessionUUID, // Use the real UUID from analytics_sessions.id
-        p_page_url: viewData.page_url,
-        p_referrer_url: viewData.referrer_url,
-        p_search_query: null // Could be added later
-      })
+      // Check for duplicate views in the last 2 hours (debounce)
+      const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+      
+      const { data: existingView } = await this.ADMIN_CLIENT
+        .from('analytics_property_views')
+        .select('id')
+        .eq('session_id', realSessionUUID)
+        .eq('property_id', viewData.property_id)
+        .gte('viewed_at', twoHoursAgo)
+        .single()
 
-      if (error) {
-        throw new Error(`Failed to record property view: ${error.message}`)
-      }
-
-      // Update additional view data if needed
-      if (viewData.time_on_page || viewData.scroll_depth || viewData.contact_button_clicked) {
-        await supabase
+      if (existingView) {
+        // Update existing view instead of creating new one
+        const { data: updatedView, error: updateError } = await this.ADMIN_CLIENT
           .from('analytics_property_views')
           .update({
             view_duration_seconds: viewData.time_on_page,
@@ -244,15 +241,49 @@ export class AnalyticsService {
             whatsapp_clicked: viewData.whatsapp_clicked,
             phone_clicked: viewData.phone_clicked,
             email_clicked: viewData.email_clicked,
-            images_viewed: viewData.images_viewed
+            images_viewed: viewData.images_viewed,
+            page_url: viewData.page_url,
+            referrer_url: viewData.referrer_url
           })
-          .eq('id', data)
+          .eq('id', existingView.id)
+          .select('id')
+          .single()
+
+        if (updateError) {
+          throw new Error(`Failed to update property view: ${updateError.message}`)
+        }
+
+        return existingView.id
+      }
+
+      // Create new property view using admin client
+      const { data: newView, error } = await this.ADMIN_CLIENT
+        .from('analytics_property_views')
+        .insert({
+          session_id: realSessionUUID,
+          property_id: viewData.property_id,
+          page_url: viewData.page_url,
+          referrer_url: viewData.referrer_url,
+          viewed_at: new Date().toISOString(),
+          view_duration_seconds: viewData.time_on_page || 0,
+          scroll_percentage: viewData.scroll_depth || 0,
+          contact_form_opened: viewData.contact_button_clicked || false,
+          whatsapp_clicked: viewData.whatsapp_clicked || false,
+          phone_clicked: viewData.phone_clicked || false,
+          email_clicked: viewData.email_clicked || false,
+          images_viewed: viewData.images_viewed || 0
+        })
+        .select('id')
+        .single()
+
+      if (error) {
+        throw new Error(`Failed to record property view: ${error.message}`)
       }
 
       // Update session last seen
       await this.updateSessionLastSeen(viewData.session_id)
 
-      return data as string
+      return newView.id as string
     } catch (error) {
       console.error('Property view recording failed:', error)
       throw error
@@ -390,7 +421,8 @@ export class AnalyticsService {
     try {
       this.validateInteraction(interactionData)
 
-      const { error } = await supabase
+      // Use admin client to bypass RLS policies
+      const { error } = await this.ADMIN_CLIENT
         .from('analytics_user_interactions')
         .insert([{
           session_id: interactionData.session_id,
@@ -889,13 +921,28 @@ export class AnalyticsService {
   static async handleOptOut(sessionId: string, ipAddress?: string): Promise<void> {
     try {
       if (sessionId) {
-        // Use the database function for opt-out
-        const { data, error } = await this.ADMIN_CLIENT.rpc('analytics_opt_out', {
-          p_session_id: sessionId
-        })
-        
-        if (error) {
-          throw new Error(`Failed to opt out session: ${error.message}`)
+        // Find session by session_id and mark as opted out
+        // The error was caused by trying to use session_id (VARCHAR) directly with UUID comparison
+        const { data: sessionData, error: findError } = await this.ADMIN_CLIENT
+          .from('analytics_sessions')
+          .select('id')
+          .eq('session_id', sessionId)
+          .single()
+
+        if (findError && findError.code !== 'PGRST116') {
+          throw new Error(`Failed to find session: ${findError.message}`)
+        }
+
+        if (sessionData) {
+          // Update the found session to opt-out
+          const { error: updateError } = await this.ADMIN_CLIENT
+            .from('analytics_sessions')
+            .update({ opt_out: true })
+            .eq('id', sessionData.id)
+
+          if (updateError) {
+            throw new Error(`Failed to opt out session: ${updateError.message}`)
+          }
         }
       }
 

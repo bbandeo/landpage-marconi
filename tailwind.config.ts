@@ -26,6 +26,9 @@ const config = {
         inter: ["Inter", "sans-serif"], // Principal para todo el sitio
         museo: ["Museo Sans", "sans-serif"], // Deprecar gradualmente
         playfair: ["Playfair Display", "serif"], // Para elementos especiales
+        // ANALYTICS & DATA TYPOGRAPHY
+        mono: ["JetBrains Mono", "Monaco", "Consolas", "monospace"], // Para números y datos
+        data: ["Inter", "sans-serif"], // Optimizada para legibilidad de datos
       },
       // JERARQUÍA TIPOGRÁFICA PREMIUM
       fontSize: {
@@ -51,6 +54,16 @@ const config = {
         'caption-lg': ['0.875rem', { lineHeight: '1.5', fontWeight: '400' }],
         'caption-md': ['0.75rem', { lineHeight: '1.5', fontWeight: '400' }],
         'caption-sm': ['0.625rem', { lineHeight: '1.5', fontWeight: '400' }],
+
+        // TYPOGRAPHY FOR ANALYTICS & DATA
+        // Números y KPIs principales
+        'data-xxl': ['3rem', { lineHeight: '1.0', fontWeight: '800' }],      // 48px - KPIs hero
+        'data-xl': ['2.5rem', { lineHeight: '1.1', fontWeight: '700' }],     // 40px - KPIs principales
+        'data-lg': ['1.75rem', { lineHeight: '1.2', fontWeight: '600' }],    // 28px - Valores secundarios
+        'data-md': ['1.25rem', { lineHeight: '1.3', fontWeight: '500' }],    // 20px - Labels de charts
+        'data-sm': ['0.875rem', { lineHeight: '1.4', fontWeight: '400' }],   // 14px - Leyendas y tooltips
+        'data-xs': ['0.75rem', { lineHeight: '1.4', fontWeight: '400' }],    // 12px - Metadatos y timestamps
+        'data-xxs': ['0.625rem', { lineHeight: '1.4', fontWeight: '400' }],  // 10px - Labels pequeños
       },
       colors: {
         // SISTEMA DE COLORES PREMIUM - ECONOMÍA DEL COLOR
@@ -64,10 +77,10 @@ const config = {
         "support-gray": "#8A9199",
         // Gris Sutil - Para textos descriptivos secundarios
         "subtle-gray": "#B3B3B3",
-        
+
         // Legacy (mantener por compatibilidad durante transición)
         "brand-orange": "#F37321", // Actualizado al naranja vibrante
-        
+
         // Paleta premium antigua (deprecar gradualmente)
         "premium": {
           gold: "#c9a961",
@@ -75,6 +88,34 @@ const config = {
           muted: "#e8e2d5",
           dark: "#1a1a1a",
           light: "#fafafa",
+        },
+
+        // ANALYTICS & DATA VISUALIZATION COLORS
+        "chart": {
+          primary: "#F37321",     // vibrant-orange - Series principal
+          secondary: "#4F46E5",   // Azul para comparaciones
+          tertiary: "#10B981",    // Verde para métricas positivas
+          quaternary: "#8B5CF6",  // Púrpura para categorías adicionales
+          warning: "#F59E0B",     // Amarillo para alertas
+          danger: "#EF4444",      // Rojo para métricas negativas
+          neutral: "#6B7280",     // Gris para datos neutros
+          info: "#3B82F6",        // Azul información
+        },
+
+        // STATUS INDICATORS
+        "status": {
+          success: "#10B981",     // Verde - operaciones exitosas
+          warning: "#F59E0B",     // Amarillo - advertencias
+          error: "#EF4444",       // Rojo - errores
+          info: "#3B82F6",        // Azul - información
+          neutral: "#6B7280",     // Gris - neutral
+        },
+
+        // TREND INDICATORS
+        "trend": {
+          positive: "#10B981",    // Verde - tendencia positiva
+          negative: "#EF4444",    // Rojo - tendencia negativa
+          neutral: "#6B7280",     // Gris - sin cambios
         },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -148,6 +189,14 @@ const config = {
         "premium-lg": "4rem", // 64px - Section vertical padding
         "premium-xl": "6rem", // 96px - Hero sections
         "premium-2xl": "8rem", // 128px - Landing sections
+
+        // ANALYTICS & WIDGETS SPACING
+        "widget-xs": "0.75rem", // 12px - Widget padding pequeño
+        "widget-sm": "1rem", // 16px - Widget padding estándar
+        "widget-md": "1.5rem", // 24px - Widget padding generoso
+        "widget-lg": "2rem", // 32px - Widget padding amplio
+        "widget-gap": "1.5rem", // 24px - Gap entre widgets
+        "chart-padding": "1.25rem", // 20px - Padding interno de charts
       },
     },
   },

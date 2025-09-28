@@ -197,13 +197,13 @@ export default function AnalyticsDashboard() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-32 bg-gray-800 rounded-lg animate-pulse" />
+            <div key={i} className="h-32 analytics-skeleton" />
           ))}
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-64 bg-gray-800 rounded-lg animate-pulse" />
+            <div key={i} className="h-64 analytics-skeleton" />
           ))}
         </div>
       </div>
@@ -213,7 +213,7 @@ export default function AnalyticsDashboard() {
   if (error) {
     return (
       <div className="p-6">
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="widget-container">
           <CardContent className="p-8 text-center">
             <Activity className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-white mb-2">Error al cargar Analytics</h3>
@@ -231,7 +231,7 @@ export default function AnalyticsDashboard() {
   if (!dashboardData) {
     return (
       <div className="p-6">
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="widget-container">
           <CardContent className="p-8 text-center">
             <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-white mb-2">No hay datos disponibles</h3>
@@ -256,10 +256,10 @@ export default function AnalyticsDashboard() {
 
         <div className="flex items-center gap-3">
           <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-            <SelectTrigger className="w-32 bg-gray-800 border-gray-700 text-white">
+            <SelectTrigger className="w-32 filter-input">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-gray-800 border-gray-700">
+            <SelectContent className="filter-panel">
               <SelectItem value="7d">7 días</SelectItem>
               <SelectItem value="30d">30 días</SelectItem>
               <SelectItem value="90d">90 días</SelectItem>
@@ -280,12 +280,12 @@ export default function AnalyticsDashboard() {
 
       {/* Main Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="widget-container">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Sesiones Totales</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="kpi-label">Sesiones Totales</p>
+                <p className="kpi-number">
                   {formatNumber(dashboardData.total_sessions)}
                 </p>
                 <p className="text-xs text-blue-400 flex items-center mt-1">
@@ -300,12 +300,12 @@ export default function AnalyticsDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="widget-container">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Vistas de Propiedades</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="kpi-label">Vistas de Propiedades</p>
+                <p className="kpi-number">
                   {formatNumber(dashboardData.total_property_views)}
                 </p>
                 <p className="text-xs text-green-400 flex items-center mt-1">
@@ -320,12 +320,12 @@ export default function AnalyticsDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="widget-container">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Total Leads</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="kpi-label">Total Leads</p>
+                <p className="kpi-number">
                   {formatNumber(dashboardData.total_leads)}
                 </p>
                 <p className="text-xs text-purple-400 flex items-center mt-1">
@@ -340,12 +340,12 @@ export default function AnalyticsDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="bg-gray-800 border-gray-700">
+        <Card className="widget-container">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-400">Tasa de Conversión</p>
-                <p className="text-2xl font-bold text-white">
+                <p className="kpi-label">Tasa de Conversión</p>
+                <p className="kpi-number">
                   {dashboardData.conversion_rate.toFixed(1)}%
                 </p>
                 <p className="text-xs text-orange-400 flex items-center mt-1">
@@ -363,7 +363,7 @@ export default function AnalyticsDashboard() {
 
       {/* Detailed Analytics */}
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="bg-gray-800 border-gray-700">
+        <TabsList className="filter-panel">
           <TabsTrigger value="overview" className="data-[state=active]:bg-gray-700">Resumen</TabsTrigger>
           <TabsTrigger value="properties" className="data-[state=active]:bg-gray-700">Propiedades</TabsTrigger>
           <TabsTrigger value="sources" className="data-[state=active]:bg-gray-700">Fuentes</TabsTrigger>
@@ -373,7 +373,7 @@ export default function AnalyticsDashboard() {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Traffic by Device */}
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="widget-container">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <Smartphone className="w-5 h-5" />
@@ -406,7 +406,7 @@ export default function AnalyticsDashboard() {
         </TabsContent>
 
         <TabsContent value="properties" className="space-y-6">
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="widget-container">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Building2 className="w-5 h-5" />
@@ -423,7 +423,7 @@ export default function AnalyticsDashboard() {
                       </Badge>
                       <div>
                         <h4 className="text-white font-medium">{property.title}</h4>
-                        <p className="text-sm text-gray-400">ID: {property.property_id}</p>
+                        <p className="kpi-label">ID: {property.property_id}</p>
                       </div>
                     </div>
                     <div className="text-right">
@@ -442,7 +442,7 @@ export default function AnalyticsDashboard() {
         </TabsContent>
 
         <TabsContent value="sources" className="space-y-6">
-          <Card className="bg-gray-800 border-gray-700">
+          <Card className="widget-container">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Globe className="w-5 h-5" />
@@ -460,7 +460,7 @@ export default function AnalyticsDashboard() {
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <p className="text-white font-semibold">{source.leads_count} leads</p>
-                        <p className="text-sm text-gray-400">
+                        <p className="kpi-label">
                           {source.conversion_rate.toFixed(1)}% conversión
                         </p>
                       </div>
@@ -475,7 +475,7 @@ export default function AnalyticsDashboard() {
 
         <TabsContent value="devices" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="widget-container">
               <CardHeader>
                 <CardTitle className="text-white">Análisis por Dispositivo</CardTitle>
               </CardHeader>
@@ -505,7 +505,7 @@ export default function AnalyticsDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800 border-gray-700">
+            <Card className="widget-container">
               <CardHeader>
                 <CardTitle className="text-white">Métricas de Engagement</CardTitle>
               </CardHeader>
