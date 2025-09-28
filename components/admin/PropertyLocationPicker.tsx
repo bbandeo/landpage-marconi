@@ -8,23 +8,8 @@ import { MapPin, RotateCcw } from 'lucide-react'
 import { toast } from '@/hooks/use-toast'
 import 'leaflet/dist/leaflet.css'
 
-// Dynamically import the map components to avoid SSR issues
-const MapContainer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.MapContainer),
-  { ssr: false }
-)
-const TileLayer = dynamic(
-  () => import('react-leaflet').then((mod) => mod.TileLayer),
-  { ssr: false }
-)
-const Marker = dynamic(
-  () => import('react-leaflet').then((mod) => mod.Marker),
-  { ssr: false }
-)
-const useMapEvents = dynamic(
-  () => import('react-leaflet').then((mod) => mod.useMapEvents),
-  { ssr: false }
-)
+// Import all Leaflet components dynamically including useMapEvents
+const LeafletMap = dynamic(() => import('./LeafletMapComponent'), { ssr: false })
 
 interface PropertyLocationPickerProps {
   address?: string
@@ -37,48 +22,6 @@ interface PropertyLocationPickerProps {
   className?: string
 }
 
-// Component to handle map clicks
-function LocationMarker({ position, onLocationChange }: {
-  position: [number, number] | null,
-  onLocationChange: (lat: number, lng: number) => void
-}) {
-  const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(position)
-
-  const map = useMapEvents({
-    click(e) {
-      const { lat, lng } = e.latlng
-
-      // Check if coordinates are within Argentina bounds
-      if (lat > ARGENTINA_BOUNDS.north ||
-          lat < ARGENTINA_BOUNDS.south ||
-          lng > ARGENTINA_BOUNDS.east ||
-          lng < ARGENTINA_BOUNDS.west) {
-        toast({
-          title: "Ubicación fuera de Argentina",
-          description: "Solo se pueden seleccionar ubicaciones dentro de Argentina",
-          variant: "destructive"
-        })
-        return
-      }
-
-      setMarkerPosition([lat, lng])
-      onLocationChange(lat, lng)
-
-      toast({
-        title: "Ubicación actualizada",
-        description: `Coordenadas: ${lat.toFixed(6)}, ${lng.toFixed(6)}`,
-      })
-    },
-  })
-
-  useEffect(() => {
-    setMarkerPosition(position)
-  }, [position])
-
-  return markerPosition === null ? null : (
-    <Marker position={markerPosition} icon={createPropertyMarkerIcon() || undefined} />
-  )
-}
 
 export function PropertyLocationPicker({
   address,
@@ -226,21 +169,12 @@ export function PropertyLocationPicker({
 
       {/* Map container */}
       <div className={`${className} rounded-2xl overflow-hidden relative border border-support-gray/20`}>
-        <MapContainer
+        <LeafletMap
           center={currentCoords}
-          zoom={15}
+          coordinates={coordinates}
+          onLocationChange={handleLocationChange}
           className="h-full w-full"
-          style={{ height: '100%', width: '100%' }}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          <LocationMarker
-            position={coordinates}
-            onLocationChange={handleLocationChange}
-          />
-        </MapContainer>
+        />
 
         {/* Coordinates display overlay */}
         {coordinates && (

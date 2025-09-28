@@ -33,8 +33,8 @@ The content is organized as follows:
 <notes>
 - Some files may have been excluded based on .gitignore rules and Repomix's configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
-- Only files matching these patterns are included: src/**/*.js, docs/**/*.md, *.md, *.json, src/**/*.cjs
-- Files matching these patterns are excluded: src/core/database/seeders/**, node_modules/**, data/**, public/**, test/**, *.log, coverage/**, dist/**, build/**, **/*.xlsx, **/*.csv, **/.DS_Store, **/*.tmp, **/*.lock, package-lock.json, **/*.svg, **/*.jpg, **/*.jpeg, **/*.png, **/*.gif, **/*.bmp, **/*.tiff, **/*.tif, **/*.webp, **/*.ico, **/*.avif, **/*.heic, **/*.heif, **/*.mp4, **/*.avi, **/*.mov, **/*.wmv, **/*.flv, **/*.webm, **/*.mkv, **/*.m4v, **/*.3gp, **/*.mpeg, **/*.mpg, **/*.ogv, **/*.ts, **/*.m3u8, **/*.mp3, **/*.wav, **/*.flac, **/*.aac, **/*.ogg, **/*.wma, **/*.m4a, **/*.md
+- Only files matching these patterns are included: **/*.tsx, **/*.ts, **/*.mjs, **/*.js, **/*.css, **/*.json, .env.example
+- Files matching these patterns are excluded: node_modules/**, public/**, .next/**, .git/**, data/**, test/**, coverage/**, dist/**, build/**, .serena/**, .claude/**, .playwright-mcp/**, backup_*.sql, repomix-output.*, *.log, **/*.xlsx, **/*.csv, **/.DS_Store, **/*.tmp, **/*.lock, pnpm-lock.yaml, package-lock.json, **/*.svg, **/*.jpg, **/*.jpeg, **/*.png, **/*.gif, **/*.bmp, **/*.tiff, **/*.tif, **/*.webp, **/*.ico, **/*.avif, **/*.heic, **/*.heif, **/*.mp4, **/*.avi, **/*.mov, **/*.wmv, **/*.flv, **/*.webm, **/*.mkv, **/*.m4v, **/*.3gp, **/*.mpeg, **/*.mpg, **/*.ogv, **/*.m3u8, **/*.mp3, **/*.wav, **/*.flac, **/*.aac, **/*.ogg, **/*.wma, **/*.m4a, **/*.md, **/*.sql
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Code comments have been removed from supported file types
@@ -46,13 +46,999 @@ The content is organized as follows:
 </file_summary>
 
 <directory_structure>
+app/
+  admin/
+    analytics/
+      page.tsx
+    contacts/
+      loading.tsx
+      page.tsx
+    properties/
+      [id]/
+        edit/
+          page.tsx
+      new/
+        page.tsx
+      page.tsx
+    layout.tsx
+    page.tsx
+  agentes/
+    page.tsx
+  api/
+    admin/
+      readme/
+        route.ts
+    analytics/
+      dashboard/
+        route.ts
+      gdpr/
+        opt-out/
+          route.ts
+      interaction/
+        route.ts
+      lead-generation/
+        route.ts
+      property-metrics/
+        [id]/
+          route.ts
+      property-view/
+        route.ts
+      session/
+        route.ts
+    auth/
+      create-user/
+        route.ts
+    dashboard/
+      recent-activity/
+        route.ts
+      stats/
+        route.ts
+    geocode/
+      route.ts
+    leads/
+      [id]/
+        route.ts
+      route.ts
+    properties/
+      [id]/
+        route.ts
+      route.ts
+    settings/
+      upload/
+        route.ts
+      route.ts
+    upload/
+      multiple/
+        route.ts
+      route.ts
+  contacto/
+    page.tsx
+  propiedades/
+    [id]/
+      page.tsx
+    loading.tsx
+    page.tsx
+  globals.css
+  layout.tsx
+  loading.tsx
+  page-premium.tsx
+  page.tsx
+components/
+  admin/
+    AdminLayout.tsx
+    AnalyticsDashboard.tsx
+    ContactDetailModal.tsx
+    ContactKanban.tsx
+    Dashboard.tsx
+    PropertiesPage.backup.tsx
+    PropertiesPage.tsx
+    PropertyForm.tsx
+    PropertyLocationPicker.tsx
+    ReadmeDocumentation.tsx
+    theme-provider.tsx
+  ui/
+    badge.tsx
+    button.tsx
+    card.tsx
+    checkbox.tsx
+    dialog.tsx
+    dropdown-menu.tsx
+    input.tsx
+    label.tsx
+    select.tsx
+    sheet.tsx
+    switch.tsx
+    tabs.tsx
+    textarea.tsx
+    toast.tsx
+    toaster.tsx
+  AdminLayout.tsx
+  AnalyticsInitializer.tsx
+  Dashboard.tsx
+  FeaturedPropertiesSlider.tsx
+  Footer.tsx
+  Header.tsx
+  Hero.tsx
+  HeroSearchBar.tsx
+  LeadSourceSelector.tsx
+  PropertyCard.tsx
+  PropertyDetailMap.tsx
+  PropertyForm.tsx
+  PropertyMiniMap.tsx
+  PropertyViewTracker.tsx
+  theme-provider.tsx
+hooks/
+  use-is-client.tsx
+  use-toast.ts
+  useAnalytics.ts
+  useContactActions.ts
+  useContactFilters.ts
+  useContactMetrics.ts
+  useContacts.ts
+lib/
+  analytics-client.ts
+  cloudinary-server.ts
+  cloudinary.ts
+  map-config.ts
+  supabase.ts
+  utils.ts
+scripts/
+  create-user.js
+  read-analytics-readme.js
+services/
+  analytics.ts
+  leads.ts
+  properties.ts
+  settings.ts
+styles/
+  globals.css
+  leaflet.css
+  premium-theme.css
+types/
+  analytics.ts
+  settings.ts
+.env.example
 components.json
+middleware.ts
+next.config.mjs
 package.json
+postcss.config.mjs
+tailwind.config.ts
 tsconfig.json
 </directory_structure>
 
 <files>
 This section contains the contents of the repository's files.
+
+<file path="app/admin/contacts/loading.tsx">
+import { Card, CardContent } from "@/components/ui/card"
+</file>
+
+<file path="app/admin/contacts/page.tsx">
+import { useState } from "react"
+import {
+  MessageSquare,
+  Phone,
+  Mail,
+  Calendar,
+  Search,
+  Eye,
+  MoreHorizontal,
+  Users,
+  TrendingUp,
+  Clock,
+  Star,
+  Grid3X3,
+  List,
+  Plus,
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+⋮----
+import { useContacts } from "@/hooks/useContacts"
+import { useContactFilters } from "@/hooks/useContactFilters"
+import { useContactActions } from "@/hooks/useContactActions"
+import ContactDetailModal from "@/components/admin/ContactDetailModal"
+import ContactKanban from "@/components/admin/ContactKanban"
+⋮----
+const handleContactClick = (contact: any) =>
+⋮----
+const handleStatusChange = async (contactId: number, newStatus: any) =>
+⋮----
+const getStatusColor = (status: string) =>
+⋮----
+const getStatusLabel = (status: string) =>
+⋮----
+const getPriorityColor = (priority: string) =>
+⋮----
+const getPriorityLabel = (priority: string) =>
+⋮----
+<Badge className=
+⋮----
+e.stopPropagation()
+callContact(contact)
+⋮----
+openEmail(contact)
+⋮----
+openWhatsApp(contact)
+</file>
+
+<file path="app/admin/properties/[id]/edit/page.tsx">
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import PropertyForm from "@/components/admin/PropertyForm";
+⋮----
+export default function EditPropertyPage()
+⋮----
+const loadProperty = async () =>
+</file>
+
+<file path="app/admin/properties/new/page.tsx">
+import PropertyForm from "@/components/admin/PropertyForm";
+⋮----
+export default function NewPropertyPage()
+</file>
+
+<file path="app/admin/properties/page.tsx">
+import PropertiesPage from '@/components/admin/PropertiesPage'
+</file>
+
+<file path="app/admin/layout.tsx">
+import type React from "react"
+import AdminLayout from "@/components/admin/AdminLayout"
+⋮----
+export default function Layout({
+  children,
+}: {
+  children: React.ReactNode
+})
+</file>
+
+<file path="app/admin/page.tsx">
+import Dashboard from "@/components/admin/Dashboard"
+⋮----
+export default function AdminPage()
+</file>
+
+<file path="app/api/dashboard/recent-activity/route.ts">
+import { NextResponse } from "next/server"
+import { createClient } from "@supabase/supabase-js"
+⋮----
+export async function GET()
+</file>
+
+<file path="app/api/dashboard/stats/route.ts">
+import { NextResponse } from "next/server"
+import { createClient } from "@supabase/supabase-js"
+⋮----
+export async function GET()
+</file>
+
+<file path="app/api/leads/[id]/route.ts">
+import { type NextRequest, NextResponse } from "next/server"
+import { supabase } from "@/lib/supabase"
+⋮----
+export async function GET(request: NextRequest,
+⋮----
+export async function PATCH(request: NextRequest,
+⋮----
+export async function DELETE(request: NextRequest,
+</file>
+
+<file path="app/api/leads/route.ts">
+import { type NextRequest, NextResponse } from "next/server"
+import { supabase } from "@/lib/supabase"
+⋮----
+export async function GET()
+⋮----
+export async function POST(request: NextRequest)
+</file>
+
+<file path="app/api/properties/[id]/route.ts">
+import { type NextRequest, NextResponse } from "next/server"
+import { createClient } from "@supabase/supabase-js"
+⋮----
+export async function GET(request: NextRequest,
+⋮----
+export async function PUT(request: NextRequest,
+⋮----
+export async function PATCH(request: NextRequest,
+⋮----
+export async function DELETE(request: NextRequest,
+</file>
+
+<file path="app/api/properties/route.ts">
+import { type NextRequest, NextResponse } from "next/server"
+import { createClient } from "@supabase/supabase-js"
+⋮----
+export async function GET(request: NextRequest)
+⋮----
+export async function POST(request: NextRequest)
+</file>
+
+<file path="app/api/upload/multiple/route.ts">
+import { type NextRequest, NextResponse } from "next/server"
+import { v2 as cloudinary } from "cloudinary"
+⋮----
+export async function POST(request: NextRequest)
+</file>
+
+<file path="app/api/upload/route.ts">
+import { type NextRequest, NextResponse } from "next/server"
+import { uploadToCloudinary } from "@/lib/cloudinary-server"
+⋮----
+export async function POST(request: NextRequest)
+</file>
+
+<file path="app/propiedades/loading.tsx">
+
+</file>
+
+<file path="app/loading.tsx">
+export default function Loading()
+</file>
+
+<file path="components/admin/ContactDetailModal.tsx">
+import { useState } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Phone, Mail, MessageCircle, User, Building, Clock, Star, Save } from "lucide-react"
+import type { Contact } from "@/hooks/useContacts"
+import { useContactActions } from "@/hooks/useContactActions"
+⋮----
+interface ContactDetailModalProps {
+  contact: Contact | null
+  isOpen: boolean
+  onClose: () => void
+  onUpdate: (id: number, updates: Partial<Contact>) => Promise<void>
+}
+⋮----
+const handleEdit = () =>
+⋮----
+const handleSave = async () =>
+⋮----
+const getStatusColor = (status: string) =>
+⋮----
+const getPriorityColor = (priority: string) =>
+⋮----
+<Badge className=
+</file>
+
+<file path="components/admin/ContactKanban.tsx">
+import type React from "react"
+⋮----
+import { useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Phone, Mail, MessageCircle, User, Calendar, Star } from "lucide-react"
+import type { Contact } from "@/hooks/useContacts"
+import { useContactActions } from "@/hooks/useContactActions"
+⋮----
+interface ContactKanbanProps {
+  contacts: Contact[]
+  onContactClick: (contact: Contact) => void
+  onStatusChange: (contactId: number, newStatus: Contact["status"]) => void
+}
+⋮----
+const handleDragStart = (e: React.DragEvent, contact: Contact) =>
+⋮----
+const handleDragOver = (e: React.DragEvent) =>
+⋮----
+const handleDrop = (e: React.DragEvent, newStatus: Contact["status"]) =>
+⋮----
+const getPriorityColor = (priority: string) =>
+⋮----
+e.stopPropagation()
+callContact(contact)
+⋮----
+openEmail(contact)
+⋮----
+openWhatsApp(contact)
+</file>
+
+<file path="components/admin/theme-provider.tsx">
+import {
+  ThemeProvider as NextThemesProvider,
+  type ThemeProviderProps,
+} from 'next-themes'
+⋮----
+export function ThemeProvider(
+</file>
+
+<file path="components/ui/badge.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+export interface BadgeProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof badgeVariants> {}
+⋮----
+<div className=
+</file>
+
+<file path="components/ui/checkbox.tsx">
+import { Check } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="components/ui/dialog.tsx">
+import { X } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="components/ui/dropdown-menu.tsx">
+import { Check, ChevronRight, Circle } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="components/ui/label.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="components/ui/select.tsx">
+import { Check, ChevronDown, ChevronUp } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="components/ui/sheet.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+import { X } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+interface SheetContentProps
+  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+    VariantProps<typeof sheetVariants> {}
+⋮----
+className=
+</file>
+
+<file path="components/ui/textarea.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="components/ui/toast.tsx">
+import { cva, type VariantProps } from "class-variance-authority"
+import { X } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+type ToastProps = React.ComponentPropsWithoutRef<typeof Toast>
+⋮----
+type ToastActionElement = React.ReactElement<typeof ToastAction>
+</file>
+
+<file path="components/ui/toaster.tsx">
+import { Toast, ToastClose, ToastDescription, ToastProvider, ToastTitle, ToastViewport } from "@/components/ui/toast"
+import { useToast } from "@/hooks/use-toast"
+⋮----
+export function Toaster()
+</file>
+
+<file path="components/AdminLayout.tsx">
+import { useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { Home, TrendingUp, MessageSquare, Settings, LogOut, Menu, X } from "lucide-react";
+⋮----
+interface AdminLayoutProps {
+	children: React.ReactNode;
+}
+⋮----
+const handleLogout = async () =>
+</file>
+
+<file path="components/Dashboard.tsx">
+import { useState, useEffect } from "react";
+import { Home, DollarSign, Users, TrendingUp, Eye, MessageSquare, Calendar, ArrowUpRight, ArrowDownRight } from "lucide-react";
+⋮----
+interface StatCard {
+	label: string;
+	value: string;
+	change: string;
+	isPositive: boolean;
+	icon: any;
+	color: string;
+}
+⋮----
+interface Property {
+	id: number;
+	title: string;
+	address: string;
+	neighborhood: string;
+	price: number;
+	currency: string;
+	type: string;
+	operation: string;
+	status: string;
+	views: number;
+	leads: number;
+	createdAt: string;
+	featured: boolean;
+}
+⋮----
+const formatCurrency = (amount: number, currency: string) =>
+⋮----
+const getStatusColor = (status: string) =>
+⋮----
+const getActivityIcon = (type: string) =>
+⋮----
+<div className="flex-shrink-0 mt-1">
+</file>
+
+<file path="components/PropertyForm.tsx">
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { Save, X, Upload, Camera, Trash2, ArrowLeft, MapPin, DollarSign, Home as HomeIcon, Info } from "lucide-react";
+⋮----
+interface PropertyFormData {
+	title: string;
+	description: string;
+	type: string;
+	operation: string;
+	price: number | "";
+	currency: string;
+	bedrooms: number | "";
+	bathrooms: number | "";
+	area: number | "";
+	address: string;
+	neighborhood: string;
+	features: string;
+	featured: boolean;
+	status: string;
+	images: File[];
+}
+⋮----
+interface PropertyFormProps {
+	property?: any; // Para modo edición
+	mode: "create" | "edit";
+}
+⋮----
+property?: any; // Para modo edición
+⋮----
+const validateForm = () =>
+⋮----
+const handleInputChange = (field: keyof PropertyFormData, value: any) =>
+⋮----
+const handleImageUpload = async (files: FileList) =>
+⋮----
+// Simular upload a Cloudinary
+⋮----
+// Aquí iría la lógica real de upload a Cloudinary
+// const response = await uploadToCloudinary(file)
+// return response.secure_url
+⋮----
+// Por ahora, simulamos con URL local
+⋮----
+const removeImage = (index: number) =>
+⋮----
+const handleSubmit = async (e: React.FormEvent) =>
+⋮----
+// Preparar datos para envío
+⋮----
+// Aquí iría la llamada a la API
+⋮----
+onChange=
+⋮----
+{/* Detalles */}
+⋮----
+{/* Ubicación */}
+⋮----
+{/* Sidebar */}
+⋮----
+{/* Estado y Configuración */}
+⋮----
+{/* Upload de Imágenes */}
+⋮----
+{/* Drag & Drop Area */}
+⋮----
+accept="image/*"
+									onChange={e => e.target.files && handleImageUpload(e.target.files)}
+									className="hidden"
+									id="image-upload"
+								/>
+								<label
+									htmlFor="image-upload"
+									className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 cursor-pointer transition-colors">
+									<Upload className="w-4 h-4 mr-2" />
+									{imageUploading ? "Subiendo..." : "Seleccionar Imágenes"}
+								</label>
+							</div>
+
+							{/* Image Preview */}
+</file>
+
+<file path="components/theme-provider.tsx">
+import {
+  ThemeProvider as NextThemesProvider,
+  type ThemeProviderProps,
+} from 'next-themes'
+⋮----
+export function ThemeProvider(
+</file>
+
+<file path="hooks/use-is-client.tsx">
+import { useState, useEffect } from 'react'
+⋮----
+export function useIsClient()
+</file>
+
+<file path="hooks/use-toast.ts">
+import type { ToastActionElement, ToastProps } from "@/components/ui/toast"
+⋮----
+type ToasterToast = ToastProps & {
+  id: string
+  title?: React.ReactNode
+  description?: React.ReactNode
+  action?: ToastActionElement
+}
+⋮----
+function genId()
+⋮----
+type ActionType = typeof actionTypes
+⋮----
+type Action =
+  | {
+      type: ActionType["ADD_TOAST"]
+      toast: ToasterToast
+    }
+  | {
+      type: ActionType["UPDATE_TOAST"]
+      toast: Partial<ToasterToast>
+    }
+  | {
+      type: ActionType["DISMISS_TOAST"]
+      toastId?: ToasterToast["id"]
+    }
+  | {
+      type: ActionType["REMOVE_TOAST"]
+      toastId?: ToasterToast["id"]
+    }
+⋮----
+interface State {
+  toasts: ToasterToast[]
+}
+⋮----
+const addToRemoveQueue = (toastId: string) =>
+⋮----
+export const reducer = (state: State, action: Action): State =>
+⋮----
+function dispatch(action: Action)
+⋮----
+type Toast = Omit<ToasterToast, "id">
+⋮----
+function toast(props: Toast)
+⋮----
+const update = (props: ToasterToast)
+const dismiss = () => dispatch(
+⋮----
+function useToast()
+</file>
+
+<file path="hooks/useContactActions.ts">
+import type { Contact } from "./useContacts"
+⋮----
+export function useContactActions()
+⋮----
+const generateWhatsAppLink = (contact: Contact) =>
+⋮----
+const generateEmailLink = (contact: Contact) =>
+⋮----
+const generatePhoneLink = (contact: Contact) =>
+⋮----
+const copyToClipboard = async (text: string) =>
+⋮----
+const markAsContacted = async (
+    contactId: number,
+    updateContact: (id: number, updates: Partial<Contact>) => Promise<any>,
+) =>
+</file>
+
+<file path="hooks/useContactFilters.ts">
+import { useState, useMemo } from "react"
+import type { Contact } from "./useContacts"
+⋮----
+export interface ContactFilters {
+  search: string
+  status: string
+  source: string
+  priority: string
+  dateFrom: string
+  dateTo: string
+}
+⋮----
+export function useContactFilters(contacts: Contact[])
+⋮----
+const updateFilter = (key: keyof ContactFilters, value: string) =>
+⋮----
+const clearFilters = () =>
+⋮----
+const updateSort = (field: keyof Contact) =>
+</file>
+
+<file path="hooks/useContactMetrics.ts">
+import { useMemo } from "react"
+import type { Contact } from "./useContacts"
+⋮----
+export function useContactMetrics(contacts: Contact[])
+</file>
+
+<file path="hooks/useContacts.ts">
+import { useState, useEffect } from "react"
+⋮----
+export interface Contact {
+  id: number
+  name: string
+  email: string
+  phone: string
+  message: string
+  property: string
+  status: "new" | "contacted" | "qualified" | "converted"
+  source: string
+  createdAt: string
+  notes?: string
+  lastContact?: string
+  nextAction?: string
+  nextActionDate?: string
+  priority: "low" | "medium" | "high"
+  score: number
+}
+⋮----
+export function useContacts()
+⋮----
+const fetchContacts = async () =>
+⋮----
+const updateContact = async (id: number, updates: Partial<Contact>) =>
+⋮----
+const deleteContact = async (id: number) =>
+</file>
+
+<file path="lib/cloudinary-server.ts">
+import { v2 as cloudinary } from "cloudinary"
+⋮----
+export const uploadToCloudinary = async (
+  file: string | Buffer,
+  options: {
+    folder?: string
+    transformation?: any[]
+    public_id?: string
+  } = {},
+) =>
+⋮----
+export const deleteFromCloudinary = async (publicId: string) =>
+</file>
+
+<file path="lib/cloudinary.ts">
+export interface CloudinaryOptions {
+  width?: number
+  height?: number
+  crop?: string
+  quality?: string
+  format?: string
+  gravity?: string
+  fetch_format?: string
+}
+⋮----
+export function getOptimizedImageUrl(publicId: string, options: CloudinaryOptions =
+⋮----
+export function getVideoUrl(publicId: string, options: CloudinaryOptions =
+</file>
+
+<file path="lib/utils.ts">
+import { clsx, type ClassValue } from "clsx"
+import { twMerge } from "tailwind-merge"
+⋮----
+export function cn(...inputs: ClassValue[])
+</file>
+
+<file path="services/leads.ts">
+import { Lead, LeadInsert } from "@/lib/supabase";
+⋮----
+export class LeadsService
+⋮----
+static async createLead(data: Omit<LeadInsert, "id">): Promise<Lead>
+⋮----
+static async updateLead(id: number, data:
+</file>
+
+<file path="services/properties.ts">
+import { supabase, type Property, type PropertyInsert, type PropertyUpdate, STATUS_MAP } from "@/lib/supabase"
+⋮----
+export interface PropertyFilters {
+  property_type?: string
+  operation_type?: string
+  min_price?: number
+  max_price?: number
+  bedrooms?: number
+  bathrooms?: number
+  neighborhood?: string
+  featured?: boolean
+  status?: string
+}
+⋮----
+export interface PropertySearchParams extends PropertyFilters {
+  page?: number
+  limit?: number
+  search?: string
+  sort_by?: "price" | "created_at" | "views"
+  sort_order?: "asc" | "desc"
+}
+⋮----
+export class PropertyService
+⋮----
+static async getProperties(params: PropertySearchParams =
+⋮----
+static async getPropertyById(id: number): Promise<Property | null>
+⋮----
+static async createProperty(property: PropertyInsert): Promise<Property>
+⋮----
+static async updateProperty(id: number, updates: PropertyUpdate): Promise<Property>
+⋮----
+static async deleteProperty(id: number): Promise<void>
+⋮----
+static async incrementViews(id: number): Promise<void>
+⋮----
+static async getFeaturedProperties(limit = 6): Promise<Property[]>
+⋮----
+static async getNeighborhoods(): Promise<string[]>
+⋮----
+static async getPropertyStats()
+⋮----
+export function getStatusDisplay(status: string): string
+</file>
+
+<file path="styles/globals.css">
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+⋮----
+body {
+⋮----
+@layer utilities {
+⋮----
+.text-balance {
+⋮----
+@layer base {
+⋮----
+:root {
+.dark {
+⋮----
+* {
+⋮----
+@apply border-border;
+</file>
+
+<file path="styles/premium-theme.css">
+:root {
+⋮----
+* {
+⋮----
+html {
+⋮----
+body {
+⋮----
+.heading-display {
+⋮----
+.heading-hero {
+⋮----
+.heading-section {
+⋮----
+.heading-subsection {
+⋮----
+.text-lead {
+⋮----
+.text-body {
+⋮----
+.text-small {
+⋮----
+.text-caption {
+⋮----
+.btn-premium {
+⋮----
+.btn-premium-primary {
+⋮----
+.btn-premium-primary:hover {
+⋮----
+.btn-premium-outline {
+⋮----
+.btn-premium-outline:hover {
+⋮----
+.btn-premium-ghost {
+⋮----
+.btn-premium-ghost:hover {
+⋮----
+.card-premium {
+⋮----
+.card-premium:hover {
+⋮----
+.card-premium-image {
+⋮----
+.card-premium-image img {
+⋮----
+.card-premium:hover .card-premium-image img {
+⋮----
+.card-premium-content {
+⋮----
+.nav-premium {
+⋮----
+.nav-premium.scrolled {
+⋮----
+.nav-link {
+⋮----
+.nav-link::after {
+⋮----
+.nav-link:hover {
+⋮----
+.nav-link:hover::after {
+⋮----
+.container-premium {
+⋮----
+.section-premium {
+⋮----
+.grid-premium {
+⋮----
+.grid-premium-2 {
+⋮----
+.grid-premium-3 {
+⋮----
+.grid-premium-4 {
+⋮----
+.animate-fadeInUp {
+⋮----
+.animate-fadeIn {
+⋮----
+.overlay-gradient {
+⋮----
+.overlay-dark {
+⋮----
+.overlay-light {
+⋮----
+.hover-lift {
+⋮----
+.hover-lift:hover {
+⋮----
+.hover-scale {
+⋮----
+.hover-scale:hover {
+⋮----
+.text-elegant {
+⋮----
+.divider-premium {
+⋮----
+.mobile-hidden {
+⋮----
+.mobile-only {
+⋮----
+.tablet-up-only {
+⋮----
+.desktop-only {
+</file>
 
 <file path="components.json">
 {
@@ -76,6 +1062,14 @@ This section contains the contents of the repository's files.
   },
   "iconLibrary": "lucide"
 }
+</file>
+
+<file path="next.config.mjs">
+/** @type {import('next').NextConfig} */
+</file>
+
+<file path="postcss.config.mjs">
+/** @type {import('postcss-load-config').Config} */
 </file>
 
 <file path="tsconfig.json">
@@ -106,6 +1100,1444 @@ This section contains the contents of the repository's files.
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
+</file>
+
+<file path="app/admin/analytics/page.tsx">
+import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard"
+⋮----
+export default function AdminAnalyticsPage()
+</file>
+
+<file path="app/api/admin/readme/route.ts">
+import { NextResponse } from 'next/server'
+import { promises as fs } from 'fs'
+import path from 'path'
+⋮----
+interface Section {
+  title: string
+  id: string
+  icon: string
+  level: number
+}
+⋮----
+interface ApiEndpoint {
+  method: string
+  path: string
+  description: string
+}
+⋮----
+export async function GET()
+⋮----
+function parseMarkdownSections(content: string): Section[]
+⋮----
+// Assign appropriate icons based on section content
+⋮----
+function extractApiEndpoints(content: string): ApiEndpoint[]
+⋮----
+// Clean up description
+⋮----
+// Try to get description from context
+</file>
+
+<file path="app/api/analytics/dashboard/route.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { AnalyticsService } from "@/services/analytics"
+import { type AnalyticsFilters, type AnalyticsMetricType } from "@/types/analytics"
+⋮----
+export async function GET(request: NextRequest)
+⋮----
+export async function POST(request: NextRequest)
+</file>
+
+<file path="app/api/analytics/gdpr/opt-out/route.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { AnalyticsService } from "@/services/analytics"
+import { AnalyticsPrivacyError } from "@/types/analytics"
+⋮----
+export async function POST(request: NextRequest)
+⋮----
+export async function GET(request: NextRequest)
+</file>
+
+<file path="app/api/analytics/interaction/route.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { AnalyticsService } from "@/services/analytics"
+import { type CreateUserInteractionEventInput } from "@/types/analytics"
+⋮----
+export async function POST(request: NextRequest)
+⋮----
+export async function PUT(request: NextRequest)
+</file>
+
+<file path="app/api/analytics/lead-generation/route.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { AnalyticsService } from "@/services/analytics"
+import { type CreateLeadGenerationEventInput, type LeadSourceCode } from "@/types/analytics"
+import { AnalyticsValidationError } from "@/types/analytics"
+⋮----
+export async function POST(request: NextRequest)
+⋮----
+export async function PUT(request: NextRequest)
+</file>
+
+<file path="app/api/analytics/property-metrics/[id]/route.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { AnalyticsService } from "@/services/analytics"
+⋮----
+interface RouteParams {
+  params: {
+    id: string
+  }
+}
+⋮----
+export async function GET(request: NextRequest,
+</file>
+
+<file path="app/api/analytics/property-view/route.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { AnalyticsService } from "@/services/analytics"
+import { type CreatePropertyViewInput } from "@/types/analytics"
+import { AnalyticsValidationError } from "@/types/analytics"
+⋮----
+export async function POST(request: NextRequest)
+⋮----
+export async function PUT(request: NextRequest)
+</file>
+
+<file path="app/api/analytics/session/route.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { AnalyticsService } from "@/services/analytics"
+import { type CreateAnalyticsSessionInput } from "@/types/analytics"
+⋮----
+export async function POST(request: NextRequest)
+⋮----
+export async function PUT(request: NextRequest)
+</file>
+
+<file path="app/api/auth/create-user/route.ts">
+import { NextRequest, NextResponse } from 'next/server'
+import { supabaseAdmin } from '@/lib/supabase'
+⋮----
+export async function POST(request: NextRequest)
+</file>
+
+<file path="app/api/geocode/route.ts">
+import { NextRequest, NextResponse } from 'next/server'
+⋮----
+export async function GET(request: NextRequest)
+</file>
+
+<file path="app/api/settings/upload/route.ts">
+import { NextRequest, NextResponse } from 'next/server'
+import { uploadToCloudinary } from '@/lib/cloudinary-server'
+import { SettingsService } from '@/services/settings'
+⋮----
+export async function POST(request: NextRequest)
+</file>
+
+<file path="app/api/settings/route.ts">
+import { NextRequest, NextResponse } from 'next/server'
+import { SettingsService } from '@/services/settings'
+import { SiteSettingsInput } from '@/types/settings'
+⋮----
+export async function GET()
+⋮----
+export async function PATCH(request: NextRequest)
+</file>
+
+<file path="app/page-premium.tsx">
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  Search,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  ArrowRight,
+  Heart,
+  ChevronDown,
+  Phone,
+  Mail,
+  Home,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
+import Link from "next/link";
+import Image from "next/image";
+⋮----
+import { useIsClient } from "@/hooks/use-is-client";
+import { PropertyService } from "@/services/properties";
+import type { Property } from "@/lib/supabase";
+⋮----
+const loadFeaturedProperties = async () =>
+⋮----
+const handleScroll = () =>
+⋮----
+const formatPrice = (price: number) =>
+</file>
+
+<file path="components/admin/AnalyticsDashboard.tsx">
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  TrendingUp,
+  TrendingDown,
+  Eye,
+  Users,
+  Target,
+  Clock,
+  Phone,
+  MessageCircle,
+  Mail,
+  Globe,
+  Building2,
+  Smartphone,
+  Monitor,
+  Tablet,
+  Calendar,
+  BarChart3,
+  PieChart,
+  Activity,
+  MousePointer,
+  ArrowRight,
+  RefreshCw
+} from "lucide-react"
+import { LeadSourceStats } from "@/components/LeadSourceSelector"
+⋮----
+interface DashboardStats {
+  total_sessions: number
+  total_property_views: number
+  unique_property_views: number
+  total_leads: number
+  conversion_rate: number
+  avg_time_on_page: number
+  top_properties: TopProperty[]
+  top_lead_sources: LeadSourceStat[]
+  traffic_by_device: DeviceTypeStat[]
+  daily_stats: DailyStat[]
+}
+⋮----
+interface TopProperty {
+  property_id: number
+  title: string
+  metric_value: number
+  unique_views: number
+  leads: number
+}
+⋮----
+interface LeadSourceStat {
+  source_id: number
+  source_name: string
+  leads_count: number
+  conversion_rate: number
+}
+⋮----
+interface DeviceTypeStat {
+  device_type: string
+  sessions: number
+  percentage: number
+}
+⋮----
+interface DailyStat {
+  date: string
+  sessions: number
+  views: number
+  leads: number
+}
+⋮----
+interface PropertyMetrics {
+  property_id: number
+  total_views: number
+  unique_views: number
+  avg_time_on_page: number | null
+  avg_scroll_depth: number | null
+  contact_rate: number | null
+  leads_generated: number
+  conversion_rate: number | null
+}
+⋮----
+const fetchAnalyticsData = async () =>
+⋮----
+const formatNumber = (num: number): string =>
+⋮----
+const formatDuration = (seconds: number): string =>
+⋮----
+const getDeviceIcon = (deviceType: string) =>
+⋮----
+const getTrendIcon = (value: number, isInverted: boolean = false) =>
+⋮----
+
+⋮----
+<span className="text-gray-400">
+⋮----
+<h4 className="text-white font-medium">
+⋮----
+<span>
+⋮----
+<span className="text-white">
+</file>
+
+<file path="components/admin/Dashboard.tsx">
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Home,
+  Users,
+  TrendingUp,
+  MessageSquare,
+  Phone,
+  Mail,
+  Calendar,
+  AlertCircle,
+  Target,
+  Clock,
+  BarChart3,
+  Activity,
+  ArrowRight
+} from "lucide-react"
+import Link from "next/link"
+import { useContacts } from "@/hooks/useContacts"
+import { useContactMetrics } from "@/hooks/useContactMetrics"
+⋮----
+const fetchProperties = async () =>
+⋮----
+Distribución por Prioridad
+</file>
+
+<file path="components/admin/PropertiesPage.backup.tsx">
+
+</file>
+
+<file path="components/admin/PropertyForm.tsx">
+import type React from "react"
+⋮----
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+⋮----
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { toast } from "@/hooks/use-toast"
+import { X, Plus, Upload, GripVertical } from "lucide-react"
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable'
+import {
+  useSortable,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { PropertyLocationPicker } from './PropertyLocationPicker'
+⋮----
+type PropertyFormData = z.infer<typeof propertySchema>
+⋮----
+interface PropertyFormProps {
+  property?: any
+  onSubmit?: (data: PropertyFormData) => void
+}
+⋮----
+interface SortableImageItemProps {
+  id: string
+  image: string
+  index: number
+  onRemove: (index: number) => void
+  isFirst: boolean
+}
+⋮----
+const router = useRouter()
+const [images, setImages] = useState<string[]>([])
+const [features, setFeatures] = useState<string[]>([])
+const [newFeature, setNewFeature] = useState("")
+const [isSubmitting, setIsSubmitting] = useState(false)
+const [uploadingImages, setUploadingImages] = useState(false)
+⋮----
+const sensors = useSensors(
+⋮----
+const removeImage = (index: number) =>
+⋮----
+const addFeature = () =>
+⋮----
+const removeFeature = (index: number) =>
+⋮----
+const handleLocationChange = (lat: number, lng: number) =>
+⋮----
+const onFormSubmit = async (data: PropertyFormData) =>
+⋮----
+<form onSubmit=
+⋮----
+value=
+onValueChange=
+</file>
+
+<file path="components/admin/PropertyLocationPicker.tsx">
+import React, { useEffect, useState, useCallback } from 'react'
+import dynamic from 'next/dynamic'
+import { Button } from '@/components/ui/button'
+import { geocodeAddress, formatAddress, createPropertyMarkerIcon, RECONQUISTA_CENTER, ARGENTINA_BOUNDS } from '@/lib/map-config'
+import { MapPin, RotateCcw } from 'lucide-react'
+import { toast } from '@/hooks/use-toast'
+⋮----
+interface PropertyLocationPickerProps {
+  address?: string
+  neighborhood?: string
+  city?: string
+  province?: string
+  latitude?: number
+  longitude?: number
+  onLocationChange?: (lat: number, lng: number) => void
+  className?: string
+}
+⋮----
+click(e)
+⋮----
+const handleSyncFromAddress = async () =>
+⋮----
+const handleResetLocation = () =>
+</file>
+
+<file path="components/admin/ReadmeDocumentation.tsx">
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  BookOpen,
+  Search,
+  FileText,
+  Hash,
+  Settings,
+  Database,
+  Shield,
+  BarChart3,
+  Code,
+  Terminal,
+  ArrowRight,
+  ChevronRight,
+  Home
+} from "lucide-react"
+import Link from "next/link"
+⋮----
+interface Section {
+  title: string
+  id: string
+  icon: JSX.Element
+  level: number
+}
+⋮----
+interface ApiEndpoint {
+  method: string
+  path: string
+  description: string
+}
+⋮----
+const loadReadmeContent = async () =>
+⋮----
+// Fallback: load content directly from the file
+⋮----
+const loadFallbackContent = () =>
+⋮----
+// Simulate loading the README content for demo purposes
+⋮----
+const getMethodColor = (method: string) =>
+</file>
+
+<file path="components/ui/input.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="components/ui/switch.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="components/ui/tabs.tsx">
+import { cn } from "@/lib/utils"
+</file>
+
+<file path="components/AnalyticsInitializer.tsx">
+import { useEffect } from 'react'
+import { getAnalyticsClient } from '@/lib/analytics-client'
+⋮----
+export default function AnalyticsInitializer()
+</file>
+
+<file path="components/Footer.tsx">
+import React from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+⋮----
+export default function Footer()
+</file>
+
+<file path="components/LeadSourceSelector.tsx">
+import { useState, useEffect } from "react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Phone, MessageCircle, Mail, Globe, Users, Building2, Star, Zap } from "lucide-react"
+import { type LeadSourceCode } from "@/types/analytics"
+⋮----
+interface LeadSource {
+  id: number
+  name: LeadSourceCode
+  display_name: string
+  description: string | null
+  icon_name: string | null
+  is_active: boolean
+  created_at: string
+}
+⋮----
+interface LeadSourceSelectorProps {
+  value?: LeadSourceCode
+  onChange: (sourceCode: LeadSourceCode) => void
+  showDescription?: boolean
+  variant?: 'select' | 'cards' | 'badges'
+  disabled?: boolean
+  className?: string
+}
+⋮----
+const getSourceIcon = (iconName: string | null) =>
+⋮----
+const getSourceColor = (sourceCode: LeadSourceCode) =>
+⋮----
+// Fetch lead sources from API if available
+⋮----
+const fetchLeadSources = async () =>
+⋮----
+// This would normally fetch from /api/analytics/lead-sources
+// For now, we use the default sources
+⋮----
+const handleSourceChange = (sourceCode: LeadSourceCode) =>
+⋮----
+const reset = () =>
+⋮----
+const fetchStats = async () =>
+⋮----
+// This would fetch from /api/analytics/lead-sources/stats
+// For now, we'll use mock data
+⋮----
+</file>
+
+<file path="components/PropertyDetailMap.tsx">
+import React, { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+import { Property } from '@/lib/supabase'
+import { geocodeAddress, formatAddress, createPropertyMarkerIcon, RECONQUISTA_CENTER } from '@/lib/map-config'
+import { Button } from '@/components/ui/button'
+import { ExternalLink } from 'lucide-react'
+⋮----
+interface PropertyDetailMapProps {
+  property: Property
+  className?: string
+}
+⋮----
+const getCoordinates = async () =>
+⋮----
+const handleOpenInGoogleMaps = () =>
+</file>
+
+<file path="components/PropertyMiniMap.tsx">
+import React, { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+import { Property } from '@/lib/supabase'
+import { geocodeAddress, formatAddress, RECONQUISTA_CENTER } from '@/lib/map-config'
+⋮----
+interface PropertyMiniMapProps {
+  property: Pick<Property, 'address' | 'neighborhood' | 'city' | 'title'>
+  className?: string
+}
+⋮----
+const getCoordinates = async () =>
+</file>
+
+<file path="components/PropertyViewTracker.tsx">
+import { useEffect, useRef } from "react"
+import { usePropertyAnalytics } from "@/hooks/useAnalytics"
+⋮----
+interface PropertyViewTrackerProps {
+  propertyId: number
+  title?: string
+  enableScrollTracking?: boolean
+  enableTimeTracking?: boolean
+  onViewTracked?: (eventId: string | null) => void
+  children?: React.ReactNode
+}
+⋮----
+export function PropertyViewTracker({
+  propertyId,
+  title,
+  enableScrollTracking = true,
+  enableTimeTracking = true,
+  onViewTracked,
+  children
+}: PropertyViewTrackerProps)
+⋮----
+interface ContactTrackerProps {
+  propertyId: number
+  type: 'whatsapp' | 'phone' | 'email' | 'form'
+  children: React.ReactElement
+  metadata?: Record<string, any>
+}
+⋮----
+export function ContactTracker({
+  propertyId,
+  type,
+  children,
+  metadata
+}: ContactTrackerProps)
+⋮----
+const handleClick = () =>
+⋮----
+interface ImageGalleryTrackerProps {
+  propertyId: number
+  totalImages: number
+  children: React.ReactNode
+}
+⋮----
+export function ImageGalleryTracker({
+  propertyId,
+  totalImages,
+  children
+}: ImageGalleryTrackerProps)
+⋮----
+const trackImageView = (imageIndex: number) =>
+⋮----
+import React from 'react'
+⋮----
+interface ImageGalleryContextValue {
+  trackImageView: (imageIndex: number) => void
+}
+⋮----
+export function useImageGalleryTracker()
+⋮----
+interface ScrollMilestoneTrackerProps {
+  propertyId: number
+  milestones?: number[]
+}
+⋮----
+export function ScrollMilestoneTracker({
+  propertyId,
+  milestones = [25, 50, 75, 100]
+}: ScrollMilestoneTrackerProps)
+⋮----
+const handleScroll = () =>
+⋮----
+interface TimeMilestoneTrackerProps {
+  propertyId: number
+  milestones?: number[]
+}
+⋮----
+export function TimeMilestoneTracker({
+  propertyId,
+  milestones = [30, 60, 120, 300]
+}: TimeMilestoneTrackerProps)
+⋮----
+interface ComprehensivePropertyTrackerProps {
+  propertyId: number
+  title?: string
+  totalImages?: number
+  enableScrollMilestones?: boolean
+  enableTimeMilestones?: boolean
+  scrollMilestones?: number[]
+  timeMilestones?: number[]
+  onViewTracked?: (eventId: string | null) => void
+  children?: React.ReactNode
+}
+⋮----
+export function ComprehensivePropertyTracker({
+  propertyId,
+  title,
+  totalImages = 0,
+  enableScrollMilestones = true,
+  enableTimeMilestones = true,
+  scrollMilestones,
+  timeMilestones,
+  onViewTracked,
+  children
+}: ComprehensivePropertyTrackerProps)
+</file>
+
+<file path="hooks/useAnalytics.ts">
+import { useState, useEffect, useCallback, useRef } from "react"
+import { type LeadSourceCode } from "@/types/analytics"
+⋮----
+class AnalyticsSession
+⋮----
+async getOrCreateSession(): Promise<string>
+⋮----
+private getDeviceType(): string
+⋮----
+private getBrowser(): string
+⋮----
+private getOS(): string
+⋮----
+private getReferrerDomain(): string | undefined
+⋮----
+private getUTMParams()
+⋮----
+async updateLastSeen(): Promise<void>
+⋮----
+export interface UseAnalyticsOptions {
+  enableAutoTracking?: boolean
+  trackScrollDepth?: boolean
+  trackTimeOnPage?: boolean
+  sessionUpdateInterval?: number
+}
+⋮----
+export function useAnalytics(options: UseAnalyticsOptions =
+⋮----
+const initializeSession = async () =>
+⋮----
+const handleScroll = () =>
+⋮----
+export function usePropertyAnalytics(propertyId: number, options?: UseAnalyticsOptions)
+</file>
+
+<file path="lib/analytics-client.ts">
+import { type LeadSourceCode } from "@/types/analytics"
+⋮----
+interface AnalyticsConfig {
+  apiBaseUrl?: string
+  enableConsoleLogging?: boolean
+  enableLocalStorage?: boolean
+  sessionStorageKey?: string
+  optOutStorageKey?: string
+}
+⋮----
+interface SessionData {
+  sessionId: string
+  createdAt: number
+  lastSeen: number
+}
+⋮----
+interface PropertyViewData {
+  propertyId: number
+  timeOnPage?: number
+  scrollDepth?: number
+  contactButtonClicked?: boolean
+  whatsappClicked?: boolean
+  phoneClicked?: boolean
+  imagesViewed?: number
+  mapInteracted?: boolean
+  similarPropertiesClicked?: boolean
+  pageUrl?: string
+  referrerUrl?: string
+}
+⋮----
+interface DeviceInfo {
+  deviceType: 'desktop' | 'tablet' | 'mobile' | 'bot'
+  browser: string
+  os: string
+  screenWidth: number
+  screenHeight: number
+  userAgent: string
+}
+⋮----
+export class AnalyticsClient
+⋮----
+constructor(config: AnalyticsConfig =
+⋮----
+private async init()
+⋮----
+private async initializeSession()
+⋮----
+private async createNewSession()
+⋮----
+private updateSessionLastSeen()
+⋮----
+async trackPropertyView(propertyId: number, additionalData?: Partial<PropertyViewData>)
+⋮----
+async trackLead(leadId: number, sourceCode: LeadSourceCode, propertyId?: number)
+⋮----
+trackInteraction(eventType: string, target?: string, data?: any)
+⋮----
+private async flushInteractions()
+⋮----
+private setupScrollTracking()
+⋮----
+const trackScroll = () =>
+⋮----
+private setupInteractionBatching()
+⋮----
+trackContactClick(propertyId?: number)
+⋮----
+trackWhatsAppClick(propertyId?: number)
+⋮----
+trackPhoneClick(propertyId?: number)
+⋮----
+trackImageView(propertyId: number, imageIndex: number)
+⋮----
+trackMapInteraction(propertyId?: number)
+⋮----
+async optOut(reason?: string)
+⋮----
+async checkOptInStatus(): Promise<boolean>
+⋮----
+private getDeviceInfo(): DeviceInfo
+⋮----
+private getDeviceType(userAgent: string, screenWidth: number): 'desktop' | 'tablet' | 'mobile' | 'bot'
+⋮----
+private getBrowser(userAgent: string): string
+⋮----
+private getOS(userAgent: string): string
+⋮----
+private getUTMParameters()
+⋮----
+private getReferrerDomain(): string | undefined
+⋮----
+private async getCountryCode(): Promise<string | undefined>
+⋮----
+private inferFormType(sourceCode: LeadSourceCode): string
+⋮----
+private loadSessionFromStorage(): SessionData | null
+⋮----
+private saveSessionToStorage()
+⋮----
+private clearSession()
+⋮----
+private checkOptOutStatus(): boolean
+⋮----
+private saveOptOutStatus(optedOut: boolean)
+⋮----
+private isSessionValid(session: SessionData): boolean
+⋮----
+private log(message: string, data?: any)
+⋮----
+destroy()
+⋮----
+export const getAnalyticsClient = (config?: AnalyticsConfig): AnalyticsClient =>
+⋮----
+export const trackPropertyView = (propertyId: number, data?: Partial<PropertyViewData>) =>
+⋮----
+export const trackLead = (leadId: number, source: LeadSourceCode, propertyId?: number) =>
+⋮----
+export const trackContactClick = (propertyId?: number) =>
+⋮----
+export const trackWhatsAppClick = (propertyId?: number) =>
+⋮----
+export const trackPhoneClick = (propertyId?: number) =>
+⋮----
+export const optOutOfAnalytics = (reason?: string) =>
+</file>
+
+<file path="lib/supabase.ts">
+import { createClient } from "@supabase/supabase-js"
+⋮----
+export interface Database {
+  public: {
+    Tables: {
+      properties: {
+        Row: {
+          id: number
+          title: string
+          description: string | null
+          price: number
+          currency: string
+          property_type: string
+          operation_type: string
+          bedrooms: number | null
+          bathrooms: number | null
+          area_m2: number | null
+          address: string | null
+          neighborhood: string | null
+          city: string
+          province: string
+          latitude: number | null
+          longitude: number | null
+          images: string[]
+          features: string[]
+          featured: boolean
+          status: string
+          views: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          title: string
+          description?: string | null
+          price: number
+          currency?: string
+          property_type: string
+          operation_type: string
+          bedrooms?: number | null
+          bathrooms?: number | null
+          area_m2?: number | null
+          address?: string | null
+          neighborhood?: string | null
+          city?: string
+          province?: string
+          latitude?: number | null
+          longitude?: number | null
+          images?: string[]
+          features?: string[]
+          featured?: boolean
+          status?: string
+          views?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          title?: string
+          description?: string | null
+          price?: number
+          currency?: string
+          property_type?: string
+          operation_type?: string
+          bedrooms?: number | null
+          bathrooms?: number | null
+          area_m2?: number | null
+          address?: string | null
+          neighborhood?: string | null
+          city?: string
+          province?: string
+          latitude?: number | null
+          longitude?: number | null
+          images?: string[]
+          features?: string[]
+          featured?: boolean
+          status?: string
+          views?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      leads: {
+        Row: {
+          id: number
+          name: string
+          email: string | null
+          phone: string | null
+          message: string | null
+          property_id: number | null
+          lead_source: string
+          status: string
+          notes: string | null
+          last_contact: string | null
+          next_action: string | null
+          next_action_date: string | null
+          priority: string
+          score: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          name: string
+          email?: string | null
+          phone?: string | null
+          message?: string | null
+          property_id?: number | null
+          lead_source?: string
+          status?: string
+          notes?: string | null
+          last_contact?: string | null
+          next_action?: string | null
+          next_action_date?: string | null
+          priority?: string
+          score?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          email?: string | null
+          phone?: string | null
+          message?: string | null
+          property_id?: number | null
+          lead_source?: string
+          status?: string
+          notes?: string | null
+          last_contact?: string | null
+          next_action?: string | null
+          next_action_date?: string | null
+          priority?: string
+          score?: number
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      profiles: {
+        Row: {
+          id: string
+          email: string
+          full_name: string
+          role: string
+          phone: string | null
+          avatar_url: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          email: string
+          full_name: string
+          role?: string
+          phone?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          full_name?: string
+          role?: string
+          phone?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+    }
+  }
+}
+⋮----
+export type Property = Database["public"]["Tables"]["properties"]["Row"]
+export type PropertyInsert = Database["public"]["Tables"]["properties"]["Insert"]
+export type PropertyUpdate = Database["public"]["Tables"]["properties"]["Update"]
+⋮----
+export type Lead = Database["public"]["Tables"]["leads"]["Row"]
+export type LeadInsert = Database["public"]["Tables"]["leads"]["Insert"]
+export type LeadUpdate = Database["public"]["Tables"]["leads"]["Update"]
+⋮----
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"]
+</file>
+
+<file path="scripts/create-user.js">
+async function createUser() {
+⋮----
+const response = await fetch('http://localhost:3001/api/auth/create-user', {
+⋮----
+body: JSON.stringify(userData)
+⋮----
+const result = await response.json()
+⋮----
+console.log('✅ User created successfully!')
+console.log('Email:', userData.email)
+console.log('Password:', userData.password)
+console.log('User ID:', result.user.id)
+⋮----
+console.error('❌ Failed to create user:', result.error)
+⋮----
+console.error('❌ Error:', error.message)
+console.log('\n💡 Make sure the development server is running with: pnpm local')
+⋮----
+createUser()
+</file>
+
+<file path="scripts/read-analytics-readme.js">
+class AnalyticsReadmeReader {
+⋮----
+this.readmePath = path.join(__dirname, '..', 'ANALYTICS.md');
+⋮----
+readFullContent() {
+⋮----
+const content = fs.readFileSync(this.readmePath, 'utf8');
+⋮----
+console.error('Error leyendo ANALYTICS.md:', error.message);
+⋮----
+readSection(sectionName) {
+const content = this.readFullContent();
+⋮----
+const lines = content.split('\n');
+const sectionRegex = new RegExp(`^##.*${sectionName}`, 'i');
+⋮----
+if (sectionRegex.test(lines[i])) {
+⋮----
+console.log(`Sección "${sectionName}" no encontrada`);
+⋮----
+if (lines[i].startsWith('## ')) {
+⋮----
+const sectionLines = lines.slice(sectionStart, sectionEnd === -1 ? undefined : sectionEnd);
+return sectionLines.join('\n');
+⋮----
+listSections() {
+⋮----
+if (line.startsWith('## ')) {
+const sectionName = line.replace('## ', '').replace(/^[🚀📊🛠️🛡️🚀🔧🔍📚🎯📞📄]+ /, '');
+sections.push(sectionName);
+⋮----
+/**
+   * Busca texto específico en el README
+   * @param {string} searchTerm - Término a buscar
+   */
+search(searchTerm) {
+⋮----
+if (lines[i].toLowerCase().includes(searchTerm.toLowerCase())) {
+results.push({
+⋮----
+content: lines[i].trim(),
+context: lines.slice(Math.max(0, i - 1), Math.min(lines.length, i + 2))
+⋮----
+extractApiEndpoints() {
+const apiSection = this.readSection('API Endpoints');
+⋮----
+const lines = apiSection.split('\n');
+⋮----
+while ((match = httpMethodRegex.exec(line)) !== null) {
+endpoints.push({
+⋮----
+description: line.replace(match[0], '').replace(/[#`]/g, '').trim()
+⋮----
+/**
+   * Muestra información sobre el commit que creó el README
+   */
+getCommitInfo() {
+⋮----
+cli() {
+const args = process.argv.slice(2);
+⋮----
+console.log(this.readFullContent());
+⋮----
+console.log('Uso: node read-analytics-readme.js section "Nombre de Sección"');
+⋮----
+console.log(this.readSection(sectionName));
+⋮----
+console.log('Secciones disponibles:');
+this.listSections().forEach((section, index) => {
+console.log(`${index + 1}. ${section}`);
+⋮----
+console.log('Uso: node read-analytics-readme.js search "término"');
+⋮----
+const results = this.search(searchTerm);
+console.log(`Encontradas ${results.length} coincidencias para "${searchTerm}":`);
+results.forEach(result => {
+console.log(`Línea ${result.line}: ${result.content}`);
+⋮----
+const endpoints = this.extractApiEndpoints();
+console.log('Endpoints de la API:');
+endpoints.forEach(endpoint => {
+console.log(`${endpoint.method} ${endpoint.path} - ${endpoint.description}`);
+⋮----
+const info = this.getCommitInfo();
+console.log('Información del commit:');
+console.log(`Hash: ${info.hash}`);
+console.log(`Fecha: ${info.date}`);
+console.log(`Autor: ${info.author}`);
+console.log(`Mensaje: ${info.message}`);
+console.log('Archivos creados:', info.filesCreated.join(', '));
+⋮----
+console.log(`
+⋮----
+const reader = new AnalyticsReadmeReader();
+reader.cli();
+</file>
+
+<file path="services/settings.ts">
+import { supabase } from '@/lib/supabase'
+import {
+  SiteSettings,
+  SiteSettingsInput,
+  SiteSettingsResponse,
+  SiteSettingsUpdateResponse,
+  DEFAULT_SITE_SETTINGS
+} from '@/types/settings'
+import { z } from 'zod'
+⋮----
+export class SettingsService
+⋮----
+static async getSettings(): Promise<SiteSettings | null>
+⋮----
+static async getSettingsWithDefaults(): Promise<SiteSettings>
+⋮----
+static async settingsExist(): Promise<boolean>
+⋮----
+static async updateSettings(updates: SiteSettingsInput): Promise<SiteSettings>
+⋮----
+static async createDefaultSettings(): Promise<SiteSettings>
+⋮----
+static async updateCompanyInfo(companyData: {
+    company_name?: string
+    company_description?: string
+    contact_email?: string
+    contact_phone?: string
+    whatsapp_number?: string
+    address?: string
+    website_url?: string
+}): Promise<SiteSettings>
+⋮----
+static async updateSocialMedia(socialMedia: {
+    facebook?: string | null
+    instagram?: string | null
+    linkedin?: string | null
+    youtube?: string | null
+    twitter?: string | null
+}): Promise<SiteSettings>
+⋮----
+static async updateBrandColors(colors: {
+    primary?: string
+    secondary?: string
+}): Promise<SiteSettings>
+⋮----
+static async updateSEO(seoData: {
+    meta_title?: string
+    meta_description?: string
+    meta_keywords?: string
+    google_analytics_id?: string
+    google_tag_manager_id?: string
+}): Promise<SiteSettings>
+⋮----
+static async updateContactMethods(contactMethods: {
+    whatsapp_enabled?: boolean
+    phone_enabled?: boolean
+    email_enabled?: boolean
+    contact_form_enabled?: boolean
+}): Promise<SiteSettings>
+⋮----
+static async updateBranding(brandingData: {
+    logo_url?: string | null
+    logo_dark_url?: string | null
+    favicon_url?: string | null
+}): Promise<SiteSettings>
+⋮----
+static validateSocialMediaUrl(platform: string, url: string): boolean
+⋮----
+static formatResponse(
+    settings: SiteSettings | null,
+    message?: string
+): SiteSettingsResponse
+⋮----
+static formatErrorResponse(error: string): SiteSettingsResponse
+</file>
+
+<file path="styles/leaflet.css">
+.leaflet-container {
+⋮----
+.leaflet-control-attribution {
+⋮----
+.leaflet-popup-content-wrapper {
+⋮----
+.leaflet-popup-tip {
+</file>
+
+<file path="types/settings.ts">
+export interface SocialMediaLinks {
+  facebook?: string | null
+  instagram?: string | null
+  linkedin?: string | null
+  youtube?: string | null
+  twitter?: string | null
+}
+⋮----
+export interface BrandColors {
+  primary: string
+  secondary: string
+}
+⋮----
+export interface ContactMethods {
+  whatsapp_enabled: boolean
+  phone_enabled: boolean
+  email_enabled: boolean
+  contact_form_enabled: boolean
+}
+⋮----
+export interface BusinessHour {
+  open: string
+  close: string
+  closed: boolean
+}
+⋮----
+export interface BusinessHours {
+  monday: BusinessHour
+  tuesday: BusinessHour
+  wednesday: BusinessHour
+  thursday: BusinessHour
+  friday: BusinessHour
+  saturday: BusinessHour
+  sunday: BusinessHour
+}
+⋮----
+export interface SiteSettings {
+  id: string
+
+
+  company_name: string
+  company_description?: string | null
+  contact_email: string
+  contact_phone: string
+  whatsapp_number?: string | null
+  address: string
+  website_url?: string | null
+
+
+  social_media: SocialMediaLinks
+
+
+  logo_url?: string | null
+  logo_dark_url?: string | null
+  favicon_url?: string | null
+  brand_colors: BrandColors
+
+
+  meta_title: string
+  meta_description: string
+  meta_keywords?: string | null
+  google_analytics_id?: string | null
+  google_tag_manager_id?: string | null
+
+
+  contact_methods: ContactMethods
+
+
+  business_hours: BusinessHours
+
+
+  settings_data: Record<string, any>
+
+
+  created_at: string
+  updated_at: string
+}
+⋮----
+export interface SiteSettingsInput {
+  company_name?: string
+  company_description?: string | null
+  contact_email?: string
+  contact_phone?: string
+  whatsapp_number?: string | null
+  address?: string
+  website_url?: string | null
+  social_media?: Partial<SocialMediaLinks>
+  logo_url?: string | null
+  logo_dark_url?: string | null
+  favicon_url?: string | null
+  brand_colors?: Partial<BrandColors>
+  meta_title?: string
+  meta_description?: string
+  meta_keywords?: string | null
+  google_analytics_id?: string | null
+  google_tag_manager_id?: string | null
+  contact_methods?: Partial<ContactMethods>
+  business_hours?: Partial<BusinessHours>
+  settings_data?: Record<string, any>
+}
+⋮----
+export interface SiteSettingsFormData {
+
+  company_name: string
+  company_description: string
+  contact_email: string
+  contact_phone: string
+  whatsapp_number: string
+  address: string
+  website_url: string
+
+
+  social_facebook: string
+  social_instagram: string
+  social_linkedin: string
+  social_youtube: string
+  social_twitter: string
+
+
+  meta_title: string
+  meta_description: string
+  meta_keywords: string
+  google_analytics_id: string
+  google_tag_manager_id: string
+
+
+  whatsapp_enabled: boolean
+  phone_enabled: boolean
+  email_enabled: boolean
+  contact_form_enabled: boolean
+
+
+  brand_primary_color: string
+  brand_secondary_color: string
+}
+⋮----
+export interface SettingsValidationSchema {
+  company: {
+    company_name: string
+    company_description?: string
+    contact_email: string
+    contact_phone: string
+    whatsapp_number?: string
+    address: string
+    website_url?: string
+  }
+  social: {
+    facebook?: string
+    instagram?: string
+    linkedin?: string
+    youtube?: string
+    twitter?: string
+  }
+  seo: {
+    meta_title: string
+    meta_description: string
+    meta_keywords?: string
+    google_analytics_id?: string
+    google_tag_manager_id?: string
+  }
+  contact: {
+    whatsapp_enabled: boolean
+    phone_enabled: boolean
+    email_enabled: boolean
+    contact_form_enabled: boolean
+  }
+  branding: {
+    primary_color: string
+    secondary_color: string
+  }
+}
+⋮----
+export interface SiteSettingsResponse {
+  success: boolean
+  data?: SiteSettings
+  error?: string
+}
+⋮----
+export interface SiteSettingsUpdateResponse {
+  success: boolean
+  data?: SiteSettings
+  message?: string
+  error?: string
+}
+⋮----
+export type SocialMediaPlatform = keyof typeof SOCIAL_MEDIA_DOMAINS
 </file>
 
 <file path="package.json">
@@ -197,6 +2629,1315 @@ This section contains the contents of the repository's files.
     "typescript": "^5"
   }
 }
+</file>
+
+<file path="components/admin/AdminLayout.tsx">
+import type React from "react"
+⋮----
+import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Users, Building2, Menu, ExternalLink, BarChart3 } from "lucide-react"
+</file>
+
+<file path="components/ui/button.tsx">
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+</file>
+
+<file path="components/ui/card.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+⋮----
+<div ref=
+</file>
+
+<file path="lib/map-config.ts">
+export const createPropertyMarkerIcon = () =>
+⋮----
+export const geocodeAddress = async (address: string): Promise<[number, number] | null> =>
+⋮----
+// Fallback to Reconquista, Santa Fe coordinates
+⋮----
+// Format address for display
+export const formatAddress = (property: {
+  address?: string | null
+  neighborhood?: string | null
+  city?: string
+}) =>
+</file>
+
+<file path=".env.example">
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_SERVICE_KEY=your-service-key
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+</file>
+
+<file path="middleware.ts">
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+⋮----
+export function middleware(request: NextRequest)
+</file>
+
+<file path="tailwind.config.ts">
+import type { Config } from "tailwindcss"
+</file>
+
+<file path="types/analytics.ts">
+export interface AnalyticsSession {
+  id: string
+  session_id: string
+  ip_hash: string
+  user_agent?: string
+  device_type?: 'desktop' | 'mobile' | 'tablet'
+  browser_name?: string
+  browser_version?: string
+  os_name?: string
+  os_version?: string
+  referrer_domain?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_term?: string
+  utm_content?: string
+  country_code?: string
+  city?: string
+  language?: string
+  timezone?: string
+  screen_width?: number
+  screen_height?: number
+  opt_out: boolean
+  first_seen_at: string
+  last_seen_at: string
+  created_at: string
+}
+⋮----
+export interface AnalyticsPropertyView {
+  id: string
+  property_id: number
+  session_id?: string
+  view_duration_seconds: number
+  page_url: string
+  referrer_url?: string
+  search_query?: string
+  search_filters?: Record<string, any>
+  interaction_events?: InteractionEvent[]
+  scroll_percentage?: number
+  images_viewed: number
+  contact_form_opened: boolean
+  contact_form_submitted: boolean
+  phone_clicked: boolean
+  whatsapp_clicked: boolean
+  email_clicked: boolean
+  viewed_at: string
+  created_at: string
+}
+⋮----
+export interface AnalyticsLeadSource {
+  id: number
+  name: string
+  display_name: string
+  description?: string
+  category: 'web' | 'social' | 'direct' | 'referral' | 'advertising'
+  icon?: string
+  color?: string
+  is_active: boolean
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
+⋮----
+export interface AnalyticsLeadGeneration {
+  id: string
+  lead_id?: number
+  session_id?: string
+  property_id?: number
+  lead_source_id?: number
+  form_type?: string
+  contact_method?: string
+  lead_value?: number
+  conversion_time_minutes?: number
+  form_data?: Record<string, any>
+  page_url?: string
+  referrer_url?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_term?: string
+  utm_content?: string
+  generated_at: string
+  created_at: string
+}
+⋮----
+export interface AnalyticsUserInteraction {
+  id: string
+  session_id?: string
+  property_id?: number
+  interaction_type: string
+  element_id?: string
+  element_class?: string
+  element_text?: string
+  page_url: string
+  coordinates_x?: number
+  coordinates_y?: number
+  viewport_width?: number
+  viewport_height?: number
+  interaction_data?: Record<string, any>
+  occurred_at: string
+  created_at: string
+}
+⋮----
+export interface InteractionEvent {
+  type: string
+  element?: string
+  timestamp: number
+  data?: Record<string, any>
+}
+⋮----
+export interface CreateSessionRequest {
+  ip_address?: string
+  user_agent?: string
+  referrer?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_term?: string
+  utm_content?: string
+  screen_width?: number
+  screen_height?: number
+  timezone?: string
+  language?: string
+}
+⋮----
+export interface UpdateSessionRequest {
+  session_id: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_term?: string
+  utm_content?: string
+}
+⋮----
+export interface TrackPropertyViewRequest {
+  property_id: number
+  session_id?: string
+  page_url: string
+  referrer_url?: string
+  search_query?: string
+  search_filters?: Record<string, any>
+  time_on_page?: number
+  scroll_depth?: number
+  images_viewed?: number
+  contact_form_opened?: boolean
+  contact_form_submitted?: boolean
+  phone_clicked?: boolean
+  whatsapp_clicked?: boolean
+  email_clicked?: boolean
+  interactions?: InteractionEvent[]
+}
+⋮----
+export interface TrackLeadGenerationRequest {
+  lead_id?: number
+  session_id?: string
+  property_id?: number
+  lead_source_id?: number
+  source_code?: string
+  form_type?: string
+  contact_method?: string
+  lead_value?: number
+  form_data?: Record<string, any>
+  page_url?: string
+  referrer_url?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_term?: string
+  utm_content?: string
+}
+⋮----
+export interface TrackUserInteractionRequest {
+  session_id?: string
+  property_id?: number
+  interaction_type: string
+  element_id?: string
+  element_class?: string
+  element_text?: string
+  page_url: string
+  coordinates_x?: number
+  coordinates_y?: number
+  viewport_width?: number
+  viewport_height?: number
+  interaction_data?: Record<string, any>
+}
+⋮----
+export interface PropertyMetrics {
+  property_id: number
+  total_views: number
+  unique_sessions: number
+  avg_duration_seconds: number
+  total_interactions: number
+  leads_generated: number
+  contact_forms_submitted: number
+  phone_clicks: number
+  whatsapp_clicks: number
+  email_clicks: number
+  conversion_rate: number
+  bounce_rate: number
+  time_period: string
+}
+⋮----
+export interface DashboardMetrics {
+  total_views: number
+  unique_sessions: number
+  total_leads: number
+  conversion_rate: number
+  avg_session_duration: number
+  bounce_rate: number
+  top_properties: PropertyPerformance[]
+  lead_sources_performance: LeadSourcePerformance[]
+  campaign_performance: CampaignPerformance[]
+  device_breakdown: DeviceBreakdown[]
+  time_series_data?: TimeSeriesData[]
+}
+⋮----
+export interface PropertyPerformance {
+  property_id: number
+  title?: string
+  total_views: number
+  unique_sessions: number
+  leads_generated: number
+  conversion_rate: number
+  avg_duration: number
+}
+⋮----
+export interface LeadSourcePerformance {
+  source_id: number
+  source_name: string
+  category: string
+  total_leads: number
+  conversion_rate: number
+  avg_lead_value: number
+  color?: string
+  icon?: string
+}
+⋮----
+export interface CampaignPerformance {
+  campaign_name: string
+  campaign_source: string
+  sessions: number
+  leads: number
+  cost: number
+  revenue: number
+  roas: number
+  ctr: number
+  cpc: number
+  cpl: number
+}
+⋮----
+export interface DeviceBreakdown {
+  device_type: string
+  sessions: number
+  percentage: number
+  avg_duration: number
+  conversion_rate: number
+}
+⋮----
+export interface TimeSeriesData {
+  date: string
+  views: number
+  sessions: number
+  leads: number
+  conversion_rate: number
+}
+⋮----
+export interface DashboardRequest {
+  start_date?: string
+  end_date?: string
+  property_id?: number
+  device_type?: string
+  utm_source?: string
+  include_time_series?: boolean
+  granularity?: 'hour' | 'day' | 'week' | 'month'
+}
+⋮----
+export interface PropertyMetricsRequest {
+  property_id: number
+  days_back?: number
+  include_interactions?: boolean
+  include_lead_attribution?: boolean
+}
+⋮----
+export class AnalyticsError extends Error
+⋮----
+constructor(message: string, code: string = 'ANALYTICS_ERROR', statusCode: number = 500)
+⋮----
+export class AnalyticsValidationError extends AnalyticsError
+⋮----
+constructor(message: string, field?: string)
+⋮----
+export class AnalyticsPrivacyError extends AnalyticsError
+⋮----
+constructor(message: string)
+⋮----
+export type LeadSourceCode = typeof LEAD_SOURCE_CODES[keyof typeof LEAD_SOURCE_CODES]
+export type DeviceType = typeof DEVICE_TYPES[keyof typeof DEVICE_TYPES]
+export type InteractionType = typeof INTERACTION_TYPES[keyof typeof INTERACTION_TYPES]
+export type FormType = typeof FORM_TYPES[keyof typeof FORM_TYPES]
+export type CampaignCategory = typeof CAMPAIGN_CATEGORIES[keyof typeof CAMPAIGN_CATEGORIES]
+⋮----
+export interface OptOutRequest {
+  session_id?: string
+  ip_address?: string
+  reason?: string
+}
+⋮----
+export interface OptOutResponse {
+  success: boolean
+  message: string
+  affected_records: number
+}
+⋮----
+export interface DatabaseFunctionResult<T> {
+  data: T | null
+  error: any
+  count?: number
+}
+⋮----
+export interface AnalyticsServiceConfig {
+  supabaseUrl: string
+  supabaseAnonKey: string
+  enableGDPRCompliance: boolean
+  defaultSessionDuration: number
+  viewDebounceDuration: number
+  maxInteractionBatchSize: number
+}
+⋮----
+export interface CreateAnalyticsSessionInput {
+  ip_address: string
+  user_agent?: string
+  country_code?: string
+  device_type?: 'desktop' | 'mobile' | 'tablet'
+  browser?: string
+  os?: string
+  referrer_domain?: string
+  landing_page?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_term?: string
+  utm_content?: string
+}
+⋮----
+export interface CreatePropertyViewInput {
+  session_id: string
+  property_id: number
+  page_url?: string
+  referrer_url?: string
+  search_query?: string
+  time_on_page?: number
+  scroll_depth?: number
+  contact_button_clicked?: boolean
+  whatsapp_clicked?: boolean
+  phone_clicked?: boolean
+  email_clicked?: boolean
+  images_viewed?: number
+  map_interacted?: boolean
+  similar_properties_clicked?: boolean
+}
+⋮----
+export interface CreateLeadGenerationEventInput {
+  lead_id: number
+  session_id?: string
+  property_id?: number
+  lead_source_id: number
+  form_type?: string
+  time_to_conversion?: number
+  conversion_page?: string
+  utm_source?: string
+  utm_medium?: string
+  utm_campaign?: string
+  utm_term?: string
+  utm_content?: string
+}
+⋮----
+export interface CreateUserInteractionEventInput {
+  session_id: string
+  property_id?: number
+  event_type: string
+  event_target?: string
+  page_url?: string
+  event_data?: any
+  timestamp?: number
+}
+⋮----
+export interface PropertyViewEvent {
+  id: string
+  property_id: number
+  session_id?: string
+  view_duration_seconds: number
+  page_url: string
+  referrer_url?: string
+  viewed_at: string
+  created_at: string
+}
+⋮----
+export interface LeadGenerationEvent {
+  id: string
+  lead_id: number
+  session_id?: string
+  property_id?: number
+  lead_source_id: number
+  generated_at: string
+  created_at: string
+}
+⋮----
+export interface UserInteractionEvent {
+  id: string
+  session_id: string
+  event_type: string
+  event_target?: string
+  page_url: string
+  occurred_at: string
+  created_at: string
+}
+⋮----
+export interface TopPropertyResult {
+  property_id: number
+  title: string
+  metric_value: number
+  unique_views: number
+  leads: number
+}
+⋮----
+export interface DashboardStats {
+  total_sessions: number
+  total_property_views: number
+  unique_property_views: number
+  total_leads: number
+  conversion_rate: number
+  avg_time_on_page: number
+  top_properties: TopPropertyResult[]
+  top_lead_sources: Array<{
+    source_id: number
+    source_name: string
+    leads_count: number
+    conversion_rate: number
+  }>
+  traffic_by_device: Array<{
+    device_type: string
+    sessions: number
+    percentage: number
+  }>
+  daily_stats: Array<{
+    date: string
+    sessions: number
+    views: number
+    leads: number
+  }>
+}
+⋮----
+export interface LeadSourceStats {
+  source_id: number
+  source_name: string
+  leads_count: number
+  avg_conversion_time?: number | null
+  unique_sessions: number
+  conversion_rate?: number | null
+}
+⋮----
+export interface CampaignStats {
+  utm_source: string
+  utm_campaign: string | null
+  sessions: number
+  total_events: number
+  leads: number
+  avg_conversion_time: number | null
+  roas: number | null
+}
+⋮----
+export interface DeviceTypeStats {
+  device_type: string
+  sessions: number
+  property_views: number
+  leads: number
+  conversion_rate: number
+}
+⋮----
+export interface HourlyTrafficStats {
+  hour: number
+  sessions: number
+  views: number
+  leads: number
+}
+⋮----
+export interface AnalyticsFilters {
+  start_date?: string
+  end_date?: string
+  property_id?: number
+  device_type?: string
+  utm_source?: string
+}
+⋮----
+export type AnalyticsMetricType = 'views' | 'leads' | 'conversion_rate'
+⋮----
+export interface PropertyMetrics {
+  total_views: number
+  unique_views: number
+  avg_time_on_page: number | null
+  avg_scroll_depth: number | null
+  contact_rate: number | null
+  leads_generated: number
+  conversion_rate: number | null
+}
+</file>
+
+<file path="app/layout.tsx">
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter, Playfair_Display } from "next/font/google"
+⋮----
+import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider"
+import AnalyticsInitializer from "@/components/AnalyticsInitializer"
+⋮----
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>)
+</file>
+
+<file path="components/FeaturedPropertiesSlider.tsx">
+import React, { useEffect, useCallback } from 'react'
+import useEmblaCarousel from 'embla-carousel-react'
+import { EmblaOptionsType } from 'embla-carousel'
+import Autoplay from 'embla-carousel-autoplay'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { PropertyMiniMap } from '@/components/PropertyMiniMap'
+import { Property } from '@/lib/supabase'
+import { Home, MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight } from 'lucide-react'
+⋮----
+interface FeaturedPropertiesSliderProps {
+  properties: Property[]
+}
+</file>
+
+<file path="components/HeroSearchBar.tsx">
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Home, Building, TreePine } from "lucide-react";
+import { motion } from "framer-motion";
+⋮----
+export function HeroSearchBar()
+⋮----
+const handleSearch = () =>
+</file>
+
+<file path="services/analytics.ts">
+import { supabase, supabaseAdmin } from "@/lib/supabase"
+import {
+  type AnalyticsSession,
+  type PropertyViewEvent,
+  type LeadGenerationEvent,
+  type UserInteractionEvent,
+  type CreateAnalyticsSessionInput,
+  type CreatePropertyViewInput,
+  type CreateLeadGenerationEventInput,
+  type CreateUserInteractionEventInput,
+  type PropertyMetrics,
+  type TopPropertyResult,
+  type DashboardStats,
+  type LeadSourceStats,
+  type CampaignStats,
+  type DeviceTypeStats,
+  type HourlyTrafficStats,
+  type AnalyticsFilters,
+  type LeadSourceCode,
+  type AnalyticsMetricType,
+  AnalyticsValidationError,
+  AnalyticsPrivacyError,
+  ANALYTICS_CONSTANTS
+} from "@/types/analytics"
+⋮----
+export class AnalyticsService
+⋮----
+static async createSession(sessionData: CreateAnalyticsSessionInput): Promise<string>
+⋮----
+static async getOrCreateSession(
+    ipAddress: string,
+    userAgent?: string,
+    additionalData?: Partial<CreateAnalyticsSessionInput>
+): Promise<string>
+⋮----
+static async updateSessionLastSeen(sessionId: string): Promise<void>
+⋮----
+static async recordPropertyView(viewData: CreatePropertyViewInput): Promise<string>
+⋮----
+static async recordPropertyViewWithSession(
+    propertyId: number,
+    ipAddress: string,
+    userAgent?: string,
+    viewData?: Partial<CreatePropertyViewInput>,
+    sessionData?: Partial<CreateAnalyticsSessionInput>
+): Promise<
+⋮----
+static async recordLeadGeneration(leadData: CreateLeadGenerationEventInput): Promise<void>
+⋮----
+static async recordLeadWithSource(
+    leadId: number,
+    sourceCode: LeadSourceCode,
+    sessionId?: string,
+    propertyId?: number,
+    additionalData?: Partial<CreateLeadGenerationEventInput>
+): Promise<void>
+⋮----
+static async recordInteraction(interactionData: CreateUserInteractionEventInput): Promise<void>
+⋮----
+static async recordInteractionsBatch(interactions: CreateUserInteractionEventInput[]): Promise<void>
+⋮----
+static async getPropertyMetrics(
+    propertyId: number,
+    daysBack: number = 30
+): Promise<PropertyMetrics>
+⋮----
+static async getTopProperties(
+    limit = 10,
+    metric: AnalyticsMetricType = 'views',
+    days = 30
+): Promise<TopPropertyResult[]>
+⋮----
+static async getDashboardStats(filters?: AnalyticsFilters): Promise<DashboardStats>
+⋮----
+static async getLeadSourceStats(startDate: string, endDate: string): Promise<LeadSourceStats[]>
+⋮----
+static async getCampaignStats(startDate: string, endDate: string): Promise<CampaignStats[]>
+⋮----
+static async getDeviceTypeStats(startDate: string, endDate: string): Promise<DeviceTypeStats[]>
+⋮----
+static async handleOptOut(sessionId: string, ipAddress?: string): Promise<void>
+⋮----
+static async cleanupOldData(retentionMonths = ANALYTICS_CONSTANTS.RETENTION_MONTHS): Promise<number>
+⋮----
+private static async getSessionStats(startDate: string, endDate: string, filters?: AnalyticsFilters)
+⋮----
+private static async getViewStats(startDate: string, endDate: string, filters?: AnalyticsFilters)
+⋮----
+private static async getLeadStats(startDate: string, endDate: string, filters?: AnalyticsFilters)
+⋮----
+private static async getDailyStats(startDate: string, endDate: string)
+⋮----
+private static validatePropertyView(data: CreatePropertyViewInput): void
+⋮----
+private static validateLeadGeneration(data: CreateLeadGenerationEventInput): void
+⋮----
+private static validateInteraction(data: CreateUserInteractionEventInput): void
+⋮----
+private static async hashString(input: string): Promise<string>
+⋮----
+// Server environment - would need to import crypto module
+⋮----
+export class AnalyticsHooks
+⋮----
+static usePageView(propertyId?: number)
+⋮----
+static useInteractionTracking(sessionId: string)
+⋮----
+export class AnalyticsAggregation
+⋮----
+static async generateDailyAggregates(date?: string): Promise<void>
+⋮----
+static async generateWeeklyMonthlyAggregates(): Promise<void>
+</file>
+
+<file path="app/propiedades/[id]/page.tsx">
+import { useState, useEffect } from "react"
+import { useParams, useRouter } from "next/navigation"
+import Image from "next/image"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { PropertyDetailMap } from "@/components/PropertyDetailMap"
+import {
+  ArrowLeft,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  Heart,
+  Share2,
+  Phone,
+  Mail,
+  MessageCircle,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Calendar,
+  Wifi,
+  Car,
+  TreePine,
+  ShieldCheck,
+  Zap,
+  Home
+} from "lucide-react"
+import type { Property as PropertyType } from "@/lib/supabase"
+import Header from "@/components/Header"
+import { ComprehensivePropertyTracker, ContactTracker, ImageGalleryTracker, useImageGalleryTracker } from "@/components/PropertyViewTracker"
+import { trackPropertyView, trackContactClick, trackWhatsAppClick, trackLead } from '@/lib/analytics-client'
+import { LEAD_SOURCE_CODES } from '@/types/analytics'
+⋮----
+interface Property extends PropertyType {
+  operation: "sale" | "rent"
+  type: "house" | "apartment" | "commercial" | "terreno" | "local"
+}
+⋮----
+// Fetch property data
+⋮----
+const fetchProperty = async () =>
+⋮----
+const nextImage = () =>
+⋮----
+const prevImage = () =>
+⋮----
+const getTypeDisplayName = (type: string) =>
+⋮----
+const getStatusDisplayName = (status: string) =>
+⋮----
+const getOperationDisplayName = (operation: string) =>
+⋮----
+const getFeatureIcon = (feature: string) =>
+⋮----
+const handleContactSubmit = async (e: React.FormEvent) =>
+⋮----
+onError=
+⋮----
+
+⋮----
+onClick=
+⋮----
+onChange=
+⋮----
+required
+</file>
+
+<file path="components/Hero.tsx">
+import { ReactNode } from "react"
+import { motion } from "framer-motion"
+import Image from "next/image"
+⋮----
+interface HeroProps {
+  backgroundImage: string
+  alt: string
+  title: string | ReactNode
+  description: string
+  showCounter?: boolean
+  counterText?: string
+  counterValue?: number
+  withAnimation?: boolean
+  imageClassName?: string
+  children?: ReactNode
+}
+</file>
+
+<file path="app/contacto/page.tsx">
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  MessageCircle,
+  Send,
+  Check,
+  ArrowRight,
+  Building2,
+  Users,
+  Award,
+  Star,
+  Facebook,
+  Instagram,
+  Globe,
+  HeadphonesIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Image from "next/image";
+import Link from "next/link";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import { LeadSourceSelector, useLeadSourceDetection, useLeadSourceSelector } from "@/components/LeadSourceSelector"
+import { useAnalytics } from "@/hooks/useAnalytics"
+import { trackLead } from '@/lib/analytics-client'
+import { type LeadSourceCode, LEAD_SOURCE_CODES } from "@/types/analytics"
+⋮----
+// Analytics and lead source tracking
+⋮----
+const handleSubmitContact = async (e: React.FormEvent) =>
+⋮----
+// Create the lead first
+⋮----
+// Track the lead generation in analytics
+⋮----
+undefined, // no specific property
+⋮----
+// Handle phone contact lead generation
+const handlePhoneClick = async () =>
+⋮----
+// Track the lead generation in analytics
+⋮----
+// Handle WhatsApp contact lead generation
+const handleWhatsAppClick = async () =>
+⋮----
+// Track the lead generation in analytics
+⋮----
+// Handle email contact lead generation
+const handleEmailClick = async () =>
+⋮----
+// Track the lead generation in analytics
+⋮----
+// Handle social media contact lead generation
+const handleSocialClick = async (platform: 'facebook' | 'instagram') =>
+⋮----
+// Track the lead generation in analytics
+⋮----
+onClick=
+</file>
+
+<file path="components/Header.tsx">
+import { useState, useEffect } from "react";
+import { Search, Menu, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useIsClient } from "@/hooks/use-is-client";
+⋮----
+interface HeaderProps {
+  showMobileSearch?: boolean;
+}
+⋮----
+const isActivePage = (path: string) =>
+⋮----
+const getLinkClassName = (path: string) =>
+⋮----
+const getContactLinkClassName = () =>
+⋮----
+const getAgentesLinkClassName = () =>
+⋮----
+const handleScroll = () =>
+</file>
+
+<file path="components/PropertyCard.tsx">
+import React from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Heart, Mail, ArrowRight, MapPin, Bed, Bath, Square, Home, Eye } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import type { Property as PropertyType } from "@/lib/supabase"
+⋮----
+interface Property extends PropertyType {
+  operation: "sale" | "rent"
+  type: "house" | "apartment" | "commercial" | "terreno" | "local"
+}
+⋮----
+interface PropertyCardProps {
+  property: Property
+}
+</file>
+
+<file path="app/globals.css">
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+⋮----
+@font-face {
+⋮----
+@layer base {
+⋮----
+:root {
+⋮----
+.dark {
+⋮----
+* {
+⋮----
+@apply border-border;
+⋮----
+body {
+⋮----
+@layer utilities {
+⋮----
+.display-xl { @apply font-inter font-bold uppercase tracking-wide; font-size: 4rem; line-height: 1.1; }
+.display-lg { @apply font-inter font-bold uppercase tracking-wide; font-size: 3.5rem; line-height: 1.1; }
+.display-md { @apply font-inter font-bold uppercase tracking-wide; font-size: 3rem; line-height: 1.2; }
+.display-sm { @apply font-inter font-bold uppercase tracking-wide; font-size: 2.5rem; line-height: 1.2; }
+⋮----
+.heading-xl { @apply font-inter font-normal; font-size: 2rem; line-height: 1.3; }
+.heading-lg { @apply font-inter font-normal; font-size: 1.75rem; line-height: 1.3; }
+.heading-md { @apply font-inter font-normal; font-size: 1.5rem; line-height: 1.4; }
+.heading-sm { @apply font-inter font-normal; font-size: 1.25rem; line-height: 1.4; }
+⋮----
+.body-xl { @apply font-inter font-light; font-size: 1.25rem; line-height: 1.7; }
+.body-lg { @apply font-inter font-light; font-size: 1.125rem; line-height: 1.7; }
+.body-md { @apply font-inter font-light; font-size: 1rem; line-height: 1.7; }
+.body-sm { @apply font-inter font-light; font-size: 0.875rem; line-height: 1.7; }
+⋮----
+.caption-lg { @apply font-inter font-normal text-support-gray; font-size: 0.875rem; line-height: 1.5; }
+.caption-md { @apply font-inter font-normal text-support-gray; font-size: 0.75rem; line-height: 1.5; }
+.caption-sm { @apply font-inter font-normal text-support-gray; font-size: 0.625rem; line-height: 1.5; }
+⋮----
+.heading-primary { @apply text-bone-white; }
+.heading-secondary { @apply text-bone-white; }
+.text-secondary { @apply text-subtle-gray; }
+.text-meta { @apply text-support-gray; }
+⋮----
+.hero-title {
+⋮----
+.section-title {
+⋮----
+.component-title {
+⋮----
+.subtitle {
+⋮----
+.body-text {
+⋮----
+.secondary-text {
+⋮----
+.section-spacing { @apply py-16 md:py-24; }
+.component-spacing { @apply mb-8 md:mb-12; }
+.element-spacing { @apply mb-4 md:mb-6; }
+⋮----
+.section-premium { @apply py-premium-lg md:py-premium-xl; }
+.container-premium { @apply px-premium-sm md:px-premium-md; }
+.card-premium { @apply p-premium-sm md:p-premium-md; }
+⋮----
+.bg-premium-main { @apply bg-night-blue; }
+.bg-premium-card { @apply bg-night-blue/95 backdrop-blur-sm; }
+.text-premium-primary { @apply text-bone-white; }
+.text-premium-secondary { @apply text-subtle-gray; }
+⋮----
+.accent-premium { @apply text-vibrant-orange; }
+.interactive-element { @apply text-vibrant-orange hover:text-vibrant-orange/90 transition-colors; }
+⋮----
+.hover-lift {
+.hover-lift:hover {
+⋮----
+.hover-scale {
+.hover-scale:hover {
+⋮----
+.premium-blur {
+⋮----
+.focus-ring {
+.focus-ring:focus {
+⋮----
+.text-transition {
+⋮----
+.gradient-border {
+⋮----
+.pulse-premium {
+⋮----
+.hero-logo-dominant {
+⋮----
+.hero-title-primary {
+⋮----
+.hero-slogan-refined {
+⋮----
+.hero-subtitle-elegant {
+⋮----
+.hero-cta-prominent {
+⋮----
+.hero-cta-prominent:hover {
+⋮----
+.hero-overlay-strong {
+⋮----
+.hero-gradient-accent {
+⋮----
+.hero-grid-advanced {
+⋮----
+.hero-header { grid-area: header; }
+.hero-content {
+⋮----
+.hero-footer {
+⋮----
+.premium-spacing-hero {
+⋮----
+button.cta {
+button.cta:hover {
+a.link-clave {
+a.link-clave:hover {
+⋮----
+h1, h2, h3 {
+.text-secundario {
+.text-meta {
+⋮----
+.brand-accent-selective { color: #F37321; }
+.hero-text-primary { color: #FFFFFF; }
+.hero-text-secondary { color: rgba(245, 245, 245, 0.85); }
+.hero-text-subtle { color: rgba(245, 245, 245, 0.7); }
+⋮----
+.hero-viewport-height {
+</file>
+
+<file path="components/admin/PropertiesPage.tsx">
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Home,
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  Star,
+  Eye,
+  MoreHorizontal,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  CheckCircle,
+  XCircle,
+  Clock,
+  AlertCircle
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
+import { PropertyService } from "@/services/properties";
+import type { Property } from "@/lib/supabase";
+import { STATUS_MAP } from "@/lib/supabase";
+⋮----
+interface PropertyWithStats extends Property {
+  views?: number;
+  leads?: number;
+}
+⋮----
+interface PropertyImageProps {
+  images: string[];
+  title: string;
+}
+⋮----
+const handleMouseEnter = () =>
+⋮----
+const handleMouseLeave = () =>
+⋮----
+const fetchProperties = async () =>
+⋮----
+const handleDeleteProperty = async (id: number) =>
+⋮----
+const toggleFeatured = async (
+    propertyId: number,
+    currentFeatured: boolean
+) =>
+⋮----
+const deleteProperty = async (propertyId: number) =>
+⋮----
+const changePropertyStatus = async (propertyId: number, newStatus: string) =>
+⋮----
+const getStatusBadgeVariant = (status: string) =>
+⋮----
+const getStatusDisplay = (status: string) =>
+⋮----
+const getStatusIcon = (status: string) =>
+⋮----
+const getStatusColor = (status: string) =>
+⋮----
+const getPropertyTypeLabel = (type: string) =>
+⋮----
+const getOperationTypeLabel = (type: string) =>
+⋮----
+const formatPrice = (price: number) =>
+⋮----
+<Badge className=
+</file>
+
+<file path="app/agentes/page.tsx">
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Award,
+  Users,
+  Home,
+  Star,
+  MessageCircle,
+  Building2,
+  Landmark,
+  Crown,
+  Check,
+  ArrowRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
+import Image from "next/image";
+import Link from "next/link";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer";
+import Hero from "@/components/Hero"
+⋮----
+interface Agent {
+  id: number;
+  name: string;
+  role: string;
+  specialization: string;
+  phone: string;
+  email: string;
+  image: string;
+  description: string;
+  achievements: string[];
+  icon: typeof Home;
+}
+⋮----
+const handleContactAgent = (agent: Agent) =>
+⋮----
+// Scroll to contact form
+⋮----
+const handleSubmitContact = async (e: React.FormEvent) =>
+⋮----
+// Here would be the API call to create a lead
+⋮----
+src=
+⋮----
+{/* Why Choose Us Section - PREMIUM DESIGN */}
+</file>
+
+<file path="app/propiedades/page.tsx">
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+import { Search, Filter, MapPin, Bed, Bath, Square, Heart, Eye, ChevronLeft, ChevronRight, Home, ArrowLeft, ChevronDown, ChevronUp } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import PropertyCard from "@/components/PropertyCard"
+import Hero from "@/components/Hero"
+import { getOptimizedImageUrl } from "@/lib/cloudinary"
+import { PropertyService } from "@/services/properties"
+import type { Property as PropertyType } from "@/lib/supabase"
+import { useAnalytics } from "@/hooks/useAnalytics"
+⋮----
+interface Property extends PropertyType {
+  operation: "sale" | "rent"
+  type: "house" | "apartment" | "commercial" | "terreno" | "local"
+}
+⋮----
+const fetchProperties = async () =>
+⋮----
+// Apply filters
+⋮----
+// Search filter
+⋮----
+// Operation filter
+⋮----
+const clearFilters = () =>
+⋮----
+const getTypeDisplayName = (type: string) =>
+⋮----
+const getStatusDisplayName = (status: string) =>
+⋮----
+{/* Filters - Compact with Expandable Design */}
+</file>
+
+<file path="app/page.tsx">
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import {
+  Search,
+  MapPin,
+  Landmark,
+  Bed,
+  Bath,
+  Square,
+  ArrowRight,
+  MessageCircle,
+  Star,
+  Users,
+  Home,
+  Award,
+  Heart,
+  Eye,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { FeaturedPropertiesSlider } from "@/components/FeaturedPropertiesSlider";
+import { HeroSearchBar } from "@/components/HeroSearchBar";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
+import Link from "next/link";
+import Image from "next/image";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+⋮----
+import { useIsClient } from "@/hooks/use-is-client";
+import { PropertyService } from "@/services/properties";
+import type { Property } from "@/lib/supabase";
+⋮----
+const loadFeaturedProperties = async () =>
+⋮----
+const formatPrice = (price: number, currency: string) =>
+⋮----
+const getPropertyTypeLabel = (type: string) =>
+⋮----
+const handlePropertyInterest = (property: Property) =>
 </file>
 
 </files>
