@@ -27,6 +27,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header"
 import Footer from "@/components/Footer";
+import Hero from "@/components/Hero"
 
 interface Agent {
   id: number;
@@ -214,43 +215,14 @@ export default function AgentesPage() {
       {/* Header Premium */}
       <Header />
 
-      {/* Hero Section - PREMIUM DESIGN */}
-      <section className="relative section-premium overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <Image
-            src="/assets/hero/agentsc.png"
-            alt="Agentes - Marconi Inmobiliaria"
-            fill
-            className="object-cover object-top scale-90"
-            priority
-          />
-          {/* Premium overlay */}
-          <div className="absolute inset-0 bg-night-blue/50" />
-          {/* Orange fade overlay - Enhanced overlay for better text contrast */}
-          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/85 via-orange-500/50 to-transparent" />
-        </div>
-
-        <div className="container-premium relative z-10 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h1 className="hero-title mb-element-spacing text-white">
-              NUESTROS <span className="text-orange-400">AGENTES</span>
-            </h1>
-            <div className="element-spacing max-w-4xl mx-auto">
-              <div className="bg-black/30 backdrop-blur-sm rounded-2xl px-8 py-6 border border-white/10">
-                <p className="body-text text-white text-center font-medium">
-                  Conocé al equipo de profesionales inmobiliarios que te acompañará
-                  en cada paso para encontrar tu próxima propiedad en Reconquista
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      <Hero
+        backgroundImage="/assets/hero/agentsc.png"
+        alt="Agentes - Marconi Inmobiliaria"
+        title={<>NUESTROS <span className="text-orange-400">AGENTES</span></>}
+        description="Conocé al equipo de profesionales inmobiliarios que te acompañará en cada paso para encontrar tu próxima propiedad en Reconquista"
+        withAnimation={true}
+        imageClassName="object-cover object-top scale-90"
+      />
 
       {/* Team Section - PREMIUM DESIGN */}
       <section className="section-premium bg-premium-main">

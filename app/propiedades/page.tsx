@@ -14,6 +14,7 @@ import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import PropertyCard from "@/components/PropertyCard"
+import Hero from "@/components/Hero"
 import { getOptimizedImageUrl } from "@/lib/cloudinary"
 import { PropertyService } from "@/services/properties"
 import type { Property as PropertyType } from "@/lib/supabase"
@@ -266,207 +267,179 @@ export default function PropiedadesPage() {
       {/* Header Premium */}
       <Header />
 
-      {/* Hero Section - PREMIUM DESIGN */}
-      <section className="relative section-premium overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <Image
-            src="/assets/hero/casa_llaves.png"
-            alt="Casa con llaves - Marconi Inmobiliaria"
-            fill
-            className="object-cover"
-            priority
-          />
-          {/* Premium overlay */}
-          <div className="absolute inset-0 bg-night-blue/50" />
-          {/* Orange fade overlay - imported effect - Enhanced overlay for better text contrast */}
-          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/85 via-orange-500/50 to-transparent" />
-        </div>
-
-        <div className="container-premium relative z-10">
-          {/* Page Title - PREMIUM TYPOGRAPHY */}
-          <div className="text-center component-spacing">
-            <h1 className="hero-title mb-element-spacing">
-              NUESTRAS PROPIEDADES
-            </h1>
-            <div className="element-spacing max-w-4xl mx-auto">
-              <div className="bg-black/30 backdrop-blur-sm rounded-2xl px-8 py-6 border border-white/10">
-                <p className="body-text text-white text-center font-medium">
-                  Descubrí las mejores propiedades cuidadosamente seleccionadas por nuestro equipo
-                  y encontrá tu propiedad ideal con nuestro acompañamiento profesional.
-                </p>
-              </div>
+      <Hero
+        backgroundImage="/assets/hero/casa_llaves.png"
+        alt="Casa con llaves - Marconi Inmobiliaria"
+        title="NUESTRAS PROPIEDADES"
+        description="Descubrí las mejores propiedades cuidadosamente seleccionadas por nuestro equipo y encontrá tu propiedad ideal con nuestro acompañamiento profesional."
+        showCounter={true}
+        counterText="propiedades disponibles"
+        counterValue={filteredProperties.length}
+      >
+        {/* Filters - Simplified Premium Design */}
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-premium-card backdrop-blur-md rounded-2xl p-8 border border-support-gray/20 shadow-xl">
+            <div className="flex items-center element-spacing">
+              <Filter className="w-5 h-5 text-vibrant-orange mr-3" />
+              <h2 className="component-title">Filtros de búsqueda</h2>
             </div>
-            <div className="secondary-text text-center">
-              <p>{filteredProperties.length} propiedades disponibles</p>
-            </div>
-          </div>
 
-          {/* Filters - Simplified Premium Design */}
-          <div className="max-w-7xl mx-auto">
-            <div className="bg-premium-card backdrop-blur-md rounded-2xl p-8 border border-support-gray/20 shadow-xl">
-              <div className="flex items-center element-spacing">
-                <Filter className="w-5 h-5 text-vibrant-orange mr-3" />
-                <h2 className="component-title">Filtros de búsqueda</h2>
-              </div>
-
-              {/* Primary Filters - Most Important */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 element-spacing">
-                {/* Search - Full width on mobile */}
-                <div className="md:col-span-2">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-support-gray w-4 h-4" />
-                    <Input
-                      placeholder="Buscar por título, dirección o barrio..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray focus:border-vibrant-orange backdrop-blur-sm rounded-xl py-3 focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300 h-12"
-                    />
-                  </div>
+            {/* Primary Filters - Most Important */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 element-spacing">
+              {/* Search - Full width on mobile */}
+              <div className="md:col-span-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-support-gray w-4 h-4" />
+                  <Input
+                    placeholder="Buscar por título, dirección o barrio..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray focus:border-vibrant-orange backdrop-blur-sm rounded-xl py-3 focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300 h-12"
+                  />
                 </div>
+              </div>
 
-                {/* Operation */}
-                <Select value={operationFilter} onValueChange={setOperationFilter}>
-                  <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white backdrop-blur-sm rounded-xl px-4 py-3 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300 h-12">
-                    <SelectValue placeholder="Operación" />
+              {/* Operation */}
+              <Select value={operationFilter} onValueChange={setOperationFilter}>
+                <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white backdrop-blur-sm rounded-xl px-4 py-3 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300 h-12">
+                  <SelectValue placeholder="Operación" />
+                </SelectTrigger>
+                <SelectContent className="bg-night-blue border-support-gray/30">
+                  <SelectItem value="all">Alquiler/Venta</SelectItem>
+                  <SelectItem value="sale">Venta</SelectItem>
+                  <SelectItem value="rent">Alquiler</SelectItem>
+                </SelectContent>
+              </Select>
+
+              {/* Type */}
+              <Select value={typeFilter} onValueChange={setTypeFilter}>
+                <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white backdrop-blur-sm rounded-xl px-4 py-3 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300 h-12">
+                  <SelectValue placeholder="Tipo" />
+                </SelectTrigger>
+                <SelectContent className="bg-night-blue border-support-gray/30">
+                  <SelectItem value="all">Tipo de propiedad</SelectItem>
+                  <SelectItem value="house">Casa</SelectItem>
+                  <SelectItem value="apartment">Departamento</SelectItem>
+                  <SelectItem value="terreno">Terreno</SelectItem>
+                  <SelectItem value="commercial">Comercial</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Secondary Filters - Organized in logical groups */}
+            <div className="space-y-4">
+              {/* Price and Area */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                  <label className="secondary-text block mb-2">Precio mínimo</label>
+                  <Input
+                    placeholder="Ej: 50000"
+                    value={minPrice}
+                    onChange={(e) => setMinPrice(e.target.value)}
+                    className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
+                  />
+                </div>
+                <div>
+                  <label className="secondary-text block mb-2">Precio máximo</label>
+                  <Input
+                    placeholder="Ej: 200000"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
+                  />
+                </div>
+                <div>
+                  <label className="secondary-text block mb-2">Metros² mínimos</label>
+                  <Input
+                    placeholder="Ej: 50"
+                    value={minArea}
+                    onChange={(e) => setMinArea(e.target.value)}
+                    className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
+                  />
+                </div>
+                <div>
+                  <label className="secondary-text block mb-2">Metros² máximos</label>
+                  <Input
+                    placeholder="Ej: 200"
+                    value={maxArea}
+                    onChange={(e) => setMaxArea(e.target.value)}
+                    className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
+                  />
+                </div>
+              </div>
+
+              {/* Features and Sort */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* Neighborhood */}
+                <Select value={neighborhoodFilter} onValueChange={setNeighborhoodFilter}>
+                  <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
+                    <SelectValue placeholder="Barrio" />
                   </SelectTrigger>
                   <SelectContent className="bg-night-blue border-support-gray/30">
-                    <SelectItem value="all">Alquiler/Venta</SelectItem>
-                    <SelectItem value="sale">Venta</SelectItem>
-                    <SelectItem value="rent">Alquiler</SelectItem>
+                    <SelectItem value="all">Todos los barrios</SelectItem>
+                    {uniqueNeighborhoods.map((neighborhood) => (
+                      <SelectItem key={neighborhood} value={neighborhood}>
+                        {neighborhood}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
 
-                {/* Type */}
-                <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white backdrop-blur-sm rounded-xl px-4 py-3 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300 h-12">
-                    <SelectValue placeholder="Tipo" />
+                {/* Bedrooms */}
+                <Select value={bedroomsFilter} onValueChange={setBedroomsFilter}>
+                  <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
+                    <SelectValue placeholder="Dormitorios" />
                   </SelectTrigger>
                   <SelectContent className="bg-night-blue border-support-gray/30">
-                    <SelectItem value="all">Tipo de propiedad</SelectItem>
-                    <SelectItem value="house">Casa</SelectItem>
-                    <SelectItem value="apartment">Departamento</SelectItem>
-                    <SelectItem value="terreno">Terreno</SelectItem>
-                    <SelectItem value="commercial">Comercial</SelectItem>
+                    <SelectItem value="all">Cualquier cantidad</SelectItem>
+                    <SelectItem value="1">1+ dormitorio</SelectItem>
+                    <SelectItem value="2">2+ dormitorios</SelectItem>
+                    <SelectItem value="3">3+ dormitorios</SelectItem>
+                    <SelectItem value="4">4+ dormitorios</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Bathrooms */}
+                <Select value={bathroomsFilter} onValueChange={setBathroomsFilter}>
+                  <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
+                    <SelectValue placeholder="Baños" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-night-blue border-support-gray/30">
+                    <SelectItem value="all">Cualquier cantidad</SelectItem>
+                    <SelectItem value="1">1+ baño</SelectItem>
+                    <SelectItem value="2">2+ baños</SelectItem>
+                    <SelectItem value="3">3+ baños</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Sort */}
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
+                    <SelectValue placeholder="Ordenar por" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-night-blue border-support-gray/30">
+                    <SelectItem value="newest">Más recientes</SelectItem>
+                    <SelectItem value="price-low">Precio: menor a mayor</SelectItem>
+                    <SelectItem value="price-high">Precio: mayor a menor</SelectItem>
+                    <SelectItem value="views">Más populares</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              {/* Secondary Filters - Organized in logical groups */}
-              <div className="space-y-4">
-                {/* Price and Area */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div>
-                    <label className="secondary-text block mb-2">Precio mínimo</label>
-                    <Input
-                      placeholder="Ej: 50000"
-                      value={minPrice}
-                      onChange={(e) => setMinPrice(e.target.value)}
-                      className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
-                    />
-                  </div>
-                  <div>
-                    <label className="secondary-text block mb-2">Precio máximo</label>
-                    <Input
-                      placeholder="Ej: 200000"
-                      value={maxPrice}
-                      onChange={(e) => setMaxPrice(e.target.value)}
-                      className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
-                    />
-                  </div>
-                  <div>
-                    <label className="secondary-text block mb-2">Metros² mínimos</label>
-                    <Input
-                      placeholder="Ej: 50"
-                      value={minArea}
-                      onChange={(e) => setMinArea(e.target.value)}
-                      className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
-                    />
-                  </div>
-                  <div>
-                    <label className="secondary-text block mb-2">Metros² máximos</label>
-                    <Input
-                      placeholder="Ej: 200"
-                      value={maxArea}
-                      onChange={(e) => setMaxArea(e.target.value)}
-                      className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
-                    />
-                  </div>
-                </div>
-
-                {/* Features and Sort */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  {/* Neighborhood */}
-                  <Select value={neighborhoodFilter} onValueChange={setNeighborhoodFilter}>
-                    <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
-                      <SelectValue placeholder="Barrio" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-night-blue border-support-gray/30">
-                      <SelectItem value="all">Todos los barrios</SelectItem>
-                      {uniqueNeighborhoods.map((neighborhood) => (
-                        <SelectItem key={neighborhood} value={neighborhood}>
-                          {neighborhood}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  {/* Bedrooms */}
-                  <Select value={bedroomsFilter} onValueChange={setBedroomsFilter}>
-                    <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
-                      <SelectValue placeholder="Dormitorios" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-night-blue border-support-gray/30">
-                      <SelectItem value="all">Cualquier cantidad</SelectItem>
-                      <SelectItem value="1">1+ dormitorio</SelectItem>
-                      <SelectItem value="2">2+ dormitorios</SelectItem>
-                      <SelectItem value="3">3+ dormitorios</SelectItem>
-                      <SelectItem value="4">4+ dormitorios</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Bathrooms */}
-                  <Select value={bathroomsFilter} onValueChange={setBathroomsFilter}>
-                    <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
-                      <SelectValue placeholder="Baños" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-night-blue border-support-gray/30">
-                      <SelectItem value="all">Cualquier cantidad</SelectItem>
-                      <SelectItem value="1">1+ baño</SelectItem>
-                      <SelectItem value="2">2+ baños</SelectItem>
-                      <SelectItem value="3">3+ baños</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  {/* Sort */}
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-12 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
-                      <SelectValue placeholder="Ordenar por" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-night-blue border-support-gray/30">
-                      <SelectItem value="newest">Más recientes</SelectItem>
-                      <SelectItem value="price-low">Precio: menor a mayor</SelectItem>
-                      <SelectItem value="price-high">Precio: mayor a menor</SelectItem>
-                      <SelectItem value="views">Más populares</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Clear Filters Button */}
-                <div className="flex justify-center pt-4">
-                  <Button
-                    onClick={clearFilters}
-                    variant="outline"
-                    className="hover:bg-vibrant-orange hover:text-bone-white hover:border-vibrant-orange transition-all duration-300 rounded-xl px-6 py-3 font-medium"
-                  >
-                    Limpiar todos los filtros
-                  </Button>
-                </div>
+              {/* Clear Filters Button */}
+              <div className="flex justify-center pt-4">
+                <Button
+                  onClick={clearFilters}
+                  variant="outline"
+                  className="hover:bg-vibrant-orange hover:text-bone-white hover:border-vibrant-orange transition-all duration-300 rounded-xl px-6 py-3 font-medium"
+                >
+                  Limpiar todos los filtros
+                </Button>
               </div>
             </div>
           </div>
         </div>
-      </section>
+      </Hero>
 
       {/* Results - PREMIUM DESIGN */}
       <section className="section-spacing bg-premium-main">
