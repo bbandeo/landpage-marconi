@@ -32,7 +32,7 @@ export default function Hero({
   const ContentWrapper = withAnimation ? motion.div : 'div'
 
   return (
-    <section className="relative section-premium overflow-hidden">
+    <section className="relative min-h-screen section-premium overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
@@ -48,7 +48,7 @@ export default function Hero({
         <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/85 via-orange-500/50 to-transparent" />
       </div>
 
-      <div className="container-premium relative z-10">
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10">
         {/* Page Title - PREMIUM TYPOGRAPHY */}
         <ContentWrapper
           {...(withAnimation && {
@@ -56,12 +56,12 @@ export default function Hero({
             animate: { opacity: 1, y: 0 },
             transition: { duration: 0.8 }
           })}
-          className="text-center component-spacing"
+          className="text-center py-16 md:py-24"
         >
-          <h1 className="hero-title mb-element-spacing text-white">
+          <h1 className="hero-title mb-8 text-white">
             {title}
           </h1>
-          <div className="element-spacing max-w-4xl mx-auto">
+          <div className="mb-6 max-w-4xl mx-auto">
             <div className="bg-black/30 backdrop-blur-sm rounded-2xl px-8 py-6 border border-white/10">
               <p className="body-text text-white text-center font-medium">
                 {description}
@@ -69,8 +69,8 @@ export default function Hero({
             </div>
           </div>
           {showCounter && counterValue !== undefined && (
-            <div className="secondary-text text-center">
-              <p>{counterValue} {counterText}</p>
+            <div className="secondary-text text-center mb-8">
+              <p className="text-white/80">{counterValue} {counterText}</p>
             </div>
           )}
         </ContentWrapper>
