@@ -378,46 +378,48 @@ export default function PropiedadesPage() {
                 </div>
 
                 {/* Features and Location */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
                   {/* Neighborhood */}
-                  <Select value={neighborhoodFilter} onValueChange={setNeighborhoodFilter}>
-                    <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
-                      <SelectValue placeholder="Barrio" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-night-blue border-support-gray/30">
-                      <SelectItem value="all">Todos los barrios</SelectItem>
-                      {uniqueNeighborhoods.map((neighborhood) => (
-                        <SelectItem key={neighborhood} value={neighborhood}>
-                          {neighborhood}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="col-span-2">
+                    <Select value={neighborhoodFilter} onValueChange={setNeighborhoodFilter}>
+                      <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
+                        <SelectValue placeholder="Barrio" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-night-blue border-support-gray/30">
+                        <SelectItem value="all">Todos los barrios</SelectItem>
+                        {uniqueNeighborhoods.map((neighborhood) => (
+                          <SelectItem key={neighborhood} value={neighborhood}>
+                            {neighborhood}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
 
-                  {/* Bedrooms */}
+                  {/* Bedrooms - Compact */}
                   <Select value={bedroomsFilter} onValueChange={setBedroomsFilter}>
                     <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
-                      <SelectValue placeholder="Dormitorios" />
+                      <SelectValue placeholder="Hab." />
                     </SelectTrigger>
                     <SelectContent className="bg-night-blue border-support-gray/30">
-                      <SelectItem value="all">Cualquier cantidad</SelectItem>
-                      <SelectItem value="1">1+ dormitorio</SelectItem>
-                      <SelectItem value="2">2+ dormitorios</SelectItem>
-                      <SelectItem value="3">3+ dormitorios</SelectItem>
-                      <SelectItem value="4">4+ dormitorios</SelectItem>
+                      <SelectItem value="all">Todas</SelectItem>
+                      <SelectItem value="1">1+</SelectItem>
+                      <SelectItem value="2">2+</SelectItem>
+                      <SelectItem value="3">3+</SelectItem>
+                      <SelectItem value="4">4+</SelectItem>
                     </SelectContent>
                   </Select>
 
-                  {/* Bathrooms */}
+                  {/* Bathrooms - Compact */}
                   <Select value={bathroomsFilter} onValueChange={setBathroomsFilter}>
                     <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
                       <SelectValue placeholder="Baños" />
                     </SelectTrigger>
                     <SelectContent className="bg-night-blue border-support-gray/30">
-                      <SelectItem value="all">Cualquier cantidad</SelectItem>
-                      <SelectItem value="1">1+ baño</SelectItem>
-                      <SelectItem value="2">2+ baños</SelectItem>
-                      <SelectItem value="3">3+ baños</SelectItem>
+                      <SelectItem value="all">Todos</SelectItem>
+                      <SelectItem value="1">1+</SelectItem>
+                      <SelectItem value="2">2+</SelectItem>
+                      <SelectItem value="3">3+</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -433,10 +435,21 @@ export default function PropiedadesPage() {
                       <SelectItem value="views">Más populares</SelectItem>
                     </SelectContent>
                   </Select>
+
+                  {/* Collapse Button - Moved to end */}
+                  <Button
+                    onClick={() => setShowAdvancedFilters(false)}
+                    variant="outline"
+                    className="bg-night-blue/60 border-support-gray/30 text-bone-white hover:bg-vibrant-orange hover:border-vibrant-orange hover:text-white transition-all duration-300 rounded-xl px-3 py-2 flex items-center gap-2 h-11"
+                  >
+                    <Filter className="w-4 h-4" />
+                    Menos filtros
+                    <ChevronUp className="w-4 h-4" />
+                  </Button>
                 </div>
 
-                {/* Clear Filters Button */}
-                <div className="flex justify-center pt-2">
+                {/* Clear Filters Button - Below the grid */}
+                <div className="flex justify-center pt-4">
                   <Button
                     onClick={clearFilters}
                     variant="outline"
