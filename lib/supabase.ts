@@ -46,6 +46,8 @@ export interface Database {
           neighborhood: string | null
           city: string
           province: string
+          latitude: number | null
+          longitude: number | null
           images: string[]
           features: string[]
           featured: boolean
@@ -69,6 +71,8 @@ export interface Database {
           neighborhood?: string | null
           city?: string
           province?: string
+          latitude?: number | null
+          longitude?: number | null
           images?: string[]
           features?: string[]
           featured?: boolean
@@ -92,6 +96,8 @@ export interface Database {
           neighborhood?: string | null
           city?: string
           province?: string
+          latitude?: number | null
+          longitude?: number | null
           images?: string[]
           features?: string[]
           featured?: boolean

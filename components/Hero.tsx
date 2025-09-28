@@ -45,7 +45,7 @@ export default function Hero({
         {/* Premium overlay */}
         <div className="absolute inset-0 bg-night-blue/50" />
         {/* Orange fade overlay - imported effect - Enhanced overlay for better text contrast */}
-        <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-vibrant-orange/85 via-vibrant-orange/50 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/60 via-orange-500/30 to-transparent" />
       </div>
 
       <div className="container mx-auto px-4 md:px-6 lg:px-8 relative z-10">
