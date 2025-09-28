@@ -126,16 +126,16 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
                 viewport={{ once: true }}
                 className="h-full"
               >
-                <Card className="group overflow-hidden bg-[#12141f] border border-gray-700/20 backdrop-blur-sm hover:border-orange-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-orange-500/20 hover:scale-[1.02] cursor-pointer h-full rounded-2xl">
+                <Card className="group overflow-hidden bg-[#12141f] border border-gray-700/20 backdrop-blur-sm hover:border-orange-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/30 hover:scale-[1.02] cursor-pointer h-full rounded-2xl">
                   {/* IMAGEN CON OVERLAYS ESTRATÉGICOS */}
                   <Link href={`/propiedades/${property.id}`}>
-                    <div className="relative overflow-hidden h-64 md:h-72">
+                    <div className="relative overflow-hidden h-56">
                       {property.images && property.images.length > 0 ? (
                         <Image
                           src={property.images[0]}
                           alt={property.title}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-700"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.src = "/placeholder.svg";
@@ -152,7 +152,7 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
 
                       {/* Gradiente inferior para destacar precio */}
                       <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                      
+
                       {/* PILL BADGE - VENTA/ALQUILER CON GRADIENTE */}
                       <div className="absolute top-4 left-4">
                         <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transition-shadow duration-300 backdrop-blur-sm">
@@ -160,14 +160,14 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
                         </div>
                       </div>
 
-                      {/* PRECIO EN OVERLAY - BADGE NARANJA */}
+                      {/* PRECIO EN OVERLAY - BADGE PREMIUM CON GRADIENTE Y BORDE */}
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="absolute bottom-4 right-4 text-right"
+                        className="absolute bottom-3 right-3 text-right"
                       >
-                        <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-sm font-bold">
+                        <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md border border-white/20">
                           {property.currency}$ {property.price.toLocaleString()}
                         </div>
                       </motion.div>
@@ -178,41 +178,35 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
                   <CardContent className="p-4 flex-1">
                     <Link href={`/propiedades/${property.id}`}>
                       <div className="space-y-3">
-                        {/* TÍTULO CON JERARQUÍA CLARA */}
-                        <div className="flex justify-between items-center">
-                          <h3 className="text-lg font-semibold text-white hover:text-orange-400 transition-colors cursor-pointer line-clamp-1 leading-tight">
-                            {property.title}
-                          </h3>
-                          <span className="px-3 py-1 rounded-full bg-orange-500 text-white text-sm font-bold">
-                            {property.currency}$ {property.price.toLocaleString()}
-                          </span>
-                        </div>
+                        {/* TÍTULO CON JERARQUÍA CLARA - MEJORADO */}
+                        <h3 className="text-lg font-bold text-gray-100 hover:text-orange-400 transition-colors cursor-pointer line-clamp-1 leading-tight">
+                          {property.title}
+                        </h3>
 
-                        {/* UBICACIÓN - GRIS CLARO LEGIBLE */}
+                        {/* UBICACIÓN - GRIS MEJORADO PARA LEGIBILIDAD */}
                         <div className="flex items-center text-gray-400 text-sm">
-                          <MapPin size={16} className="mr-2" />
-                          {property.neighborhood}, Reconquista
+                          <MapPin size={16} className="mr-2 flex-shrink-0" />
+                          <span className="truncate">{property.neighborhood}, Reconquista</span>
                         </div>
 
-
-                        {/* CARACTERÍSTICAS SI ESTÁN DISPONIBLES */}
+                        {/* CARACTERÍSTICAS SI ESTÁN DISPONIBLES - ICONOS MEJORADOS */}
                         {(property.bedrooms || property.bathrooms || property.area_m2) && (
                           <div className="flex gap-4 text-gray-300 text-sm">
                             {property.bedrooms && (
                               <span className="flex items-center gap-1">
-                                <Home size={16} />
+                                <span>🛏</span>
                                 {property.bedrooms}
                               </span>
                             )}
                             {property.bathrooms && (
                               <span className="flex items-center gap-1">
-                                <Bath size={16} />
+                                <span>🛁</span>
                                 {property.bathrooms}
                               </span>
                             )}
                             {property.area_m2 && (
                               <span className="flex items-center gap-1">
-                                <Square size={16} />
+                                <span>📐</span>
                                 {property.area_m2} m²
                               </span>
                             )}
