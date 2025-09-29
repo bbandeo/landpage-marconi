@@ -282,123 +282,153 @@ function ChannelPerformanceWidget({ period, loading }: ChannelPerformanceProps) 
   return (
     <div className="space-y-4">
       {/* Summary Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-lg bg-surface-darker/20 border border-border-subtle">
-        <div className="text-center">
-          <div className="text-kpi-number-small text-chart-primary">{totals.leads}</div>
-          <div className="text-xs text-subtle-gray">Total Leads</div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 rounded-xl bg-gradient-to-r from-surface-darker/40 to-surface-darker/20 border border-border-subtle/70 backdrop-blur-sm">
+        <div className="text-center space-y-2">
+          <div className="text-2xl font-bold text-chart-primary tracking-tight">{totals.leads}</div>
+          <div className="text-sm font-medium text-subtle-gray">Total Leads</div>
         </div>
-        <div className="text-center">
-          <div className="text-kpi-number-small text-chart-secondary">
+        <div className="text-center space-y-2">
+          <div className="text-2xl font-bold text-chart-secondary tracking-tight">
             {new Intl.NumberFormat('es-AR', {
               style: 'currency',
               currency: 'ARS',
-              minimumFractionDigits: 0
+              minimumFractionDigits: 0,
+              notation: 'compact'
             }).format(totals.cost)}
           </div>
-          <div className="text-xs text-subtle-gray">Inversión Total</div>
+          <div className="text-sm font-medium text-subtle-gray">Inversión Total</div>
         </div>
-        <div className="text-center">
-          <div className="text-kpi-number-small text-chart-success">{Math.round(totals.avgROI)}%</div>
-          <div className="text-xs text-subtle-gray">ROI Promedio</div>
+        <div className="text-center space-y-2">
+          <div className="text-2xl font-bold text-chart-success tracking-tight">{Math.round(totals.avgROI)}%</div>
+          <div className="text-sm font-medium text-subtle-gray">ROI Promedio</div>
         </div>
       </div>
 
       {/* Channels List */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {channelsData
           .sort((a, b) => b.roi - a.roi) // Ordenar por ROI descendente
           .map((channel) => (
             <div
               key={channel.id}
-              className="flex items-center gap-4 p-4 rounded-lg bg-surface-darker/30 hover:bg-surface-darker/50 transition-colors border border-border-subtle/50"
+              className="group relative p-5 rounded-xl bg-gradient-to-r from-surface-darker/40 to-surface-darker/20 hover:from-surface-darker/60 hover:to-surface-darker/40 transition-all duration-300 border border-border-subtle/50 hover:border-border-subtle backdrop-blur-sm"
             >
-              {/* Channel Icon & Name */}
-              <div className="flex items-center gap-3 flex-1 min-w-0">
-                <div
-                  className="w-10 h-10 rounded-lg flex items-center justify-center"
-                  style={{ backgroundColor: `${channel.color}20` }}
-                >
-                  <channel.icon className="w-5 h-5" style={{ color: channel.color }} />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-medium text-white text-sm truncate">{channel.name}</h4>
-                    <div className="flex items-center gap-1">
-                      {channel.status === 'active' && (
-                        <Play className="w-3 h-3 text-chart-success" />
-                      )}
-                      {channel.status === 'paused' && (
-                        <Pause className="w-3 h-3 text-chart-warning" />
-                      )}
-                      {channel.status === 'testing' && (
-                        <TestTube className="w-3 h-3 text-chart-info" />
-                      )}
+              {/* Status Indicator Bar */}
+              <div
+                className="absolute top-0 left-0 w-full h-1 rounded-t-xl"
+                style={{ backgroundColor: channel.color }}
+              />
+
+              <div className="flex items-center justify-between">
+                {/* Channel Icon & Name */}
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                    style={{ backgroundColor: `${channel.color}15`, border: `1px solid ${channel.color}30` }}
+                  >
+                    <channel.icon className="w-6 h-6" style={{ color: channel.color }} />
+                  </div>
+
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <div className="flex items-center gap-3">
+                      <h4 className="font-semibold text-bone-white text-base truncate">{channel.name}</h4>
+                      <div className="flex items-center gap-1">
+                        {channel.status === 'active' && (
+                          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-chart-success/20 border border-chart-success/30">
+                            <Play className="w-3 h-3 text-chart-success" />
+                            <span className="text-xs font-medium text-chart-success">Activo</span>
+                          </div>
+                        )}
+                        {channel.status === 'paused' && (
+                          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-chart-warning/20 border border-chart-warning/30">
+                            <Pause className="w-3 h-3 text-chart-warning" />
+                            <span className="text-xs font-medium text-chart-warning">Pausado</span>
+                          </div>
+                        )}
+                        {channel.status === 'testing' && (
+                          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-chart-info/20 border border-chart-info/30">
+                            <TestTube className="w-3 h-3 text-chart-info" />
+                            <span className="text-xs font-medium text-chart-info">Prueba</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-6 text-sm text-subtle-gray">
+                      <span className="font-medium">{channel.leads} leads</span>
+                      <span>{channel.conversionRate}% conversión</span>
+                      <span className="hidden md:inline">CPL: {new Intl.NumberFormat('es-AR', {
+                        style: 'currency',
+                        currency: 'ARS',
+                        minimumFractionDigits: 0,
+                        notation: 'compact'
+                      }).format(channel.cpl)}</span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-subtle-gray">
-                    <span>{channel.leads} leads</span>
-                    <span>{channel.conversionRate}% conversión</span>
-                    <span>CPL: {new Intl.NumberFormat('es-AR', {
-                      style: 'currency',
-                      currency: 'ARS',
-                      minimumFractionDigits: 0
-                    }).format(channel.cpl)}</span>
-                  </div>
                 </div>
-              </div>
 
-              {/* Performance Metrics */}
-              <div className="hidden sm:flex items-center gap-6 text-right">
-                <div>
-                  <div className="text-sm font-semibold text-bone-white">
-                    {new Intl.NumberFormat('es-AR', {
-                      style: 'currency',
-                      currency: 'ARS',
-                      minimumFractionDigits: 0
-                    }).format(channel.cost)}
-                  </div>
-                  <div className="text-xs text-subtle-gray">Inversión</div>
-                </div>
-                <div>
-                  <div className={`text-sm font-semibold ${
-                    channel.roi >= 200 ? 'text-chart-success' :
-                    channel.roi >= 150 ? 'text-chart-warning' : 'text-chart-error'
-                  }`}>
-                    {channel.roi}%
-                  </div>
-                  <div className="text-xs text-subtle-gray">ROI</div>
-                </div>
-              </div>
+                {/* Performance Metrics */}
+                <div className="flex items-center gap-8">
+                  <div className="hidden lg:flex items-center gap-6 text-right">
+                    <div className="space-y-1">
+                      <div className="text-base font-bold text-bone-white">
+                        {new Intl.NumberFormat('es-AR', {
+                          style: 'currency',
+                          currency: 'ARS',
+                          minimumFractionDigits: 0,
+                          notation: 'compact'
+                        }).format(channel.cost)}
+                      </div>
+                      <div className="text-sm text-subtle-gray">Inversión</div>
+                    </div>
 
-              {/* Trend Indicator */}
-              <div className="flex items-center gap-1">
-                <div className={`text-sm font-medium ${
-                  channel.trend > 0 ? 'text-chart-success' : 'text-chart-error'
-                }`}>
-                  {channel.trend > 0 ? (
-                    <ArrowUpRight className="w-4 h-4" />
-                  ) : (
-                    <ArrowDownRight className="w-4 h-4" />
-                  )}
+                    <div className="space-y-1">
+                      <div className={`text-xl font-bold ${
+                        channel.roi >= 300 ? 'text-chart-success' :
+                        channel.roi >= 200 ? 'text-chart-info' :
+                        channel.roi >= 150 ? 'text-chart-warning' : 'text-chart-error'
+                      }`}>
+                        {channel.roi}%
+                      </div>
+                      <div className="text-sm text-subtle-gray">ROI</div>
+                    </div>
+                  </div>
+
+                  {/* Trend Indicator */}
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-darker/40">
+                    <div className={`${
+                      channel.trend > 0 ? 'text-chart-success' : 'text-chart-error'
+                    }`}>
+                      {channel.trend > 0 ? (
+                        <ArrowUpRight className="w-5 h-5" />
+                      ) : (
+                        <ArrowDownRight className="w-5 h-5" />
+                      )}
+                    </div>
+                    <span className={`text-sm font-semibold ${
+                      channel.trend > 0 ? 'text-chart-success' : 'text-chart-error'
+                    }`}>
+                      {Math.abs(channel.trend)}%
+                    </span>
+                  </div>
                 </div>
-                <span className={`text-xs ${
-                  channel.trend > 0 ? 'text-chart-success' : 'text-chart-error'
-                }`}>
-                  {Math.abs(channel.trend)}%
-                </span>
               </div>
             </div>
           ))}
       </div>
 
       {/* Performance Insights */}
-      <div className="mt-4 p-3 rounded-lg bg-chart-success/10 border border-chart-success/20">
-        <div className="flex items-start gap-2">
-          <TrendingUp className="w-4 h-4 text-chart-success mt-0.5" />
-          <div className="text-sm">
-            <div className="font-medium text-chart-success">Insight de Rendimiento</div>
-            <div className="text-subtle-gray text-xs mt-1">
-              WhatsApp tiene el mejor ROI (320%) y menor CPL. Considera aumentar inversión en este canal.
+      <div className="mt-6 p-5 rounded-xl bg-gradient-to-r from-chart-success/10 to-chart-info/10 border border-chart-success/30 backdrop-blur-sm">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-lg bg-chart-success/20 flex items-center justify-center">
+            <TrendingUp className="w-5 h-5 text-chart-success" />
+          </div>
+          <div className="space-y-2">
+            <div className="font-semibold text-chart-success text-base">💡 Insight de Rendimiento</div>
+            <div className="text-bone-white text-sm leading-relaxed">
+              <strong>WhatsApp</strong> lidera con <span className="text-chart-success font-semibold">320% ROI</span> y el menor CPL (${new Intl.NumberFormat('es-AR', { minimumFractionDigits: 0 }).format(156)}).
+              <br />
+              <span className="text-chart-info">Recomendación:</span> Aumentar presupuesto en WhatsApp y Email Marketing para maximizar el retorno.
             </div>
           </div>
         </div>
@@ -577,96 +607,110 @@ function CampaignROIWidget({ period, loading }: CampaignROIProps) {
   return (
     <div className="space-y-4">
       {/* Summary Metrics */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-lg bg-surface-darker/20 border border-border-subtle">
-        <div className="text-center">
-          <div className="text-sm font-semibold text-chart-primary">{totalLeads}</div>
-          <div className="text-xs text-subtle-gray">Total Leads</div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-5 rounded-xl bg-gradient-to-br from-surface-darker/40 to-surface-darker/20 border border-border-subtle/70 backdrop-blur-sm">
+        <div className="text-center space-y-1">
+          <div className="text-xl font-bold text-chart-primary tracking-tight">{totalLeads}</div>
+          <div className="text-sm font-medium text-subtle-gray">Total Leads</div>
         </div>
-        <div className="text-center">
-          <div className="text-sm font-semibold text-chart-secondary">
+        <div className="text-center space-y-1">
+          <div className="text-xl font-bold text-chart-secondary tracking-tight">
             {Math.round(avgROI)}%
           </div>
-          <div className="text-xs text-subtle-gray">ROI Promedio</div>
+          <div className="text-sm font-medium text-subtle-gray">ROI Promedio</div>
         </div>
-        <div className="text-center">
-          <div className="text-sm font-semibold text-chart-tertiary">
+        <div className="text-center space-y-1">
+          <div className="text-xl font-bold text-chart-tertiary tracking-tight">
             {new Intl.NumberFormat('es-AR', {
               style: 'currency',
               currency: 'ARS',
-              minimumFractionDigits: 0
+              minimumFractionDigits: 0,
+              notation: 'compact'
             }).format(totalSpent)}
           </div>
-          <div className="text-xs text-subtle-gray">Gastado</div>
+          <div className="text-sm font-medium text-subtle-gray">Gastado</div>
         </div>
-        <div className="text-center">
-          <div className="text-sm font-semibold text-chart-success">
+        <div className="text-center space-y-1">
+          <div className="text-xl font-bold text-chart-success tracking-tight">
             {new Intl.NumberFormat('es-AR', {
               style: 'currency',
               currency: 'ARS',
-              minimumFractionDigits: 0
+              minimumFractionDigits: 0,
+              notation: 'compact'
             }).format(totalRevenue)}
           </div>
-          <div className="text-xs text-subtle-gray">Revenue</div>
+          <div className="text-sm font-medium text-subtle-gray">Revenue</div>
         </div>
       </div>
 
       {/* Campaigns List */}
-      <div className="space-y-2">
+      <div className="space-y-3">
         {campaignsData
           .sort((a, b) => b.roi - a.roi) // Ordenar por ROI descendente
           .map((campaign) => (
             <div
               key={campaign.id}
-              className="flex items-center justify-between p-3 rounded-lg bg-surface-darker/30 hover:bg-surface-darker/50 transition-colors border border-border-subtle/50"
+              className="group p-4 rounded-xl bg-gradient-to-r from-surface-darker/30 to-surface-darker/15 hover:from-surface-darker/50 hover:to-surface-darker/30 transition-all duration-300 border border-border-subtle/50 hover:border-border-subtle backdrop-blur-sm"
             >
-              {/* Campaign Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <h4 className="font-medium text-white text-sm truncate">{campaign.name}</h4>
-                  <div className="flex items-center gap-1">
-                    <div className={`w-2 h-2 rounded-full ${
-                      campaign.status === 'active' ? 'bg-chart-success' :
-                      campaign.status === 'paused' ? 'bg-chart-warning' :
-                      campaign.status === 'completed' ? 'bg-chart-info' : 'bg-subtle-gray'
-                    }`}></div>
-                    <span className={`text-xs capitalize ${getStatusColor(campaign.status)}`}>
-                      {campaign.status}
+              <div className="flex items-center justify-between">
+                {/* Campaign Info */}
+                <div className="flex-1 min-w-0 space-y-2">
+                  <div className="flex items-center gap-3">
+                    <h4 className="font-semibold text-bone-white text-base truncate">{campaign.name}</h4>
+                    <div className="flex items-center gap-1">
+                      <div className={`w-3 h-3 rounded-full ${
+                        campaign.status === 'active' ? 'bg-chart-success shadow-lg shadow-chart-success/30' :
+                        campaign.status === 'paused' ? 'bg-chart-warning shadow-lg shadow-chart-warning/30' :
+                        campaign.status === 'completed' ? 'bg-chart-info shadow-lg shadow-chart-info/30' : 'bg-subtle-gray'
+                      }`}></div>
+                      <span className={`text-sm font-medium capitalize ${getStatusColor(campaign.status)}`}>
+                        {campaign.status === 'active' ? 'Activa' :
+                         campaign.status === 'completed' ? 'Completada' :
+                         campaign.status === 'paused' ? 'Pausada' : campaign.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-6 text-sm text-subtle-gray">
+                    <span className="font-medium">{campaign.channel}</span>
+                    <span>{campaign.leads} leads</span>
+                    <span>{campaign.conversionRate}% conversión</span>
+                    <span className="hidden lg:inline font-mono text-xs">
+                      {campaign.utmSource}/{campaign.utmMedium}
                     </span>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 text-xs text-subtle-gray">
-                  <span>{campaign.channel}</span>
-                  <span>{campaign.leads} leads</span>
-                  <span className="hidden sm:inline">{campaign.conversionRate}% conv.</span>
-                  <span className="hidden md:inline">
-                    UTM: {campaign.utmSource}/{campaign.utmMedium}
-                  </span>
-                </div>
-              </div>
 
-              {/* Performance Metrics */}
-              <div className="flex items-center gap-4 text-right">
-                <div className="hidden sm:block">
-                  <div className="text-sm font-semibold text-bone-white">
-                    {new Intl.NumberFormat('es-AR', {
-                      style: 'currency',
-                      currency: 'ARS',
-                      minimumFractionDigits: 0
-                    }).format(campaign.spent)}
+                {/* Performance Metrics */}
+                <div className="flex items-center gap-6">
+                  <div className="hidden md:block text-right space-y-1">
+                    <div className="text-base font-bold text-bone-white">
+                      {new Intl.NumberFormat('es-AR', {
+                        style: 'currency',
+                        currency: 'ARS',
+                        minimumFractionDigits: 0,
+                        notation: 'compact'
+                      }).format(campaign.spent)}
+                    </div>
+                    <div className="text-sm text-subtle-gray">
+                      de {new Intl.NumberFormat('es-AR', {
+                        style: 'currency',
+                        currency: 'ARS',
+                        minimumFractionDigits: 0,
+                        notation: 'compact'
+                      }).format(campaign.budget)}
+                    </div>
                   </div>
-                  <div className="text-xs text-subtle-gray">
-                    de {new Intl.NumberFormat('es-AR', {
-                      style: 'currency',
-                      currency: 'ARS',
-                      minimumFractionDigits: 0
-                    }).format(campaign.budget)}
+
+                  <div className="text-right space-y-1">
+                    <div className={`text-xl font-bold ${
+                      campaign.performance === 'excellent' ? 'text-chart-success' :
+                      campaign.performance === 'good' ? 'text-chart-info' :
+                      campaign.performance === 'average' ? 'text-chart-warning' : 'text-chart-error'
+                    }`}>
+                      {campaign.roi}%
+                    </div>
+                    <div className="text-sm text-subtle-gray">ROI</div>
                   </div>
-                </div>
-                <div>
-                  <div className={`text-sm font-semibold ${getPerformanceColor(campaign.performance)}`}>
-                    {campaign.roi}%
-                  </div>
-                  <div className="text-xs text-subtle-gray">ROI</div>
                 </div>
               </div>
             </div>
@@ -847,94 +891,104 @@ function WebsiteAnalyticsWidget({ period, loading }: WebsiteAnalyticsProps) {
   return (
     <div className="space-y-4">
       {/* Key Metrics Summary */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-lg bg-surface-darker/20 border border-border-subtle">
-        <div className="text-center">
-          <div className="text-sm font-semibold text-chart-primary">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-5 rounded-xl bg-gradient-to-bl from-surface-darker/40 to-surface-darker/20 border border-border-subtle/70 backdrop-blur-sm">
+        <div className="text-center space-y-1">
+          <div className="text-xl font-bold text-chart-primary tracking-tight">
             {websiteData.overallMetrics.totalSessions.toLocaleString()}
           </div>
-          <div className="text-xs text-subtle-gray">Sesiones</div>
+          <div className="text-sm font-medium text-subtle-gray">Sesiones</div>
         </div>
-        <div className="text-center">
-          <div className="text-sm font-semibold text-chart-secondary">
+        <div className="text-center space-y-1">
+          <div className="text-xl font-bold text-chart-secondary tracking-tight">
             {websiteData.overallMetrics.overallConversionRate}%
           </div>
-          <div className="text-xs text-subtle-gray">Conversión</div>
+          <div className="text-sm font-medium text-subtle-gray">Conversión</div>
         </div>
-        <div className="text-center">
-          <div className="text-sm font-semibold text-chart-tertiary">
+        <div className="text-center space-y-1">
+          <div className="text-xl font-bold text-chart-tertiary tracking-tight">
             {formatDuration(websiteData.overallMetrics.avgSessionDuration)}
           </div>
-          <div className="text-xs text-subtle-gray">Duración</div>
+          <div className="text-sm font-medium text-subtle-gray">Duración</div>
         </div>
-        <div className="text-center">
-          <div className="text-sm font-semibold text-chart-quaternary">
+        <div className="text-center space-y-1">
+          <div className="text-xl font-bold text-chart-quaternary tracking-tight">
             {websiteData.overallMetrics.bounceRate}%
           </div>
-          <div className="text-xs text-subtle-gray">Rebote</div>
+          <div className="text-sm font-medium text-subtle-gray">Rebote</div>
         </div>
       </div>
 
       {/* Traffic Sources */}
-      <div className="space-y-2">
-        <h4 className="text-sm font-medium text-bone-white mb-2">Fuentes de Tráfico</h4>
-        {websiteData.trafficSources.map((source, index) => (
-          <div
-            key={source.source}
-            className="flex items-center justify-between p-3 rounded-lg bg-surface-darker/30 hover:bg-surface-darker/50 transition-colors border border-border-subtle/50"
-          >
-            <div className="flex items-center gap-3 flex-1">
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{
-                    backgroundColor: index === 0 ? '#4285F4' :
-                                   index === 1 ? '#34A853' :
-                                   index === 2 ? '#EA4335' :
-                                   index === 3 ? '#FBBC05' : '#9AA0A6'
-                  }}
-                ></div>
-                <span className="text-sm font-medium text-white">{source.source}</span>
-              </div>
-              <div className="flex items-center gap-4 text-xs text-subtle-gray">
-                <span>{source.sessions.toLocaleString()} sesiones</span>
-                <span className="hidden sm:inline">{source.percentage}%</span>
-                <span className="hidden md:inline">{source.conversionRate}% conv.</span>
+      <div className="space-y-3">
+        <h4 className="text-base font-semibold text-bone-white">Fuentes de Tráfico</h4>
+        {websiteData.trafficSources.map((source, index) => {
+          const color = index === 0 ? '#4285F4' : index === 1 ? '#34A853' : index === 2 ? '#EA4335' : index === 3 ? '#FBBC05' : '#9AA0A6'
+          return (
+            <div
+              key={source.source}
+              className="group p-4 rounded-xl bg-gradient-to-r from-surface-darker/30 to-surface-darker/15 hover:from-surface-darker/50 hover:to-surface-darker/30 transition-all duration-300 border border-border-subtle/50 hover:border-border-subtle backdrop-blur-sm"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4 flex-1">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-4 h-4 rounded-full shadow-lg"
+                      style={{
+                        backgroundColor: color,
+                        boxShadow: `0 0 10px ${color}40`
+                      }}
+                    ></div>
+                    <span className="text-base font-semibold text-white">{source.source}</span>
+                  </div>
+                  <div className="flex items-center gap-6 text-sm text-subtle-gray">
+                    <span className="font-medium">{source.sessions.toLocaleString()} sesiones</span>
+                    <span className="hidden lg:inline">{source.percentage}%</span>
+                    <span className="hidden xl:inline">{source.conversionRate}% conv.</span>
+                  </div>
+                </div>
+                <div className="text-right space-y-1">
+                  <div className="text-lg font-bold text-chart-success">
+                    {source.conversions}
+                  </div>
+                  <div className="text-sm text-subtle-gray">conversiones</div>
+                </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-sm font-semibold text-chart-success">
-                {source.conversions}
-              </div>
-              <div className="text-xs text-subtle-gray">conversiones</div>
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
 
       {/* Top Pages */}
-      <div className="space-y-2">
-        <h4 className="text-sm font-medium text-bone-white mb-2">Páginas Principales</h4>
-        {websiteData.topPages.slice(0, 4).map((page) => (
+      <div className="space-y-3">
+        <h4 className="text-base font-semibold text-bone-white">Páginas Principales</h4>
+        {websiteData.topPages.slice(0, 4).map((page, index) => (
           <div
             key={page.page}
-            className="flex items-center justify-between p-3 rounded-lg bg-surface-darker/30 hover:bg-surface-darker/50 transition-colors border border-border-subtle/50"
+            className="group p-4 rounded-xl bg-gradient-to-r from-surface-darker/30 to-surface-darker/15 hover:from-surface-darker/50 hover:to-surface-darker/30 transition-all duration-300 border border-border-subtle/50 hover:border-border-subtle backdrop-blur-sm"
           >
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-sm font-medium text-white truncate">{page.title}</span>
-                <span className="text-xs text-subtle-gray font-mono">{page.page}</span>
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0 space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-chart-quaternary/20 flex items-center justify-center">
+                    <span className="text-sm font-bold text-chart-quaternary">#{index + 1}</span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <span className="text-base font-semibold text-white truncate block">{page.title}</span>
+                    <span className="text-sm text-chart-quaternary font-mono">{page.page}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-6 text-sm text-subtle-gray ml-11">
+                  <span className="font-medium">{page.pageviews.toLocaleString()} vistas</span>
+                  <span className="hidden lg:inline">{formatDuration(page.avgTimeOnPage)}</span>
+                  <span className="hidden xl:inline">{page.bounceRate}% rebote</span>
+                </div>
               </div>
-              <div className="flex items-center gap-4 text-xs text-subtle-gray">
-                <span>{page.pageviews.toLocaleString()} vistas</span>
-                <span className="hidden sm:inline">{formatDuration(page.avgTimeOnPage)}</span>
-                <span className="hidden md:inline">{page.bounceRate}% rebote</span>
+              <div className="text-right space-y-1">
+                <div className="text-lg font-bold text-chart-info">
+                  {page.conversions}
+                </div>
+                <div className="text-sm text-subtle-gray">conversiones</div>
               </div>
-            </div>
-            <div className="text-right">
-              <div className="text-sm font-semibold text-chart-info">
-                {page.conversions}
-              </div>
-              <div className="text-xs text-subtle-gray">conv.</div>
             </div>
           </div>
         ))}
@@ -1155,9 +1209,9 @@ export default function MarketingAnalytics() {
         />
       </WidgetGrid>
 
-      {/* Placeholder para futuras features */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="widget-container lg:col-span-2">
+      {/* Analytics Widgets Section */}
+      <div className="space-y-8">
+        <Card className="widget-container">
           <CardHeader className="widget-header">
             <CardTitle className="widget-title flex items-center gap-2">
               <BarChart3 className="w-5 h-5 text-chart-secondary" />
