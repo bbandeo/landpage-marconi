@@ -1,9 +1,5 @@
-import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard"
+import ExecutiveOverview from "@/components/admin/ExecutiveOverview"
 
 export default function AdminAnalyticsPage() {
-  return (
-    <div className="min-h-screen bg-gray-900">
-      <AnalyticsDashboard />
-    </div>
-  )
+  return <ExecutiveOverview />
 }
