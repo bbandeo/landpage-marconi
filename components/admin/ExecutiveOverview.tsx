@@ -43,7 +43,6 @@ import {
   PieChart
 } from 'lucide-react'
 import { useAnalyticsDashboard } from '@/hooks/useAnalyticsDashboard'
-import { useOptimisticUpdates } from '@/hooks/useOptimisticUpdates'
 import { useRealTimeUpdates } from '@/hooks/useRealTimeUpdates'
 import { InteractiveChart } from '@/components/ui/interactive-chart'
 
