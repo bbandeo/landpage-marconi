@@ -89,6 +89,59 @@ interface ChannelPerformance {
   status: 'active' | 'paused' | 'testing'
 }
 
+interface CampaignData {
+  id: string
+  name: string
+  channel: string
+  utmSource: string
+  utmMedium: string
+  utmCampaign: string
+  startDate: string
+  endDate: string
+  budget: number
+  spent: number
+  leads: number
+  conversions: number
+  revenue: number
+  roi: number
+  cpl: number
+  conversionRate: number
+  clickThroughRate: number
+  status: 'active' | 'paused' | 'completed' | 'draft'
+  performance: 'excellent' | 'good' | 'average' | 'poor'
+}
+
+interface WebsiteAnalyticsData {
+  trafficSources: {
+    source: string
+    sessions: number
+    percentage: number
+    bounceRate: number
+    avgSessionDuration: number
+    conversions: number
+    conversionRate: number
+  }[]
+  topPages: {
+    page: string
+    title: string
+    pageviews: number
+    uniquePageviews: number
+    avgTimeOnPage: number
+    bounceRate: number
+    exitRate: number
+    conversions: number
+  }[]
+  overallMetrics: {
+    totalSessions: number
+    totalPageviews: number
+    avgSessionDuration: number
+    bounceRate: number
+    newUsersPercentage: number
+    totalConversions: number
+    overallConversionRate: number
+  }
+}
+
 // =====================================================================================
 // CONFIGURATION
 // =====================================================================================
@@ -355,6 +408,555 @@ function ChannelPerformanceWidget({ period, loading }: ChannelPerformanceProps) 
 }
 
 // =====================================================================================
+// CAMPAIGN ROI ANALYSIS COMPONENT
+// =====================================================================================
+
+interface CampaignROIProps {
+  period: string
+  loading: boolean
+}
+
+function CampaignROIWidget({ period, loading }: CampaignROIProps) {
+  // Mock data de campañas - En el futuro vendrá de analytics API con UTM tracking
+  const campaignsData: CampaignData[] = [
+    {
+      id: 'google-search-2024-q1',
+      name: 'Google Search - Propiedades Premium',
+      channel: 'Google Ads',
+      utmSource: 'google',
+      utmMedium: 'cpc',
+      utmCampaign: 'propiedades-premium-2024',
+      startDate: '2024-01-15',
+      endDate: '2024-03-15',
+      budget: 25000,
+      spent: 22500,
+      leads: 38,
+      conversions: 12,
+      revenue: 450000,
+      roi: 1900,
+      cpl: 592,
+      conversionRate: 31.6,
+      clickThroughRate: 4.2,
+      status: 'active',
+      performance: 'excellent'
+    },
+    {
+      id: 'facebook-lookalike-q1',
+      name: 'Facebook Lookalike - Inversores',
+      channel: 'Facebook Ads',
+      utmSource: 'facebook',
+      utmMedium: 'social',
+      utmCampaign: 'lookalike-inversores-2024',
+      startDate: '2024-02-01',
+      endDate: '2024-04-30',
+      budget: 18000,
+      spent: 16200,
+      leads: 25,
+      conversions: 6,
+      revenue: 280000,
+      roi: 1630,
+      cpl: 648,
+      conversionRate: 24.0,
+      clickThroughRate: 3.1,
+      status: 'active',
+      performance: 'excellent'
+    },
+    {
+      id: 'instagram-stories-q1',
+      name: 'Instagram Stories - Jóvenes Profesionales',
+      channel: 'Instagram Ads',
+      utmSource: 'instagram',
+      utmMedium: 'social',
+      utmCampaign: 'jovenes-profesionales-2024',
+      startDate: '2024-01-20',
+      endDate: '2024-03-20',
+      budget: 12000,
+      spent: 11400,
+      leads: 18,
+      conversions: 3,
+      revenue: 165000,
+      roi: 1347,
+      cpl: 633,
+      conversionRate: 16.7,
+      clickThroughRate: 2.8,
+      status: 'completed',
+      performance: 'good'
+    },
+    {
+      id: 'google-display-retargeting',
+      name: 'Google Display - Retargeting',
+      channel: 'Google Ads',
+      utmSource: 'google',
+      utmMedium: 'display',
+      utmCampaign: 'retargeting-visitantes-2024',
+      startDate: '2024-02-10',
+      endDate: '2024-05-10',
+      budget: 8000,
+      spent: 6800,
+      leads: 14,
+      conversions: 2,
+      revenue: 95000,
+      roi: 1297,
+      cpl: 486,
+      conversionRate: 14.3,
+      clickThroughRate: 1.9,
+      status: 'active',
+      performance: 'good'
+    },
+    {
+      id: 'email-nurturing-q1',
+      name: 'Email Nurturing - Base Existente',
+      channel: 'Email Marketing',
+      utmSource: 'email',
+      utmMedium: 'email',
+      utmCampaign: 'nurturing-base-2024',
+      startDate: '2024-01-01',
+      endDate: '2024-03-31',
+      budget: 3500,
+      spent: 2800,
+      leads: 12,
+      conversions: 4,
+      revenue: 180000,
+      roi: 6329,
+      cpl: 233,
+      conversionRate: 33.3,
+      clickThroughRate: 8.5,
+      status: 'completed',
+      performance: 'excellent'
+    }
+  ]
+
+  if (loading) {
+    return (
+      <div className="space-y-3">
+        {Array.from({ length: 3 }, (_, i) => (
+          <div key={i} className="animate-pulse">
+            <div className="flex items-center justify-between p-4 rounded-lg bg-surface-darker/30">
+              <div className="flex-1 space-y-2">
+                <div className="h-4 bg-surface-darker rounded w-48"></div>
+                <div className="h-3 bg-surface-darker rounded w-32"></div>
+              </div>
+              <div className="space-y-1 text-right">
+                <div className="h-4 bg-surface-darker rounded w-16"></div>
+                <div className="h-3 bg-surface-darker rounded w-12"></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Calcular métricas agregadas
+  const totalBudget = campaignsData.reduce((sum, campaign) => sum + campaign.budget, 0)
+  const totalSpent = campaignsData.reduce((sum, campaign) => sum + campaign.spent, 0)
+  const totalLeads = campaignsData.reduce((sum, campaign) => sum + campaign.leads, 0)
+  const totalRevenue = campaignsData.reduce((sum, campaign) => sum + campaign.revenue, 0)
+  const avgROI = campaignsData.reduce((sum, campaign) => sum + campaign.roi, 0) / campaignsData.length
+
+  const getPerformanceColor = (performance: string) => {
+    switch (performance) {
+      case 'excellent': return 'text-chart-success'
+      case 'good': return 'text-chart-info'
+      case 'average': return 'text-chart-warning'
+      case 'poor': return 'text-chart-error'
+      default: return 'text-subtle-gray'
+    }
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'text-chart-success'
+      case 'paused': return 'text-chart-warning'
+      case 'completed': return 'text-chart-info'
+      case 'draft': return 'text-subtle-gray'
+      default: return 'text-subtle-gray'
+    }
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Summary Metrics */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-lg bg-surface-darker/20 border border-border-subtle">
+        <div className="text-center">
+          <div className="text-sm font-semibold text-chart-primary">{totalLeads}</div>
+          <div className="text-xs text-subtle-gray">Total Leads</div>
+        </div>
+        <div className="text-center">
+          <div className="text-sm font-semibold text-chart-secondary">
+            {Math.round(avgROI)}%
+          </div>
+          <div className="text-xs text-subtle-gray">ROI Promedio</div>
+        </div>
+        <div className="text-center">
+          <div className="text-sm font-semibold text-chart-tertiary">
+            {new Intl.NumberFormat('es-AR', {
+              style: 'currency',
+              currency: 'ARS',
+              minimumFractionDigits: 0
+            }).format(totalSpent)}
+          </div>
+          <div className="text-xs text-subtle-gray">Gastado</div>
+        </div>
+        <div className="text-center">
+          <div className="text-sm font-semibold text-chart-success">
+            {new Intl.NumberFormat('es-AR', {
+              style: 'currency',
+              currency: 'ARS',
+              minimumFractionDigits: 0
+            }).format(totalRevenue)}
+          </div>
+          <div className="text-xs text-subtle-gray">Revenue</div>
+        </div>
+      </div>
+
+      {/* Campaigns List */}
+      <div className="space-y-2">
+        {campaignsData
+          .sort((a, b) => b.roi - a.roi) // Ordenar por ROI descendente
+          .map((campaign) => (
+            <div
+              key={campaign.id}
+              className="flex items-center justify-between p-3 rounded-lg bg-surface-darker/30 hover:bg-surface-darker/50 transition-colors border border-border-subtle/50"
+            >
+              {/* Campaign Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <h4 className="font-medium text-white text-sm truncate">{campaign.name}</h4>
+                  <div className="flex items-center gap-1">
+                    <div className={`w-2 h-2 rounded-full ${
+                      campaign.status === 'active' ? 'bg-chart-success' :
+                      campaign.status === 'paused' ? 'bg-chart-warning' :
+                      campaign.status === 'completed' ? 'bg-chart-info' : 'bg-subtle-gray'
+                    }`}></div>
+                    <span className={`text-xs capitalize ${getStatusColor(campaign.status)}`}>
+                      {campaign.status}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 text-xs text-subtle-gray">
+                  <span>{campaign.channel}</span>
+                  <span>{campaign.leads} leads</span>
+                  <span className="hidden sm:inline">{campaign.conversionRate}% conv.</span>
+                  <span className="hidden md:inline">
+                    UTM: {campaign.utmSource}/{campaign.utmMedium}
+                  </span>
+                </div>
+              </div>
+
+              {/* Performance Metrics */}
+              <div className="flex items-center gap-4 text-right">
+                <div className="hidden sm:block">
+                  <div className="text-sm font-semibold text-bone-white">
+                    {new Intl.NumberFormat('es-AR', {
+                      style: 'currency',
+                      currency: 'ARS',
+                      minimumFractionDigits: 0
+                    }).format(campaign.spent)}
+                  </div>
+                  <div className="text-xs text-subtle-gray">
+                    de {new Intl.NumberFormat('es-AR', {
+                      style: 'currency',
+                      currency: 'ARS',
+                      minimumFractionDigits: 0
+                    }).format(campaign.budget)}
+                  </div>
+                </div>
+                <div>
+                  <div className={`text-sm font-semibold ${getPerformanceColor(campaign.performance)}`}>
+                    {campaign.roi}%
+                  </div>
+                  <div className="text-xs text-subtle-gray">ROI</div>
+                </div>
+              </div>
+            </div>
+          ))}
+      </div>
+
+      {/* Performance Insight */}
+      <div className="mt-4 p-3 rounded-lg bg-chart-info/10 border border-chart-info/20">
+        <div className="flex items-start gap-2">
+          <PieChart className="w-4 h-4 text-chart-info mt-0.5" />
+          <div className="text-sm">
+            <div className="font-medium text-chart-info">Insight de Campañas</div>
+            <div className="text-subtle-gray text-xs mt-1">
+              Email Marketing tiene el mejor ROI (6329%). Las campañas de Google Search generan más volumen con ROI sólido.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// =====================================================================================
+// WEBSITE ANALYTICS COMPONENT
+// =====================================================================================
+
+interface WebsiteAnalyticsProps {
+  period: string
+  loading: boolean
+}
+
+function WebsiteAnalyticsWidget({ period, loading }: WebsiteAnalyticsProps) {
+  // Mock data de website analytics - En el futuro vendrá de Google Analytics API o similar
+  const websiteData: WebsiteAnalyticsData = {
+    trafficSources: [
+      {
+        source: 'Organic Search',
+        sessions: 3250,
+        percentage: 52.3,
+        bounceRate: 34.2,
+        avgSessionDuration: 185,
+        conversions: 48,
+        conversionRate: 1.48
+      },
+      {
+        source: 'Direct',
+        sessions: 1850,
+        percentage: 29.7,
+        bounceRate: 28.1,
+        avgSessionDuration: 220,
+        conversions: 35,
+        conversionRate: 1.89
+      },
+      {
+        source: 'Social Media',
+        sessions: 680,
+        percentage: 10.9,
+        bounceRate: 45.8,
+        avgSessionDuration: 142,
+        conversions: 12,
+        conversionRate: 1.76
+      },
+      {
+        source: 'Paid Search',
+        sessions: 285,
+        percentage: 4.6,
+        bounceRate: 31.5,
+        avgSessionDuration: 195,
+        conversions: 8,
+        conversionRate: 2.81
+      },
+      {
+        source: 'Email',
+        sessions: 160,
+        percentage: 2.5,
+        bounceRate: 22.5,
+        avgSessionDuration: 280,
+        conversions: 6,
+        conversionRate: 3.75
+      }
+    ],
+    topPages: [
+      {
+        page: '/propiedades',
+        title: 'Listado de Propiedades',
+        pageviews: 8420,
+        uniquePageviews: 6850,
+        avgTimeOnPage: 195,
+        bounceRate: 42.3,
+        exitRate: 35.2,
+        conversions: 38
+      },
+      {
+        page: '/',
+        title: 'Inicio - Marconi Inmobiliaria',
+        pageviews: 6280,
+        uniquePageviews: 5120,
+        avgTimeOnPage: 125,
+        bounceRate: 38.7,
+        exitRate: 28.4,
+        conversions: 22
+      },
+      {
+        page: '/propiedades/departamentos',
+        title: 'Departamentos en Venta',
+        pageviews: 4150,
+        uniquePageviews: 3420,
+        avgTimeOnPage: 210,
+        bounceRate: 35.8,
+        exitRate: 32.1,
+        conversions: 25
+      },
+      {
+        page: '/propiedades/casas',
+        title: 'Casas en Venta',
+        pageviews: 3680,
+        uniquePageviews: 2950,
+        avgTimeOnPage: 225,
+        bounceRate: 33.2,
+        exitRate: 29.8,
+        conversions: 18
+      },
+      {
+        page: '/contacto',
+        title: 'Contacto',
+        pageviews: 2340,
+        uniquePageviews: 1890,
+        avgTimeOnPage: 95,
+        bounceRate: 25.4,
+        exitRate: 45.7,
+        conversions: 15
+      }
+    ],
+    overallMetrics: {
+      totalSessions: 6225,
+      totalPageviews: 18750,
+      avgSessionDuration: 187,
+      bounceRate: 35.8,
+      newUsersPercentage: 68.4,
+      totalConversions: 109,
+      overallConversionRate: 1.75
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-3">
+          {Array.from({ length: 4 }, (_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="p-3 rounded-lg bg-surface-darker/30">
+                <div className="h-3 bg-surface-darker rounded w-20 mb-2"></div>
+                <div className="h-5 bg-surface-darker rounded w-16"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="space-y-2">
+          {Array.from({ length: 3 }, (_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="flex justify-between items-center p-3 rounded-lg bg-surface-darker/30">
+                <div className="h-4 bg-surface-darker rounded w-32"></div>
+                <div className="h-4 bg-surface-darker rounded w-16"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  const formatDuration = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60)
+    const remainingSeconds = seconds % 60
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+  }
+
+  return (
+    <div className="space-y-4">
+      {/* Key Metrics Summary */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-3 rounded-lg bg-surface-darker/20 border border-border-subtle">
+        <div className="text-center">
+          <div className="text-sm font-semibold text-chart-primary">
+            {websiteData.overallMetrics.totalSessions.toLocaleString()}
+          </div>
+          <div className="text-xs text-subtle-gray">Sesiones</div>
+        </div>
+        <div className="text-center">
+          <div className="text-sm font-semibold text-chart-secondary">
+            {websiteData.overallMetrics.overallConversionRate}%
+          </div>
+          <div className="text-xs text-subtle-gray">Conversión</div>
+        </div>
+        <div className="text-center">
+          <div className="text-sm font-semibold text-chart-tertiary">
+            {formatDuration(websiteData.overallMetrics.avgSessionDuration)}
+          </div>
+          <div className="text-xs text-subtle-gray">Duración</div>
+        </div>
+        <div className="text-center">
+          <div className="text-sm font-semibold text-chart-quaternary">
+            {websiteData.overallMetrics.bounceRate}%
+          </div>
+          <div className="text-xs text-subtle-gray">Rebote</div>
+        </div>
+      </div>
+
+      {/* Traffic Sources */}
+      <div className="space-y-2">
+        <h4 className="text-sm font-medium text-bone-white mb-2">Fuentes de Tráfico</h4>
+        {websiteData.trafficSources.map((source, index) => (
+          <div
+            key={source.source}
+            className="flex items-center justify-between p-3 rounded-lg bg-surface-darker/30 hover:bg-surface-darker/50 transition-colors border border-border-subtle/50"
+          >
+            <div className="flex items-center gap-3 flex-1">
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{
+                    backgroundColor: index === 0 ? '#4285F4' :
+                                   index === 1 ? '#34A853' :
+                                   index === 2 ? '#EA4335' :
+                                   index === 3 ? '#FBBC05' : '#9AA0A6'
+                  }}
+                ></div>
+                <span className="text-sm font-medium text-white">{source.source}</span>
+              </div>
+              <div className="flex items-center gap-4 text-xs text-subtle-gray">
+                <span>{source.sessions.toLocaleString()} sesiones</span>
+                <span className="hidden sm:inline">{source.percentage}%</span>
+                <span className="hidden md:inline">{source.conversionRate}% conv.</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-sm font-semibold text-chart-success">
+                {source.conversions}
+              </div>
+              <div className="text-xs text-subtle-gray">conversiones</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Top Pages */}
+      <div className="space-y-2">
+        <h4 className="text-sm font-medium text-bone-white mb-2">Páginas Principales</h4>
+        {websiteData.topPages.slice(0, 4).map((page) => (
+          <div
+            key={page.page}
+            className="flex items-center justify-between p-3 rounded-lg bg-surface-darker/30 hover:bg-surface-darker/50 transition-colors border border-border-subtle/50"
+          >
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-medium text-white truncate">{page.title}</span>
+                <span className="text-xs text-subtle-gray font-mono">{page.page}</span>
+              </div>
+              <div className="flex items-center gap-4 text-xs text-subtle-gray">
+                <span>{page.pageviews.toLocaleString()} vistas</span>
+                <span className="hidden sm:inline">{formatDuration(page.avgTimeOnPage)}</span>
+                <span className="hidden md:inline">{page.bounceRate}% rebote</span>
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-sm font-semibold text-chart-info">
+                {page.conversions}
+              </div>
+              <div className="text-xs text-subtle-gray">conv.</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Website Performance Insight */}
+      <div className="mt-4 p-3 rounded-lg bg-chart-quaternary/10 border border-chart-quaternary/20">
+        <div className="flex items-start gap-2">
+          <Eye className="w-4 h-4 text-chart-quaternary mt-0.5" />
+          <div className="text-sm">
+            <div className="font-medium text-chart-quaternary">Insight de Website</div>
+            <div className="text-subtle-gray text-xs mt-1">
+              Búsqueda orgánica genera 52% del tráfico. La página de propiedades tiene la mejor conversión (38 leads).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// =====================================================================================
 // MAIN COMPONENT
 // =====================================================================================
 
@@ -574,17 +1176,14 @@ export default function MarketingAnalytics() {
           <CardHeader className="widget-header">
             <CardTitle className="widget-title flex items-center gap-2">
               <PieChart className="w-5 h-5 text-chart-tertiary" />
-              Campaign Analysis
+              Campaign ROI Analysis
             </CardTitle>
-            <Badge variant="outline" className="text-xs">
-              Próximamente
+            <Badge variant="default" className="text-xs bg-chart-tertiary/20 text-chart-tertiary border-chart-tertiary/30">
+              UTM Tracking
             </Badge>
           </CardHeader>
           <CardContent className="widget-content">
-            <div className="text-center py-8 text-subtle-gray">
-              <MousePointer className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p>UTM tracking y ROI</p>
-            </div>
+            <CampaignROIWidget period={selectedPeriod} loading={dashboardLoading} />
           </CardContent>
         </Card>
 
@@ -594,15 +1193,12 @@ export default function MarketingAnalytics() {
               <Eye className="w-5 h-5 text-chart-quaternary" />
               Website Analytics
             </CardTitle>
-            <Badge variant="outline" className="text-xs">
-              Próximamente
+            <Badge variant="default" className="text-xs bg-chart-quaternary/20 text-chart-quaternary border-chart-quaternary/30">
+              Traffic & Engagement
             </Badge>
           </CardHeader>
           <CardContent className="widget-content">
-            <div className="text-center py-8 text-subtle-gray">
-              <Globe className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p>Traffic y engagement</p>
-            </div>
+            <WebsiteAnalyticsWidget period={selectedPeriod} loading={dashboardLoading} />
           </CardContent>
         </Card>
       </div>
