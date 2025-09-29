@@ -60,42 +60,8 @@ export {
   type ResponsiveBreakpoint
 } from './responsive-wrapper'
 
-// Re-export hooks for easy access
-export {
-  default as useResponsive,
-  useMinBreakpoint,
-  useMaxBreakpoint,
-  useResponsiveClasses,
-  type Breakpoint as ResponsiveBreakpoint2
-} from '../hooks/useResponsive'
-
-export {
-  default as useSidebar,
-  useNavigationSidebar,
-  useAnalyticsSidebar,
-  type SidebarState,
-  type SidebarActions,
-  type SidebarOptions
-} from '../hooks/useSidebar'
-
-export {
-  default as useFilters,
-  useAnalyticsFilters,
-  usePropertyFilters,
-  type FilterValue,
-  type FilterState,
-  type FilterActions,
-  type FilterConfig,
-  type UseFiltersOptions
-} from '../hooks/useFilters'
-
-export {
-  default as useAnalyticsLayout,
-  useModuleFilters,
-  type LayoutState,
-  type LayoutActions,
-  type LayoutPreferences
-} from '../hooks/useAnalyticsLayout'
+// Note: Individual hooks are available in their respective files
+// Import them directly when needed to avoid circular dependencies
 
 // Layout Constants and Utilities
 export const LAYOUT_CONSTANTS = {
