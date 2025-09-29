@@ -281,57 +281,70 @@ function ChannelPerformanceWidget({ period, loading }: ChannelPerformanceProps) 
 
   return (
     <div className="space-y-4">
-      {/* Summary Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6 rounded-xl bg-gradient-to-r from-surface-darker/40 to-surface-darker/20 border border-border-subtle/70 backdrop-blur-sm">
-        <div className="text-center space-y-2">
-          <div className="text-2xl font-bold text-chart-primary tracking-tight">{totals.leads}</div>
-          <div className="text-sm font-medium text-subtle-gray">Total Leads</div>
-        </div>
-        <div className="text-center space-y-2">
-          <div className="text-2xl font-bold text-chart-secondary tracking-tight">
-            {new Intl.NumberFormat('es-AR', {
-              style: 'currency',
-              currency: 'ARS',
-              minimumFractionDigits: 0,
-              notation: 'compact'
-            }).format(totals.cost)}
+      {/* Enhanced Summary Row */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-chart-primary/10 via-chart-secondary/10 to-chart-success/10 rounded-2xl blur-sm"></div>
+        <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 p-8 rounded-2xl bg-gradient-to-r from-surface-darker/60 to-surface-darker/40 border border-border-subtle/80 backdrop-blur-md">
+          <div className="text-center space-y-3 group">
+            <div className="text-3xl lg:text-4xl font-bold text-chart-primary tracking-tight group-hover:scale-105 transition-transform duration-200">{totals.leads}</div>
+            <div className="text-sm font-semibold text-bone-white/80 uppercase tracking-wider">Total Leads</div>
+            <div className="w-12 h-1 bg-gradient-to-r from-chart-primary/60 to-chart-primary/20 rounded-full mx-auto"></div>
           </div>
-          <div className="text-sm font-medium text-subtle-gray">Inversión Total</div>
-        </div>
-        <div className="text-center space-y-2">
-          <div className="text-2xl font-bold text-chart-success tracking-tight">{Math.round(totals.avgROI)}%</div>
-          <div className="text-sm font-medium text-subtle-gray">ROI Promedio</div>
+          <div className="text-center space-y-3 group">
+            <div className="text-3xl lg:text-4xl font-bold text-chart-secondary tracking-tight group-hover:scale-105 transition-transform duration-200">
+              {new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 0,
+                notation: 'compact'
+              }).format(totals.cost)}
+            </div>
+            <div className="text-sm font-semibold text-bone-white/80 uppercase tracking-wider">Inversión Total</div>
+            <div className="w-12 h-1 bg-gradient-to-r from-chart-secondary/60 to-chart-secondary/20 rounded-full mx-auto"></div>
+          </div>
+          <div className="text-center space-y-3 group">
+            <div className="text-3xl lg:text-4xl font-bold text-chart-success tracking-tight group-hover:scale-105 transition-transform duration-200">{Math.round(totals.avgROI)}%</div>
+            <div className="text-sm font-semibold text-bone-white/80 uppercase tracking-wider">ROI Promedio</div>
+            <div className="w-12 h-1 bg-gradient-to-r from-chart-success/60 to-chart-success/20 rounded-full mx-auto"></div>
+          </div>
         </div>
       </div>
 
-      {/* Channels List */}
-      <div className="space-y-4">
+      {/* Enhanced Channels List */}
+      <div className="space-y-5">
         {channelsData
           .sort((a, b) => b.roi - a.roi) // Ordenar por ROI descendente
           .map((channel) => (
             <div
               key={channel.id}
-              className="group relative p-5 rounded-xl bg-gradient-to-r from-surface-darker/40 to-surface-darker/20 hover:from-surface-darker/60 hover:to-surface-darker/40 transition-all duration-300 border border-border-subtle/50 hover:border-border-subtle backdrop-blur-sm"
+              className="group relative p-6 lg:p-7 rounded-2xl bg-gradient-to-r from-surface-darker/50 to-surface-darker/30 hover:from-surface-darker/70 hover:to-surface-darker/50 transition-all duration-500 border border-border-subtle/60 hover:border-border-subtle hover:shadow-2xl hover:shadow-black/20 backdrop-blur-md"
             >
-              {/* Status Indicator Bar */}
+              {/* Enhanced Status Indicator Bar */}
               <div
-                className="absolute top-0 left-0 w-full h-1 rounded-t-xl"
-                style={{ backgroundColor: channel.color }}
+                className="absolute top-0 left-0 w-full h-1.5 rounded-t-2xl opacity-80 group-hover:opacity-100 transition-opacity duration-300"
+                style={{
+                  background: `linear-gradient(90deg, ${channel.color}, ${channel.color}80)`,
+                  boxShadow: `0 0 8px ${channel.color}40`
+                }}
               />
 
               <div className="flex items-center justify-between">
                 {/* Channel Icon & Name */}
                 <div className="flex items-center gap-4 flex-1 min-w-0">
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-                    style={{ backgroundColor: `${channel.color}15`, border: `1px solid ${channel.color}30` }}
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300"
+                    style={{
+                      backgroundColor: `${channel.color}20`,
+                      border: `2px solid ${channel.color}40`,
+                      boxShadow: `0 8px 16px ${channel.color}20, 0 0 0 1px ${channel.color}10`
+                    }}
                   >
-                    <channel.icon className="w-6 h-6" style={{ color: channel.color }} />
+                    <channel.icon className="w-7 h-7" style={{ color: channel.color }} />
                   </div>
 
                   <div className="min-w-0 flex-1 space-y-1">
-                    <div className="flex items-center gap-3">
-                      <h4 className="font-semibold text-bone-white text-base truncate">{channel.name}</h4>
+                    <div className="flex items-center gap-4">
+                      <h4 className="font-bold text-bone-white text-lg tracking-tight truncate">{channel.name}</h4>
                       <div className="flex items-center gap-1">
                         {channel.status === 'active' && (
                           <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-chart-success/20 border border-chart-success/30">
@@ -354,10 +367,10 @@ function ChannelPerformanceWidget({ period, loading }: ChannelPerformanceProps) 
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-6 text-sm text-subtle-gray">
-                      <span className="font-medium">{channel.leads} leads</span>
-                      <span>{channel.conversionRate}% conversión</span>
-                      <span className="hidden md:inline">CPL: {new Intl.NumberFormat('es-AR', {
+                    <div className="flex items-center gap-8 text-sm text-bone-white/70">
+                      <span className="font-semibold">{channel.leads} leads</span>
+                      <span className="font-medium">{channel.conversionRate}% conversión</span>
+                      <span className="hidden md:inline font-mono text-xs bg-surface-darker/40 px-2 py-1 rounded-md">CPL: {new Intl.NumberFormat('es-AR', {
                         style: 'currency',
                         currency: 'ARS',
                         minimumFractionDigits: 0,
@@ -367,11 +380,11 @@ function ChannelPerformanceWidget({ period, loading }: ChannelPerformanceProps) 
                   </div>
                 </div>
 
-                {/* Performance Metrics */}
-                <div className="flex items-center gap-8">
-                  <div className="hidden lg:flex items-center gap-6 text-right">
-                    <div className="space-y-1">
-                      <div className="text-base font-bold text-bone-white">
+                {/* Enhanced Performance Metrics */}
+                <div className="flex items-center gap-6 lg:gap-10">
+                  <div className="hidden lg:flex items-center gap-8 text-right">
+                    <div className="space-y-2">
+                      <div className="text-lg font-bold text-bone-white tracking-tight">
                         {new Intl.NumberFormat('es-AR', {
                           style: 'currency',
                           currency: 'ARS',
@@ -379,24 +392,28 @@ function ChannelPerformanceWidget({ period, loading }: ChannelPerformanceProps) 
                           notation: 'compact'
                         }).format(channel.cost)}
                       </div>
-                      <div className="text-sm text-subtle-gray">Inversión</div>
+                      <div className="text-xs font-semibold text-bone-white/60 uppercase tracking-wider">Inversión</div>
                     </div>
 
-                    <div className="space-y-1">
-                      <div className={`text-xl font-bold ${
-                        channel.roi >= 300 ? 'text-chart-success' :
-                        channel.roi >= 200 ? 'text-chart-info' :
-                        channel.roi >= 150 ? 'text-chart-warning' : 'text-chart-error'
+                    <div className="space-y-2">
+                      <div className={`text-2xl font-bold tracking-tight ${
+                        channel.roi >= 300 ? 'text-chart-success drop-shadow-lg' :
+                        channel.roi >= 200 ? 'text-chart-info drop-shadow-lg' :
+                        channel.roi >= 150 ? 'text-chart-warning drop-shadow-lg' : 'text-chart-error drop-shadow-lg'
                       }`}>
                         {channel.roi}%
                       </div>
-                      <div className="text-sm text-subtle-gray">ROI</div>
+                      <div className="text-xs font-semibold text-bone-white/60 uppercase tracking-wider">ROI</div>
                     </div>
                   </div>
 
-                  {/* Trend Indicator */}
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-darker/40">
-                    <div className={`${
+                  {/* Enhanced Trend Indicator */}
+                  <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg transition-all duration-300 ${
+                    channel.trend > 0
+                      ? 'bg-gradient-to-r from-chart-success/20 to-chart-success/10 border border-chart-success/30 group-hover:border-chart-success/50'
+                      : 'bg-gradient-to-r from-chart-error/20 to-chart-error/10 border border-chart-error/30 group-hover:border-chart-error/50'
+                  }`}>
+                    <div className={`transition-transform duration-200 group-hover:scale-110 ${
                       channel.trend > 0 ? 'text-chart-success' : 'text-chart-error'
                     }`}>
                       {channel.trend > 0 ? (
@@ -405,7 +422,7 @@ function ChannelPerformanceWidget({ period, loading }: ChannelPerformanceProps) 
                         <ArrowDownRight className="w-5 h-5" />
                       )}
                     </div>
-                    <span className={`text-sm font-semibold ${
+                    <span className={`text-base font-bold tracking-tight ${
                       channel.trend > 0 ? 'text-chart-success' : 'text-chart-error'
                     }`}>
                       {Math.abs(channel.trend)}%
@@ -417,18 +434,24 @@ function ChannelPerformanceWidget({ period, loading }: ChannelPerformanceProps) 
           ))}
       </div>
 
-      {/* Performance Insights */}
-      <div className="mt-6 p-5 rounded-xl bg-gradient-to-r from-chart-success/10 to-chart-info/10 border border-chart-success/30 backdrop-blur-sm">
-        <div className="flex items-start gap-3">
-          <div className="w-10 h-10 rounded-lg bg-chart-success/20 flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-chart-success" />
-          </div>
-          <div className="space-y-2">
-            <div className="font-semibold text-chart-success text-base">💡 Insight de Rendimiento</div>
-            <div className="text-bone-white text-sm leading-relaxed">
-              <strong>WhatsApp</strong> lidera con <span className="text-chart-success font-semibold">320% ROI</span> y el menor CPL (${new Intl.NumberFormat('es-AR', { minimumFractionDigits: 0 }).format(156)}).
-              <br />
-              <span className="text-chart-info">Recomendación:</span> Aumentar presupuesto en WhatsApp y Email Marketing para maximizar el retorno.
+      {/* Enhanced Performance Insights */}
+      <div className="mt-8 relative group">
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-success/40 to-chart-info/40 rounded-2xl blur opacity-60 group-hover:opacity-80 transition duration-500"></div>
+        <div className="relative p-6 lg:p-8 rounded-2xl bg-gradient-to-r from-chart-success/10 via-chart-success/5 to-chart-info/10 border border-chart-success/40 backdrop-blur-md">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-chart-success/30 to-chart-success/20 flex items-center justify-center shadow-lg">
+              <TrendingUp className="w-6 h-6 text-chart-success" />
+            </div>
+            <div className="space-y-3 flex-1">
+              <div className="flex items-center gap-2">
+                <div className="text-lg font-bold text-chart-success tracking-tight">💡 Insight de Rendimiento</div>
+                <div className="px-2 py-1 bg-chart-success/20 rounded-full text-xs font-semibold text-chart-success">AI-Powered</div>
+              </div>
+              <div className="text-bone-white text-base leading-relaxed">
+                <strong className="text-chart-success">WhatsApp</strong> lidera con <span className="text-chart-success font-bold text-lg">${new Intl.NumberFormat('es-AR', { minimumFractionDigits: 0 }).format(156)} CPL</span> y <span className="text-chart-success font-bold">320% ROI</span>.
+                <br />
+                <span className="text-chart-info font-semibold">Recomendación:</span> <span className="text-bone-white/90">Aumentar presupuesto en WhatsApp (+40%) y Email Marketing (+25%) para maximizar el retorno de inversión.</span>
+              </div>
             </div>
           </div>
         </div>
@@ -606,56 +629,63 @@ function CampaignROIWidget({ period, loading }: CampaignROIProps) {
 
   return (
     <div className="space-y-4">
-      {/* Summary Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-5 rounded-xl bg-gradient-to-br from-surface-darker/40 to-surface-darker/20 border border-border-subtle/70 backdrop-blur-sm">
-        <div className="text-center space-y-1">
-          <div className="text-xl font-bold text-chart-primary tracking-tight">{totalLeads}</div>
-          <div className="text-sm font-medium text-subtle-gray">Total Leads</div>
-        </div>
-        <div className="text-center space-y-1">
-          <div className="text-xl font-bold text-chart-secondary tracking-tight">
-            {Math.round(avgROI)}%
+      {/* Enhanced Campaign Summary Metrics */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-chart-primary/8 via-chart-secondary/8 via-chart-tertiary/8 to-chart-success/8 rounded-2xl blur-sm"></div>
+        <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-6 p-7 rounded-2xl bg-gradient-to-br from-surface-darker/60 to-surface-darker/40 border border-border-subtle/80 backdrop-blur-md">
+          <div className="text-center space-y-3 group">
+            <div className="text-2xl lg:text-3xl font-bold text-chart-primary tracking-tight group-hover:scale-105 transition-transform duration-200">{totalLeads}</div>
+            <div className="text-xs font-semibold text-bone-white/70 uppercase tracking-wider">Total Leads</div>
+            <div className="w-8 h-0.5 bg-gradient-to-r from-chart-primary/60 to-chart-primary/20 rounded-full mx-auto"></div>
           </div>
-          <div className="text-sm font-medium text-subtle-gray">ROI Promedio</div>
-        </div>
-        <div className="text-center space-y-1">
-          <div className="text-xl font-bold text-chart-tertiary tracking-tight">
-            {new Intl.NumberFormat('es-AR', {
-              style: 'currency',
-              currency: 'ARS',
-              minimumFractionDigits: 0,
-              notation: 'compact'
-            }).format(totalSpent)}
+          <div className="text-center space-y-3 group">
+            <div className="text-2xl lg:text-3xl font-bold text-chart-secondary tracking-tight group-hover:scale-105 transition-transform duration-200">
+              {Math.round(avgROI)}%
+            </div>
+            <div className="text-xs font-semibold text-bone-white/70 uppercase tracking-wider">ROI Promedio</div>
+            <div className="w-8 h-0.5 bg-gradient-to-r from-chart-secondary/60 to-chart-secondary/20 rounded-full mx-auto"></div>
           </div>
-          <div className="text-sm font-medium text-subtle-gray">Gastado</div>
-        </div>
-        <div className="text-center space-y-1">
-          <div className="text-xl font-bold text-chart-success tracking-tight">
-            {new Intl.NumberFormat('es-AR', {
-              style: 'currency',
-              currency: 'ARS',
-              minimumFractionDigits: 0,
-              notation: 'compact'
-            }).format(totalRevenue)}
+          <div className="text-center space-y-3 group">
+            <div className="text-2xl lg:text-3xl font-bold text-chart-tertiary tracking-tight group-hover:scale-105 transition-transform duration-200">
+              {new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 0,
+                notation: 'compact'
+              }).format(totalSpent)}
+            </div>
+            <div className="text-xs font-semibold text-bone-white/70 uppercase tracking-wider">Gastado</div>
+            <div className="w-8 h-0.5 bg-gradient-to-r from-chart-tertiary/60 to-chart-tertiary/20 rounded-full mx-auto"></div>
           </div>
-          <div className="text-sm font-medium text-subtle-gray">Revenue</div>
+          <div className="text-center space-y-3 group">
+            <div className="text-2xl lg:text-3xl font-bold text-chart-success tracking-tight group-hover:scale-105 transition-transform duration-200">
+              {new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 0,
+                notation: 'compact'
+              }).format(totalRevenue)}
+            </div>
+            <div className="text-xs font-semibold text-bone-white/70 uppercase tracking-wider">Revenue</div>
+            <div className="w-8 h-0.5 bg-gradient-to-r from-chart-success/60 to-chart-success/20 rounded-full mx-auto"></div>
+          </div>
         </div>
       </div>
 
-      {/* Campaigns List */}
-      <div className="space-y-3">
+      {/* Enhanced Campaigns List */}
+      <div className="space-y-4">
         {campaignsData
           .sort((a, b) => b.roi - a.roi) // Ordenar por ROI descendente
           .map((campaign) => (
             <div
               key={campaign.id}
-              className="group p-4 rounded-xl bg-gradient-to-r from-surface-darker/30 to-surface-darker/15 hover:from-surface-darker/50 hover:to-surface-darker/30 transition-all duration-300 border border-border-subtle/50 hover:border-border-subtle backdrop-blur-sm"
+              className="group p-6 rounded-2xl bg-gradient-to-r from-surface-darker/40 to-surface-darker/25 hover:from-surface-darker/60 hover:to-surface-darker/45 transition-all duration-500 border border-border-subtle/60 hover:border-border-subtle hover:shadow-xl hover:shadow-black/20 backdrop-blur-md"
             >
               <div className="flex items-center justify-between">
                 {/* Campaign Info */}
                 <div className="flex-1 min-w-0 space-y-2">
-                  <div className="flex items-center gap-3">
-                    <h4 className="font-semibold text-bone-white text-base truncate">{campaign.name}</h4>
+                  <div className="flex items-center gap-4">
+                    <h4 className="font-bold text-bone-white text-lg tracking-tight truncate">{campaign.name}</h4>
                     <div className="flex items-center gap-1">
                       <div className={`w-3 h-3 rounded-full ${
                         campaign.status === 'active' ? 'bg-chart-success shadow-lg shadow-chart-success/30' :
@@ -670,20 +700,20 @@ function CampaignROIWidget({ period, loading }: CampaignROIProps) {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-6 text-sm text-subtle-gray">
-                    <span className="font-medium">{campaign.channel}</span>
-                    <span>{campaign.leads} leads</span>
-                    <span>{campaign.conversionRate}% conversión</span>
-                    <span className="hidden lg:inline font-mono text-xs">
+                  <div className="flex items-center gap-8 text-sm text-bone-white/70">
+                    <span className="font-semibold text-bone-white/90">{campaign.channel}</span>
+                    <span className="font-medium">{campaign.leads} leads</span>
+                    <span className="font-medium">{campaign.conversionRate}% conversión</span>
+                    <span className="hidden lg:inline font-mono text-xs bg-surface-darker/50 px-3 py-1.5 rounded-lg border border-border-subtle/30">
                       {campaign.utmSource}/{campaign.utmMedium}
                     </span>
                   </div>
                 </div>
 
-                {/* Performance Metrics */}
-                <div className="flex items-center gap-6">
-                  <div className="hidden md:block text-right space-y-1">
-                    <div className="text-base font-bold text-bone-white">
+                {/* Enhanced Performance Metrics */}
+                <div className="flex items-center gap-8">
+                  <div className="hidden md:block text-right space-y-2">
+                    <div className="text-lg font-bold text-bone-white tracking-tight">
                       {new Intl.NumberFormat('es-AR', {
                         style: 'currency',
                         currency: 'ARS',
@@ -691,7 +721,7 @@ function CampaignROIWidget({ period, loading }: CampaignROIProps) {
                         notation: 'compact'
                       }).format(campaign.spent)}
                     </div>
-                    <div className="text-sm text-subtle-gray">
+                    <div className="text-xs text-bone-white/60 font-medium">
                       de {new Intl.NumberFormat('es-AR', {
                         style: 'currency',
                         currency: 'ARS',
@@ -701,15 +731,19 @@ function CampaignROIWidget({ period, loading }: CampaignROIProps) {
                     </div>
                   </div>
 
-                  <div className="text-right space-y-1">
-                    <div className={`text-xl font-bold ${
-                      campaign.performance === 'excellent' ? 'text-chart-success' :
-                      campaign.performance === 'good' ? 'text-chart-info' :
-                      campaign.performance === 'average' ? 'text-chart-warning' : 'text-chart-error'
+                  <div className={`text-right space-y-2 px-4 py-3 rounded-xl border transition-all duration-300 ${
+                    campaign.performance === 'excellent' ? 'bg-chart-success/10 border-chart-success/30 group-hover:border-chart-success/50' :
+                    campaign.performance === 'good' ? 'bg-chart-info/10 border-chart-info/30 group-hover:border-chart-info/50' :
+                    campaign.performance === 'average' ? 'bg-chart-warning/10 border-chart-warning/30 group-hover:border-chart-warning/50' : 'bg-chart-error/10 border-chart-error/30 group-hover:border-chart-error/50'
+                  }`}>
+                    <div className={`text-2xl font-bold tracking-tight ${
+                      campaign.performance === 'excellent' ? 'text-chart-success drop-shadow-lg' :
+                      campaign.performance === 'good' ? 'text-chart-info drop-shadow-lg' :
+                      campaign.performance === 'average' ? 'text-chart-warning drop-shadow-lg' : 'text-chart-error drop-shadow-lg'
                     }`}>
                       {campaign.roi}%
                     </div>
-                    <div className="text-sm text-subtle-gray">ROI</div>
+                    <div className="text-xs font-semibold text-bone-white/60 uppercase tracking-wider">ROI</div>
                   </div>
                 </div>
               </div>
@@ -717,14 +751,22 @@ function CampaignROIWidget({ period, loading }: CampaignROIProps) {
           ))}
       </div>
 
-      {/* Performance Insight */}
-      <div className="mt-4 p-3 rounded-lg bg-chart-info/10 border border-chart-info/20">
-        <div className="flex items-start gap-2">
-          <PieChart className="w-4 h-4 text-chart-info mt-0.5" />
-          <div className="text-sm">
-            <div className="font-medium text-chart-info">Insight de Campañas</div>
-            <div className="text-subtle-gray text-xs mt-1">
-              Email Marketing tiene el mejor ROI (6329%). Las campañas de Google Search generan más volumen con ROI sólido.
+      {/* Enhanced Campaign Insight */}
+      <div className="mt-6 relative group">
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-info/30 to-chart-tertiary/30 rounded-2xl blur opacity-50 group-hover:opacity-75 transition duration-500"></div>
+        <div className="relative p-5 lg:p-6 rounded-2xl bg-gradient-to-r from-chart-info/10 to-chart-tertiary/10 border border-chart-info/30 backdrop-blur-md">
+          <div className="flex items-start gap-4">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-chart-info/30 to-chart-info/20 flex items-center justify-center shadow-lg">
+              <PieChart className="w-5 h-5 text-chart-info" />
+            </div>
+            <div className="space-y-2 flex-1">
+              <div className="flex items-center gap-2">
+                <div className="text-base font-bold text-chart-info tracking-tight">📊 Insight de Campañas</div>
+                <div className="px-2 py-0.5 bg-chart-info/20 rounded-full text-xs font-semibold text-chart-info">Optimized</div>
+              </div>
+              <div className="text-bone-white text-sm leading-relaxed">
+                <strong className="text-chart-info">Email Marketing</strong> lidera con <span className="text-chart-success font-bold">6329% ROI</span>. Las campañas de <strong className="text-chart-primary">Google Search</strong> generan más volumen con ROI sólido (+1900%).
+              </div>
             </div>
           </div>
         </div>
@@ -890,67 +932,79 @@ function WebsiteAnalyticsWidget({ period, loading }: WebsiteAnalyticsProps) {
 
   return (
     <div className="space-y-4">
-      {/* Key Metrics Summary */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 p-5 rounded-xl bg-gradient-to-bl from-surface-darker/40 to-surface-darker/20 border border-border-subtle/70 backdrop-blur-sm">
-        <div className="text-center space-y-1">
-          <div className="text-xl font-bold text-chart-primary tracking-tight">
-            {websiteData.overallMetrics.totalSessions.toLocaleString()}
+      {/* Enhanced Website Metrics Summary */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-bl from-chart-primary/8 via-chart-secondary/8 via-chart-tertiary/8 to-chart-quaternary/8 rounded-2xl blur-sm"></div>
+        <div className="relative grid grid-cols-2 lg:grid-cols-4 gap-6 p-7 rounded-2xl bg-gradient-to-bl from-surface-darker/60 to-surface-darker/40 border border-border-subtle/80 backdrop-blur-md">
+          <div className="text-center space-y-3 group">
+            <div className="text-2xl lg:text-3xl font-bold text-chart-primary tracking-tight group-hover:scale-105 transition-transform duration-200">
+              {websiteData.overallMetrics.totalSessions.toLocaleString()}
+            </div>
+            <div className="text-xs font-semibold text-bone-white/70 uppercase tracking-wider">Sesiones</div>
+            <div className="w-8 h-0.5 bg-gradient-to-r from-chart-primary/60 to-chart-primary/20 rounded-full mx-auto"></div>
           </div>
-          <div className="text-sm font-medium text-subtle-gray">Sesiones</div>
-        </div>
-        <div className="text-center space-y-1">
-          <div className="text-xl font-bold text-chart-secondary tracking-tight">
-            {websiteData.overallMetrics.overallConversionRate}%
+          <div className="text-center space-y-3 group">
+            <div className="text-2xl lg:text-3xl font-bold text-chart-secondary tracking-tight group-hover:scale-105 transition-transform duration-200">
+              {websiteData.overallMetrics.overallConversionRate}%
+            </div>
+            <div className="text-xs font-semibold text-bone-white/70 uppercase tracking-wider">Conversión</div>
+            <div className="w-8 h-0.5 bg-gradient-to-r from-chart-secondary/60 to-chart-secondary/20 rounded-full mx-auto"></div>
           </div>
-          <div className="text-sm font-medium text-subtle-gray">Conversión</div>
-        </div>
-        <div className="text-center space-y-1">
-          <div className="text-xl font-bold text-chart-tertiary tracking-tight">
-            {formatDuration(websiteData.overallMetrics.avgSessionDuration)}
+          <div className="text-center space-y-3 group">
+            <div className="text-2xl lg:text-3xl font-bold text-chart-tertiary tracking-tight group-hover:scale-105 transition-transform duration-200">
+              {formatDuration(websiteData.overallMetrics.avgSessionDuration)}
+            </div>
+            <div className="text-xs font-semibold text-bone-white/70 uppercase tracking-wider">Duración</div>
+            <div className="w-8 h-0.5 bg-gradient-to-r from-chart-tertiary/60 to-chart-tertiary/20 rounded-full mx-auto"></div>
           </div>
-          <div className="text-sm font-medium text-subtle-gray">Duración</div>
-        </div>
-        <div className="text-center space-y-1">
-          <div className="text-xl font-bold text-chart-quaternary tracking-tight">
-            {websiteData.overallMetrics.bounceRate}%
+          <div className="text-center space-y-3 group">
+            <div className="text-2xl lg:text-3xl font-bold text-chart-quaternary tracking-tight group-hover:scale-105 transition-transform duration-200">
+              {websiteData.overallMetrics.bounceRate}%
+            </div>
+            <div className="text-xs font-semibold text-bone-white/70 uppercase tracking-wider">Rebote</div>
+            <div className="w-8 h-0.5 bg-gradient-to-r from-chart-quaternary/60 to-chart-quaternary/20 rounded-full mx-auto"></div>
           </div>
-          <div className="text-sm font-medium text-subtle-gray">Rebote</div>
         </div>
       </div>
 
-      {/* Traffic Sources */}
-      <div className="space-y-3">
-        <h4 className="text-base font-semibold text-bone-white">Fuentes de Tráfico</h4>
+      {/* Enhanced Traffic Sources */}
+      <div className="space-y-5">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-chart-primary/20 flex items-center justify-center">
+            <Globe className="w-4 h-4 text-chart-primary" />
+          </div>
+          <h4 className="text-lg font-bold text-bone-white tracking-tight">Fuentes de Tráfico</h4>
+        </div>
         {websiteData.trafficSources.map((source, index) => {
           const color = index === 0 ? '#4285F4' : index === 1 ? '#34A853' : index === 2 ? '#EA4335' : index === 3 ? '#FBBC05' : '#9AA0A6'
           return (
             <div
               key={source.source}
-              className="group p-4 rounded-xl bg-gradient-to-r from-surface-darker/30 to-surface-darker/15 hover:from-surface-darker/50 hover:to-surface-darker/30 transition-all duration-300 border border-border-subtle/50 hover:border-border-subtle backdrop-blur-sm"
+              className="group p-5 lg:p-6 rounded-2xl bg-gradient-to-r from-surface-darker/40 to-surface-darker/25 hover:from-surface-darker/60 hover:to-surface-darker/45 transition-all duration-500 border border-border-subtle/60 hover:border-border-subtle hover:shadow-xl hover:shadow-black/20 backdrop-blur-md"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4 flex-1">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4">
                     <div
-                      className="w-4 h-4 rounded-full shadow-lg"
+                      className="w-6 h-6 rounded-full shadow-xl transition-transform duration-300 group-hover:scale-110"
                       style={{
                         backgroundColor: color,
-                        boxShadow: `0 0 10px ${color}40`
+                        boxShadow: `0 0 16px ${color}50, 0 0 4px ${color}80`
                       }}
                     ></div>
-                    <span className="text-base font-semibold text-white">{source.source}</span>
+                    <span className="text-lg font-bold text-white tracking-tight">{source.source}</span>
                   </div>
-                  <div className="flex items-center gap-6 text-sm text-subtle-gray">
-                    <span className="font-medium">{source.sessions.toLocaleString()} sesiones</span>
-                    <span className="hidden lg:inline">{source.percentage}%</span>
-                    <span className="hidden xl:inline">{source.conversionRate}% conv.</span>
+                  <div className="flex items-center gap-8 text-sm text-bone-white/70 mt-2">
+                    <span className="font-semibold text-bone-white/90">{source.sessions.toLocaleString()} sesiones</span>
+                    <span className="hidden lg:inline font-medium">{source.percentage}%</span>
+                    <span className="hidden xl:inline font-medium bg-surface-darker/50 px-2 py-1 rounded-md">{source.conversionRate}% conv.</span>
                   </div>
                 </div>
-                <div className="text-right space-y-1">
-                  <div className="text-lg font-bold text-chart-success">
+                <div className="text-right space-y-2 px-4 py-3 rounded-xl bg-chart-success/10 border border-chart-success/30 group-hover:border-chart-success/50 transition-all duration-300">
+                  <div className="text-xl font-bold text-chart-success tracking-tight drop-shadow-lg">
                     {source.conversions}
                   </div>
-                  <div className="text-sm text-subtle-gray">conversiones</div>
+                  <div className="text-xs font-semibold text-bone-white/60 uppercase tracking-wider">conversiones</div>
                 </div>
               </div>
             </div>
@@ -958,50 +1012,63 @@ function WebsiteAnalyticsWidget({ period, loading }: WebsiteAnalyticsProps) {
         })}
       </div>
 
-      {/* Top Pages */}
-      <div className="space-y-3">
-        <h4 className="text-base font-semibold text-bone-white">Páginas Principales</h4>
+      {/* Enhanced Top Pages */}
+      <div className="space-y-5">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-lg bg-chart-quaternary/20 flex items-center justify-center">
+            <Eye className="w-4 h-4 text-chart-quaternary" />
+          </div>
+          <h4 className="text-lg font-bold text-bone-white tracking-tight">Páginas Principales</h4>
+        </div>
         {websiteData.topPages.slice(0, 4).map((page, index) => (
           <div
             key={page.page}
-            className="group p-4 rounded-xl bg-gradient-to-r from-surface-darker/30 to-surface-darker/15 hover:from-surface-darker/50 hover:to-surface-darker/30 transition-all duration-300 border border-border-subtle/50 hover:border-border-subtle backdrop-blur-sm"
+            className="group p-5 lg:p-6 rounded-2xl bg-gradient-to-r from-surface-darker/40 to-surface-darker/25 hover:from-surface-darker/60 hover:to-surface-darker/45 transition-all duration-500 border border-border-subtle/60 hover:border-border-subtle hover:shadow-xl hover:shadow-black/20 backdrop-blur-md"
           >
             <div className="flex items-center justify-between">
               <div className="flex-1 min-w-0 space-y-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-chart-quaternary/20 flex items-center justify-center">
-                    <span className="text-sm font-bold text-chart-quaternary">#{index + 1}</span>
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-chart-quaternary/30 to-chart-quaternary/20 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-base font-bold text-chart-quaternary tracking-tight">#{index + 1}</span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="text-base font-semibold text-white truncate block">{page.title}</span>
-                    <span className="text-sm text-chart-quaternary font-mono">{page.page}</span>
+                    <span className="text-lg font-bold text-white truncate block tracking-tight">{page.title}</span>
+                    <span className="text-sm text-chart-quaternary/80 font-mono bg-surface-darker/50 px-2 py-1 rounded-md inline-block mt-1">{page.page}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-6 text-sm text-subtle-gray ml-11">
-                  <span className="font-medium">{page.pageviews.toLocaleString()} vistas</span>
-                  <span className="hidden lg:inline">{formatDuration(page.avgTimeOnPage)}</span>
-                  <span className="hidden xl:inline">{page.bounceRate}% rebote</span>
+                <div className="flex items-center gap-8 text-sm text-bone-white/70 ml-14 mt-2">
+                  <span className="font-semibold text-bone-white/90">{page.pageviews.toLocaleString()} vistas</span>
+                  <span className="hidden lg:inline font-medium">{formatDuration(page.avgTimeOnPage)}</span>
+                  <span className="hidden xl:inline font-medium">{page.bounceRate}% rebote</span>
                 </div>
               </div>
-              <div className="text-right space-y-1">
-                <div className="text-lg font-bold text-chart-info">
+              <div className="text-right space-y-2 px-4 py-3 rounded-xl bg-chart-info/10 border border-chart-info/30 group-hover:border-chart-info/50 transition-all duration-300">
+                <div className="text-xl font-bold text-chart-info tracking-tight drop-shadow-lg">
                   {page.conversions}
                 </div>
-                <div className="text-sm text-subtle-gray">conversiones</div>
+                <div className="text-xs font-semibold text-bone-white/60 uppercase tracking-wider">conversiones</div>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Website Performance Insight */}
-      <div className="mt-4 p-3 rounded-lg bg-chart-quaternary/10 border border-chart-quaternary/20">
-        <div className="flex items-start gap-2">
-          <Eye className="w-4 h-4 text-chart-quaternary mt-0.5" />
-          <div className="text-sm">
-            <div className="font-medium text-chart-quaternary">Insight de Website</div>
-            <div className="text-subtle-gray text-xs mt-1">
-              Búsqueda orgánica genera 52% del tráfico. La página de propiedades tiene la mejor conversión (38 leads).
+      {/* Enhanced Website Performance Insight */}
+      <div className="mt-6 relative group">
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-quaternary/30 to-chart-primary/30 rounded-2xl blur opacity-50 group-hover:opacity-75 transition duration-500"></div>
+        <div className="relative p-5 lg:p-6 rounded-2xl bg-gradient-to-r from-chart-quaternary/10 to-chart-primary/10 border border-chart-quaternary/30 backdrop-blur-md">
+          <div className="flex items-start gap-4">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-chart-quaternary/30 to-chart-quaternary/20 flex items-center justify-center shadow-lg">
+              <Eye className="w-5 h-5 text-chart-quaternary" />
+            </div>
+            <div className="space-y-2 flex-1">
+              <div className="flex items-center gap-2">
+                <div className="text-base font-bold text-chart-quaternary tracking-tight">📊 Insight de Website</div>
+                <div className="px-2 py-0.5 bg-chart-quaternary/20 rounded-full text-xs font-semibold text-chart-quaternary">Traffic</div>
+              </div>
+              <div className="text-bone-white text-sm leading-relaxed">
+                <strong className="text-chart-primary">Búsqueda orgánica</strong> genera <span className="text-chart-success font-bold">52% del tráfico</span>. La página de <strong className="text-chart-quaternary">propiedades</strong> tiene la mejor conversión con <span className="text-chart-info font-bold">38 leads</span>.
+              </div>
             </div>
           </div>
         </div>
@@ -1073,32 +1140,34 @@ export default function MarketingAnalytics() {
   // Breadcrumbs
   const breadcrumbs = buildAnalyticsBreadcrumbs('marketing', 'Marketing & Leads')
 
-  // Header actions
+  // Enhanced Header actions with better accessibility
   const headerActions = (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
-      <div className="flex items-center gap-2 text-sm text-subtle-gray order-2 sm:order-1">
-        <Clock className="w-4 h-4" />
-        <span className="hidden sm:inline">Última actualización: {lastRefresh.toLocaleTimeString('es-AR')}</span>
-        <span className="sm:hidden">{lastRefresh.toLocaleTimeString('es-AR', { timeStyle: 'short' })}</span>
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-6">
+      <div className="flex items-center gap-3 text-sm text-bone-white/70 order-2 sm:order-1">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-surface-darker/40 border border-border-subtle/30">
+          <Clock className="w-4 h-4 text-chart-quaternary" />
+          <span className="hidden sm:inline font-medium">Última actualización: <span className="text-bone-white font-semibold">{lastRefresh.toLocaleTimeString('es-AR')}</span></span>
+          <span className="sm:hidden font-medium text-bone-white">{lastRefresh.toLocaleTimeString('es-AR', { timeStyle: 'short' })}</span>
+        </div>
         {realtimeConnected && (
-          <Badge variant="outline" className="text-chart-success border-chart-success/30">
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-chart-success rounded-full animate-pulse"></div>
-              {isWebSocket ? 'WebSocket' : 'Polling'}
+          <Badge variant="outline" className="text-chart-success border-chart-success/40 bg-chart-success/5 px-3 py-1.5">
+            <div className="flex items-center gap-2">
+              <div className="w-2.5 h-2.5 bg-chart-success rounded-full animate-pulse shadow-lg shadow-chart-success/50"></div>
+              <span className="font-semibold text-xs uppercase tracking-wider">{isWebSocket ? 'WebSocket' : 'Polling'}</span>
             </div>
           </Badge>
         )}
       </div>
 
-      <div className="flex items-center gap-2 order-1 sm:order-2">
+      <div className="flex items-center gap-3 order-1 sm:order-2">
         <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-          <SelectTrigger className="w-28 sm:w-32 filter-input">
-            <SelectValue />
+          <SelectTrigger className="w-32 sm:w-36 filter-input bg-surface-darker/60 border-border-subtle/60 hover:border-border-subtle focus:border-chart-primary/50 focus:ring-chart-primary/20">
+            <SelectValue className="font-semibold" />
           </SelectTrigger>
-          <SelectContent className="filter-panel">
+          <SelectContent className="filter-panel bg-surface-darker/95 border-border-subtle/60 backdrop-blur-md">
             {PERIOD_OPTIONS.map(period => (
-              <SelectItem key={period.value} value={period.value}>
-                {period.label}
+              <SelectItem key={period.value} value={period.value} className="hover:bg-chart-primary/10 focus:bg-chart-primary/10">
+                <span className="font-medium">{period.label}</span>
               </SelectItem>
             ))}
           </SelectContent>
@@ -1112,10 +1181,11 @@ export default function MarketingAnalytics() {
           variant="outline"
           size="sm"
           disabled={dashboardLoading}
-          className="gap-2"
+          className="gap-2 bg-chart-primary/10 border-chart-primary/40 text-chart-primary hover:bg-chart-primary/20 hover:border-chart-primary/60 focus:ring-chart-primary/30 disabled:opacity-50 disabled:cursor-not-allowed px-4 py-2"
+          aria-label="Actualizar datos del dashboard"
         >
           <RefreshCw className={`w-4 h-4 ${dashboardLoading ? 'animate-spin' : ''}`} />
-          <span className="hidden sm:inline">Actualizar</span>
+          <span className="hidden sm:inline font-semibold">Actualizar</span>
         </Button>
       </div>
     </div>
@@ -1130,131 +1200,190 @@ export default function MarketingAnalytics() {
       loading={dashboardLoading}
       className="space-y-dashboard"
     >
-      {/* Marketing KPI Cards Row */}
-      <WidgetGrid
-        desktop={{ cols: 4, gap: 'lg' }}
-        tablet={{ cols: 2, gap: 'md' }}
-        mobile={{ cols: 1, gap: 'sm' }}
-      >
-        {/* Total Leads Generated */}
-        <KPICard
-          title="Leads Generados"
-          value={marketingKPIs.totalLeads.value}
-          format="number"
-          trend={{
-            value: marketingKPIs.totalLeads.change,
-            period: `vs ${currentPeriod.label.toLowerCase()} anterior`,
-            direction: marketingKPIs.totalLeads.change > 0 ? 'positive' : 'negative'
-          }}
-          icon={Users}
-          color="primary"
-          size="lg"
-          description={`Inversión: ${new Intl.NumberFormat('es-AR', {
-            style: 'currency',
-            currency: 'ARS',
-            minimumFractionDigits: 0
-          }).format(marketingKPIs.totalLeads.cost)}`}
-        />
+      {/* Marketing KPI Cards Row - Enhanced Visual Hierarchy */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8">
+        {/* Total Leads Generated - Primary Focus */}
+        <div className="group relative">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-primary/50 to-chart-primary/30 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
+          <div className="relative">
+            <KPICard
+              title="Leads Generados"
+              value={marketingKPIs.totalLeads.value}
+              format="number"
+              trend={{
+                value: marketingKPIs.totalLeads.change,
+                period: `vs ${currentPeriod.label.toLowerCase()} anterior`,
+                direction: marketingKPIs.totalLeads.change > 0 ? 'positive' : 'negative'
+              }}
+              icon={Users}
+              color="primary"
+              size="lg"
+              description={`Inversión: ${new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 0
+              }).format(marketingKPIs.totalLeads.cost)}`}
+              className="border-chart-primary/40 bg-gradient-to-br from-chart-primary/5 to-transparent"
+            />
+          </div>
+        </div>
 
-        {/* Lead Quality Score */}
-        <KPICard
-          title="Calidad de Leads"
-          value={marketingKPIs.leadQuality.value}
-          format="percentage"
-          trend={{
-            value: marketingKPIs.leadQuality.change,
-            period: `vs ${currentPeriod.label.toLowerCase()} anterior`,
-            direction: marketingKPIs.leadQuality.change > 0 ? 'positive' : 'negative'
-          }}
-          icon={Target}
-          color="secondary"
-          size="lg"
-          description={`Benchmark del sector: ${marketingKPIs.leadQuality.benchmark}%`}
-        />
+        {/* Lead Quality Score - Enhanced */}
+        <div className="group relative">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-secondary/40 to-chart-secondary/20 rounded-2xl blur opacity-60 group-hover:opacity-90 transition duration-300"></div>
+          <div className="relative">
+            <KPICard
+              title="Calidad de Leads"
+              value={marketingKPIs.leadQuality.value}
+              format="percentage"
+              trend={{
+                value: marketingKPIs.leadQuality.change,
+                period: `vs ${currentPeriod.label.toLowerCase()} anterior`,
+                direction: marketingKPIs.leadQuality.change > 0 ? 'positive' : 'negative'
+              }}
+              icon={Target}
+              color="secondary"
+              size="lg"
+              description={`Benchmark del sector: ${marketingKPIs.leadQuality.benchmark}%`}
+              className="border-chart-secondary/40 bg-gradient-to-br from-chart-secondary/5 to-transparent"
+            />
+          </div>
+        </div>
 
-        {/* Cost Per Lead */}
-        <KPICard
-          title="Costo por Lead"
-          value={marketingKPIs.costPerLead.value}
-          format="currency"
-          trend={{
-            value: marketingKPIs.costPerLead.change,
-            period: `vs ${currentPeriod.label.toLowerCase()} anterior`,
-            direction: marketingKPIs.costPerLead.change < 0 ? 'positive' : 'negative' // Lower is better
-          }}
-          icon={DollarSign}
-          color="tertiary"
-          size="lg"
-          description={`Meta: ${new Intl.NumberFormat('es-AR', {
-            style: 'currency',
-            currency: 'ARS',
-            minimumFractionDigits: 0
-          }).format(marketingKPIs.costPerLead.target)}`}
-        />
+        {/* Cost Per Lead - Enhanced */}
+        <div className="group relative">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-success/40 to-chart-success/20 rounded-2xl blur opacity-60 group-hover:opacity-90 transition duration-300"></div>
+          <div className="relative">
+            <KPICard
+              title="Costo por Lead"
+              value={marketingKPIs.costPerLead.value}
+              format="currency"
+              trend={{
+                value: marketingKPIs.costPerLead.change,
+                period: `vs ${currentPeriod.label.toLowerCase()} anterior`,
+                direction: marketingKPIs.costPerLead.change < 0 ? 'positive' : 'negative'
+              }}
+              icon={DollarSign}
+              color="tertiary"
+              size="lg"
+              description={`Meta: ${new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+                minimumFractionDigits: 0
+              }).format(marketingKPIs.costPerLead.target)}`}
+              className="border-chart-success/40 bg-gradient-to-br from-chart-success/5 to-transparent"
+            />
+          </div>
+        </div>
 
-        {/* Website Traffic */}
-        <KPICard
-          title="Tráfico Web"
-          value={marketingKPIs.websiteTraffic.value}
-          format="number"
-          trend={{
-            value: marketingKPIs.websiteTraffic.change,
-            period: `vs ${currentPeriod.label.toLowerCase()} anterior`,
-            direction: marketingKPIs.websiteTraffic.change > 0 ? 'positive' : 'negative'
-          }}
-          icon={Globe}
-          color="quaternary"
-          size="lg"
-          description={`Conversión: ${marketingKPIs.websiteTraffic.conversionRate}%`}
-        />
-      </WidgetGrid>
+        {/* Website Traffic - Enhanced */}
+        <div className="group relative">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-info/40 to-chart-info/20 rounded-2xl blur opacity-60 group-hover:opacity-90 transition duration-300"></div>
+          <div className="relative">
+            <KPICard
+              title="Tráfico Web"
+              value={marketingKPIs.websiteTraffic.value}
+              format="number"
+              trend={{
+                value: marketingKPIs.websiteTraffic.change,
+                period: `vs ${currentPeriod.label.toLowerCase()} anterior`,
+                direction: marketingKPIs.websiteTraffic.change > 0 ? 'positive' : 'negative'
+              }}
+              icon={Globe}
+              color="quaternary"
+              size="lg"
+              description={`Conversión: ${marketingKPIs.websiteTraffic.conversionRate}%`}
+              className="border-chart-info/40 bg-gradient-to-br from-chart-info/5 to-transparent"
+            />
+          </div>
+        </div>
+      </div>
 
-      {/* Analytics Widgets Section */}
-      <div className="space-y-8">
-        <Card className="widget-container">
-          <CardHeader className="widget-header">
-            <CardTitle className="widget-title flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-chart-secondary" />
-              Channel Performance
-            </CardTitle>
-            <Badge variant="default" className="text-xs bg-chart-secondary/20 text-chart-secondary border-chart-secondary/30">
-              ROI & Costos
-            </Badge>
-          </CardHeader>
-          <CardContent className="widget-content">
-            <ChannelPerformanceWidget period={selectedPeriod} loading={dashboardLoading} />
-          </CardContent>
-        </Card>
+      {/* Analytics Widgets Section - Enhanced Layout */}
+      <div className="space-y-10 mt-12">
+        {/* Channel Performance - Enhanced Card */}
+        <div className="group relative">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-secondary/30 to-chart-secondary/10 rounded-2xl blur opacity-50 group-hover:opacity-75 transition duration-500"></div>
+          <Card className="relative widget-container border-chart-secondary/30 bg-gradient-to-br from-chart-secondary/[0.02] to-transparent backdrop-blur-sm">
+            <CardHeader className="widget-header pb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-chart-secondary/20 flex items-center justify-center">
+                    <BarChart3 className="w-5 h-5 text-chart-secondary" />
+                  </div>
+                  <div>
+                    <CardTitle className="widget-title text-xl font-bold text-bone-white">
+                      Channel Performance
+                    </CardTitle>
+                    <p className="text-sm text-subtle-gray mt-1">Análisis de rendimiento por canal de marketing</p>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs bg-chart-secondary/10 text-chart-secondary border-chart-secondary/30 px-3 py-1">
+                  ROI & Costos
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="widget-content pt-0">
+              <ChannelPerformanceWidget period={selectedPeriod} loading={dashboardLoading} />
+            </CardContent>
+          </Card>
+        </div>
 
-        <Card className="widget-container">
-          <CardHeader className="widget-header">
-            <CardTitle className="widget-title flex items-center gap-2">
-              <PieChart className="w-5 h-5 text-chart-tertiary" />
-              Campaign ROI Analysis
-            </CardTitle>
-            <Badge variant="default" className="text-xs bg-chart-tertiary/20 text-chart-tertiary border-chart-tertiary/30">
-              UTM Tracking
-            </Badge>
-          </CardHeader>
-          <CardContent className="widget-content">
-            <CampaignROIWidget period={selectedPeriod} loading={dashboardLoading} />
-          </CardContent>
-        </Card>
+        {/* Campaign ROI Analysis - Enhanced Card */}
+        <div className="group relative">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-tertiary/30 to-chart-tertiary/10 rounded-2xl blur opacity-50 group-hover:opacity-75 transition duration-500"></div>
+          <Card className="relative widget-container border-chart-tertiary/30 bg-gradient-to-br from-chart-tertiary/[0.02] to-transparent backdrop-blur-sm">
+            <CardHeader className="widget-header pb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-chart-tertiary/20 flex items-center justify-center">
+                    <PieChart className="w-5 h-5 text-chart-tertiary" />
+                  </div>
+                  <div>
+                    <CardTitle className="widget-title text-xl font-bold text-bone-white">
+                      Campaign ROI Analysis
+                    </CardTitle>
+                    <p className="text-sm text-subtle-gray mt-1">Rendimiento detallado de campañas activas</p>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs bg-chart-tertiary/10 text-chart-tertiary border-chart-tertiary/30 px-3 py-1">
+                  UTM Tracking
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="widget-content pt-0">
+              <CampaignROIWidget period={selectedPeriod} loading={dashboardLoading} />
+            </CardContent>
+          </Card>
+        </div>
 
-        <Card className="widget-container">
-          <CardHeader className="widget-header">
-            <CardTitle className="widget-title flex items-center gap-2">
-              <Eye className="w-5 h-5 text-chart-quaternary" />
-              Website Analytics
-            </CardTitle>
-            <Badge variant="default" className="text-xs bg-chart-quaternary/20 text-chart-quaternary border-chart-quaternary/30">
-              Traffic & Engagement
-            </Badge>
-          </CardHeader>
-          <CardContent className="widget-content">
-            <WebsiteAnalyticsWidget period={selectedPeriod} loading={dashboardLoading} />
-          </CardContent>
-        </Card>
+        {/* Website Analytics - Enhanced Card */}
+        <div className="group relative">
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-chart-quaternary/30 to-chart-quaternary/10 rounded-2xl blur opacity-50 group-hover:opacity-75 transition duration-500"></div>
+          <Card className="relative widget-container border-chart-quaternary/30 bg-gradient-to-br from-chart-quaternary/[0.02] to-transparent backdrop-blur-sm">
+            <CardHeader className="widget-header pb-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-chart-quaternary/20 flex items-center justify-center">
+                    <Eye className="w-5 h-5 text-chart-quaternary" />
+                  </div>
+                  <div>
+                    <CardTitle className="widget-title text-xl font-bold text-bone-white">
+                      Website Analytics
+                    </CardTitle>
+                    <p className="text-sm text-subtle-gray mt-1">Métricas de tráfico web y engagement</p>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-xs bg-chart-quaternary/10 text-chart-quaternary border-chart-quaternary/30 px-3 py-1">
+                  Traffic & Engagement
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="widget-content pt-0">
+              <WebsiteAnalyticsWidget period={selectedPeriod} loading={dashboardLoading} />
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </AnalyticsDashboardLayout>
   )
