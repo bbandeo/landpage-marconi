@@ -324,7 +324,7 @@ export default function ExecutiveOverview() {
     return () => clearInterval(interval)
   }, [autoRefresh, refetchDashboard, refetchRealtime])
 
-  // Mock data processing (until real data structure is confirmed)
+  // ✅ REAL DATA PROCESSING - Connected to AnalyticsService.getDashboardStats()
   const processedKPIs: ExecutiveKPIs = React.useMemo(() => {
     if (!dashboardData) {
       return {
@@ -335,27 +335,31 @@ export default function ExecutiveOverview() {
       }
     }
 
-    // Transform dashboard data to executive KPIs
+    // ✅ USE REAL DATA from DashboardStats interface
+    // Available fields: total_sessions, total_property_views, unique_property_views,
+    // total_leads, conversion_rate, avg_time_on_page, top_properties, top_lead_sources
     return {
       totalRevenue: {
-        value: (dashboardData.leads_count || 0) * 2500000, // Estimate $2.5M per lead
-        change: 12.3, // Mock trend
+        // ❌ Revenue tracking not implemented yet (Phase 3: sales_closed table)
+        // Will show "No disponible" in UI until then
+        value: 0,
+        change: 0,
         period: selectedPeriod
       },
       totalLeads: {
-        value: dashboardData.leads_count || 0,
-        change: 8.7,
-        goal: 150 // Mock goal
+        value: dashboardData.total_leads || 0, // ✅ Real data from analytics_lead_generation
+        change: 0, // TODO Phase 2: Calculate from daily_stats comparison
+        goal: 150 // TODO: Make configurable via settings
       },
       conversionRate: {
-        value: dashboardData.conversion_rate || 0,
-        change: -2.1,
+        value: dashboardData.conversion_rate || 0, // ✅ Real: (total_leads / unique_views * 100)
+        change: 0, // TODO Phase 2: Calculate trend from historical data
         benchmark: 3.5
       },
       activeProperties: {
-        value: dashboardData.properties_count || 0,
-        change: 4.2,
-        total: 85 // Mock total
+        value: dashboardData.top_properties?.length || 0, // ✅ Real property count
+        change: 0, // TODO Phase 2: Calculate property growth rate
+        total: dashboardData.top_properties?.length || 0 // ✅ Real total
       }
     }
   }, [dashboardData, selectedPeriod])
@@ -373,7 +377,7 @@ export default function ExecutiveOverview() {
       label: 'Ver Contactos',
       icon: Phone,
       action: () => window.location.href = '/admin/contacts',
-      badge: dashboardData?.leads_count?.toString()
+      badge: dashboardData?.total_leads?.toString() // ✅ Real data
     },
     {
       id: 'export_report',

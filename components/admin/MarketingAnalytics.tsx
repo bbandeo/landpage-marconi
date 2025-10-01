@@ -1113,29 +1113,45 @@ export default function MarketingAnalytics() {
     enableNotifications: false
   })
 
-  // Mock marketing KPIs - En el futuro estos vendrán de la API
-  const marketingKPIs: MarketingKPIs = {
-    totalLeads: {
-      value: dashboardData?.leads_count || 156,
-      change: 12.5,
-      cost: 85000
-    },
-    leadQuality: {
-      value: 68,
-      change: 8.3,
-      benchmark: 65
-    },
-    costPerLead: {
-      value: 545,
-      change: -15.2,
-      target: 500
-    },
-    websiteTraffic: {
-      value: dashboardData?.sessions_count || 1250,
-      change: 23.7,
-      conversionRate: dashboardData?.conversion_rate || 4.5
+  // ✅ REAL DATA from AnalyticsService.getDashboardStats()
+  const marketingKPIs: MarketingKPIs = React.useMemo(() => {
+    if (!dashboardData) {
+      return {
+        totalLeads: { value: 0, change: 0, cost: 0 },
+        leadQuality: { value: 0, change: 0, benchmark: 65 },
+        costPerLead: { value: 0, change: 0, target: 500 },
+        websiteTraffic: { value: 0, change: 0, conversionRate: 0 }
+      }
     }
-  }
+
+    const totalLeads = dashboardData.total_leads || 0
+    const totalSessions = dashboardData.total_sessions || 0
+    const totalCost = 85000 // TODO Phase 3: Get from campaign_stats.cost
+    const costPerLead = totalLeads > 0 ? Math.round(totalCost / totalLeads) : 0
+
+    return {
+      totalLeads: {
+        value: totalLeads, // ✅ Real from analytics_lead_generation
+        change: 0, // TODO Phase 2: Calculate trend from daily_stats
+        cost: totalCost // TODO Phase 3: Sum from campaign_stats table
+      },
+      leadQuality: {
+        value: 0, // ❌ Phase 3: Implement lead scoring algorithm
+        change: 0,
+        benchmark: 65
+      },
+      costPerLead: {
+        value: costPerLead, // ⏸️ Calculated: cost / leads
+        change: 0, // TODO Phase 2: Calculate trend
+        target: 500
+      },
+      websiteTraffic: {
+        value: totalSessions, // ✅ Real from analytics_sessions
+        change: 0, // TODO Phase 2: Calculate trend
+        conversionRate: dashboardData.conversion_rate || 0 // ✅ Real
+      }
+    }
+  }, [dashboardData])
 
   // Breadcrumbs
   const breadcrumbs = buildAnalyticsBreadcrumbs('marketing', 'Marketing & Leads')

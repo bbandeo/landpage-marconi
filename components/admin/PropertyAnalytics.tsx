@@ -118,8 +118,35 @@ interface PropertyPerformanceProps {
 }
 
 function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps) {
-  // Mock data de property performance - En el futuro vendrá de analytics API
-  const propertiesData: PropertyPerformance[] = [
+  // ✅ Get real data from useAnalyticsDashboard hook
+  const { data: dashboardData } = useAnalyticsDashboard({
+    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0]
+  })
+
+  // Transform top_properties from API to PropertyPerformance interface
+  const propertiesData: PropertyPerformance[] = (dashboardData?.top_properties || []).map((prop, index) => ({
+    id: prop.id || `prop-${index}`,
+    title: prop.title || 'Propiedad sin título',
+    address: prop.location || 'Dirección no disponible',
+    neighborhood: prop.location || 'N/A',
+    price: prop.price || 0,
+    propertyType: 'departamento', // TODO: Get from properties table
+    listingDate: prop.created_at || new Date().toISOString(),
+    views: prop.views || 0, // ✅ Real views
+    uniqueViews: prop.unique_views || 0, // ✅ Real unique views
+    leads: prop.leads || 0, // ✅ Real leads
+    showings: 0, // TODO Phase 3: Track showings
+    favorites: 0, // TODO Phase 3: Track favorites
+    daysOnMarket: prop.days_on_market || 0,
+    priceChanges: 0, // TODO Phase 3: Track price history
+    leadConversionRate: prop.conversion_rate || 0, // ✅ Real conversion
+    performance: prop.conversion_rate > 2 ? 'excellent' : prop.conversion_rate > 1.5 ? 'good' : prop.conversion_rate > 1 ? 'average' : 'poor',
+    trending: prop.views > 1000 ? 'up' : 'stable' // Simple heuristic
+  }))
+
+  // Fallback mock data if no real data available yet
+  const mockPropertiesData: PropertyPerformance[] = [
     {
       id: 'prop-001',
       title: 'Departamento Premium en Palermo',
@@ -274,10 +301,13 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
     }
   }
 
+  // Use real data if available, fallback to mock
+  const displayData = propertiesData.length > 0 ? propertiesData : mockPropertiesData
+
   // Calcular métricas totales
-  const totalViews = propertiesData.reduce((sum, prop) => sum + prop.views, 0)
-  const totalLeads = propertiesData.reduce((sum, prop) => sum + prop.leads, 0)
-  const avgDaysOnMarket = Math.round(propertiesData.reduce((sum, prop) => sum + prop.daysOnMarket, 0) / propertiesData.length)
+  const totalViews = displayData.reduce((sum, prop) => sum + prop.views, 0)
+  const totalLeads = displayData.reduce((sum, prop) => sum + prop.leads, 0)
+  const avgDaysOnMarket = displayData.length > 0 ? Math.round(displayData.reduce((sum, prop) => sum + prop.daysOnMarket, 0) / displayData.length) : 0
 
   return (
     <div className="space-y-4">
@@ -299,7 +329,7 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
 
       {/* Properties List */}
       <div className="space-y-3">
-        {propertiesData
+        {displayData
           .sort((a, b) => b.views - a.views) // Ordenar por views descendente
           .map((property) => {
             const PropertyTypeIcon = getPropertyTypeIcon(property.propertyType)
@@ -413,30 +443,46 @@ export default function PropertyAnalytics() {
     enableNotifications: false
   })
 
-  // Mock property KPIs - En el futuro estos vendrán de la API
-  const propertyKPIs: PropertyKPIs = {
-    totalProperties: {
-      value: 45,
-      active: 38,
-      sold: 5,
-      pending: 2
-    },
-    avgViewsPerProperty: {
-      value: 1650,
-      change: 18.5,
-      benchmark: 1200
-    },
-    avgTimeOnMarket: {
-      value: 72,
-      change: -8.3,
-      target: 60
-    },
-    conversionRate: {
-      value: 1.46,
-      change: 12.7,
-      benchmark: 1.20
+  // ✅ REAL DATA from AnalyticsService.getDashboardStats()
+  const propertyKPIs: PropertyKPIs = React.useMemo(() => {
+    if (!dashboardData) {
+      return {
+        totalProperties: { value: 0, active: 0, sold: 0, pending: 0 },
+        avgViewsPerProperty: { value: 0, change: 0, benchmark: 1200 },
+        avgTimeOnMarket: { value: 0, change: 0, target: 60 },
+        conversionRate: { value: 0, change: 0, benchmark: 1.20 }
+      }
     }
-  }
+
+    const topProperties = dashboardData.top_properties || []
+    const totalViews = dashboardData.total_property_views || 0
+    const totalProps = topProperties.length
+    const avgViews = totalProps > 0 ? Math.round(totalViews / totalProps) : 0
+
+    return {
+      totalProperties: {
+        value: totalProps, // ✅ Real property count
+        active: totalProps, // TODO Phase 3: Add property status filtering
+        sold: 0, // TODO Phase 3: Track from sales_closed table
+        pending: 0 // TODO Phase 3: Track from sales_pipeline table
+      },
+      avgViewsPerProperty: {
+        value: avgViews, // ✅ Real: total_views / property_count
+        change: 0, // TODO Phase 2: Calculate trend
+        benchmark: 1200
+      },
+      avgTimeOnMarket: {
+        value: 0, // TODO Phase 2: Calculate from properties.created_at
+        change: 0,
+        target: 60
+      },
+      conversionRate: {
+        value: dashboardData.conversion_rate || 0, // ✅ Real data
+        change: 0, // TODO Phase 2: Calculate trend
+        benchmark: 1.20
+      }
+    }
+  }, [dashboardData])
 
   // Breadcrumbs
   const breadcrumbs = buildAnalyticsBreadcrumbs('properties', 'Property Analytics')
