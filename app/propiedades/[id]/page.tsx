@@ -33,8 +33,8 @@ import {
 } from "lucide-react"
 import type { Property as PropertyType } from "@/lib/supabase"
 import Header from "@/components/Header"
-import { ComprehensivePropertyTracker, ContactTracker, ImageGalleryTracker, useImageGalleryTracker } from "@/components/PropertyViewTracker"
-import { trackPropertyView, trackContactClick, trackWhatsAppClick, trackLead } from '@/lib/analytics-client'
+import { ComprehensivePropertyTracker, ContactTracker, ImageGalleryTracker } from "@/components/PropertyViewTracker"
+import { trackLead } from '@/lib/analytics-client'
 import { LEAD_SOURCE_CODES } from '@/types/analytics'
 
 interface Property extends PropertyType {
@@ -107,15 +107,7 @@ export default function PropertyDetailPage() {
     }
   }, [params.id])
 
-  // Track property view
-  useEffect(() => {
-    if (property?.id) {
-      trackPropertyView(property.id, {
-        pageUrl: window.location.href,
-        referrerUrl: document.referrer
-      })
-    }
-  }, [property?.id])
+  // Property view tracking is handled by ComprehensivePropertyTracker component below
 
   // Image gallery navigation
   const nextImage = () => {
@@ -493,10 +485,7 @@ export default function PropertyDetailPage() {
                   <div className="space-y-premium-sm">
                     <ContactTracker propertyId={property.id} type="form" metadata={{ form_type: 'property_inquiry' }}>
                       <Button
-                        onClick={() => {
-                          trackContactClick(property.id)
-                          setShowContactForm(true)
-                        }}
+                        onClick={() => setShowContactForm(true)}
                         className="w-full"
                         size="lg"
                       >
@@ -509,8 +498,6 @@ export default function PropertyDetailPage() {
                       <Button
                         variant="outline"
                         onClick={async () => {
-                          trackContactClick(property.id)
-                          
                           // Create lead for phone contact
                           try {
                             const response = await fetch('/api/leads', {
@@ -551,8 +538,6 @@ export default function PropertyDetailPage() {
                       <Button
                         variant="outline"
                         onClick={async () => {
-                          trackContactClick(property.id)
-                          
                           // Create lead for email contact
                           try {
                             const response = await fetch('/api/leads', {
@@ -593,8 +578,6 @@ export default function PropertyDetailPage() {
                       <Button
                         variant="outline"
                         onClick={async () => {
-                          trackContactClick(property.id)
-                          
                           // Create lead for visit request
                           try {
                             const response = await fetch('/api/leads', {
@@ -629,49 +612,49 @@ export default function PropertyDetailPage() {
                         Agendar visita
                       </Button>
                     </ContactTracker>
-                    
-                    <Button
-                      onClick={async () => {
-                        trackWhatsAppClick(property.id)
-                        
-                        // Create lead for WhatsApp contact
-                        try {
-                          const response = await fetch('/api/leads', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                              name: 'Cliente - WhatsApp',
-                              phone: '+54 9 1234567890',
-                              message: `Consulta por propiedad "${property.title}" - Código #${property.id}`,
-                              source: 'whatsapp',
-                              property_id: property.id,
-                            }),
-                          });
 
-                          if (response.ok) {
-                            const leadData = await response.json();
-                            
-                            // Track the lead generation in analytics
-                            if (leadData.id) {
-                              await trackLead(leadData.id, LEAD_SOURCE_CODES.WHATSAPP, property.id);
+                    <ContactTracker propertyId={property.id} type="whatsapp" metadata={{ contact_method: 'whatsapp' }}>
+                      <Button
+                        onClick={async () => {
+                          // Create lead for WhatsApp contact
+                          try {
+                            const response = await fetch('/api/leads', {
+                              method: 'POST',
+                              headers: {
+                                'Content-Type': 'application/json',
+                              },
+                              body: JSON.stringify({
+                                name: 'Cliente - WhatsApp',
+                                phone: '+54 9 1234567890',
+                                message: `Consulta por propiedad "${property.title}" - Código #${property.id}`,
+                                source: 'whatsapp',
+                                property_id: property.id,
+                              }),
+                            });
+
+                            if (response.ok) {
+                              const leadData = await response.json();
+
+                              // Track the lead generation in analytics
+                              if (leadData.id) {
+                                await trackLead(leadData.id, LEAD_SOURCE_CODES.WHATSAPP, property.id);
+                              }
                             }
+                          } catch (error) {
+                            console.error('Error creating WhatsApp lead:', error);
                           }
-                        } catch (error) {
-                          console.error('Error creating WhatsApp lead:', error);
-                        }
-                        
-                        // Abrir WhatsApp con mensaje predeterminado
-                        const message = encodeURIComponent(`Hola! Me interesa la propiedad "${property.title}" - Código #${property.id}`)
-                        window.open(`https://wa.me/5491234567890?text=${message}`, '_blank')
-                      }}
-                      className="w-full bg-green-600 hover:bg-green-700"
-                      size="lg"
-                    >
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      WhatsApp
-                    </Button>
+
+                          // Abrir WhatsApp con mensaje predeterminado
+                          const message = encodeURIComponent(`Hola! Me interesa la propiedad "${property.title}" - Código #${property.id}`)
+                          window.open(`https://wa.me/5491234567890?text=${message}`, '_blank')
+                        }}
+                        className="w-full bg-green-600 hover:bg-green-700"
+                        size="lg"
+                      >
+                        <MessageCircle className="w-4 h-4 mr-2" />
+                        WhatsApp
+                      </Button>
+                    </ContactTracker>
                   </div>
                 ) : (
                   <form onSubmit={handleContactSubmit} className="space-y-premium-md">
