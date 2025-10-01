@@ -162,6 +162,8 @@ async function getMarketingData(filters: AnalyticsFilters) {
 }
 
 async function getPropertiesData(filters: AnalyticsFilters) {
+  const { supabaseAdmin } = await import('@/lib/supabase')
+
   const [topByViews, topByLeads, topByConversion, dashboardStats] = await Promise.all([
     AnalyticsService.getTopProperties(20, 'views', 30),
     AnalyticsService.getTopProperties(20, 'leads', 30),
@@ -169,11 +171,49 @@ async function getPropertiesData(filters: AnalyticsFilters) {
     AnalyticsService.getDashboardStats(filters)
   ])
 
-  // Calculate overview metrics from top properties data
+  // Get all unique property IDs
   const allPropertiesSet = new Set<number>()
   topByViews.forEach(p => p.property_id && allPropertiesSet.add(p.property_id))
   topByLeads.forEach(p => p.property_id && allPropertiesSet.add(p.property_id))
   topByConversion.forEach(p => p.property_id && allPropertiesSet.add(p.property_id))
+
+  // Fetch full property details from properties table
+  const propertyIds = Array.from(allPropertiesSet)
+  const { data: propertiesDetails, error: propertiesError } = await supabaseAdmin
+    .from('properties')
+    .select('id, title, address, neighborhood, price, images, property_type, operation_type, created_at')
+    .in('id', propertyIds)
+
+  if (propertiesError) {
+    console.error('Failed to fetch properties details:', propertiesError)
+  }
+
+  // Create a map for quick property lookup
+  const propertiesMap = new Map(
+    propertiesDetails?.map(p => [p.id, p]) || []
+  )
+
+  // Enrich analytics data with property details
+  const enrichProperty = (analyticsData: any) => {
+    const propertyDetails = propertiesMap.get(analyticsData.property_id)
+    if (!propertyDetails) return analyticsData
+
+    return {
+      ...analyticsData,
+      // Property details
+      address: propertyDetails.address,
+      neighborhood: propertyDetails.neighborhood,
+      price: propertyDetails.price,
+      images: propertyDetails.images,
+      property_type: propertyDetails.property_type,
+      operation_type: propertyDetails.operation_type,
+      created_at: propertyDetails.created_at,
+      // Calculate days on market
+      days_on_market: Math.floor(
+        (new Date().getTime() - new Date(propertyDetails.created_at).getTime()) / (1000 * 60 * 60 * 24)
+      )
+    }
+  }
 
   const totalProperties = allPropertiesSet.size
   const totalViews = topByViews.reduce((sum, p) => sum + (p.unique_views || 0), 0)
@@ -181,9 +221,9 @@ async function getPropertiesData(filters: AnalyticsFilters) {
 
   return {
     top_properties: {
-      by_views: topByViews,
-      by_leads: topByLeads,
-      by_conversion_rate: topByConversion
+      by_views: topByViews.map(enrichProperty),
+      by_leads: topByLeads.map(enrichProperty),
+      by_conversion_rate: topByConversion.map(enrichProperty)
     },
     overview: {
       total_properties: totalProperties,

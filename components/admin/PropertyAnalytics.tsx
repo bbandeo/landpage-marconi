@@ -89,6 +89,7 @@ interface PropertyPerformance {
   leadConversionRate: number
   performance: 'excellent' | 'good' | 'average' | 'poor'
   trending: 'up' | 'down' | 'stable'
+  images?: string[]
 }
 
 // =====================================================================================
@@ -129,25 +130,31 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
   }, [period])
 
   // Transform top_properties from API to PropertyPerformance interface
-  const propertiesData: PropertyPerformance[] = (propertiesModuleData?.top_properties?.by_views || []).map((prop, index) => ({
-    id: prop.id || `prop-${index}`,
-    title: prop.title || 'Propiedad sin título',
-    address: prop.location || 'Dirección no disponible',
-    neighborhood: prop.location || 'N/A',
-    price: prop.price || 0,
-    propertyType: 'departamento', // TODO: Get from properties table
-    listingDate: prop.created_at || new Date().toISOString(),
-    views: prop.views || 0, // ✅ Real views
-    uniqueViews: prop.unique_views || 0, // ✅ Real unique views
-    leads: prop.leads || 0, // ✅ Real leads
-    showings: 0, // TODO Phase 3: Track showings
-    favorites: 0, // TODO Phase 3: Track favorites
-    daysOnMarket: prop.days_on_market || 0,
-    priceChanges: 0, // TODO Phase 3: Track price history
-    leadConversionRate: prop.conversion_rate || 0, // ✅ Real conversion
-    performance: prop.conversion_rate > 2 ? 'excellent' : prop.conversion_rate > 1.5 ? 'good' : prop.conversion_rate > 1 ? 'average' : 'poor',
-    trending: prop.views > 1000 ? 'up' : 'stable' // Simple heuristic
-  }))
+  const propertiesData: PropertyPerformance[] = (propertiesModuleData?.top_properties?.by_views || []).map((prop, index) => {
+    // Calculate conversion rate properly
+    const conversionRate = prop.unique_views > 0 ? ((prop.leads / prop.unique_views) * 100) : 0
+
+    return {
+      id: prop.property_id?.toString() || `prop-${index}`,
+      title: prop.title || 'Propiedad sin título',
+      address: prop.address || 'Dirección no disponible',
+      neighborhood: prop.neighborhood || 'N/A',
+      price: prop.price || 0,
+      propertyType: prop.property_type || 'departamento',
+      listingDate: prop.created_at || new Date().toISOString(),
+      views: prop.metric_value || 0, // Total views
+      uniqueViews: prop.unique_views || 0,
+      leads: prop.leads || 0,
+      showings: 0, // TODO Phase 3: Track showings
+      favorites: 0, // TODO Phase 3: Track favorites
+      daysOnMarket: prop.days_on_market || 0,
+      priceChanges: 0, // TODO Phase 3: Track price history
+      leadConversionRate: conversionRate,
+      performance: conversionRate > 2 ? 'excellent' : conversionRate > 1.5 ? 'good' : conversionRate > 1 ? 'average' : 'poor',
+      trending: prop.metric_value > 50 ? 'up' : prop.metric_value < 10 ? 'down' : 'stable',
+      images: prop.images || []
+    }
+  })
 
   // Fallback mock data if no real data available yet
   const mockPropertiesData: PropertyPerformance[] = [
@@ -344,11 +351,30 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
                 key={property.id}
                 className="flex items-center gap-4 p-4 rounded-lg bg-surface-darker/30 hover:bg-surface-darker/50 transition-colors border border-border-subtle/50"
               >
-                {/* Property Icon & Info */}
+                {/* Property Image & Info */}
                 <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="w-12 h-12 rounded-lg bg-chart-primary/20 flex items-center justify-center">
-                    <PropertyTypeIcon className="w-6 h-6 text-chart-primary" />
-                  </div>
+                  {property.images && property.images.length > 0 ? (
+                    <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-surface-darker">
+                      <img
+                        src={property.images[0]}
+                        alt={property.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback to icon if image fails to load
+                          const target = e.target as HTMLElement
+                          target.style.display = 'none'
+                          const parent = target.parentElement
+                          if (parent) {
+                            parent.innerHTML = `<div class="w-full h-full bg-chart-primary/20 flex items-center justify-center"><svg class="w-8 h-8 text-chart-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg></div>`
+                          }
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-16 h-16 rounded-lg bg-chart-primary/20 flex items-center justify-center flex-shrink-0">
+                      <PropertyTypeIcon className="w-8 h-8 text-chart-primary" />
+                    </div>
+                  )}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="font-medium text-white text-sm truncate">{property.title}</h4>
@@ -362,7 +388,7 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
                     <div className="flex items-center gap-4 text-xs text-subtle-gray">
                       <span className="flex items-center gap-1">
                         <MapPin className="w-3 h-3" />
-                        {property.neighborhood}
+                        {property.address || property.neighborhood}
                       </span>
                       <span>{property.views.toLocaleString()} views</span>
                       <span className="hidden sm:inline">{property.leads} leads</span>
