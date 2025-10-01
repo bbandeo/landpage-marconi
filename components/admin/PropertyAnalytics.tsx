@@ -421,18 +421,50 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
           })}
       </div>
 
-      {/* Performance Insight */}
-      <div className="mt-4 p-3 rounded-lg bg-chart-primary/10 border border-chart-primary/20">
-        <div className="flex items-start gap-2">
-          <BarChart3 className="w-4 h-4 text-chart-primary mt-0.5" />
-          <div className="text-sm">
-            <div className="font-medium text-chart-primary">Insight de Propiedades</div>
-            <div className="text-subtle-gray text-xs mt-1">
-              El loft en Puerto Madero lidera en views (2,280) y conversión (1.54%). Recoleta necesita optimización de precio.
+      {/* Performance Insight - Dynamic */}
+      {displayData.length > 0 && (() => {
+        // Find top performer by views
+        const topByViews = displayData.reduce((max, prop) =>
+          prop.views > max.views ? prop : max
+        , displayData[0])
+
+        // Find top performer by conversion
+        const topByConversion = displayData.reduce((max, prop) =>
+          prop.leadConversionRate > max.leadConversionRate ? prop : max
+        , displayData[0])
+
+        // Find property that needs attention (high views but low conversion)
+        const needsAttention = displayData
+          .filter(p => p.views > 0)
+          .find(p => p.views > avgDaysOnMarket * 10 && p.leadConversionRate < 1)
+
+        // Generate dynamic insight
+        let insight = `${topByViews.title} lidera en visualizaciones (${topByViews.views.toLocaleString()}).`
+
+        if (topByConversion.id !== topByViews.id) {
+          insight += ` ${topByConversion.title} destaca con ${topByConversion.leadConversionRate.toFixed(2)}% de conversión.`
+        } else {
+          insight += ` También lidera en conversión (${topByConversion.leadConversionRate.toFixed(2)}%).`
+        }
+
+        if (needsAttention) {
+          insight += ` ${needsAttention.title} tiene buen tráfico pero baja conversión - considera optimizar precio o descripción.`
+        }
+
+        return (
+          <div className="mt-4 p-3 rounded-lg bg-chart-primary/10 border border-chart-primary/20">
+            <div className="flex items-start gap-2">
+              <BarChart3 className="w-4 h-4 text-chart-primary mt-0.5" />
+              <div className="text-sm">
+                <div className="font-medium text-chart-primary">Insight de Propiedades</div>
+                <div className="text-subtle-gray text-xs mt-1">
+                  {insight}
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        )
+      })()}
     </div>
   )
 }
