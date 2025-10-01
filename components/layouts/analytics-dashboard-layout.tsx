@@ -4,6 +4,7 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 import { ChevronRight, Home } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import ModuleTabs from '@/components/navigation/module-tabs'
 
 interface BreadcrumbItem {
   label: string
@@ -34,6 +35,9 @@ export function AnalyticsDashboardLayout({
 }: AnalyticsDashboardLayoutProps) {
   return (
     <div className={cn("analytics-dashboard-layout min-h-screen bg-background", className)}>
+      {/* Module Tabs Navigation (Desktop/Tablet only) */}
+      <ModuleTabs />
+
       {/* Header Section */}
       <div className="analytics-dashboard-header border-b bg-card/50">
         <div className="container mx-auto px-4 py-4 lg:px-6 lg:py-6">
