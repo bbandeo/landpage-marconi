@@ -327,11 +327,28 @@ export class AnalyticsService {
     try {
       this.validateLeadGeneration(leadData)
 
-      const { error } = await supabase
+      let realSessionUUID: string | null = null
+
+      // Get the real session UUID if session_id is provided
+      if (leadData.session_id) {
+        const { data: sessionData, error: sessionError } = await this.ADMIN_CLIENT
+          .from('analytics_sessions')
+          .select('id')
+          .eq('session_id', leadData.session_id)
+          .single()
+
+        if (sessionError || !sessionData) {
+          console.warn('Session not found for lead generation, skipping session association:', leadData.session_id)
+        } else {
+          realSessionUUID = sessionData.id
+        }
+      }
+
+      const { error } = await this.ADMIN_CLIENT
         .from('analytics_lead_generation')
         .insert([{
           lead_id: leadData.lead_id,
-          session_id: leadData.session_id,
+          session_id: realSessionUUID,
           property_id: leadData.property_id,
           lead_source_id: leadData.lead_source_id,
           form_type: leadData.form_type,
@@ -421,11 +438,25 @@ export class AnalyticsService {
     try {
       this.validateInteraction(interactionData)
 
+      // Get the real session UUID from analytics_sessions
+      const { data: sessionData, error: sessionError } = await this.ADMIN_CLIENT
+        .from('analytics_sessions')
+        .select('id')
+        .eq('session_id', interactionData.session_id)
+        .single()
+
+      if (sessionError || !sessionData) {
+        console.warn('Session not found for interaction, skipping:', interactionData.session_id)
+        return // Silently skip if session doesn't exist
+      }
+
+      const realSessionUUID = sessionData.id
+
       // Use admin client to bypass RLS policies
       const { error } = await this.ADMIN_CLIENT
         .from('analytics_user_interactions')
         .insert([{
-          session_id: interactionData.session_id,
+          session_id: realSessionUUID,
           property_id: interactionData.property_id,
           interaction_type: interactionData.event_type,
           element_id: interactionData.event_target,
@@ -458,16 +489,38 @@ export class AnalyticsService {
 
       if (validInteractions.length === 0) return
 
-      const interactionsFormatted = validInteractions.map(interaction => ({
-        session_id: interaction.session_id,
-        property_id: interaction.property_id,
-        interaction_type: interaction.event_type,
-        element_id: interaction.event_target,
-        page_url: interaction.page_url,
-        interaction_data: interaction.event_data
-      }))
+      // Get all unique session_ids
+      const sessionIds = [...new Set(validInteractions.map(i => i.session_id))]
 
-      const { error } = await supabase
+      // Fetch real session UUIDs
+      const { data: sessionsData } = await this.ADMIN_CLIENT
+        .from('analytics_sessions')
+        .select('id, session_id')
+        .in('session_id', sessionIds)
+
+      if (!sessionsData || sessionsData.length === 0) {
+        console.warn('No valid sessions found for batch interactions')
+        return
+      }
+
+      // Create a map of session_id -> real UUID
+      const sessionMap = new Map(sessionsData.map(s => [s.session_id, s.id]))
+
+      // Filter and map interactions with real session UUIDs
+      const interactionsFormatted = validInteractions
+        .filter(interaction => sessionMap.has(interaction.session_id))
+        .map(interaction => ({
+          session_id: sessionMap.get(interaction.session_id),
+          property_id: interaction.property_id,
+          interaction_type: interaction.event_type,
+          element_id: interaction.event_target,
+          page_url: interaction.page_url,
+          interaction_data: interaction.event_data
+        }))
+
+      if (interactionsFormatted.length === 0) return
+
+      const { error } = await this.ADMIN_CLIENT
         .from('analytics_user_interactions')
         .insert(interactionsFormatted)
 
