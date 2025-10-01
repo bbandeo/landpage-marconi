@@ -118,14 +118,18 @@ interface PropertyPerformanceProps {
 }
 
 function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps) {
-  // ✅ Get real data from useAnalyticsDashboard hook
-  const { data: dashboardData } = useAnalyticsDashboard({
-    startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    endDate: new Date().toISOString().split('T')[0]
-  })
+  // ✅ Get real data from properties module
+  const [propertiesModuleData, setPropertiesModuleData] = React.useState<any>(null)
+
+  React.useEffect(() => {
+    fetch('/api/analytics/modules/properties')
+      .then(res => res.json())
+      .then(data => setPropertiesModuleData(data.data))
+      .catch(err => console.error('Failed to fetch properties module data:', err))
+  }, [period])
 
   // Transform top_properties from API to PropertyPerformance interface
-  const propertiesData: PropertyPerformance[] = (dashboardData?.top_properties || []).map((prop, index) => ({
+  const propertiesData: PropertyPerformance[] = (propertiesModuleData?.top_properties?.by_views || []).map((prop, index) => ({
     id: prop.id || `prop-${index}`,
     title: prop.title || 'Propiedad sin título',
     address: prop.location || 'Dirección no disponible',
@@ -443,9 +447,29 @@ export default function PropertyAnalytics() {
     enableNotifications: false
   })
 
-  // ✅ REAL DATA from AnalyticsService.getDashboardStats()
+  // State for properties module data
+  const [propertiesModuleData, setPropertiesModuleData] = React.useState<any>(null)
+
+  // Fetch properties module data
+  React.useEffect(() => {
+    const fetchPropertiesData = async () => {
+      try {
+        const response = await fetch('/api/analytics/modules/properties')
+        const result = await response.json()
+        if (result.success) {
+          setPropertiesModuleData(result.data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch properties module data:', error)
+      }
+    }
+
+    fetchPropertiesData()
+  }, [selectedPeriod])
+
+  // ✅ REAL DATA from properties module
   const propertyKPIs: PropertyKPIs = React.useMemo(() => {
-    if (!dashboardData) {
+    if (!propertiesModuleData || !propertiesModuleData.overview) {
       return {
         totalProperties: { value: 0, active: 0, sold: 0, pending: 0 },
         avgViewsPerProperty: { value: 0, change: 0, benchmark: 1200 },
@@ -454,35 +478,32 @@ export default function PropertyAnalytics() {
       }
     }
 
-    const topProperties = dashboardData.top_properties || []
-    const totalViews = dashboardData.total_property_views || 0
-    const totalProps = topProperties.length
-    const avgViews = totalProps > 0 ? Math.round(totalViews / totalProps) : 0
+    const overview = propertiesModuleData.overview
 
     return {
       totalProperties: {
-        value: totalProps, // ✅ Real property count
-        active: totalProps, // TODO Phase 3: Add property status filtering
+        value: overview.total_properties || 0, // ✅ Real property count
+        active: overview.total_properties || 0, // TODO Phase 3: Add property status filtering
         sold: 0, // TODO Phase 3: Track from sales_closed table
         pending: 0 // TODO Phase 3: Track from sales_pipeline table
       },
       avgViewsPerProperty: {
-        value: avgViews, // ✅ Real: total_views / property_count
+        value: overview.avg_views_per_property || 0, // ✅ Real: total_views / property_count
         change: 0, // TODO Phase 2: Calculate trend
         benchmark: 1200
       },
       avgTimeOnMarket: {
-        value: 0, // TODO Phase 2: Calculate from properties.created_at
+        value: overview.avg_time_on_market || 0, // TODO Phase 2: Calculate from properties.created_at
         change: 0,
         target: 60
       },
       conversionRate: {
-        value: dashboardData.conversion_rate || 0, // ✅ Real data
+        value: dashboardData?.conversion_rate || 0, // ✅ Real data from dashboard
         change: 0, // TODO Phase 2: Calculate trend
         benchmark: 1.20
       }
     }
-  }, [dashboardData])
+  }, [propertiesModuleData, dashboardData])
 
   // Breadcrumbs
   const breadcrumbs = buildAnalyticsBreadcrumbs('properties', 'Property Analytics')

@@ -169,6 +169,16 @@ async function getPropertiesData(filters: AnalyticsFilters) {
     AnalyticsService.getDashboardStats(filters)
   ])
 
+  // Calculate overview metrics from top properties data
+  const allPropertiesSet = new Set<number>()
+  topByViews.forEach(p => p.property_id && allPropertiesSet.add(p.property_id))
+  topByLeads.forEach(p => p.property_id && allPropertiesSet.add(p.property_id))
+  topByConversion.forEach(p => p.property_id && allPropertiesSet.add(p.property_id))
+
+  const totalProperties = allPropertiesSet.size
+  const totalViews = topByViews.reduce((sum, p) => sum + (p.unique_views || 0), 0)
+  const avgViewsPerProperty = totalProperties > 0 ? Math.round(totalViews / totalProperties) : 0
+
   return {
     top_properties: {
       by_views: topByViews,
@@ -176,9 +186,9 @@ async function getPropertiesData(filters: AnalyticsFilters) {
       by_conversion_rate: topByConversion
     },
     overview: {
-      total_properties: dashboardStats.properties_count || 0,
-      total_views: dashboardStats.property_views_count || 0,
-      avg_views_per_property: dashboardStats.avg_views_per_property || 0,
+      total_properties: totalProperties,
+      total_views: totalViews,
+      avg_views_per_property: avgViewsPerProperty,
       avg_time_on_property: dashboardStats.avg_property_view_duration || 0
     },
     performance_trends: {

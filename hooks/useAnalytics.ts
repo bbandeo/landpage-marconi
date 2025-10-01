@@ -147,10 +147,18 @@ export function useAnalytics(options: UseAnalyticsOptions = {}) {
         setSessionId(sessionId)
 
         // Check opt-out status
-        const optOutResponse = await fetch(`/api/analytics/gdpr/opt-out?session_id=${sessionId}`)
-        if (optOutResponse.ok) {
-          const optOutData = await optOutResponse.json()
-          setIsOptedOut(optOutData.data?.is_opted_out || false)
+        try {
+          const optOutResponse = await fetch(`/api/analytics/gdpr/opt-out?session_id=${sessionId}`)
+          if (optOutResponse.ok) {
+            const optOutData = await optOutResponse.json()
+            setIsOptedOut(optOutData.data?.is_opted_out || false)
+          } else if (optOutResponse.status === 404) {
+            // Session not found yet, default to not opted out
+            setIsOptedOut(false)
+          }
+        } catch (optOutError) {
+          console.warn('Failed to check opt-out status:', optOutError)
+          setIsOptedOut(false)
         }
       } catch (error) {
         console.warn('Analytics initialization failed:', error)
