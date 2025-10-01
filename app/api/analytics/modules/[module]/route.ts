@@ -225,10 +225,11 @@ async function getCustomersData(filters: AnalyticsFilters) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { module: string } }
+  { params }: { params: Promise<{ module: string }> }
 ) {
   const startTime = Date.now()
-  const module = params.module as ModuleType
+  const { module: moduleParam } = await params
+  const module = moduleParam as ModuleType
 
   try {
     // Validate module
@@ -390,10 +391,11 @@ export async function GET(
 // POST endpoint for complex module queries with custom parameters
 export async function POST(
   request: NextRequest,
-  { params }: { params: { module: string } }
+  { params }: { params: Promise<{ module: string }> }
 ) {
   const startTime = Date.now()
-  const module = params.module as ModuleType
+  const { module: moduleParam } = await params
+  const module = moduleParam as ModuleType
 
   try {
     // Validate module

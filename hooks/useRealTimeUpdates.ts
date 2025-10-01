@@ -90,6 +90,22 @@ export function useRealTimeUpdates(options: UseRealTimeOptions = {}) {
       const response = await fetch('/api/analytics/realtime/active')
 
       if (!response.ok) {
+        // If endpoint doesn't exist (404), return empty data instead of throwing
+        if (response.status === 404) {
+          return {
+            activeUsers: 0,
+            currentViews: 0,
+            todayLeads: 0,
+            lastHourViews: 0,
+            topActiveProperties: [],
+            recentEvents: [],
+            systemStatus: {
+              isHealthy: true,
+              responseTime: 0,
+              errorRate: 0
+            }
+          }
+        }
         throw new Error(`Real-time data fetch failed: ${response.status}`)
       }
 
