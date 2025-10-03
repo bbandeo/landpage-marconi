@@ -64,7 +64,7 @@ export interface RealTimeEvent {
 export function useRealTimeUpdates(options: UseRealTimeOptions = {}) {
   const {
     enabled = true,
-    interval = 30000, // 30 seconds
+    interval = 60000, // ✅ 60 seconds default (changed from 30s)
     maxEvents = 50,
     enableNotifications = false,
     enableWebSocket = false,
@@ -73,10 +73,11 @@ export function useRealTimeUpdates(options: UseRealTimeOptions = {}) {
   const queryClient = useQueryClient()
   const [events, setEvents] = useState<RealTimeEvent[]>([])
   const [isConnected, setIsConnected] = useState(false)
+  const [isPaused, setIsPaused] = useState(false) // ✅ Track pause state
   const wsRef = useRef<WebSocket | null>(null)
   const notificationPermission = useRef<NotificationPermission>('default')
 
-  // Main real-time data query
+  // ✅ FASE 1.2: Main real-time data query using existing dashboard endpoint
   const {
     data,
     isLoading,
@@ -87,11 +88,12 @@ export function useRealTimeUpdates(options: UseRealTimeOptions = {}) {
   } = useQuery({
     queryKey: queryKeys.realtime.active(),
     queryFn: async (): Promise<RealTimeMetrics> => {
-      const response = await fetch('/api/analytics/realtime/active')
+      // ✅ Use existing dashboard endpoint with period=today
+      const response = await fetch('/api/analytics/dashboard?period=today')
 
       if (!response.ok) {
-        // If endpoint doesn't exist (404), return empty data instead of throwing
-        if (response.status === 404) {
+        // If endpoint fails, return empty data instead of throwing
+        if (response.status === 404 || response.status === 500) {
           return {
             activeUsers: 0,
             currentViews: 0,
@@ -100,9 +102,9 @@ export function useRealTimeUpdates(options: UseRealTimeOptions = {}) {
             topActiveProperties: [],
             recentEvents: [],
             systemStatus: {
-              isHealthy: true,
+              isHealthy: false,
               responseTime: 0,
-              errorRate: 0
+              errorRate: 1
             }
           }
         }
@@ -115,12 +117,13 @@ export function useRealTimeUpdates(options: UseRealTimeOptions = {}) {
         throw new Error(rawData.error || 'Real-time data fetch failed')
       }
 
-      return transformRealTimeMetrics(rawData.data)
+      // ✅ Transform dashboard response to real-time metrics format
+      return transformDashboardToRealtime(rawData.data)
     },
 
     ...cacheStrategies.realtime,
-    enabled,
-    refetchInterval: interval,
+    enabled: enabled && !isPaused, // ✅ Pause when tab not visible
+    refetchInterval: isPaused ? false : interval, // ✅ Stop polling when paused
     refetchOnWindowFocus: true,
     throwOnError: false,
   })
@@ -311,6 +314,21 @@ export function useRealTimeUpdates(options: UseRealTimeOptions = {}) {
     }
   }, [])
 
+  // ✅ FASE 1.2: Page Visibility API - Pause polling when tab not visible
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+
+    const handleVisibilityChange = () => {
+      setIsPaused(document.hidden)
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [])
+
   // =====================================================================================
   // UTILITY FUNCTIONS
   // =====================================================================================
@@ -421,6 +439,43 @@ export function useLeadNotifications() {
 // HELPER FUNCTIONS
 // =====================================================================================
 
+// ✅ FASE 1.2: Transform dashboard response to real-time metrics format
+function transformDashboardToRealtime(dashboardData: any): RealTimeMetrics {
+  // Extract top 5 properties from dashboard data
+  const topProperties = (dashboardData.top_properties || []).slice(0, 5).map((prop: any) => ({
+    id: prop.property_id || 0,
+    title: prop.title || 'Property',
+    currentViews: prop.metric_value || 0,
+    todayLeads: prop.leads || 0,
+  }))
+
+  // Get recent activity from daily stats
+  const recentEvents = (dashboardData.daily_stats || []).slice(0, 10).map((stat: any, index: number) => ({
+    id: `event-${index}`,
+    type: 'view' as const,
+    propertyId: 0,
+    propertyTitle: 'Activity',
+    timestamp: stat.stat_date || new Date().toISOString(),
+    deviceType: 'unknown',
+    source: 'dashboard',
+  }))
+
+  return {
+    activeUsers: dashboardData.sessions_count || 0,
+    currentViews: dashboardData.property_views_count || 0,
+    todayLeads: dashboardData.leads_count || 0,
+    lastHourViews: Math.floor((dashboardData.property_views_count || 0) / 24), // Estimate
+    topActiveProperties: topProperties,
+    recentEvents: recentEvents,
+    systemStatus: {
+      isHealthy: true,
+      responseTime: 0,
+      errorRate: 0,
+    },
+  }
+}
+
+// Legacy function kept for backwards compatibility
 function transformRealTimeMetrics(rawData: any): RealTimeMetrics {
   return {
     activeUsers: rawData.active_users || 0,
