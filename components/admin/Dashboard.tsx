@@ -185,7 +185,7 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Access to Analytics */}
-      <Card className="bg-gradient-to-r from-blue-900 to-purple-900 border-blue-700">
+      {/* <Card className="bg-gradient-to-r from-blue-900 to-purple-900 border-blue-700">
         <CardContent className="p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -205,7 +205,7 @@ export default function Dashboard() {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       {/* Charts and Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

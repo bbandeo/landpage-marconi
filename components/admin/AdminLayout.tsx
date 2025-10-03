@@ -13,7 +13,7 @@ const navigation = [
   { name: "Dashboard", href: "/admin", icon: BarChart3 },
   { name: "Propiedades", href: "/admin/properties", icon: Building2 },
   { name: "Contactos", href: "/admin/contacts", icon: Users },
-  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+  // { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
 ]
 
 export default function AdminLayout({
