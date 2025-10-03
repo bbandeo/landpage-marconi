@@ -47,7 +47,12 @@ The content is organized as follows:
 
 <directory_structure>
 .env.example
+app/admin/analytics/customers/page.tsx
+app/admin/analytics/layout.tsx
+app/admin/analytics/marketing/page.tsx
 app/admin/analytics/page.tsx
+app/admin/analytics/properties/page.tsx
+app/admin/analytics/sales/page.tsx
 app/admin/contacts/loading.tsx
 app/admin/contacts/page.tsx
 app/admin/layout.tsx
@@ -61,6 +66,7 @@ app/api/analytics/dashboard/route.ts
 app/api/analytics/gdpr/opt-out/route.ts
 app/api/analytics/interaction/route.ts
 app/api/analytics/lead-generation/route.ts
+app/api/analytics/modules/[module]/route.ts
 app/api/analytics/property-metrics/[id]/route.ts
 app/api/analytics/property-view/route.ts
 app/api/analytics/session/route.ts
@@ -94,13 +100,18 @@ components/admin/AdminLayout.tsx
 components/admin/AnalyticsDashboard.tsx
 components/admin/ContactDetailModal.tsx
 components/admin/ContactKanban.tsx
+components/admin/CustomerInsights.tsx
 components/admin/Dashboard.tsx
+components/admin/ExecutiveOverview.tsx
 components/admin/LeafletMapComponent.tsx
+components/admin/MarketingAnalytics.tsx
 components/admin/PropertiesPage.backup.tsx
 components/admin/PropertiesPage.tsx
+components/admin/PropertyAnalytics.tsx
 components/admin/PropertyForm.tsx
 components/admin/PropertyLocationPicker.tsx
 components/admin/ReadmeDocumentation.tsx
+components/admin/SalesPerformance.tsx
 components/admin/theme-provider.tsx
 components/AdminLayout.tsx
 components/AnalyticsInitializer.tsx
@@ -122,6 +133,11 @@ components/layouts/responsive-wrapper.tsx
 components/layouts/sidebar-navigation.tsx
 components/layouts/widget-grid.tsx
 components/LeadSourceSelector.tsx
+components/navigation/analytics-layout-wrapper.tsx
+components/navigation/command-palette.tsx
+components/navigation/index.ts
+components/navigation/mobile-bottom-nav.tsx
+components/navigation/module-tabs.tsx
 components/PropertyCard.tsx
 components/PropertyDetailMap.tsx
 components/PropertyForm.tsx
@@ -138,10 +154,12 @@ components/ui/button.tsx
 components/ui/card.tsx
 components/ui/chart-container.tsx
 components/ui/checkbox.tsx
+components/ui/command.tsx
 components/ui/data-table.tsx
 components/ui/dialog.tsx
 components/ui/dropdown-menu.tsx
 components/ui/input.tsx
+components/ui/interactive-chart.tsx
 components/ui/kpi-card.tsx
 components/ui/label.tsx
 components/ui/loading-skeleton.tsx
@@ -178,6 +196,8 @@ hooks/useRealTimeUpdates.ts
 hooks/useResponsive.ts
 hooks/useSidebar.ts
 lib/analytics-client.ts
+lib/api-middleware.ts
+lib/api-utils.ts
 lib/cloudinary-server.ts
 lib/cloudinary.ts
 lib/map-config.ts
@@ -190,12 +210,14 @@ package.json
 postcss.config.mjs
 scripts/create-user.js
 scripts/read-analytics-readme.js
+scripts/run-analytics-fix.js
 services/analytics.ts
 services/leads.ts
 services/properties.ts
 services/settings.ts
 session.json
 stores/analytics-store.ts
+stores/navigation-store.ts
 styles/globals.css
 styles/leaflet.css
 styles/premium-theme.css
@@ -319,17 +341,6 @@ import { createClient } from "@supabase/supabase-js"
 export async function GET()
 </file>
 
-<file path="app/api/leads/[id]/route.ts">
-import { type NextRequest, NextResponse } from "next/server"
-import { supabase } from "@/lib/supabase"
-⋮----
-export async function GET(request: NextRequest,
-⋮----
-export async function PATCH(request: NextRequest,
-⋮----
-export async function DELETE(request: NextRequest,
-</file>
-
 <file path="app/api/leads/route.ts">
 import { type NextRequest, NextResponse } from "next/server"
 import { supabase } from "@/lib/supabase"
@@ -377,6 +388,42 @@ export async function POST(request: NextRequest)
 
 <file path="app/loading.tsx">
 export default function Loading()
+</file>
+
+<file path="app/page-premium.tsx">
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  Search,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  ArrowRight,
+  Heart,
+  ChevronDown,
+  Phone,
+  Mail,
+  Home,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
+import Link from "next/link";
+import Image from "next/image";
+⋮----
+import { useIsClient } from "@/hooks/use-is-client";
+import { PropertyService } from "@/services/properties";
+import type { Property } from "@/lib/supabase";
+⋮----
+const loadFeaturedProperties = async () =>
+⋮----
+const handleScroll = () =>
+⋮----
+const formatPrice = (price: number) =>
 </file>
 
 <file path="app/propiedades/loading.tsx">
@@ -633,6 +680,27 @@ export interface BadgeProps
 <div className=
 </file>
 
+<file path="components/ui/button.tsx">
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+⋮----
+import { cn } from "@/lib/utils"
+⋮----
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean
+}
+</file>
+
+<file path="components/ui/card.tsx">
+import { cn } from "@/lib/utils"
+⋮----
+className=
+⋮----
+<div ref=
+</file>
+
 <file path="components/ui/checkbox.tsx">
 import { Check } from "lucide-react"
 ⋮----
@@ -652,6 +720,12 @@ className=
 <file path="components/ui/dropdown-menu.tsx">
 import { Check, ChevronRight, Circle } from "lucide-react"
 ⋮----
+import { cn } from "@/lib/utils"
+⋮----
+className=
+</file>
+
+<file path="components/ui/input.tsx">
 import { cn } from "@/lib/utils"
 ⋮----
 className=
@@ -1110,10 +1184,39 @@ body {
 }
 </file>
 
-<file path="app/admin/analytics/page.tsx">
-import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard"
+<file path="app/admin/analytics/customers/page.tsx">
+import CustomerInsights from '@/components/admin/CustomerInsights'
 ⋮----
-export default function AdminAnalyticsPage()
+export default function CustomerInsightsPage()
+</file>
+
+<file path="app/admin/analytics/layout.tsx">
+import type React from "react"
+import AnalyticsLayoutWrapper from "@/components/navigation/analytics-layout-wrapper"
+⋮----
+export default function AnalyticsLayout({
+  children,
+}: {
+  children: React.ReactNode
+})
+</file>
+
+<file path="app/admin/analytics/marketing/page.tsx">
+import MarketingAnalytics from "@/components/admin/MarketingAnalytics"
+⋮----
+export default function AdminMarketingAnalyticsPage()
+</file>
+
+<file path="app/admin/analytics/properties/page.tsx">
+import PropertyAnalytics from '@/components/admin/PropertyAnalytics'
+⋮----
+export default function PropertyAnalyticsPage()
+</file>
+
+<file path="app/admin/analytics/sales/page.tsx">
+import SalesPerformance from "@/components/admin/SalesPerformance"
+⋮----
+export default function AdminSalesAnalyticsPage()
 </file>
 
 <file path="app/api/admin/readme/route.ts">
@@ -1145,16 +1248,6 @@ function extractApiEndpoints(content: string): ApiEndpoint[]
 // Clean up description
 ⋮----
 // Try to get description from context
-</file>
-
-<file path="app/api/analytics/dashboard/route.ts">
-import { NextRequest, NextResponse } from "next/server"
-import { AnalyticsService } from "@/services/analytics"
-import { type AnalyticsFilters, type AnalyticsMetricType } from "@/types/analytics"
-⋮----
-export async function GET(request: NextRequest)
-⋮----
-export async function POST(request: NextRequest)
 </file>
 
 <file path="app/api/analytics/gdpr/opt-out/route.ts">
@@ -1222,6 +1315,17 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET(request: NextRequest)
 </file>
 
+<file path="app/api/leads/[id]/route.ts">
+import { type NextRequest, NextResponse } from "next/server"
+import { supabase } from "@/lib/supabase"
+⋮----
+export async function GET(request: NextRequest,
+⋮----
+export async function PATCH(request: NextRequest,
+⋮----
+export async function DELETE(request: NextRequest,
+</file>
+
 <file path="app/api/reverse-geocode/route.ts">
 import { NextRequest, NextResponse } from 'next/server'
 ⋮----
@@ -1244,42 +1348,6 @@ import { uploadToCloudinary } from '@/lib/cloudinary-server'
 import { SettingsService } from '@/services/settings'
 ⋮----
 export async function POST(request: NextRequest)
-</file>
-
-<file path="app/page-premium.tsx">
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import {
-  Search,
-  MapPin,
-  Bed,
-  Bath,
-  Square,
-  ArrowRight,
-  Heart,
-  ChevronDown,
-  Phone,
-  Mail,
-  Home,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getOptimizedImageUrl } from "@/lib/cloudinary";
-import Link from "next/link";
-import Image from "next/image";
-⋮----
-import { useIsClient } from "@/hooks/use-is-client";
-import { PropertyService } from "@/services/properties";
-import type { Property } from "@/lib/supabase";
-⋮----
-const loadFeaturedProperties = async () =>
-⋮----
-const handleScroll = () =>
-⋮----
-const formatPrice = (price: number) =>
 </file>
 
 <file path="apply-analytics-fix.js">
@@ -1552,6 +1620,103 @@ applyRLSFix().catch(console.error)
 }
 </file>
 
+<file path="components/admin/CustomerInsights.tsx">
+import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { KPICard } from '@/components/ui/kpi-card'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  AnalyticsDashboardLayout,
+  WidgetGrid,
+  buildAnalyticsBreadcrumbs
+} from '@/components/layouts'
+import {
+  TrendingUp,
+  TrendingDown,
+  Users,
+  UserCheck,
+  Heart,
+  DollarSign,
+  Clock,
+  RefreshCw,
+  BarChart3,
+  PieChart,
+  Target,
+  Star,
+  Crown,
+  User,
+  UserPlus,
+  Repeat,
+  ArrowRight,
+  Phone,
+  Mail,
+  MessageCircle,
+  Calendar,
+  Activity,
+  Award
+} from 'lucide-react'
+import { useAnalyticsDashboard } from '@/hooks/useAnalyticsDashboard'
+import { useRealTimeUpdates } from '@/hooks/useRealTimeUpdates'
+⋮----
+interface CustomerKPIs {
+  totalCustomers: {
+    value: number
+    newThisMonth: number
+    returningCustomers: number
+    churnRate: number
+  }
+  avgLifetimeValue: {
+    value: number
+    change: number
+    highValueCustomers: number
+  }
+  customerSatisfaction: {
+    value: number
+    change: number
+    npsScore: number
+  }
+  retentionRate: {
+    value: number
+    change: number
+    benchmark: number
+  }
+}
+⋮----
+interface CustomerSegment {
+  id: string
+  name: string
+  description: string
+  customerCount: number
+  percentage: number
+  avgValue: number
+  avgTransactions: number
+  retentionRate: number
+  growthRate: number
+  color: string
+  priority: 'high' | 'medium' | 'low'
+  characteristics: string[]
+}
+⋮----
+interface CustomerJourney {
+  stage: string
+  customers: number
+  conversionRate: number
+  avgTimeInStage: number
+  dropOffRate: number
+  topActions: string[]
+  nextStageConversion: number
+}
+⋮----
+interface CustomerSegmentationProps {
+  period: string
+  loading: boolean
+}
+⋮----
+const getPriorityBadge = (priority: string) =>
+</file>
+
 <file path="components/admin/LeafletMapComponent.tsx">
 import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
@@ -1624,6 +1789,100 @@ const loadFallbackContent = () =>
 const getMethodColor = (method: string) =>
 </file>
 
+<file path="components/admin/SalesPerformance.tsx">
+import React, { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { KPICard } from '@/components/ui/kpi-card'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  AnalyticsDashboardLayout,
+  WidgetGrid,
+  buildAnalyticsBreadcrumbs
+} from '@/components/layouts'
+import {
+  TrendingUp,
+  Users,
+  Building,
+  Target,
+  DollarSign,
+  Clock,
+  RefreshCw,
+  ChevronRight,
+  BarChart3,
+  Layers,
+  ArrowUpRight,
+  ArrowDownRight
+} from 'lucide-react'
+import { useAnalyticsDashboard } from '@/hooks/useAnalyticsDashboard'
+import { useRealTimeUpdates } from '@/hooks/useRealTimeUpdates'
+⋮----
+interface SalesKPIs {
+  totalRevenue: {
+    value: number
+    change: number
+    target: number
+  }
+  leadsConverted: {
+    value: number
+    change: number
+    target: number
+  }
+  avgSaleValue: {
+    value: number
+    change: number
+    benchmark: number
+  }
+  salesCycleTime: {
+    value: number
+    change: number
+    target: number
+  }
+}
+⋮----
+interface PipelineStage {
+  id: string
+  name: string
+  count: number
+  value: number
+  conversionRate: number
+  color: string
+}
+⋮----
+interface AgentPerformance {
+  id: string
+  name: string
+  avatar: string
+  salesCount: number
+  revenue: number
+  conversionRate: number
+  avgSaleValue: number
+  rank: number
+  change: number
+}
+⋮----
+interface PropertyRanking {
+  id: string
+  title: string
+  image: string
+  leads: number
+  sales: number
+  conversionRate: number
+  revenue: number
+  trend: number
+}
+⋮----
+interface SalesPipelineProps {
+  data: PipelineStage[]
+  loading: boolean
+}
+⋮----
+<span className="font-semibold text-bone-white">
+⋮----
+</div>
+</file>
+
 <file path="components/AnalyticsInitializer.tsx">
 import { useEffect } from 'react'
 import { getAnalyticsClient } from '@/lib/analytics-client'
@@ -1637,30 +1896,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 ⋮----
 export default function Footer()
-</file>
-
-<file path="components/layouts/analytics-dashboard-layout.tsx">
-import React from 'react'
-import { cn } from '@/lib/utils'
-import { ChevronRight, Home } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-⋮----
-interface BreadcrumbItem {
-  label: string
-  href?: string
-  active?: boolean
-}
-⋮----
-interface AnalyticsDashboardLayoutProps {
-  children: React.ReactNode
-  title: string
-  subtitle?: string
-  actions?: React.ReactNode
-  filters?: React.ReactNode
-  breadcrumbs?: BreadcrumbItem[]
-  className?: string
-  loading?: boolean
-}
 </file>
 
 <file path="components/layouts/examples/analytics-dashboard-demo.tsx">
@@ -1832,11 +2067,6 @@ const handleDateRangeSelect = (days: number) =>
 onChange=
 ⋮----
 // Preset filters para diferentes módulos
-</file>
-
-<file path="components/layouts/index.ts">
-export type LayoutPresetKey = keyof typeof LAYOUT_PRESETS
-export type AnalyticsModuleId = typeof ANALYTICS_MODULES[number]['id']
 </file>
 
 <file path="components/layouts/module-container.tsx">
@@ -2190,6 +2420,133 @@ const fetchStats = async () =>
 ⋮----
 </file>
 
+<file path="components/navigation/analytics-layout-wrapper.tsx">
+import React, { useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { SidebarNavigation } from '@/components/layouts/sidebar-navigation'
+import MobileBottomNav from './mobile-bottom-nav'
+import CommandPalette from './command-palette'
+import {
+  BarChart3,
+  TrendingUp,
+  Target,
+  Building,
+  Users
+} from 'lucide-react'
+⋮----
+interface NavigationItem {
+  id: string
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+  href: string
+  badge?: number
+  active?: boolean
+  children?: NavigationItem[]
+}
+⋮----
+interface AnalyticsLayoutWrapperProps {
+  children: React.ReactNode
+}
+</file>
+
+<file path="components/navigation/command-palette.tsx">
+import React, { useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/components/ui/command'
+import { useCommandPalette, useRecentSearches } from '@/stores/navigation-store'
+import { toast } from 'sonner'
+import {
+  BarChart3,
+  TrendingUp,
+  Target,
+  Building,
+  Users,
+  RefreshCw,
+  Download,
+  FileText,
+  Clock,
+  HelpCircle,
+  Sparkles
+} from 'lucide-react'
+⋮----
+interface CommandItem {
+  id: string
+  label: string
+  description?: string
+  icon: React.ComponentType<{ className?: string }>
+  keywords?: string[]
+  onSelect: () => void
+  shortcut?: string
+}
+⋮----
+const handleKeyDown = (e: KeyboardEvent) =>
+</file>
+
+<file path="components/navigation/index.ts">
+
+</file>
+
+<file path="components/navigation/mobile-bottom-nav.tsx">
+import React from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
+import {
+  BarChart3,
+  TrendingUp,
+  Target,
+  Building,
+  Users
+} from 'lucide-react'
+⋮----
+interface MobileNavItem {
+  id: string
+  label: string
+  shortLabel: string
+  href: string
+  icon: React.ComponentType<{ className?: string }>
+  badge?: number
+}
+⋮----
+const getActiveItem = (): string =>
+⋮----
+className=
+</file>
+
+<file path="components/navigation/module-tabs.tsx">
+import React from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
+import {
+  BarChart3,
+  TrendingUp,
+  Target,
+  Building,
+  Users
+} from 'lucide-react'
+⋮----
+interface ModuleTab {
+  id: string
+  label: string
+  href: string
+  icon: React.ComponentType<{ className?: string }>
+  badge?: number
+}
+⋮----
+interface ModuleTabsProps {
+  className?: string
+}
+⋮----
+const getActiveTab = (): string =>
+⋮----
+const handleTabClick = (href: string) =>
+⋮----
+className=
+</file>
+
 <file path="components/PropertyDetailMap.tsx">
 import React, { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
@@ -2406,6 +2763,17 @@ export interface ChartContainerProps
 className=
 </file>
 
+<file path="components/ui/command.tsx">
+import { type DialogProps } from "@radix-ui/react-dialog"
+import { Command as CommandPrimitive } from "cmdk"
+import { Search } from "lucide-react"
+⋮----
+import { cn } from "@/lib/utils"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+⋮----
+className=
+</file>
+
 <file path="components/ui/data-table.tsx">
 import React, { forwardRef, useState, useMemo } from "react"
 import { cn } from "@/lib/utils"
@@ -2468,10 +2836,65 @@ const getSortIcon = (columnId: string) =>
 className=
 </file>
 
-<file path="components/ui/input.tsx">
-import { cn } from "@/lib/utils"
+<file path="components/ui/interactive-chart.tsx">
+import React, { useState, useRef, useEffect } from 'react'
+import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { TrendingUp, TrendingDown, MoreVertical, ZoomIn, ZoomOut, Download } from 'lucide-react'
 ⋮----
-className=
+export interface ChartDataPoint {
+  date: string
+  value: number
+  label?: string
+  metadata?: Record<string, any>
+}
+⋮----
+export interface ChartSeries {
+  id: string
+  name: string
+  data: ChartDataPoint[]
+  color: string
+  type?: 'line' | 'area' | 'bar'
+}
+⋮----
+export interface InteractiveChartProps {
+  series: ChartSeries[]
+  width?: number
+  height?: number
+  showGrid?: boolean
+  showTooltip?: boolean
+  showLegend?: boolean
+  allowZoom?: boolean
+  allowPan?: boolean
+  className?: string
+  onPointClick?: (point: ChartDataPoint, series: ChartSeries) => void
+}
+⋮----
+function getMinMax(series: ChartSeries[]):
+⋮----
+function formatValue(value: number): string
+⋮----
+function formatCurrency(value: number): string
+⋮----
+const scaleX = (index: number)
+const scaleY = (value: number)
+⋮----
+const generatePath = (data: ChartDataPoint[], type: 'line' | 'area' = 'line') =>
+⋮----
+const handleMouseMove = (event: React.MouseEvent<SVGSVGElement>) =>
+⋮----
+const handleMouseLeave = () =>
+⋮----
+const handleZoomIn = ()
+const handleZoomOut = ()
+⋮----
+d=
+⋮----
+cx=
+cy=
+⋮----
 </file>
 
 <file path="components/ui/kpi-card.tsx">
@@ -3328,62 +3751,6 @@ function transformPropertyMetrics(rawData: any, propertyId: number): PropertyPer
 function createComparisonMatrix(properties: PropertyPerformance[])
 </file>
 
-<file path="hooks/useRealTimeUpdates.ts">
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { queryKeys, cacheStrategies, invalidateQueries } from '@/lib/react-query-config'
-⋮----
-export interface RealTimeMetrics {
-  activeUsers: number
-  currentViews: number
-  todayLeads: number
-  lastHourViews: number
-  topActiveProperties: Array<{
-    id: number
-    title: string
-    currentViews: number
-    todayLeads: number
-  }>
-  recentEvents: Array<{
-    id: string
-    type: 'view' | 'lead' | 'interaction'
-    propertyId: number
-    propertyTitle: string
-    timestamp: string
-    deviceType: string
-    source?: string
-  }>
-  systemStatus: {
-    isHealthy: boolean
-    responseTime: number
-    errorRate: number
-  }
-}
-⋮----
-export interface UseRealTimeOptions {
-  enabled?: boolean
-  interval?: number
-  maxEvents?: number
-  enableNotifications?: boolean
-  enableWebSocket?: boolean
-}
-⋮----
-export interface RealTimeEvent {
-  id: string
-  type: 'view' | 'lead' | 'interaction' | 'system'
-  data: any
-  timestamp: string
-}
-⋮----
-export function useRealTimeUpdates(options: UseRealTimeOptions =
-⋮----
-export function useActiveUsers()
-⋮----
-export function useLeadNotifications()
-⋮----
-function transformRealTimeMetrics(rawData: any): RealTimeMetrics
-</file>
-
 <file path="hooks/useResponsive.ts">
 import { useState, useEffect } from 'react'
 ⋮----
@@ -3587,6 +3954,185 @@ export const trackWhatsAppClick = (propertyId?: number) =>
 export const trackPhoneClick = (propertyId?: number) =>
 ⋮----
 export const optOutOfAnalytics = (reason?: string) =>
+</file>
+
+<file path="lib/api-middleware.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { API_CONFIG, type CacheConfig } from "./api-utils"
+⋮----
+export interface CacheEntry {
+  data: any
+  timestamp: number
+  ttl: number
+  etag: string
+  compressed?: boolean
+}
+⋮----
+function startCacheCleanup()
+⋮----
+export function generateCacheKey(
+  url: string,
+  method: string,
+  headers?: Record<string, string>
+): string
+⋮----
+export function getCachedResponse(cacheKey: string): CacheEntry | null
+⋮----
+export function setCachedResponse(
+  cacheKey: string,
+  data: any,
+  ttl: number = API_CONFIG.cache.default_max_age
+): void
+⋮----
+export function shouldCompress(request: NextRequest): boolean
+⋮----
+export function compressResponse(data: any): string
+⋮----
+export function handleConditionalRequest(
+  request: NextRequest,
+  etag: string
+): NextResponse | null
+⋮----
+export interface MiddlewareConfig {
+  cache?: {
+    enabled: boolean
+    ttl?: number
+    staleWhileRevalidate?: number
+    varyByHeaders?: string[]
+  }
+  compression?: {
+    enabled: boolean
+    minSize?: number
+  }
+  rateLimit?: {
+    enabled: boolean
+    limit?: number
+  }
+  monitoring?: {
+    enabled: boolean
+    logRequests?: boolean
+  }
+}
+⋮----
+export function createApiMiddleware(config: MiddlewareConfig =
+⋮----
+export function getCacheStats():
+⋮----
+export function clearCache(pattern?: string): number
+⋮----
+export function warmUpCache(endpoints: string[]): Promise<void[]>
+</file>
+
+<file path="lib/api-utils.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { type AnalyticsFilters } from "@/types/analytics"
+⋮----
+interface RateLimitRecord {
+  count: number
+  resetTime: number
+}
+⋮----
+interface RateLimitResult {
+  allowed: boolean
+  remaining: number
+  resetTime: number
+  limit: number
+}
+⋮----
+export function getRateLimitKey(request: NextRequest, prefix: string = 'api'): string
+⋮----
+export function checkRateLimit(
+  key: string,
+  limit: number = API_CONFIG.rateLimit.default_limit
+): RateLimitResult
+⋮----
+export function addRateLimitHeaders(response: NextResponse, rateLimit: RateLimitResult): void
+⋮----
+export function createRateLimitResponse(rateLimit: RateLimitResult, context?: string): NextResponse
+⋮----
+export function addSecurityHeaders(response: NextResponse): NextResponse
+⋮----
+export interface CacheConfig {
+  maxAge: number
+  staleWhileRevalidate?: number
+  private?: boolean
+  mustRevalidate?: boolean
+}
+⋮----
+export function addCacheHeaders(
+  response: NextResponse,
+  config: CacheConfig = { maxAge: API_CONFIG.cache.default_max_age }
+): NextResponse
+⋮----
+export function generateCacheKey(
+  endpoint: string,
+  filters: AnalyticsFilters,
+  additional?: Record<string, any>
+): string
+⋮----
+// =====================================================================================
+// VALIDATION
+// =====================================================================================
+⋮----
+export interface ValidationResult {
+  valid: boolean
+  error?: string
+  code?: string
+}
+⋮----
+export function validateDateRange(startDate: string, endDate: string, maxDays: number = API_CONFIG.validation.max_date_range_days): ValidationResult
+⋮----
+export function validateFilters(filters: Partial<AnalyticsFilters>): ValidationResult
+⋮----
+export interface ApiResponse<T = any> {
+  success: boolean
+  data?: T
+  error?: string
+  code?: string
+  meta?: {
+    execution_time_ms?: number
+    cached?: boolean
+    rate_limit?: {
+      remaining: number
+      reset_time: number
+    }
+    [key: string]: any
+  }
+}
+⋮----
+export function createSuccessResponse<T>(
+  data: T,
+  meta: Record<string, any> = {}
+): ApiResponse<T>
+⋮----
+export function createErrorResponse(
+  error: string,
+  code: string = 'INTERNAL_ERROR',
+  meta: Record<string, any> = {}
+): ApiResponse
+⋮----
+export function addPerformanceHeaders(response: NextResponse, executionTime: number): void
+⋮----
+export function parseAnalyticsFilters(searchParams: URLSearchParams): AnalyticsFilters
+⋮----
+export function parseCompactFlag(searchParams: URLSearchParams): boolean
+⋮----
+export function handleApiError(error: unknown, context: string = 'API'): ApiResponse
+⋮----
+export interface ApiMetrics {
+  endpoint: string
+  method: string
+  status_code: number
+  execution_time_ms: number
+  rate_limited: boolean
+  cached: boolean
+  user_ip?: string
+  user_agent?: string
+}
+⋮----
+export function logApiMetrics(metrics: ApiMetrics): void
+⋮----
+export function extractRequestMetadata(request: NextRequest):
 </file>
 
 <file path="lib/react-query-config.ts">
@@ -3907,6 +4453,39 @@ const reader = new AnalyticsReadmeReader();
 reader.cli();
 </file>
 
+<file path="scripts/run-analytics-fix.js">
+async function runMigration() {
+⋮----
+const envContent = fs.readFileSync('.env', 'utf-8')
+⋮----
+envContent.split('\n').forEach(line => {
+const [key, ...valueParts] = line.split('=')
+⋮----
+envVars[key.trim()] = valueParts.join('=').trim()
+⋮----
+const supabase = createClient(
+⋮----
+console.log('🔄 Ejecutando migración de analytics...')
+⋮----
+const { data, error } = await supabase.rpc('exec_sql', {
+⋮----
+console.log('⚠️  La función exec_sql no existe. Instrucciones manuales:')
+console.log('\n1. Ve a: https://uutffduomvmyuqmeqjbw.supabase.co/project/uutffduomvmyuqmeqjbw/editor')
+console.log('2. Ejecuta el siguiente SQL en el Editor SQL:\n')
+console.log('ALTER TABLE analytics_property_views ALTER COLUMN page_url DROP NOT NULL;')
+console.log('\n3. Luego ejecuta para verificar:\n')
+console.log(`SELECT column_name, data_type, is_nullable
+⋮----
+process.exit(1)
+⋮----
+console.log('✅ Migración ejecutada exitosamente')
+console.log('📊 Resultado:', data)
+⋮----
+console.error('❌ Error ejecutando migración:', err)
+⋮----
+runMigration()
+</file>
+
 <file path="services/settings.ts">
 import { supabase } from '@/lib/supabase'
 import {
@@ -4084,6 +4663,42 @@ export const useAnalyticsFilters = ()
 export const useUserPreferences = ()
 export const useDashboardState = ()
 export const useFilterActions = () => useAnalyticsStore(state => (
+</file>
+
+<file path="stores/navigation-store.ts">
+import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
+⋮----
+interface RecentSearch {
+  id: string
+  label: string
+  href: string
+  timestamp: number
+}
+⋮----
+interface NavigationState {
+
+  commandPaletteOpen: boolean
+  recentSearches: RecentSearch[]
+  favoriteModules: string[]
+
+
+  openCommandPalette: () => void
+  closeCommandPalette: () => void
+  toggleCommandPalette: () => void
+
+  addRecentSearch: (search: Omit<RecentSearch, 'id' | 'timestamp'>) => void
+  clearRecentSearches: () => void
+
+  toggleFavorite: (moduleId: string) => void
+  isFavorite: (moduleId: string) => boolean
+}
+⋮----
+export const useCommandPalette = () =>
+⋮----
+export const useRecentSearches = () =>
+⋮----
+export const useFavorites = () =>
 </file>
 
 <file path="styles/leaflet.css">
@@ -4547,17 +5162,28 @@ CLOUDINARY_API_SECRET=your-api-secret
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
 </file>
 
-<file path="app/api/analytics/property-metrics/[id]/route.ts">
+<file path="app/admin/analytics/page.tsx">
+import ExecutiveOverview from "@/components/admin/ExecutiveOverview"
+⋮----
+export default function AdminAnalyticsPage()
+</file>
+
+<file path="app/api/analytics/dashboard/route.ts">
 import { NextRequest, NextResponse } from "next/server"
 import { AnalyticsService } from "@/services/analytics"
+import { type AnalyticsFilters, type AnalyticsMetricType } from "@/types/analytics"
 ⋮----
-interface RouteParams {
-  params: {
-    id: string
-  }
-}
+function getRateLimitKey(request: NextRequest): string
 ⋮----
-export async function GET(request: NextRequest,
+function checkRateLimit(key: string):
+⋮----
+function addSecurityHeaders(response: NextResponse): NextResponse
+⋮----
+function addCacheHeaders(response: NextResponse, maxAge: number = CACHE_MAX_AGE): NextResponse
+⋮----
+export async function GET(request: NextRequest)
+⋮----
+export async function POST(request: NextRequest)
 </file>
 
 <file path="components/admin/AdminLayout.tsx">
@@ -4787,6 +5413,36 @@ value=
 onValueChange=
 </file>
 
+<file path="components/layouts/analytics-dashboard-layout.tsx">
+import React from 'react'
+import { cn } from '@/lib/utils'
+import { ChevronRight, Home } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import ModuleTabs from '@/components/navigation/module-tabs'
+⋮----
+interface BreadcrumbItem {
+  label: string
+  href?: string
+  active?: boolean
+}
+⋮----
+interface AnalyticsDashboardLayoutProps {
+  children: React.ReactNode
+  title: string
+  subtitle?: string
+  actions?: React.ReactNode
+  filters?: React.ReactNode
+  breadcrumbs?: BreadcrumbItem[]
+  className?: string
+  loading?: boolean
+}
+</file>
+
+<file path="components/layouts/index.ts">
+export type LayoutPresetKey = keyof typeof LAYOUT_PRESETS
+export type AnalyticsModuleId = typeof ANALYTICS_MODULES[number]['id']
+</file>
+
 <file path="components/ui/analytics-demo.tsx">
 import React, { useState } from "react"
 import {
@@ -4814,61 +5470,60 @@ interface PropertyData {
 const toggleLoading = () =>
 </file>
 
-<file path="components/ui/button.tsx">
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
+<file path="hooks/useRealTimeUpdates.ts">
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { queryKeys, cacheStrategies, invalidateQueries } from '@/lib/react-query-config'
 ⋮----
-import { cn } from "@/lib/utils"
-⋮----
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
-}
-</file>
-
-<file path="components/ui/card.tsx">
-import { cn } from "@/lib/utils"
-⋮----
-className=
-⋮----
-<div ref=
-</file>
-
-<file path="hooks/useAnalytics.ts">
-import { useState, useEffect, useCallback, useRef } from "react"
-import { type LeadSourceCode } from "@/types/analytics"
-⋮----
-class AnalyticsSession
-⋮----
-async getOrCreateSession(): Promise<string>
-⋮----
-private getDeviceType(): string
-⋮----
-private getBrowser(): string
-⋮----
-private getOS(): string
-⋮----
-private getReferrerDomain(): string | undefined
-⋮----
-private getUTMParams()
-⋮----
-async updateLastSeen(): Promise<void>
-⋮----
-export interface UseAnalyticsOptions {
-  enableAutoTracking?: boolean
-  trackScrollDepth?: boolean
-  trackTimeOnPage?: boolean
-  sessionUpdateInterval?: number
+export interface RealTimeMetrics {
+  activeUsers: number
+  currentViews: number
+  todayLeads: number
+  lastHourViews: number
+  topActiveProperties: Array<{
+    id: number
+    title: string
+    currentViews: number
+    todayLeads: number
+  }>
+  recentEvents: Array<{
+    id: string
+    type: 'view' | 'lead' | 'interaction'
+    propertyId: number
+    propertyTitle: string
+    timestamp: string
+    deviceType: string
+    source?: string
+  }>
+  systemStatus: {
+    isHealthy: boolean
+    responseTime: number
+    errorRate: number
+  }
 }
 ⋮----
-export function useAnalytics(options: UseAnalyticsOptions =
+export interface UseRealTimeOptions {
+  enabled?: boolean
+  interval?: number
+  maxEvents?: number
+  enableNotifications?: boolean
+  enableWebSocket?: boolean
+}
 ⋮----
-const initializeSession = async () =>
+export interface RealTimeEvent {
+  id: string
+  type: 'view' | 'lead' | 'interaction' | 'system'
+  data: any
+  timestamp: string
+}
 ⋮----
-const handleScroll = () =>
+export function useRealTimeUpdates(options: UseRealTimeOptions =
 ⋮----
-export function usePropertyAnalytics(propertyId: number, options?: UseAnalyticsOptions)
+export function useActiveUsers()
+⋮----
+export function useLeadNotifications()
+⋮----
+function transformRealTimeMetrics(rawData: any): RealTimeMetrics
 </file>
 
 <file path="package.json">
@@ -4965,6 +5620,210 @@ export function usePropertyAnalytics(propertyId: number, options?: UseAnalyticsO
 }
 </file>
 
+<file path="tailwind.config.ts">
+import type { Config } from "tailwindcss"
+</file>
+
+<file path="app/api/analytics/property-metrics/[id]/route.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { AnalyticsService } from "@/services/analytics"
+import {
+  getRateLimitKey,
+  checkRateLimit,
+  addRateLimitHeaders,
+  addSecurityHeaders,
+  addCacheHeaders,
+  createSuccessResponse,
+  createErrorResponse,
+  addPerformanceHeaders,
+  API_CONFIG
+} from "@/lib/api-utils"
+⋮----
+interface RouteParams {
+  params: {
+    id: string
+  }
+}
+⋮----
+export async function GET(request: NextRequest,
+</file>
+
+<file path="app/contacto/page.tsx">
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Clock,
+  MessageCircle,
+  Send,
+  Check,
+  ArrowRight,
+  Building2,
+  Users,
+  Award,
+  Star,
+  Facebook,
+  Instagram,
+  Globe,
+  HeadphonesIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Image from "next/image";
+import Link from "next/link";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import { LeadSourceSelector, useLeadSourceDetection, useLeadSourceSelector } from "@/components/LeadSourceSelector"
+import { useAnalytics } from "@/hooks/useAnalytics"
+import { trackLead } from '@/lib/analytics-client'
+import { type LeadSourceCode, LEAD_SOURCE_CODES } from "@/types/analytics"
+⋮----
+// Analytics and lead source tracking
+⋮----
+const handleSubmitContact = async (e: React.FormEvent) =>
+⋮----
+// Create the lead first
+⋮----
+// Track the lead generation in analytics
+⋮----
+undefined, // no specific property
+⋮----
+// Handle phone contact lead generation
+const handlePhoneClick = async () =>
+⋮----
+// Track the lead generation in analytics
+⋮----
+// Handle WhatsApp contact lead generation
+const handleWhatsAppClick = async () =>
+⋮----
+// Track the lead generation in analytics
+⋮----
+// Handle email contact lead generation
+const handleEmailClick = async () =>
+⋮----
+// Track the lead generation in analytics
+⋮----
+// Handle social media contact lead generation
+const handleSocialClick = async (platform: 'facebook' | 'instagram') =>
+⋮----
+// Track the lead generation in analytics
+⋮----
+onClick=
+</file>
+
+<file path="app/layout.tsx">
+import type React from "react"
+import type { Metadata } from "next"
+import { Inter, Playfair_Display } from "next/font/google"
+⋮----
+import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider"
+import { QueryProvider } from "@/components/providers/query-provider"
+import { AnalyticsStoreProvider } from "@/components/providers/analytics-store-provider"
+import AnalyticsInitializer from "@/components/AnalyticsInitializer"
+⋮----
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>)
+</file>
+
+<file path="components/admin/ExecutiveOverview.tsx">
+import React, { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { KPICard } from '@/components/ui/kpi-card'
+import { TrendIndicator } from '@/components/ui/trend-indicator'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  AnalyticsDashboardLayout,
+  WidgetGrid,
+  buildAnalyticsBreadcrumbs,
+  FilterBar
+} from '@/components/layouts'
+import {
+  TrendingUp,
+  TrendingDown,
+  Users,
+  Building,
+  Target,
+  DollarSign,
+  Eye,
+  Activity,
+  RefreshCw,
+  Calendar,
+  Download,
+  Settings,
+  Plus,
+  ArrowRight,
+  Clock,
+  Phone,
+  Mail,
+  MessageCircle,
+  BarChart3,
+  PieChart
+} from 'lucide-react'
+import { useAnalyticsDashboard } from '@/hooks/useAnalyticsDashboard'
+import { useRealTimeUpdates } from '@/hooks/useRealTimeUpdates'
+import { InteractiveChart } from '@/components/ui/interactive-chart'
+⋮----
+interface ExecutiveKPIs {
+  totalRevenue: {
+    value: number
+    change: number
+    period: string
+  }
+  totalLeads: {
+    value: number
+    change: number
+    goal: number
+  }
+  conversionRate: {
+    value: number
+    change: number
+    benchmark: number
+  }
+  activeProperties: {
+    value: number
+    change: number
+    total: number
+  }
+}
+⋮----
+interface QuickAction {
+  id: string
+  label: string
+  icon: React.ComponentType<{ className?: string }>
+  action: () => void
+  badge?: string
+}
+⋮----
+interface RevenueChartProps {
+  period: { value: string; label: string; days: number }
+  data: any
+  loading: boolean
+}
+⋮----
+function RevenueChart(
+⋮----
+const generateRevenueData = () =>
+⋮----
+{/* Interactive Chart */}
+⋮----
+onPointClick=
+⋮----
+{/* Quick Stats */}
+⋮----
+const days = Math.ceil((range.to.getTime() - range.from.getTime()) / (1000 * 60 * 60 * 24))
+</file>
+
 <file path="components/admin/PropertyLocationPicker.tsx">
 import React, { useEffect, useState, useCallback } from 'react'
 import dynamic from 'next/dynamic'
@@ -5004,6 +5863,67 @@ const handleSyncFromMap = async () =>
 const handleResetLocation = () =>
 </file>
 
+<file path="components/Header.tsx">
+import { useState, useEffect } from "react";
+import { Search, Menu, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useIsClient } from "@/hooks/use-is-client";
+⋮----
+interface HeaderProps {
+  showMobileSearch?: boolean;
+}
+⋮----
+const isActivePage = (path: string) =>
+⋮----
+const getLinkClassName = (path: string) =>
+⋮----
+const getContactLinkClassName = () =>
+⋮----
+const getAgentesLinkClassName = () =>
+⋮----
+const handleScroll = () =>
+</file>
+
+<file path="hooks/useAnalytics.ts">
+import { useState, useEffect, useCallback, useRef } from "react"
+import { type LeadSourceCode } from "@/types/analytics"
+⋮----
+class AnalyticsSession
+⋮----
+async getOrCreateSession(): Promise<string>
+⋮----
+private getDeviceType(): string
+⋮----
+private getBrowser(): string
+⋮----
+private getOS(): string
+⋮----
+private getReferrerDomain(): string | undefined
+⋮----
+private getUTMParams()
+⋮----
+async updateLastSeen(): Promise<void>
+⋮----
+export interface UseAnalyticsOptions {
+  enableAutoTracking?: boolean
+  trackScrollDepth?: boolean
+  trackTimeOnPage?: boolean
+  sessionUpdateInterval?: number
+}
+⋮----
+export function useAnalytics(options: UseAnalyticsOptions =
+⋮----
+const initializeSession = async () =>
+⋮----
+const handleScroll = () =>
+⋮----
+export function usePropertyAnalytics(propertyId: number, options?: UseAnalyticsOptions)
+</file>
+
 <file path="lib/map-config.ts">
 export const createPropertyMarkerIcon = () =>
 ⋮----
@@ -5020,10 +5940,6 @@ export const formatAddress = (property: {
   neighborhood?: string | null
   city?: string
 }) =>
-</file>
-
-<file path="tailwind.config.ts">
-import type { Config } from "tailwindcss"
 </file>
 
 <file path="types/analytics.ts">
@@ -5534,521 +6450,42 @@ export interface PropertyMetrics {
 }
 </file>
 
-<file path="components/FeaturedPropertiesSlider.tsx">
-import React, { useEffect, useCallback } from 'react'
-import useEmblaCarousel from 'embla-carousel-react'
-import { EmblaOptionsType } from 'embla-carousel'
-import Autoplay from 'embla-carousel-autoplay'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { PropertyMiniMap } from '@/components/PropertyMiniMap'
-import { Property } from '@/lib/supabase'
-import { Home, MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight } from 'lucide-react'
+<file path="app/api/analytics/modules/[module]/route.ts">
+import { NextRequest, NextResponse } from "next/server"
+import { AnalyticsService } from "@/services/analytics"
+import { type AnalyticsFilters } from "@/types/analytics"
 ⋮----
-interface FeaturedPropertiesSliderProps {
-  properties: Property[]
-}
-</file>
-
-<file path="components/HeroSearchBar.tsx">
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Home, Building, TreePine } from "lucide-react";
-import { motion } from "framer-motion";
+type ModuleType = typeof VALID_MODULES[number]
 ⋮----
-export function HeroSearchBar()
+function getRateLimitKey(request: NextRequest, module: string): string
 ⋮----
-const handleSearch = () =>
-</file>
-
-<file path="app/layout.tsx">
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter, Playfair_Display } from "next/font/google"
+function checkRateLimit(key: string, limit: number = RATE_LIMIT):
 ⋮----
-import { Toaster } from "@/components/ui/toaster"
-import { ThemeProvider } from "@/components/theme-provider"
-import { QueryProvider } from "@/components/providers/query-provider"
-import { AnalyticsStoreProvider } from "@/components/providers/analytics-store-provider"
-import AnalyticsInitializer from "@/components/AnalyticsInitializer"
+function addSecurityHeaders(response: NextResponse): NextResponse
 ⋮----
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>)
-</file>
-
-<file path="app/propiedades/[id]/page.tsx">
-import { useState, useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
-import Image from "next/image"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { PropertyDetailMap } from "@/components/PropertyDetailMap"
-import {
-  ArrowLeft,
-  MapPin,
-  Bed,
-  Bath,
-  Square,
-  Heart,
-  Share2,
-  Phone,
-  Mail,
-  MessageCircle,
-  ChevronLeft,
-  ChevronRight,
-  Eye,
-  Calendar,
-  Wifi,
-  Car,
-  TreePine,
-  ShieldCheck,
-  Zap,
-  Home
-} from "lucide-react"
-import type { Property as PropertyType } from "@/lib/supabase"
-import Header from "@/components/Header"
-import { ComprehensivePropertyTracker, ContactTracker, ImageGalleryTracker, useImageGalleryTracker } from "@/components/PropertyViewTracker"
-import { trackPropertyView, trackContactClick, trackWhatsAppClick, trackLead } from '@/lib/analytics-client'
-import { LEAD_SOURCE_CODES } from '@/types/analytics'
+function addCacheHeaders(response: NextResponse, maxAge: number): NextResponse
 ⋮----
-interface Property extends PropertyType {
-  operation: "sale" | "rent"
-  type: "house" | "apartment" | "commercial" | "terreno" | "local"
-}
+async function getOverviewData(filters: AnalyticsFilters)
 ⋮----
-// Fetch property data
+async function getSalesData(filters: AnalyticsFilters)
 ⋮----
-const fetchProperty = async () =>
+async function getMarketingData(filters: AnalyticsFilters)
 ⋮----
-const nextImage = () =>
+async function getPropertiesData(filters: AnalyticsFilters)
 ⋮----
-const prevImage = () =>
+const enrichProperty = (analyticsData: any) =>
 ⋮----
-const getTypeDisplayName = (type: string) =>
+async function getCustomersData(filters: AnalyticsFilters)
 ⋮----
-const getStatusDisplayName = (status: string) =>
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ module: string }> }
+)
 ⋮----
-const getOperationDisplayName = (operation: string) =>
-⋮----
-const getFeatureIcon = (feature: string) =>
-⋮----
-const handleContactSubmit = async (e: React.FormEvent) =>
-⋮----
-onError=
-⋮----
-
-⋮----
-onClick=
-⋮----
-onChange=
-⋮----
-required
-</file>
-
-<file path="app/contacto/page.tsx">
-import { useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Clock,
-  MessageCircle,
-  Send,
-  Check,
-  ArrowRight,
-  Building2,
-  Users,
-  Award,
-  Star,
-  Facebook,
-  Instagram,
-  Globe,
-  HeadphonesIcon,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Image from "next/image";
-import Link from "next/link";
-import Header from "@/components/Header"
-import Footer from "@/components/Footer"
-import { LeadSourceSelector, useLeadSourceDetection, useLeadSourceSelector } from "@/components/LeadSourceSelector"
-import { useAnalytics } from "@/hooks/useAnalytics"
-import { trackLead } from '@/lib/analytics-client'
-import { type LeadSourceCode, LEAD_SOURCE_CODES } from "@/types/analytics"
-⋮----
-// Analytics and lead source tracking
-⋮----
-const handleSubmitContact = async (e: React.FormEvent) =>
-⋮----
-// Create the lead first
-⋮----
-// Track the lead generation in analytics
-⋮----
-undefined, // no specific property
-⋮----
-// Handle phone contact lead generation
-const handlePhoneClick = async () =>
-⋮----
-// Track the lead generation in analytics
-⋮----
-// Handle WhatsApp contact lead generation
-const handleWhatsAppClick = async () =>
-⋮----
-// Track the lead generation in analytics
-⋮----
-// Handle email contact lead generation
-const handleEmailClick = async () =>
-⋮----
-// Track the lead generation in analytics
-⋮----
-// Handle social media contact lead generation
-const handleSocialClick = async (platform: 'facebook' | 'instagram') =>
-⋮----
-// Track the lead generation in analytics
-⋮----
-onClick=
-</file>
-
-<file path="components/Hero.tsx">
-import { ReactNode } from "react"
-import { motion } from "framer-motion"
-import Image from "next/image"
-⋮----
-interface HeroProps {
-  backgroundImage: string
-  alt: string
-  title: string | ReactNode
-  description: string
-  showCounter?: boolean
-  counterText?: string
-  counterValue?: number
-  withAnimation?: boolean
-  imageClassName?: string
-  children?: ReactNode
-}
-</file>
-
-<file path="services/analytics.ts">
-import { supabase, supabaseAdmin } from "@/lib/supabase"
-import {
-  type AnalyticsSession,
-  type PropertyViewEvent,
-  type LeadGenerationEvent,
-  type UserInteractionEvent,
-  type CreateAnalyticsSessionInput,
-  type CreatePropertyViewInput,
-  type CreateLeadGenerationEventInput,
-  type CreateUserInteractionEventInput,
-  type PropertyMetrics,
-  type TopPropertyResult,
-  type DashboardStats,
-  type LeadSourceStats,
-  type CampaignStats,
-  type DeviceTypeStats,
-  type HourlyTrafficStats,
-  type AnalyticsFilters,
-  type LeadSourceCode,
-  type AnalyticsMetricType,
-  AnalyticsValidationError,
-  AnalyticsPrivacyError,
-  ANALYTICS_CONSTANTS
-} from "@/types/analytics"
-⋮----
-export class AnalyticsService
-⋮----
-static async createSession(sessionData: CreateAnalyticsSessionInput): Promise<string>
-⋮----
-static async getOrCreateSession(
-    ipAddress: string,
-    userAgent?: string,
-    additionalData?: Partial<CreateAnalyticsSessionInput>
-): Promise<string>
-⋮----
-static async updateSessionLastSeen(sessionId: string): Promise<void>
-⋮----
-static async recordPropertyView(viewData: CreatePropertyViewInput): Promise<string>
-⋮----
-static async recordPropertyViewWithSession(
-    propertyId: number,
-    ipAddress: string,
-    userAgent?: string,
-    viewData?: Partial<CreatePropertyViewInput>,
-    sessionData?: Partial<CreateAnalyticsSessionInput>
-): Promise<
-⋮----
-static async recordLeadGeneration(leadData: CreateLeadGenerationEventInput): Promise<void>
-⋮----
-static async recordLeadWithSource(
-    leadId: number,
-    sourceCode: LeadSourceCode,
-    sessionId?: string,
-    propertyId?: number,
-    additionalData?: Partial<CreateLeadGenerationEventInput>
-): Promise<void>
-⋮----
-static async recordInteraction(interactionData: CreateUserInteractionEventInput): Promise<void>
-⋮----
-static async recordInteractionsBatch(interactions: CreateUserInteractionEventInput[]): Promise<void>
-⋮----
-static async getPropertyMetrics(
-    propertyId: number,
-    daysBack: number = 30
-): Promise<PropertyMetrics>
-⋮----
-static async getTopProperties(
-    limit = 10,
-    metric: AnalyticsMetricType = 'views',
-    days = 30
-): Promise<TopPropertyResult[]>
-⋮----
-static async getDashboardStats(filters?: AnalyticsFilters): Promise<DashboardStats>
-⋮----
-static async getLeadSourceStats(startDate: string, endDate: string): Promise<LeadSourceStats[]>
-⋮----
-static async getCampaignStats(startDate: string, endDate: string): Promise<CampaignStats[]>
-⋮----
-static async getDeviceTypeStats(startDate: string, endDate: string): Promise<DeviceTypeStats[]>
-⋮----
-static async handleOptOut(sessionId: string, ipAddress?: string): Promise<void>
-⋮----
-static async cleanupOldData(retentionMonths = ANALYTICS_CONSTANTS.RETENTION_MONTHS): Promise<number>
-⋮----
-private static async getSessionStats(startDate: string, endDate: string, filters?: AnalyticsFilters)
-⋮----
-private static async getViewStats(startDate: string, endDate: string, filters?: AnalyticsFilters)
-⋮----
-private static async getLeadStats(startDate: string, endDate: string, filters?: AnalyticsFilters)
-⋮----
-private static async getDailyStats(startDate: string, endDate: string)
-⋮----
-private static validatePropertyView(data: CreatePropertyViewInput): void
-⋮----
-private static validateLeadGeneration(data: CreateLeadGenerationEventInput): void
-⋮----
-private static validateInteraction(data: CreateUserInteractionEventInput): void
-⋮----
-private static async hashString(input: string): Promise<string>
-⋮----
-// Server environment - would need to import crypto module
-⋮----
-export class AnalyticsHooks
-⋮----
-static usePageView(propertyId?: number)
-⋮----
-static useInteractionTracking(sessionId: string)
-⋮----
-export class AnalyticsAggregation
-⋮----
-static async generateDailyAggregates(date?: string): Promise<void>
-⋮----
-static async generateWeeklyMonthlyAggregates(): Promise<void>
-</file>
-
-<file path="components/Header.tsx">
-import { useState, useEffect } from "react";
-import { Search, Menu, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useIsClient } from "@/hooks/use-is-client";
-⋮----
-interface HeaderProps {
-  showMobileSearch?: boolean;
-}
-⋮----
-const isActivePage = (path: string) =>
-⋮----
-const getLinkClassName = (path: string) =>
-⋮----
-const getContactLinkClassName = () =>
-⋮----
-const getAgentesLinkClassName = () =>
-⋮----
-const handleScroll = () =>
-</file>
-
-<file path="components/PropertyCard.tsx">
-import React from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Heart, Mail, ArrowRight, MapPin, Bed, Bath, Square, Home, Eye } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import type { Property as PropertyType } from "@/lib/supabase"
-⋮----
-interface Property extends PropertyType {
-  operation: "sale" | "rent"
-  type: "house" | "apartment" | "commercial" | "terreno" | "local"
-}
-⋮----
-interface PropertyCardProps {
-  property: Property
-}
-</file>
-
-<file path="app/agentes/page.tsx">
-import { useState } from "react";
-import { motion } from "framer-motion";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Award,
-  Users,
-  Home,
-  Star,
-  MessageCircle,
-  Building2,
-  Landmark,
-  Crown,
-  Check,
-  ArrowRight,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { getOptimizedImageUrl } from "@/lib/cloudinary";
-import Image from "next/image";
-import Link from "next/link";
-import Header from "@/components/Header"
-import Footer from "@/components/Footer";
-import Hero from "@/components/Hero"
-⋮----
-interface Agent {
-  id: number;
-  name: string;
-  role: string;
-  specialization: string;
-  phone: string;
-  email: string;
-  image: string;
-  description: string;
-  achievements: string[];
-  icon: typeof Home;
-}
-⋮----
-const handleContactAgent = (agent: Agent) =>
-⋮----
-// Scroll to contact form
-⋮----
-const handleSubmitContact = async (e: React.FormEvent) =>
-⋮----
-// Here would be the API call to create a lead
-⋮----
-src=
-⋮----
-{/* Why Choose Us Section - PREMIUM DESIGN */}
-</file>
-
-<file path="components/admin/PropertiesPage.tsx">
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import {
-  Home,
-  Plus,
-  Search,
-  Edit,
-  Trash2,
-  Star,
-  Eye,
-  MoreHorizontal,
-  MapPin,
-  Bed,
-  Bath,
-  Square,
-  CheckCircle,
-  XCircle,
-  Clock,
-  AlertCircle
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger
-} from "@/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import { getOptimizedImageUrl } from "@/lib/cloudinary";
-import { PropertyService } from "@/services/properties";
-import type { Property } from "@/lib/supabase";
-import { STATUS_MAP } from "@/lib/supabase";
-⋮----
-interface PropertyWithStats extends Property {
-  views?: number;
-  leads?: number;
-}
-⋮----
-interface PropertyImageProps {
-  images: string[];
-  title: string;
-}
-⋮----
-const handleMouseEnter = () =>
-⋮----
-const handleMouseLeave = () =>
-⋮----
-const fetchProperties = async () =>
-⋮----
-const handleDeleteProperty = async (id: number) =>
-⋮----
-const toggleFeatured = async (
-    propertyId: number,
-    currentFeatured: boolean
-) =>
-⋮----
-const deleteProperty = async (propertyId: number) =>
-⋮----
-const changePropertyStatus = async (propertyId: number, newStatus: string) =>
-⋮----
-const getStatusBadgeVariant = (status: string) =>
-⋮----
-const getStatusDisplay = (status: string) =>
-⋮----
-const getStatusIcon = (status: string) =>
-⋮----
-const getStatusColor = (status: string) =>
-⋮----
-const getPropertyTypeLabel = (type: string) =>
-⋮----
-const getOperationTypeLabel = (type: string) =>
-⋮----
-const formatPrice = (price: number) =>
-⋮----
-<Badge className=
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ module: string }> }
+)
 </file>
 
 <file path="app/globals.css">
@@ -6293,6 +6730,658 @@ h1, h2, h3 {
 @apply text-bone-white;
 ⋮----
 .widget-container, .progress-fill, .analytics-skeleton {
+</file>
+
+<file path="components/admin/PropertiesPage.tsx">
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import {
+  Home,
+  Plus,
+  Search,
+  Edit,
+  Trash2,
+  Star,
+  Eye,
+  MoreHorizontal,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  CheckCircle,
+  XCircle,
+  Clock,
+  AlertCircle
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
+import { PropertyService } from "@/services/properties";
+import type { Property } from "@/lib/supabase";
+import { STATUS_MAP } from "@/lib/supabase";
+⋮----
+interface PropertyWithStats extends Property {
+  views?: number;
+  leads?: number;
+}
+⋮----
+interface PropertyImageProps {
+  images: string[];
+  title: string;
+}
+⋮----
+const handleMouseEnter = () =>
+⋮----
+const handleMouseLeave = () =>
+⋮----
+const fetchProperties = async () =>
+⋮----
+const handleDeleteProperty = async (id: number) =>
+⋮----
+const toggleFeatured = async (
+    propertyId: number,
+    currentFeatured: boolean
+) =>
+⋮----
+const deleteProperty = async (propertyId: number) =>
+⋮----
+const changePropertyStatus = async (propertyId: number, newStatus: string) =>
+⋮----
+const getStatusBadgeVariant = (status: string) =>
+⋮----
+const getStatusDisplay = (status: string) =>
+⋮----
+const getStatusIcon = (status: string) =>
+⋮----
+const getStatusColor = (status: string) =>
+⋮----
+const getPropertyTypeLabel = (type: string) =>
+⋮----
+const getOperationTypeLabel = (type: string) =>
+⋮----
+const formatPrice = (price: number) =>
+⋮----
+<Badge className=
+</file>
+
+<file path="components/FeaturedPropertiesSlider.tsx">
+import React, { useEffect, useCallback } from 'react'
+import useEmblaCarousel from 'embla-carousel-react'
+import { EmblaOptionsType } from 'embla-carousel'
+import Autoplay from 'embla-carousel-autoplay'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { PropertyMiniMap } from '@/components/PropertyMiniMap'
+import { Property } from '@/lib/supabase'
+import { Home, MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight } from 'lucide-react'
+⋮----
+interface FeaturedPropertiesSliderProps {
+  properties: Property[]
+}
+</file>
+
+<file path="components/HeroSearchBar.tsx">
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Search, Home, Building, TreePine } from "lucide-react";
+import { motion } from "framer-motion";
+⋮----
+export function HeroSearchBar()
+⋮----
+const handleSearch = () =>
+</file>
+
+<file path="app/agentes/page.tsx">
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Award,
+  Users,
+  Home,
+  Star,
+  MessageCircle,
+  Building2,
+  Landmark,
+  Crown,
+  Check,
+  ArrowRight,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { getOptimizedImageUrl } from "@/lib/cloudinary";
+import Image from "next/image";
+import Link from "next/link";
+import Header from "@/components/Header"
+import Footer from "@/components/Footer";
+import Hero from "@/components/Hero"
+⋮----
+interface Agent {
+  id: number;
+  name: string;
+  role: string;
+  specialization: string;
+  phone: string;
+  email: string;
+  image: string;
+  description: string;
+  achievements: string[];
+  icon: typeof Home;
+}
+⋮----
+const handleContactAgent = (agent: Agent) =>
+⋮----
+// Scroll to contact form
+⋮----
+const handleSubmitContact = async (e: React.FormEvent) =>
+⋮----
+// Here would be the API call to create a lead
+⋮----
+src=
+⋮----
+{/* Why Choose Us Section - PREMIUM DESIGN */}
+</file>
+
+<file path="app/propiedades/[id]/page.tsx">
+import { useState, useEffect } from "react"
+import { useParams, useRouter } from "next/navigation"
+import Image from "next/image"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { PropertyDetailMap } from "@/components/PropertyDetailMap"
+import {
+  ArrowLeft,
+  MapPin,
+  Bed,
+  Bath,
+  Square,
+  Heart,
+  Share2,
+  Phone,
+  Mail,
+  MessageCircle,
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Calendar,
+  Wifi,
+  Car,
+  TreePine,
+  ShieldCheck,
+  Zap,
+  Home
+} from "lucide-react"
+import type { Property as PropertyType } from "@/lib/supabase"
+import Header from "@/components/Header"
+import { ComprehensivePropertyTracker, ContactTracker, ImageGalleryTracker } from "@/components/PropertyViewTracker"
+import { trackLead } from '@/lib/analytics-client'
+import { LEAD_SOURCE_CODES } from '@/types/analytics'
+⋮----
+interface Property extends PropertyType {
+  operation: "sale" | "rent"
+  type: "house" | "apartment" | "commercial" | "terreno" | "local"
+}
+⋮----
+// Fetch property data
+⋮----
+const fetchProperty = async () =>
+⋮----
+const nextImage = () =>
+⋮----
+const prevImage = () =>
+⋮----
+const getTypeDisplayName = (type: string) =>
+⋮----
+const getStatusDisplayName = (status: string) =>
+⋮----
+const getOperationDisplayName = (operation: string) =>
+⋮----
+const getFeatureIcon = (feature: string) =>
+⋮----
+const handleContactSubmit = async (e: React.FormEvent) =>
+⋮----
+onError=
+⋮----
+
+⋮----
+onClick=
+⋮----
+onChange=
+⋮----
+required
+</file>
+
+<file path="components/admin/MarketingAnalytics.tsx">
+import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { KPICard } from '@/components/ui/kpi-card'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  AnalyticsDashboardLayout,
+  WidgetGrid,
+  buildAnalyticsBreadcrumbs
+} from '@/components/layouts'
+import {
+  TrendingUp,
+  TrendingDown,
+  Users,
+  Target,
+  DollarSign,
+  Clock,
+  RefreshCw,
+  BarChart3,
+  PieChart,
+  Globe,
+  Megaphone,
+  MousePointer,
+  Eye,
+  Search,
+  Facebook,
+  Instagram,
+  MessageCircle,
+  Mail,
+  Phone,
+  UserPlus,
+  ArrowUpRight,
+  ArrowDownRight,
+  Play,
+  Pause,
+  TestTube
+} from 'lucide-react'
+import { useAnalyticsDashboard } from '@/hooks/useAnalyticsDashboard'
+import { useRealTimeUpdates } from '@/hooks/useRealTimeUpdates'
+⋮----
+interface MarketingKPIs {
+  totalLeads: {
+    value: number
+    change: number
+    cost: number
+  }
+  leadQuality: {
+    value: number
+    change: number
+    benchmark: number
+  }
+  costPerLead: {
+    value: number
+    change: number
+    target: number
+  }
+  websiteTraffic: {
+    value: number
+    change: number
+    conversionRate: number
+  }
+}
+⋮----
+interface ChannelPerformance {
+  id: string
+  name: string
+  icon: React.ComponentType<{ className?: string }>
+  leads: number
+  cost: number
+  cpl: number
+  conversionRate: number
+  roi: number
+  trend: number
+  color: string
+  status: 'active' | 'paused' | 'testing'
+}
+⋮----
+interface CampaignData {
+  id: string
+  name: string
+  channel: string
+  utmSource: string
+  utmMedium: string
+  utmCampaign: string
+  startDate: string
+  endDate: string
+  budget: number
+  spent: number
+  leads: number
+  conversions: number
+  revenue: number
+  roi: number
+  cpl: number
+  conversionRate: number
+  clickThroughRate: number
+  status: 'active' | 'paused' | 'completed' | 'draft'
+  performance: 'excellent' | 'good' | 'average' | 'poor'
+}
+⋮----
+interface WebsiteAnalyticsData {
+  trafficSources: {
+    source: string
+    sessions: number
+    percentage: number
+    bounceRate: number
+    avgSessionDuration: number
+    conversions: number
+    conversionRate: number
+  }[]
+  topPages: {
+    page: string
+    title: string
+    pageviews: number
+    uniquePageviews: number
+    avgTimeOnPage: number
+    bounceRate: number
+    exitRate: number
+    conversions: number
+  }[]
+  overallMetrics: {
+    totalSessions: number
+    totalPageviews: number
+    avgSessionDuration: number
+    bounceRate: number
+    newUsersPercentage: number
+    totalConversions: number
+    overallConversionRate: number
+  }
+}
+⋮----
+interface ChannelPerformanceProps {
+  period: string
+  loading: boolean
+}
+⋮----
+const getStatusColor = (status: string) =>
+⋮----
+<span className="text-sm text-chart-quaternary/80 font-mono bg-surface-darker/50 px-2 py-1 rounded-md inline-block mt-1">
+<span className="hidden lg:inline font-medium">
+⋮----
+const [selectedPeriod, setSelectedPeriod] = useState('30d')
+const [lastRefresh, setLastRefresh] = useState<Date>(new Date())
+</file>
+
+<file path="components/admin/PropertyAnalytics.tsx">
+import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { KPICard } from '@/components/ui/kpi-card'
+import { Badge } from '@/components/ui/badge'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  AnalyticsDashboardLayout,
+  WidgetGrid,
+  buildAnalyticsBreadcrumbs
+} from '@/components/layouts'
+import {
+  TrendingUp,
+  TrendingDown,
+  Home,
+  MapPin,
+  DollarSign,
+  Clock,
+  RefreshCw,
+  BarChart3,
+  PieChart,
+  Eye,
+  Users,
+  Calendar,
+  Star,
+  Target,
+  Zap,
+  Activity,
+  Map,
+  Building,
+  ArrowUpRight,
+  ArrowDownRight
+} from 'lucide-react'
+import { useAnalyticsDashboard } from '@/hooks/useAnalyticsDashboard'
+import { useRealTimeUpdates } from '@/hooks/useRealTimeUpdates'
+⋮----
+interface PropertyKPIs {
+  totalProperties: {
+    value: number
+    active: number
+    sold: number
+    pending: number
+  }
+  avgViewsPerProperty: {
+    value: number
+    change: number
+    benchmark: number
+  }
+  avgTimeOnMarket: {
+    value: number
+    change: number
+    target: number
+  }
+  conversionRate: {
+    value: number
+    change: number
+    benchmark: number
+  }
+}
+⋮----
+interface PropertyPerformance {
+  id: string
+  title: string
+  address: string
+  neighborhood: string
+  price: number
+  propertyType: 'casa' | 'departamento' | 'local' | 'terreno'
+  listingDate: string
+  views: number
+  uniqueViews: number
+  leads: number
+  showings: number
+  favorites: number
+  daysOnMarket: number
+  priceChanges: number
+  leadConversionRate: number
+  performance: 'excellent' | 'good' | 'average' | 'poor'
+  trending: 'up' | 'down' | 'stable'
+  images?: string[]
+}
+⋮----
+interface PropertyPerformanceProps {
+  period: string
+  loading: boolean
+}
+⋮----
+const getPropertyTypeIcon = (type: string) =>
+⋮----
+const getTrendingIcon = (trending: string) =>
+⋮----
+const getTrendingColor = (trending: string) =>
+⋮----
+onError=
+⋮----
+if (parent)
+⋮----
+const fetchPropertiesData = async () =>
+</file>
+
+<file path="components/Hero.tsx">
+import { ReactNode } from "react"
+import { motion } from "framer-motion"
+import Image from "next/image"
+⋮----
+interface HeroProps {
+  backgroundImage: string
+  alt: string
+  title: string | ReactNode
+  description: string
+  showCounter?: boolean
+  counterText?: string
+  counterValue?: number
+  withAnimation?: boolean
+  imageClassName?: string
+  children?: ReactNode
+}
+</file>
+
+<file path="components/PropertyCard.tsx">
+import React from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Heart, Mail, ArrowRight, MapPin, Bed, Bath, Square, Home, Eye } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
+import type { Property as PropertyType } from "@/lib/supabase"
+⋮----
+interface Property extends PropertyType {
+  operation: "sale" | "rent"
+  type: "house" | "apartment" | "commercial" | "terreno" | "local"
+}
+⋮----
+interface PropertyCardProps {
+  property: Property
+}
+</file>
+
+<file path="services/analytics.ts">
+import { supabase, supabaseAdmin } from "@/lib/supabase"
+import {
+  type AnalyticsSession,
+  type PropertyViewEvent,
+  type LeadGenerationEvent,
+  type UserInteractionEvent,
+  type CreateAnalyticsSessionInput,
+  type CreatePropertyViewInput,
+  type CreateLeadGenerationEventInput,
+  type CreateUserInteractionEventInput,
+  type PropertyMetrics,
+  type TopPropertyResult,
+  type DashboardStats,
+  type LeadSourceStats,
+  type CampaignStats,
+  type DeviceTypeStats,
+  type HourlyTrafficStats,
+  type AnalyticsFilters,
+  type LeadSourceCode,
+  type AnalyticsMetricType,
+  AnalyticsValidationError,
+  AnalyticsPrivacyError,
+  ANALYTICS_CONSTANTS
+} from "@/types/analytics"
+⋮----
+export class AnalyticsService
+⋮----
+static async createSession(sessionData: CreateAnalyticsSessionInput): Promise<string>
+⋮----
+static async getOrCreateSession(
+    ipAddress: string,
+    userAgent?: string,
+    additionalData?: Partial<CreateAnalyticsSessionInput>
+): Promise<string>
+⋮----
+static async updateSessionLastSeen(sessionId: string): Promise<void>
+⋮----
+static async recordPropertyView(viewData: CreatePropertyViewInput): Promise<string>
+⋮----
+static async recordPropertyViewWithSession(
+    propertyId: number,
+    ipAddress: string,
+    userAgent?: string,
+    viewData?: Partial<CreatePropertyViewInput>,
+    sessionData?: Partial<CreateAnalyticsSessionInput>
+): Promise<
+⋮----
+static async recordLeadGeneration(leadData: CreateLeadGenerationEventInput): Promise<void>
+⋮----
+static async recordLeadWithSource(
+    leadId: number,
+    sourceCode: LeadSourceCode,
+    sessionId?: string,
+    propertyId?: number,
+    additionalData?: Partial<CreateLeadGenerationEventInput>
+): Promise<void>
+⋮----
+static async recordInteraction(interactionData: CreateUserInteractionEventInput): Promise<void>
+⋮----
+static async recordInteractionsBatch(interactions: CreateUserInteractionEventInput[]): Promise<void>
+⋮----
+static async getPropertyMetrics(
+    propertyId: number,
+    daysBack: number = 30
+): Promise<PropertyMetrics>
+⋮----
+static async getTopProperties(
+    limit = 10,
+    metric: AnalyticsMetricType = 'views',
+    days = 30
+): Promise<TopPropertyResult[]>
+⋮----
+static async getDashboardStats(filters?: AnalyticsFilters): Promise<DashboardStats>
+⋮----
+static async getLeadSourceStats(startDate: string, endDate: string): Promise<LeadSourceStats[]>
+⋮----
+static async getCampaignStats(startDate: string, endDate: string): Promise<CampaignStats[]>
+⋮----
+static async getDeviceTypeStats(startDate: string, endDate: string): Promise<DeviceTypeStats[]>
+⋮----
+static async handleOptOut(sessionId: string, ipAddress?: string): Promise<void>
+⋮----
+static async cleanupOldData(retentionMonths = ANALYTICS_CONSTANTS.RETENTION_MONTHS): Promise<number>
+⋮----
+private static async getSessionStats(startDate: string, endDate: string, filters?: AnalyticsFilters)
+⋮----
+private static async getViewStats(startDate: string, endDate: string, filters?: AnalyticsFilters)
+⋮----
+private static async getLeadStats(startDate: string, endDate: string, filters?: AnalyticsFilters)
+⋮----
+private static async getDailyStats(startDate: string, endDate: string)
+⋮----
+private static validatePropertyView(data: CreatePropertyViewInput): void
+⋮----
+private static validateLeadGeneration(data: CreateLeadGenerationEventInput): void
+⋮----
+private static validateInteraction(data: CreateUserInteractionEventInput): void
+⋮----
+private static async hashString(input: string): Promise<string>
+⋮----
+// Server environment - would need to import crypto module
+⋮----
+export class AnalyticsHooks
+⋮----
+static usePageView(propertyId?: number)
+⋮----
+static useInteractionTracking(sessionId: string)
+⋮----
+export class AnalyticsAggregation
+⋮----
+static async generateDailyAggregates(date?: string): Promise<void>
+⋮----
+static async generateWeeklyMonthlyAggregates(): Promise<void>
 </file>
 
 <file path="app/propiedades/page.tsx">
