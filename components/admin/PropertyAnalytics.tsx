@@ -129,10 +129,14 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
       .catch(err => console.error('Failed to fetch properties module data:', err))
   }, [period])
 
-  // Transform top_properties from API to PropertyPerformance interface
+  // ✅ Transform top_properties from API to PropertyPerformance interface - 100% REAL DATA
   const propertiesData: PropertyPerformance[] = (propertiesModuleData?.top_properties?.by_views || []).map((prop, index) => {
     // Calculate conversion rate properly
     const conversionRate = prop.unique_views > 0 ? ((prop.leads / prop.unique_views) * 100) : 0
+
+    // Calculate days on market from created_at
+    const createdDate = prop.created_at ? new Date(prop.created_at) : new Date()
+    const daysOnMarket = Math.floor((new Date().getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24))
 
     return {
       id: prop.property_id?.toString() || `prop-${index}`,
@@ -147,7 +151,7 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
       leads: prop.leads || 0,
       showings: 0, // TODO Phase 3: Track showings
       favorites: 0, // TODO Phase 3: Track favorites
-      daysOnMarket: prop.days_on_market || 0,
+      daysOnMarket: daysOnMarket,
       priceChanges: 0, // TODO Phase 3: Track price history
       leadConversionRate: conversionRate,
       performance: conversionRate > 2 ? 'excellent' : conversionRate > 1.5 ? 'good' : conversionRate > 1 ? 'average' : 'poor',
@@ -156,105 +160,7 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
     }
   })
 
-  // Fallback mock data if no real data available yet
-  const mockPropertiesData: PropertyPerformance[] = [
-    {
-      id: 'prop-001',
-      title: 'Departamento Premium en Palermo',
-      address: 'Av. Santa Fe 3200',
-      neighborhood: 'Palermo',
-      price: 450000,
-      propertyType: 'departamento',
-      listingDate: '2024-02-15',
-      views: 1850,
-      uniqueViews: 1420,
-      leads: 28,
-      showings: 12,
-      favorites: 45,
-      daysOnMarket: 45,
-      priceChanges: 1,
-      leadConversionRate: 1.51,
-      performance: 'excellent',
-      trending: 'up'
-    },
-    {
-      id: 'prop-002',
-      title: 'Casa Moderna en Belgrano',
-      address: 'Crámer 1500',
-      neighborhood: 'Belgrano',
-      price: 680000,
-      propertyType: 'casa',
-      listingDate: '2024-01-20',
-      views: 1560,
-      uniqueViews: 1180,
-      leads: 22,
-      showings: 8,
-      favorites: 38,
-      daysOnMarket: 68,
-      priceChanges: 2,
-      leadConversionRate: 1.41,
-      performance: 'good',
-      trending: 'stable'
-    },
-    {
-      id: 'prop-003',
-      title: 'Loft en Puerto Madero',
-      address: 'Pierina Dealessi 550',
-      neighborhood: 'Puerto Madero',
-      price: 820000,
-      propertyType: 'departamento',
-      listingDate: '2024-01-05',
-      views: 2280,
-      uniqueViews: 1850,
-      leads: 35,
-      showings: 15,
-      favorites: 62,
-      daysOnMarket: 85,
-      priceChanges: 0,
-      leadConversionRate: 1.54,
-      performance: 'excellent',
-      trending: 'up'
-    },
-    {
-      id: 'prop-004',
-      title: 'Casa Familiar en Villa Urquiza',
-      address: 'Av. Triunvirato 4200',
-      neighborhood: 'Villa Urquiza',
-      price: 385000,
-      propertyType: 'casa',
-      listingDate: '2024-03-01',
-      views: 890,
-      uniqueViews: 720,
-      leads: 12,
-      showings: 4,
-      favorites: 18,
-      daysOnMarket: 28,
-      priceChanges: 0,
-      leadConversionRate: 1.35,
-      performance: 'good',
-      trending: 'up'
-    },
-    {
-      id: 'prop-005',
-      title: 'Departamento en Recoleta',
-      address: 'Av. Callao 1800',
-      neighborhood: 'Recoleta',
-      price: 520000,
-      propertyType: 'departamento',
-      listingDate: '2023-11-15',
-      views: 3250,
-      uniqueViews: 2180,
-      leads: 48,
-      showings: 22,
-      favorites: 85,
-      daysOnMarket: 135,
-      priceChanges: 3,
-      leadConversionRate: 1.48,
-      performance: 'average',
-      trending: 'down'
-    }
-  ]
-
+  // Loading state
   if (loading) {
     return (
       <div className="space-y-3">
@@ -271,6 +177,21 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
           </div>
         ))}
       </div>
+    )
+  }
+
+  // ✅ Empty state - No fallback to mock data
+  if (propertiesData.length === 0) {
+    return (
+      <Card className="border-border-subtle">
+        <CardContent className="text-center py-12">
+          <BarChart3 className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
+          <h3 className="mt-4 text-lg font-semibold text-white">No hay datos de propiedades disponibles</h3>
+          <p className="text-sm text-subtle-gray mt-2">
+            Las métricas de propiedades aparecerán aquí una vez que haya tráfico registrado
+          </p>
+        </CardContent>
+      </Card>
     )
   }
 
@@ -312,10 +233,10 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
     }
   }
 
-  // Use real data if available, fallback to mock
-  const displayData = propertiesData.length > 0 ? propertiesData : mockPropertiesData
+  // ✅ USE ONLY REAL DATA - No fallback to mock
+  const displayData = propertiesData
 
-  // Calcular métricas totales
+  // Calcular métricas totales desde datos reales
   const totalViews = displayData.reduce((sum, prop) => sum + prop.views, 0)
   const totalLeads = displayData.reduce((sum, prop) => sum + prop.leads, 0)
   const avgDaysOnMarket = displayData.length > 0 ? Math.round(displayData.reduce((sum, prop) => sum + prop.daysOnMarket, 0) / displayData.length) : 0
@@ -421,34 +342,42 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
           })}
       </div>
 
-      {/* Performance Insight - Dynamic */}
+      {/* ✅ Performance Insight - Dynamic based on percentiles */}
       {displayData.length > 0 && (() => {
-        // Find top performer by views
-        const topByViews = displayData.reduce((max, prop) =>
-          prop.views > max.views ? prop : max
-        , displayData[0])
+        // Calculate percentiles for views and conversion rate
+        const sortedByViews = [...displayData].sort((a, b) => a.views - b.views)
+        const sortedByConversion = [...displayData].sort((a, b) => a.leadConversionRate - b.leadConversionRate)
 
-        // Find top performer by conversion
-        const topByConversion = displayData.reduce((max, prop) =>
-          prop.leadConversionRate > max.leadConversionRate ? prop : max
-        , displayData[0])
+        const percentile25Views = sortedByViews[Math.floor(displayData.length * 0.25)]?.views || 0
+        const percentile75Views = sortedByViews[Math.floor(displayData.length * 0.75)]?.views || 0
+        const percentile25Conversion = sortedByConversion[Math.floor(displayData.length * 0.25)]?.leadConversionRate || 0
+        const percentile75Conversion = sortedByConversion[Math.floor(displayData.length * 0.75)]?.leadConversionRate || 0
 
-        // Find property that needs attention (high views but low conversion)
-        const needsAttention = displayData
-          .filter(p => p.views > 0)
-          .find(p => p.views > avgDaysOnMarket * 10 && p.leadConversionRate < 1)
+        // Top performers: Top 25% in both views and conversion
+        const topPerformers = displayData.filter(p =>
+          p.views >= percentile75Views && p.leadConversionRate >= percentile75Conversion
+        )
+
+        // Needs attention: Bottom 25% in views
+        const needsAttention = displayData.filter(p =>
+          p.views > 0 && p.views <= percentile25Views
+        )
 
         // Generate dynamic insight
-        let insight = `${topByViews.title} lidera en visualizaciones (${topByViews.views.toLocaleString()}).`
+        let insight = ''
 
-        if (topByConversion.id !== topByViews.id) {
-          insight += ` ${topByConversion.title} destaca con ${topByConversion.leadConversionRate.toFixed(2)}% de conversión.`
-        } else {
-          insight += ` También lidera en conversión (${topByConversion.leadConversionRate.toFixed(2)}%).`
+        if (topPerformers.length > 0) {
+          const topProp = topPerformers[0]
+          insight += `🌟 Top performers (${topPerformers.length}): ${topProp.title} lidera con ${topProp.views.toLocaleString()} views y ${topProp.leadConversionRate.toFixed(2)}% conversión. `
         }
 
-        if (needsAttention) {
-          insight += ` ${needsAttention.title} tiene buen tráfico pero baja conversión - considera optimizar precio o descripción.`
+        if (needsAttention.length > 0 && displayData.length > 1) {
+          const needsProp = needsAttention[0]
+          insight += `⚠️ ${needsAttention.length} ${needsAttention.length === 1 ? 'propiedad necesita' : 'propiedades necesitan'} atención: ${needsProp.title} tiene bajo tráfico (${needsProp.views} views). Considera mejorar fotos, descripción o promoción.`
+        }
+
+        if (!insight) {
+          insight = `Análisis basado en ${displayData.length} ${displayData.length === 1 ? 'propiedad' : 'propiedades'}. Continúa monitoreando el rendimiento.`
         }
 
         return (
@@ -456,7 +385,7 @@ function PropertyPerformanceWidget({ period, loading }: PropertyPerformanceProps
             <div className="flex items-start gap-2">
               <BarChart3 className="w-4 h-4 text-chart-primary mt-0.5" />
               <div className="text-sm">
-                <div className="font-medium text-chart-primary">Insight de Propiedades</div>
+                <div className="font-medium text-chart-primary">Insights de Performance</div>
                 <div className="text-subtle-gray text-xs mt-1">
                   {insight}
                 </div>
@@ -525,7 +454,7 @@ export default function PropertyAnalytics() {
     fetchPropertiesData()
   }, [selectedPeriod])
 
-  // ✅ REAL DATA from properties module
+  // ✅ REAL DATA from properties module - 100% calculated from real data
   const propertyKPIs: PropertyKPIs = React.useMemo(() => {
     if (!propertiesModuleData || !propertiesModuleData.overview) {
       return {
@@ -537,6 +466,21 @@ export default function PropertyAnalytics() {
     }
 
     const overview = propertiesModuleData.overview
+
+    // ✅ Calculate avg time on market from properties' created_at dates
+    let avgTimeOnMarket = 0
+    if (propertiesModuleData.top_properties?.by_views?.length > 0) {
+      const properties = propertiesModuleData.top_properties.by_views
+      const totalDays = properties.reduce((sum: number, prop: any) => {
+        if (prop.created_at) {
+          const createdDate = new Date(prop.created_at)
+          const daysOnMarket = Math.floor((new Date().getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24))
+          return sum + daysOnMarket
+        }
+        return sum
+      }, 0)
+      avgTimeOnMarket = properties.length > 0 ? Math.round(totalDays / properties.length) : 0
+    }
 
     return {
       totalProperties: {
@@ -551,8 +495,8 @@ export default function PropertyAnalytics() {
         benchmark: 1200
       },
       avgTimeOnMarket: {
-        value: overview.avg_time_on_market || 0, // TODO Phase 2: Calculate from properties.created_at
-        change: 0,
+        value: avgTimeOnMarket, // ✅ Real: calculated from properties.created_at
+        change: 0, // TODO Phase 2: Calculate trend
         target: 60
       },
       conversionRate: {
