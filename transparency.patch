@@ -1,0 +1,141 @@
+diff --git a/components/House3D.tsx b/components/House3D.tsx
+index old..new 100644
+--- a/components/House3D.tsx
++++ b/components/House3D.tsx
+@@ -1,59 +1,121 @@
+ "use client";
+
+-import { useEffect } from "react";
++import { useEffect, useRef } from "react";
+
+ /**
+- * House3D Component
++ * House3D (mejorado)
+  *
+- * Modelo 3D de una casa hecho completamente en CSS puro.
+- * Código original sin modificar de /public/imported/3dhousemodel/
++ * - Usa un ref en el iframe y añade un listener 'load'
++ * - Inyecta un <style> dentro del documento del iframe para:
++ *    • forzar transparencia de html/body
++ *    • ocultar las sombras / wrappers (.shadows, .shadow-a, .shadow-b)
++ *    • neutralizar cualquier otro wrapper que esté pintando un fondo
+  *
+- * Este componente carga el modelo 3D usando un iframe con fondo completamente transparente.
++ * Esto evita depender solo de la CSS externa y hace la limpieza de fondo
++ * desde el host (mismo origen) de forma robusta.
+  */
+ export function House3D() {
++  const iframeRef = useRef<HTMLIFrameElement | null>(null);
++
+   useEffect(() => {
+-    // Hacer el fondo del iframe transparente una vez cargado
+-    const iframe = document.querySelector('iframe[title="3D House Model"]') as HTMLIFrameElement;
++    const iframe = iframeRef.current;
++    if (!iframe) return;
++
++    const onLoad = () => {
++      try {
++        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
++        if (!iframeDoc) return;
++
++        // 1) Forzamos html/body transparent
++        if (iframeDoc.documentElement) {
++          (iframeDoc.documentElement as HTMLElement).style.background = "transparent";
++          (iframeDoc.documentElement as HTMLElement).style.backgroundColor = "transparent";
++        }
++        if (iframeDoc.body) {
++          (iframeDoc.body as HTMLElement).style.background = "transparent";
++          (iframeDoc.body as HTMLElement).style.backgroundColor = "transparent";
++        }
++
++        // 2) Inyectamos una hoja con overrides contundentes (usa !important)
++        const override = iframeDoc.createElement("style");
++        override.setAttribute("data-injected-by", "House3D");
++        override.innerHTML = `
++          /* Make the whole document transparent */
++          html, body, :root { background: transparent !important; background-color: transparent !important; }
++
++          /* Hide internal shadows / background blocks from the original pen */
++          .shadows, .shadow-a, .shadow-b { display: none !important; background: transparent !important; box-shadow: none !important; filter: none !important; }
++
++          /* If the original markup has top-level wrappers that paint a background,
++             neutralize them while keeping .house visible.
++             Exclude <style> and <script> so we don't break loading of CSS/JS. */
++          body > *:not(.house):not(style):not(script) { background: transparent !important; }
++
++          /* Some pens use pseudo-elements on body/html — neutralize them */
++          html::before, html::after, body::before, body::after { background: transparent !important; content: none !important; }
++        `;
++
++        // Append last so it overrides previously loaded CSS
++        iframeDoc.head?.appendChild(override);
++
++        // (Opcional) re-run any layout code inside iframe if necessary:
++        // Si el script del modelo depende de window.innerWidth/height,
++        // dispatchear un resize puede ayudar:
++        try {
++          iframe.contentWindow?.dispatchEvent(new Event("resize"));
++        } catch (e) {
++          // ignore
++        }
++      } catch (err) {
++        // Si el iframe fuera cross-origin, esto fallaría (pero en tu caso es local).
++        // Dejamos un log útil para debugging.
++        // eslint-disable-next-line no-console
++        console.warn("House3D: no se pudo acceder al iframe para limpiar el fondo:", err);
++      }
++    };
+
+-    if (iframe) {
+-      iframe.onload = () => {
+-        try {
+-          const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+-          if (iframeDoc) {
+-            // Quitar el background-color del body y html
+-            const html = iframeDoc.querySelector('html');
+-            const body = iframeDoc.querySelector('body');
+-
+-            if (html) {
+-              (html as HTMLElement).style.background = 'transparent';
+-              (html as HTMLElement).style.backgroundColor = 'transparent';
+-            }
+-            if (body) {
+-              (body as HTMLElement).style.background = 'transparent';
+-              (body as HTMLElement).style.backgroundColor = 'transparent';
+-            }
+-          }
+-        } catch (e) {
+-          console.log('No se pudo acceder al iframe debido a políticas CORS');
+-        }
+-      };
++    // Conectamos el listener
++    iframe.addEventListener("load", onLoad);
++
++    // Si ya está cargado (hot-reload / dev), ejecutar inmediatamente
++    if (iframe.contentDocument?.readyState === "complete") {
++      onLoad();
+     }
++
++    return () => {
++      iframe.removeEventListener("load", onLoad);
++    };
+   }, []);
+
+   return (
+     <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none">
+       <iframe
++        ref={iframeRef}
+         src="/imported/3dhousemodel/index.html"
+         className="w-full h-full border-0"
+         title="3D House Model"
+-        allowTransparency={true}
++        // estilo en línea para ayudar: (no reemplaza lo inyectado dentro del iframe)
+         style={{
+           pointerEvents: "auto",
+           background: "transparent",
+           backgroundColor: "transparent",
+         }}
+       />
+     </div>
+   );
+ }
