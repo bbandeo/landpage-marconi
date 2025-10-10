@@ -43,7 +43,6 @@ body {
 .shadows {
   width: 100%;
   height: 100%;
-  display: none; /* Ocultar sombras para fondo transparente */
 }
 
 .shadow-a {
@@ -54,10 +53,9 @@ body {
   height: 103%;
   transform-origin: top right;
   transform: skewY(-3deg);
-  background-color: transparent;
-  box-shadow: none;
-  filter: none;
-  display: none;
+  background-color: #686688;
+  box-shadow: -1vw 1vw 1.5vw #686688;
+  filter: blur(0.5vw);
 }
 
 .shadow-b {
@@ -65,8 +63,7 @@ body {
   top: 0;
   width: 100%;
   height: 101.5%;
-  background-color: transparent;
-  display: none;
+  background-color: #5f5d7c;
 }
 
 /***************/
@@ -2607,4 +2604,75 @@ body {
 
 .door-t {
   transform: translateZ(8.4vw);
+}
+/* === PATCH para hacer el fondo transparente del modelo === */
+
+html, body {
+  background: transparent !important;
+}
+
+.house, .scene, .shadows,
+.shadow-a, .shadow-b {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Asegurar que nada externo tape la imagen del hero */
+#h {
+  background: transparent !important;
+}
+
+/* === SOMBRAS 3D CON TRANSPARENCIA PARA PROFUNDIDAD === */
+
+/* Restaurar sombras proyectadas sutiles con transparencia */
+.shadow-a {
+  display: block !important;
+  background: transparent !important;
+  box-shadow: -1vw 1vw 2vw rgba(0, 0, 0, 0.15) !important;
+  filter: blur(0.8vw) !important;
+  opacity: 0.6;
+}
+
+.shadow-b {
+  display: block !important;
+  background: rgba(0, 0, 0, 0.05) !important;
+  opacity: 0.4;
+}
+
+/* Sombras sutiles en elementos principales de la casa */
+.al__bottom::before {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+.bl__bottom::before {
+  background: rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0vw 0.25vw 1vw rgba(0, 0, 0, 0.15) !important;
+}
+
+.bce__bottom::before,
+.bci__bottom::before,
+.bbe__bottom::before,
+.bbi__bottom::before {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+.cl__bottom::before {
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+.ccl__bottom::before {
+  background: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Sombra de la mesa */
+.table::before {
+  background: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Sombras de sofás */
+.couch__bottom::before,
+.couchb__bottom::before,
+.couchc__bottom::before,
+.couchd__bottom::before {
+  background: rgba(0, 0, 0, 0.08) !important;
 }
