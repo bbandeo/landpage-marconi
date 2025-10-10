@@ -1,33 +1,166 @@
-// Custom marker icons for real estate - only create on client side
-export const createPropertyMarkerIcon = () => {
-  if (typeof window === 'undefined') return null
-  
-  const L = require('leaflet')
-  require('leaflet-defaulticon-compatibility')
-  require('leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css')
+import type { MapConfig, MapResponsiveConfig, MapBounds } from '@/types/map'
+import type { DivIcon } from 'leaflet'
 
-  return new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  })
+/**
+ * CONFIGURACIÓN PRINCIPAL DEL MAPA INTERACTIVO
+ * Define todos los parámetros de comportamiento y visualización
+ */
+export const MAP_CONFIG: MapConfig = {
+  // Centro inicial en Reconquista, Santa Fe, Argentina
+  defaultCenter: [-29.15, -59.65],
+  // Zoom inicial (ciudad completa visible)
+  defaultZoom: 13,
+  // Zoom mínimo (permite ver toda Argentina)
+  minZoom: 5,
+  // Zoom máximo (nivel de calle)
+  maxZoom: 18,
+  // Límites geográficos de Argentina
+  maxBounds: [
+    [-55.061314, -73.560562], // Suroeste
+    [-21.781277, -53.591835], // Noreste
+  ],
+  // OpenStreetMap tile layer
+  tileLayerUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  // Atribución requerida por OpenStreetMap
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  // Activar clustering cuando hay más de 50 propiedades
+  clusteringThreshold: 50,
+  // Radio máximo de clustering (80px)
+  maxClusterRadius: 80,
 }
 
-export const propertyMarkerIcon = createPropertyMarkerIcon()
-
-// Argentina bounds for map restrictions
-export const ARGENTINA_BOUNDS = {
+/**
+ * LÍMITES GEOGRÁFICOS DE ARGENTINA
+ * Para validación de coordenadas
+ */
+export const ARGENTINA_BOUNDS: MapBounds = {
   north: -21.781277,
   south: -55.061314,
   east: -53.591835,
   west: -73.560562,
 }
 
-// Reconquista, Santa Fe coordinates
+/**
+ * COORDENADAS DE RECONQUISTA, SANTA FE
+ * Centro predeterminado del mapa
+ */
 export const RECONQUISTA_CENTER: [number, number] = [-29.15, -59.65]
+
+/**
+ * CONFIGURACIÓN RESPONSIVE DEL MAPA
+ * Ajusta altura, zoom y controles según el tamaño de pantalla
+ */
+export const MAP_RESPONSIVE_CONFIG: MapResponsiveConfig[] = [
+  {
+    // Móvil (< 768px)
+    minWidth: 0,
+    height: '400px',
+    defaultZoom: 12,
+    controlSize: 'large', // Controles táctiles grandes (44x44px WCAG)
+    showAttribution: true,
+  },
+  {
+    // Tablet (768px - 1024px)
+    minWidth: 768,
+    height: '500px',
+    defaultZoom: 13,
+    controlSize: 'medium',
+    showAttribution: true,
+  },
+  {
+    // Desktop (> 1024px)
+    minWidth: 1024,
+    height: '600px',
+    defaultZoom: 13,
+    controlSize: 'medium',
+    showAttribution: true,
+  },
+]
+
+/**
+ * ESTILOS DE MARCADORES
+ * Define los colores y estilos para diferentes estados
+ */
+export const MARKER_STYLES = {
+  default: {
+    fillColor: '#F37321', // vibrant-orange
+    color: '#fff', // borde blanco
+    fillOpacity: 1,
+    weight: 3,
+    radius: 8,
+  },
+  selected: {
+    fillColor: '#ff8c42', // naranja más claro
+    color: '#fff',
+    fillOpacity: 1,
+    weight: 4,
+    radius: 10,
+  },
+  hover: {
+    fillColor: '#e86820', // naranja más oscuro
+    color: '#fff',
+    fillOpacity: 1,
+    weight: 4,
+    radius: 9,
+  },
+}
+
+/**
+ * Crea un icono personalizado para marcadores de propiedades
+ * Usa el sistema de colores del proyecto (vibrant-orange)
+ *
+ * @returns Icono de Leaflet o null si se ejecuta en servidor
+ */
+export const createPropertyMarkerIcon = () => {
+  if (typeof window === 'undefined') return null
+
+  const L = require('leaflet')
+  require('leaflet-defaulticon-compatibility')
+  require('leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css')
+
+  // Icono personalizado con el color naranja vibrante del proyecto
+  return new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  })
+}
+
+/**
+ * Crea un icono personalizado para clusters
+ * Estilo premium consistente con el diseño del sitio
+ *
+ * @param cluster - Cluster de Leaflet con información de marcadores
+ * @returns DivIcon personalizado
+ */
+export const createClusterIcon = (cluster: any): DivIcon => {
+  if (typeof window === 'undefined') return null as any
+
+  const L = require('leaflet')
+  const childCount = cluster.getChildCount()
+
+  // Determinar tamaño del cluster según cantidad de propiedades
+  let sizeClass = 'marker-cluster-small'
+  if (childCount >= 100) {
+    sizeClass = 'marker-cluster-large'
+  } else if (childCount >= 10) {
+    sizeClass = 'marker-cluster-medium'
+  }
+
+  return new L.DivIcon({
+    html: `<div class="custom-cluster-icon ${sizeClass}"><span>${childCount}</span></div>`,
+    className: 'custom-cluster-container',
+    iconSize: [40, 40],
+  })
+}
+
+/**
+ * Instancia del icono de marcador (se crea una sola vez en cliente)
+ */
+export const propertyMarkerIcon = createPropertyMarkerIcon()
 
 // Geocoding service for Spanish addresses - using internal API to avoid CORS
 export const geocodeAddress = async (address: string): Promise<[number, number] | null> => {

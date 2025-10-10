@@ -1,0 +1,129 @@
+/**
+ * PropertyMapPopup - Componente de popup para propiedades en el mapa
+ *
+ * Muestra información detallada de una propiedad cuando se hace clic en su marcador.
+ * Incluye imagen, precio, tipo y enlace para ver detalles completos.
+ */
+
+'use client'
+
+import Image from 'next/image'
+import Link from 'next/link'
+import { MapPin, Home, DollarSign, ArrowRight } from 'lucide-react'
+import type { PropertyMapPopupProps } from '@/types/map'
+import { getOptimizedImageUrl } from '@/lib/cloudinary'
+
+export default function PropertyMapPopup({ property, onViewDetails }: PropertyMapPopupProps) {
+  // Formatear precio
+  const formatPrice = (price: number, currency: string) => {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: currency === 'USD' ? 'USD' : 'ARS',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(price)
+  }
+
+  // Obtener primera imagen optimizada
+  const firstImage = property.images && property.images.length > 0 ? property.images[0] : null
+
+  const imageUrl = firstImage
+    ? getOptimizedImageUrl(firstImage, {
+        width: 400,
+        height: 250,
+        crop: 'fill',
+        quality: 'auto',
+        fetch_format: 'auto',
+      })
+    : '/placeholder-property.jpg'
+
+  // Traducir tipos
+  const translatePropertyType = (type: string) => {
+    const translations: Record<string, string> = {
+      house: 'Casa',
+      apartment: 'Departamento',
+      land: 'Terreno',
+      commercial: 'Comercial',
+      Casa: 'Casa',
+      Departamento: 'Departamento',
+      Terreno: 'Terreno',
+      Comercial: 'Comercial',
+    }
+    return translations[type] || type
+  }
+
+  const translateOperationType = (type: string) => {
+    const translations: Record<string, string> = {
+      sale: 'Venta',
+      rent: 'Alquiler',
+      Venta: 'Venta',
+      Alquiler: 'Alquiler',
+    }
+    return translations[type] || type
+  }
+
+  const handleViewDetails = () => {
+    if (onViewDetails) {
+      onViewDetails(property.id)
+    }
+  }
+
+  return (
+    <div className="w-[320px] sm:w-[360px] bg-night-blue/95 backdrop-blur-sm rounded-lg overflow-hidden">
+      {/* Imagen de la propiedad */}
+      <div className="relative w-full h-48 bg-support-gray/10 overflow-hidden">
+        <Image
+          src={imageUrl}
+          alt={property.title}
+          fill
+          className="object-cover transition-transform duration-500 hover:scale-105"
+          sizes="(max-width: 640px) 320px, 360px"
+          loading="lazy"
+        />
+
+        {/* Badge de tipo de operación */}
+        <div className="absolute top-3 right-3">
+          <span className="inline-flex items-center gap-1 px-3 py-1.5 bg-vibrant-orange text-bone-white text-xs font-semibold uppercase tracking-wide rounded-full shadow-lg">
+            {translateOperationType(property.operation_type)}
+          </span>
+        </div>
+      </div>
+
+      {/* Contenido del popup */}
+      <div className="p-4 space-y-3">
+        {/* Título */}
+        <h3 className="text-bone-white text-base font-semibold line-clamp-2 leading-snug">{property.title}</h3>
+
+        {/* Información de la propiedad */}
+        <div className="space-y-2">
+          {/* Precio */}
+          <div className="flex items-center gap-2">
+            <DollarSign className="w-4 h-4 text-vibrant-orange flex-shrink-0" />
+            <span className="text-bone-white text-lg font-bold">
+              {formatPrice(property.price, property.currency)}
+            </span>
+          </div>
+
+          {/* Tipo de propiedad */}
+          <div className="flex items-center gap-2">
+            <Home className="w-4 h-4 text-subtle-gray flex-shrink-0" />
+            <span className="text-subtle-gray text-sm">{translatePropertyType(property.property_type)}</span>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-support-gray/20 my-3" />
+
+        {/* Botón Ver Detalles */}
+        <Link
+          href={`/propiedades/${property.id}`}
+          onClick={handleViewDetails}
+          className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-vibrant-orange hover:bg-vibrant-orange/90 text-bone-white text-sm font-semibold rounded-lg transition-all hover-lift group"
+        >
+          <span>Ver Detalles</span>
+          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+        </Link>
+      </div>
+    </div>
+  )
+}

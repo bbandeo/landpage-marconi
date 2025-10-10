@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import dynamic from "next/dynamic";
 import {
   Search,
   MapPin,
@@ -17,6 +18,7 @@ import {
   Award,
   Heart,
   Eye,
+  Map,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +36,22 @@ import Footer from "@/components/Footer";
 import { useIsClient } from "@/hooks/use-is-client";
 import { PropertyService } from "@/services/properties";
 import type { Property } from "@/lib/supabase";
+
+// Importar mapa con dynamic import (SSR disabled)
+const InteractivePropertyMap = dynamic(
+  () => import("@/components/map/InteractivePropertyMap"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[600px] bg-night-blue rounded-xl flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-support-gray/20 border-t-vibrant-orange mx-auto" />
+          <p className="text-bone-white">Cargando mapa...</p>
+        </div>
+      </div>
+    ),
+  }
+);
 
 // Componente para animación de contador
 function CounterAnimation({ value, label, icon: Icon }: { value: string, label: string, icon: any }) {
@@ -363,6 +381,89 @@ export default function HomePage() {
               )}
             </>
           )}
+        </div>
+      </section>
+
+      {/* Separador decorativo minimalista entre secciones */}
+      <div className="relative w-full flex justify-center my-12">
+        <div className="h-px w-3/4 bg-gradient-to-r from-transparent via-gray-600/40 to-transparent" />
+        <span className="absolute -top-3 bg-[#0d0f1a] px-3 text-gray-500 text-sm">
+          • • •
+        </span>
+      </div>
+
+      {/* MAPA INTERACTIVO - Sección del mapa de propiedades */}
+      <section
+        id="mapa"
+        className="section-spacing relative overflow-hidden bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900"
+      >
+        <div className="container-premium relative z-10">
+          {/* Header de la sección */}
+          <div className="text-center mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-vibrant-orange/10 border border-vibrant-orange/30 mb-6"
+            >
+              <Map className="w-5 h-5 text-vibrant-orange" />
+              <span className="text-vibrant-orange font-semibold text-sm uppercase tracking-wide">
+                Explora Ubicaciones
+              </span>
+            </motion.div>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6"
+            >
+              Mapa de Propiedades Disponibles
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto"
+            >
+              Descubre todas nuestras propiedades en Reconquista y alrededores. Haz clic en los marcadores para ver
+              más información.
+            </motion.p>
+          </div>
+
+          {/* Mapa interactivo */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="relative"
+          >
+            <div className="relative bg-night-blue/50 backdrop-blur-sm rounded-2xl p-2 sm:p-4 border border-support-gray/20 shadow-2xl">
+              <InteractivePropertyMap height="600px" className="shadow-xl" />
+            </div>
+
+            {/* Decorative elements */}
+            <div className="absolute -inset-4 bg-gradient-to-r from-vibrant-orange/5 via-transparent to-vibrant-orange/5 rounded-3xl blur-2xl -z-10" />
+          </motion.div>
+
+          {/* Info adicional */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            viewport={{ once: true }}
+            className="mt-8 text-center"
+          >
+            <p className="text-subtle-gray text-sm">
+              💡 <span className="text-bone-white">Tip:</span> Haz zoom y arrastra para explorar diferentes zonas.
+              Los clusters naranjas muestran grupos de propiedades cercanas.
+            </p>
+          </motion.div>
         </div>
       </section>
 

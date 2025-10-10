@@ -34,7 +34,7 @@ The content is organized as follows:
 - Some files may have been excluded based on .gitignore rules and Repomix's configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
 - Only files matching these patterns are included: **/*.tsx, **/*.ts, **/*.mjs, **/*.js, **/*.css, **/*.json, .env.example
-- Files matching these patterns are excluded: node_modules/**, public/**, .next/**, .git/**, data/**, test/**, coverage/**, dist/**, build/**, .serena/**, .claude/**, .playwright-mcp/**, backup_*.sql, repomix-output.*, *.log, **/*.xlsx, **/*.csv, **/.DS_Store, **/*.tmp, **/*.lock, pnpm-lock.yaml, package-lock.json, **/*.svg, **/*.jpg, **/*.jpeg, **/*.png, **/*.gif, **/*.bmp, **/*.tiff, **/*.tif, **/*.webp, **/*.ico, **/*.avif, **/*.heic, **/*.heif, **/*.mp4, **/*.avi, **/*.mov, **/*.wmv, **/*.flv, **/*.webm, **/*.mkv, **/*.m4v, **/*.3gp, **/*.mpeg, **/*.mpg, **/*.ogv, **/*.m3u8, **/*.mp3, **/*.wav, **/*.flac, **/*.aac, **/*.ogg, **/*.wma, **/*.m4a, **/*.md, **/*.sql
+- Files matching these patterns are excluded: node_modules/**, public/**, .next/**, .git/**, data/**, test/**, coverage/**, dist/**, build/**, .serena/**, .claude/**, .playwright-mcp/**, backup_*.sql, repomix-output.*, *.log, **/*.xlsx, **/*.csv, **/.DS_Store, **/*.tmp, **/*.lock, pnpm-lock.yaml, package-lock.json, **/*.svg, **/*.jpg, **/*.jpeg, **/*.png, **/*.gif, **/*.bmp, **/*.tiff, **/*.tif, **/*.webp, **/*.ico, **/*.avif, **/*.heic, **/*.heif, **/*.mp4, **/*.avi, **/*.mov, **/*.wmv, **/*.flv, **/*.webm, **/*.mkv, **/*.m4v, **/*.3gp, **/*.mpeg, **/*.mpg, **/*.ogv, **/*.m3u8, **/*.mp3, **/*.wav, **/*.flac, **/*.aac, **/*.ogg, **/*.wma, **/*.m4a, **/*.md
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Code comments have been removed from supported file types
@@ -5186,17 +5186,6 @@ export async function GET(request: NextRequest)
 export async function POST(request: NextRequest)
 </file>
 
-<file path="components/admin/AdminLayout.tsx">
-import type React from "react"
-⋮----
-import { useState } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Users, Building2, Menu, ExternalLink, BarChart3 } from "lucide-react"
-</file>
-
 <file path="components/admin/AnalyticsDashboard.tsx">
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -5301,35 +5290,6 @@ const getTrendIcon = (value: number, isInverted: boolean = false) =>
 <span>
 ⋮----
 <span className="text-white">
-</file>
-
-<file path="components/admin/Dashboard.tsx">
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import {
-  Home,
-  Users,
-  TrendingUp,
-  MessageSquare,
-  Phone,
-  Mail,
-  Calendar,
-  AlertCircle,
-  Target,
-  Clock,
-  BarChart3,
-  Activity,
-  ArrowRight
-} from "lucide-react"
-import Link from "next/link"
-import { useContacts } from "@/hooks/useContacts"
-import { useContactMetrics } from "@/hooks/useContactMetrics"
-⋮----
-const fetchProperties = async () =>
-⋮----
-Distribución por Prioridad
 </file>
 
 <file path="components/admin/PropertyForm.tsx">
@@ -5468,62 +5428,6 @@ interface PropertyData {
 }
 ⋮----
 const toggleLoading = () =>
-</file>
-
-<file path="hooks/useRealTimeUpdates.ts">
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { queryKeys, cacheStrategies, invalidateQueries } from '@/lib/react-query-config'
-⋮----
-export interface RealTimeMetrics {
-  activeUsers: number
-  currentViews: number
-  todayLeads: number
-  lastHourViews: number
-  topActiveProperties: Array<{
-    id: number
-    title: string
-    currentViews: number
-    todayLeads: number
-  }>
-  recentEvents: Array<{
-    id: string
-    type: 'view' | 'lead' | 'interaction'
-    propertyId: number
-    propertyTitle: string
-    timestamp: string
-    deviceType: string
-    source?: string
-  }>
-  systemStatus: {
-    isHealthy: boolean
-    responseTime: number
-    errorRate: number
-  }
-}
-⋮----
-export interface UseRealTimeOptions {
-  enabled?: boolean
-  interval?: number
-  maxEvents?: number
-  enableNotifications?: boolean
-  enableWebSocket?: boolean
-}
-⋮----
-export interface RealTimeEvent {
-  id: string
-  type: 'view' | 'lead' | 'interaction' | 'system'
-  data: any
-  timestamp: string
-}
-⋮----
-export function useRealTimeUpdates(options: UseRealTimeOptions =
-⋮----
-export function useActiveUsers()
-⋮----
-export function useLeadNotifications()
-⋮----
-function transformRealTimeMetrics(rawData: any): RealTimeMetrics
 </file>
 
 <file path="package.json">
@@ -5734,6 +5638,46 @@ export default function RootLayout({
 }>)
 </file>
 
+<file path="components/admin/AdminLayout.tsx">
+import type React from "react"
+⋮----
+import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Users, Building2, Menu, ExternalLink, BarChart3 } from "lucide-react"
+</file>
+
+<file path="components/admin/Dashboard.tsx">
+import { useState, useEffect } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Home,
+  Users,
+  TrendingUp,
+  MessageSquare,
+  Phone,
+  Mail,
+  Calendar,
+  AlertCircle,
+  Target,
+  Clock,
+  BarChart3,
+  Activity,
+  ArrowRight
+} from "lucide-react"
+import Link from "next/link"
+import { useContacts } from "@/hooks/useContacts"
+import { useContactMetrics } from "@/hooks/useContactMetrics"
+⋮----
+const fetchProperties = async () =>
+⋮----
+Distribución por Prioridad
+</file>
+
 <file path="components/admin/ExecutiveOverview.tsx">
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -5922,6 +5866,66 @@ const initializeSession = async () =>
 const handleScroll = () =>
 ⋮----
 export function usePropertyAnalytics(propertyId: number, options?: UseAnalyticsOptions)
+</file>
+
+<file path="hooks/useRealTimeUpdates.ts">
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { queryKeys, cacheStrategies, invalidateQueries } from '@/lib/react-query-config'
+⋮----
+export interface RealTimeMetrics {
+  activeUsers: number
+  currentViews: number
+  todayLeads: number
+  lastHourViews: number
+  topActiveProperties: Array<{
+    id: number
+    title: string
+    currentViews: number
+    todayLeads: number
+  }>
+  recentEvents: Array<{
+    id: string
+    type: 'view' | 'lead' | 'interaction'
+    propertyId: number
+    propertyTitle: string
+    timestamp: string
+    deviceType: string
+    source?: string
+  }>
+  systemStatus: {
+    isHealthy: boolean
+    responseTime: number
+    errorRate: number
+  }
+}
+⋮----
+export interface UseRealTimeOptions {
+  enabled?: boolean
+  interval?: number
+  maxEvents?: number
+  enableNotifications?: boolean
+  enableWebSocket?: boolean
+}
+⋮----
+export interface RealTimeEvent {
+  id: string
+  type: 'view' | 'lead' | 'interaction' | 'system'
+  data: any
+  timestamp: string
+}
+⋮----
+export function useRealTimeUpdates(options: UseRealTimeOptions =
+⋮----
+const handleVisibilityChange = () =>
+⋮----
+export function useActiveUsers()
+⋮----
+export function useLeadNotifications()
+⋮----
+function transformDashboardToRealtime(dashboardData: any): RealTimeMetrics
+⋮----
+function transformRealTimeMetrics(rawData: any): RealTimeMetrics
 </file>
 
 <file path="lib/map-config.ts">
@@ -7216,17 +7220,55 @@ interface PropertyPerformanceProps {
   loading: boolean
 }
 ⋮----
-const getPropertyTypeIcon = (type: string) =>
+switch (type)
 ⋮----
-const getTrendingIcon = (trending: string) =>
-⋮----
-const getTrendingColor = (trending: string) =>
+switch (trending)
 ⋮----
 onError=
 ⋮----
 if (parent)
 ⋮----
+// =====================================================================================
+// MAIN COMPONENT
+// =====================================================================================
+⋮----
+// State management
+⋮----
+// Date range calculation
+⋮----
+// Hooks for data fetching
+⋮----
+// Real-time updates
+⋮----
+// State for properties module data
+⋮----
+// Fetch properties module data
+⋮----
 const fetchPropertiesData = async () =>
+⋮----
+// ✅ REAL DATA from properties module - 100% calculated from real data
+⋮----
+// ✅ Calculate avg time on market from properties' created_at dates
+⋮----
+value: overview.total_properties || 0, // ✅ Real property count
+active: overview.total_properties || 0, // TODO Phase 3: Add property status filtering
+sold: 0, // TODO Phase 3: Track from sales_closed table
+pending: 0 // TODO Phase 3: Track from sales_pipeline table
+⋮----
+value: overview.avg_views_per_property || 0, // ✅ Real: total_views / property_count
+change: 0, // TODO Phase 2: Calculate trend
+⋮----
+value: avgTimeOnMarket, // ✅ Real: calculated from properties.created_at
+change: 0, // TODO Phase 2: Calculate trend
+⋮----
+value: dashboardData?.conversion_rate || 0, // ✅ Real data from dashboard
+change: 0, // TODO Phase 2: Calculate trend
+⋮----
+// Breadcrumbs
+⋮----
+// Header actions
+⋮----
+{/* Property KPI Cards Row */}
 </file>
 
 <file path="components/Hero.tsx">
