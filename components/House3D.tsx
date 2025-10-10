@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import "@/public/imported/3dhousemodel/style.css";
 
 /**
  * House3D integrado sin iframe
  * - Inserta directamente el HTML del modelo dentro del DOM de Next.js
  * - Conserva la interacción de rotación con el mouse
- * - Puede personalizarse y estilizarse desde globals.css
+ * - CSS scoped al componente para evitar conflictos globales
  */
 export function House3D() {
   useEffect(() => {

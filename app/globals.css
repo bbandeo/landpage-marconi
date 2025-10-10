@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import 3D House Model CSS */
-@import '../public/imported/3dhousemodel/style.css';
-
 /* Museo Sans 500 - Custom font for headings and important text */
 @font-face {
   font-family: 'Museo Sans';
