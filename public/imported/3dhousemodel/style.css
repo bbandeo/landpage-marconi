@@ -43,6 +43,7 @@ body {
 .shadows {
   width: 100%;
   height: 100%;
+  display: none; /* Ocultar sombras para fondo transparente */
 }
 
 .shadow-a {
@@ -53,9 +54,10 @@ body {
   height: 103%;
   transform-origin: top right;
   transform: skewY(-3deg);
-  background-color: #686688;
-  box-shadow: -1vw 1vw 1.5vw #686688;
-  filter: blur(0.5vw);
+  background-color: transparent;
+  box-shadow: none;
+  filter: none;
+  display: none;
 }
 
 .shadow-b {
@@ -63,7 +65,8 @@ body {
   top: 0;
   width: 100%;
   height: 101.5%;
-  background-color: #5f5d7c;
+  background-color: transparent;
+  display: none;
 }
 
 /***************/
