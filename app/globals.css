@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import 3D House Model CSS */
+@import '../public/imported/3dhousemodel/style.css';
+
 /* Museo Sans 500 - Custom font for headings and important text */
 @font-face {
   font-family: 'Museo Sans';
@@ -436,3 +439,309 @@
     }
   }
 }
+
+/* ============================================ */
+/* === HOUSE 3D MODEL CSS === */
+/* ============================================ */
+
+/* Base reset for 3D model */
+.house-container *,
+.house-container *::after,
+.house-container *::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  transform-style: preserve-3d;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Transparencia global para el contenedor */
+.house-container {
+  pointer-events: none;
+  background: transparent !important;
+}
+
+.face {
+  position: absolute;
+}
+
+/* Contenedor principal del modelo */
+.house {
+  position: absolute;
+  width: 36vw;
+  height: 24vw;
+  transform: perspective(20000px) rotateX(75deg) rotateZ(35deg) translateZ(-9vw);
+  transition: transform 0.1s linear;
+  background: transparent !important;
+  pointer-events: auto;
+}
+
+/* Sombras ocultadas para fondo transparente */
+.shadows {
+  width: 100%;
+  height: 100%;
+  display: none !important;
+}
+
+.shadow-a,
+.shadow-b {
+  display: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+/* === Estructura de la casa === */
+
+/* Al - Left wall */
+.al {
+  width: 3vw;
+  height: 24vw;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.al__front {
+  width: 30vw;
+  height: 0.4vw;
+  transform-origin: bottom left;
+  transform: rotateX(-90deg) translateZ(23.6vw);
+  background-image: linear-gradient(to right, #8985ad, #c4c2d6);
+}
+.al__back {
+  width: 30vw;
+  height: 0.4vw;
+  transform-origin: top left;
+  transform: rotateX(-90deg) rotateY(180deg) translateX(-30vw) translateY(-0.4vw);
+  background-color: #c4c2d6;
+}
+.al__right {
+  width: 24vw;
+  height: 0.4vw;
+  transform-origin: top left;
+  transform: rotateY(90deg) rotateZ(-90deg) translateZ(30vw) translateX(-24vw) translateY(-0.4vw);
+  background-color: #fbfbfb;
+}
+.al__left {
+  width: 24vw;
+  height: 0.4vw;
+  transform-origin: top left;
+  transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.4vw);
+  background-color: #7a76a3;
+}
+.al__top {
+  width: 30vw;
+  height: 24vw;
+  transform-origin: top left;
+  transform: translateZ(0.4vw);
+  background-image: linear-gradient(to right, #a7a4c2 40%, #e5e5e5, #f2f2f2);
+}
+.al__top::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  width: 13vw;
+  height: 7vw;
+  background-image: linear-gradient(-135deg, transparent 20%, rgba(169, 215, 207, 0.75));
+}
+.al__top::after {
+  content: "";
+  position: absolute;
+  bottom: 1vw;
+  left: 6vw;
+  width: 5vw;
+  height: 5vw;
+  border-radius: 50%;
+  background-image: radial-gradient(rgba(251, 251, 251, 0.25), transparent);
+  filter: blur(0.7vw);
+}
+.al__bottom {
+  width: 30vw;
+  height: 24vw;
+  transform-origin: top left;
+  transform: rotateY(180deg) translateX(-30vw);
+  background-color: #c4c2d6;
+}
+
+/* Ab - Bottom right block */
+.ab {
+  width: 8vw;
+  height: 8vw;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.ab__front {
+  width: 8vw;
+  height: 0.4vw;
+  transform-origin: bottom left;
+  transform: rotateX(-90deg) translateZ(7.6vw);
+  background-color: #c4c2d6;
+}
+.ab__back {
+  width: 8vw;
+  height: 0.4vw;
+  transform-origin: top left;
+  transform: rotateX(-90deg) rotateY(180deg) translateX(-8vw) translateY(-0.4vw);
+  background-color: #c4c2d6;
+}
+.ab__right {
+  width: 8vw;
+  height: 0.4vw;
+  transform-origin: top left;
+  transform: rotateY(90deg) rotateZ(-90deg) translateZ(8vw) translateX(-8vw) translateY(-0.4vw);
+  background-color: #fbfbfb;
+}
+.ab__left {
+  width: 8vw;
+  height: 0.4vw;
+  transform-origin: top left;
+  transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.4vw);
+  background-color: #fbfbfb;
+}
+.ab__top {
+  width: 8vw;
+  height: 8vw;
+  transform-origin: top left;
+  transform: translateZ(0.4vw);
+  background-color: #f2f2f2;
+}
+.ab__bottom {
+  width: 8vw;
+  height: 8vw;
+  transform-origin: top left;
+  transform: rotateY(180deg) translateX(-8vw);
+  background-color: #c4c2d6;
+}
+
+/* At - Top right block */
+.at {
+  width: 8vw;
+  height: 4vw;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.at__front {
+  width: 8vw;
+  height: 0.4vw;
+  transform-origin: bottom left;
+  transform: rotateX(-90deg) translateZ(3.6vw);
+  background-color: #c4c2d6;
+}
+.at__back {
+  width: 8vw;
+  height: 0.4vw;
+  transform-origin: top left;
+  transform: rotateX(-90deg) rotateY(180deg) translateX(-8vw) translateY(-0.4vw);
+  background-color: #c4c2d6;
+}
+.at__right {
+  width: 4vw;
+  height: 0.4vw;
+  transform-origin: top left;
+  transform: rotateY(90deg) rotateZ(-90deg) translateZ(8vw) translateX(-4vw) translateY(-0.4vw);
+  background-color: #fbfbfb;
+}
+.at__left {
+  width: 4vw;
+  height: 0.4vw;
+  transform-origin: top left;
+  transform: rotateY(-90deg) rotateZ(90deg) translateY(-0.4vw);
+  background-color: #fbfbfb;
+}
+.at__top {
+  width: 8vw;
+  height: 4vw;
+  transform-origin: top left;
+  transform: translateZ(0.4vw);
+  background-color: #f2f2f2;
+}
+.at__bottom {
+  width: 8vw;
+  height: 4vw;
+  transform-origin: top left;
+  transform: rotateY(180deg) translateX(-8vw);
+  background-color: #c4c2d6;
+}
+
+/* Ac - Central right column (blue glass) */
+.ac {
+  width: 6vw;
+  height: 12vw;
+  position: absolute;
+  right: 0;
+  top: 4vw;
+}
+.ac__front {
+  width: 6vw;
+  height: 1vw;
+  transform-origin: bottom left;
+  transform: rotateX(-90deg) translateZ(11vw);
+  background-color: #4d6d98;
+  opacity: 0.75;
+}
+.ac__back {
+  width: 6vw;
+  height: 1vw;
+  transform-origin: top left;
+  transform: rotateX(-90deg) rotateY(180deg) translateX(-6vw) translateY(-1vw);
+  background-color: #4d6d98;
+}
+.ac__right {
+  width: 12vw;
+  height: 1vw;
+  transform-origin: top left;
+  transform: rotateY(90deg) rotateZ(-90deg) translateZ(6vw) translateX(-12vw) translateY(-1vw);
+  background-image: linear-gradient(to top, #6187be, #7095c9);
+}
+.ac__left {
+  width: 12vw;
+  height: 1vw;
+  transform-origin: top left;
+  transform: rotateY(-90deg) rotateZ(90deg) translateY(-1vw);
+  background-color: #16273c;
+}
+.ac__top {
+  width: 6vw;
+  height: 12vw;
+  transform-origin: top left;
+  transform: translateZ(1vw);
+  opacity: 0.75;
+  background-image: linear-gradient(to right, #7095c9 0, #7095c9 5%, #6187be 20%, #6187be 30%, #7095c9 40%, #7095c9 65%, #658dc5 70%, #658dc5 72%, #7095c9 85%);
+  box-shadow: inset 0.5vw 0.5vw 2vw rgba(251, 251, 251, 0.5);
+}
+.ac__top::before {
+  content: "";
+  position: absolute;
+  width: 40%;
+  height: 100%;
+  overflow: hidden;
+  background-image: linear-gradient(to bottom, transparent 0, transparent 10%, rgba(97, 135, 190, 0.9) 15%, rgba(97, 135, 190, 0.9) 40%, rgba(251, 251, 251, 0.2) 40%, rgba(251, 251, 251, 0.2) 50%, transparent 60%);
+  filter: blur(0.15vw);
+}
+.ac__bottom {
+  width: 6vw;
+  height: 12vw;
+  transform-origin: top left;
+  transform: rotateY(180deg) translateX(-6vw);
+  background-color: #4d6d98;
+}
+.ac__bottom::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  box-shadow: -0.25vw 0.25vw 1vw #234062;
+}
+.ac .face {
+  opacity: 0.9;
+}
+
+/* Nota: Para mantener este archivo manejable, aquí se incluyen solo las clases principales.
+   El CSS completo del modelo (bce, bci, bl, bt, bbe, bbi, cl, cc, ccl, cml, cmr, cmt, dl, dm, dt,
+   el, ec, er, eb, fl, ft, fb, table, foot, lamp, kitchen, couch, couchb, couchc, couchd,
+   picture, door-l, door-r, door-b, door-t) sigue el mismo patrón estructural.
+
+   Para implementación completa, consultar: public/imported/3dhousemodel/style.css */
