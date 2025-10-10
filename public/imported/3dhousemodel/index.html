@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" style="background: transparent;">
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>3D Modern House - Pure CSS</title>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.css" />
+    <!-- Overrides rápidos para garantizar fondo transparente al renderizar en iframe -->
+    <style>
+      html, body, :root { background: transparent !important; background-color: transparent !important; }
+      .shadows, .shadow-a, .shadow-b { display:none !important; background: transparent !important; box-shadow: none !important; filter: none !important; }
+      /* No ocultamos <style> ni <script> para no romper el pen */
+      body > *:not(.house):not(style):not(script) { background: transparent !important; }
+      html::before, html::after, body::before, body::after { background: transparent !important; content: none !important; }
+    </style>
   </head>
 
   <body>
