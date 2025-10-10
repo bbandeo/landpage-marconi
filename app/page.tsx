@@ -247,7 +247,7 @@ export default function HomePage() {
         </motion.div>
 
         {/* CASA 3D FLOTANDO EN EL FONDO - Código original sin modificar */}
-        <div className="absolute inset-0 z-5 opacity-20">
+        <div className="absolute inset-0 z-5">
           <House3D />
         </div>
 
