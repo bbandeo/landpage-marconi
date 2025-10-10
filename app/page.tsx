@@ -34,6 +34,7 @@ import Footer from "@/components/Footer";
 import { useIsClient } from "@/hooks/use-is-client";
 import { PropertyService } from "@/services/properties";
 import type { Property } from "@/lib/supabase";
+import { House3D } from "@/components/House3D";
 
 // Componente para animación de contador
 function CounterAnimation({ value, label, icon: Icon }: { value: string, label: string, icon: any }) {
@@ -213,7 +214,7 @@ export default function HomePage() {
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
       <section className="relative min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
         {/* Background con Parallax - Fixed overflow containment */}
-        <motion.div 
+        <motion.div
           className="absolute inset-0 overflow-hidden"
           style={{ y: heroY, opacity: heroOpacity }}
         >
@@ -234,7 +235,7 @@ export default function HomePage() {
             className="object-cover scale-105" // Further reduced scale to prevent overflow
             priority
           />
-          
+
           {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
 
@@ -244,6 +245,11 @@ export default function HomePage() {
           {/* Overlay central para mejorar contraste del texto */}
           <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20" />
         </motion.div>
+
+        {/* CASA 3D FLOTANDO EN EL FONDO - Código original sin modificar */}
+        <div className="absolute inset-0 z-5 opacity-20">
+          <House3D />
+        </div>
 
         {/* CONTENIDO PRINCIPAL - LAYOUT UNIFICADO PARA TODOS LOS TAMAÑOS */}
         <div className="relative z-10 w-full min-h-screen flex flex-col overflow-hidden" style={{ contain: 'layout style', transform: 'translateY(-20vh)' }}>
