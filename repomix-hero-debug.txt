@@ -1,35 +1,40 @@
 This file is a merged representation of a subset of the codebase, containing specifically included files and files not matching ignore patterns, combined into a single document by Repomix.
 
-<file_summary>
-This section contains a summary of this file.
+================================================================
+File Summary
+================================================================
 
-<purpose>
+Purpose:
+--------
 This file contains a packed representation of a subset of the repository's contents that is considered the most important context.
 It is designed to be easily consumable by AI systems for analysis, code review,
 or other automated processes.
-</purpose>
 
-<file_format>
+File Format:
+------------
 The content is organized as follows:
 1. This summary section
 2. Repository information
 3. Directory structure
 4. Repository files (if enabled)
 5. Multiple file entries, each consisting of:
-  - File path as an attribute
-  - Full contents of the file
-</file_format>
+  a. A separator line (================)
+  b. The file path (File: path/to/file)
+  c. Another separator line
+  d. The full contents of the file
+  e. A blank line
 
-<usage_guidelines>
+Usage Guidelines:
+-----------------
 - This file should be treated as read-only. Any changes should be made to the
   original repository files, not this packed version.
 - When processing this file, use the file path to distinguish
   between different files in the repository.
 - Be aware that this file may contain sensitive information. Handle it with
   the same level of security as you would the original repository.
-</usage_guidelines>
 
-<notes>
+Notes:
+------
 - Some files may have been excluded based on .gitignore rules and Repomix's configuration
 - Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
 - Only files matching these patterns are included: app/page.tsx, app/globals.css, app/layout.tsx, components/House3D.tsx, components/HeroSearchBar.tsx, components/Header.tsx, components/ui/button.tsx, components/ui/input.tsx, components/ui/card.tsx, components/ui/badge.tsx, lib/cloudinary.ts, lib/utils.ts, hooks/use-is-client.ts, hooks/use-is-client.tsx, public/imported/3dhousemodel/**, tailwind.config.js, tailwind.config.ts, package.json, tsconfig.json, next.config.js
@@ -37,11 +42,11 @@ The content is organized as follows:
 - Files matching patterns in .gitignore are excluded
 - Files matching default ignore patterns are excluded
 - Files are sorted by Git change count (files with more changes are at the bottom)
-</notes>
 
-</file_summary>
 
-<directory_structure>
+================================================================
+Directory Structure
+================================================================
 app/
   globals.css
   layout.tsx
@@ -74,12 +79,14 @@ public/
 package.json
 tailwind.config.ts
 tsconfig.json
-</directory_structure>
 
-<files>
-This section contains the contents of the repository's files.
+================================================================
+Files
+================================================================
 
-<file path="components/ui/badge.tsx">
+================
+File: components/ui/badge.tsx
+================
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -116,9 +123,10 @@ function Badge({ className, variant, ...props }: BadgeProps) {
 }
 
 export { Badge, badgeVariants }
-</file>
 
-<file path="hooks/use-is-client.tsx">
+================
+File: hooks/use-is-client.tsx
+================
 "use client"
 
 import { useState, useEffect } from 'react'
@@ -132,9 +140,10 @@ export function useIsClient() {
 
   return isClient
 }
-</file>
 
-<file path="lib/cloudinary.ts">
+================
+File: lib/cloudinary.ts
+================
 // Client-safe Cloudinary utility functions
 export interface CloudinaryOptions {
   width?: number
@@ -178,18 +187,20 @@ export function getVideoUrl(publicId: string, options: CloudinaryOptions = {}): 
 
   return `https://res.cloudinary.com/${cloudName}/video/upload/${transformations}/${publicId}`
 }
-</file>
 
-<file path="lib/utils.ts">
+================
+File: lib/utils.ts
+================
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-</file>
 
-<file path="tsconfig.json">
+================
+File: tsconfig.json
+================
 {
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -217,9 +228,10 @@ export function cn(...inputs: ClassValue[]) {
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
-</file>
 
-<file path="components/ui/input.tsx">
+================
+File: components/ui/input.tsx
+================
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -242,9 +254,10 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
 Input.displayName = "Input"
 
 export { Input }
-</file>
 
-<file path="public/imported/3dhousemodel/index.pug">
+================
+File: public/imported/3dhousemodel/index.pug
+================
 div.house#h 
     
     div.shadows
@@ -532,9 +545,10 @@ div.house#h
         div.door-t__left.face 
         div.door-t__top.face 
         div.door-t__bottom.face
-</file>
 
-<file path="public/imported/3dhousemodel/LICENSE.txt">
+================
+File: public/imported/3dhousemodel/LICENSE.txt
+================
 The MIT License (MIT)
 
 Copyright (c) 2025 Ricardo Oliva Alonso (https://codepen.io/ricardoolivaalonso/pen/yLOpNdZ)
@@ -556,17 +570,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-</file>
 
-<file path="public/imported/3dhousemodel/README.md">
+================
+File: public/imported/3dhousemodel/README.md
+================
 # 3D Modern House - Pure CSS
 
 A Pen created on CodePen.
 
 Original URL: [https://codepen.io/ricardoolivaalonso/pen/yLOpNdZ](https://codepen.io/ricardoolivaalonso/pen/yLOpNdZ).
-</file>
 
-<file path="public/imported/3dhousemodel/script (1).js">
+================
+File: public/imported/3dhousemodel/script (1).js
+================
 /*
 		Designed by: Joanna Ngai
 		Original image: https://dribbble.com/shots/14118297-Villa
@@ -588,9 +604,10 @@ let base = (e) => {
 }
 
 b.addEventListener("pointermove", base);
-</file>
 
-<file path="public/imported/3dhousemodel/script.js">
+================
+File: public/imported/3dhousemodel/script.js
+================
 /*
 		Designed by: Joanna Ngai
 		Original image: https://dribbble.com/shots/14118297-Villa
@@ -612,9 +629,10 @@ let base = (e) => {
 }
 
 b.addEventListener("pointermove", base);
-</file>
 
-<file path="public/imported/3dhousemodel/style.scss">
+================
+File: public/imported/3dhousemodel/style.scss
+================
 $bg-1: #C6C5E1;
 $bg-2: #686688;
 
@@ -1930,9 +1948,10 @@ body{
 }
 
 .door-t{ transform: translateZ(8.4vw); }
-</file>
 
-<file path="package.json">
+================
+File: package.json
+================
 {
   "name": "my-v0-project",
   "version": "0.1.0",
@@ -2021,9 +2040,10 @@ body{
     "typescript": "^5"
   }
 }
-</file>
 
-<file path="components/ui/button.tsx">
+================
+File: components/ui/button.tsx
+================
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -2089,9 +2109,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button"
 
 export { Button, buttonVariants }
-</file>
 
-<file path="components/ui/card.tsx">
+================
+File: components/ui/card.tsx
+================
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -2171,9 +2192,10 @@ const CardFooter = React.forwardRef<
 CardFooter.displayName = "CardFooter"
 
 export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
-</file>
 
-<file path="public/imported/3dhousemodel/index.html">
+================
+File: public/imported/3dhousemodel/index.html
+================
 <!DOCTYPE html>
 <html lang="en" style="background: transparent;">
 
@@ -2512,9 +2534,10 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
   </body>
   
 </html>
-</file>
 
-<file path="components/House3D.tsx">
+================
+File: components/House3D.tsx
+================
 "use client";
 
 import { useEffect } from "react";
@@ -2573,9 +2596,10 @@ export function House3D() {
     </div>
   );
 }
-</file>
 
-<file path="public/imported/3dhousemodel/style.css">
+================
+File: public/imported/3dhousemodel/style.css
+================
 /***********************/
 /***********************/
 /************************/
@@ -5186,9 +5210,10 @@ body {
 .door-t {
   transform: translateZ(8.4vw);
 }
-</file>
 
-<file path="tailwind.config.ts">
+================
+File: tailwind.config.ts
+================
 import type { Config } from "tailwindcss"
 
 const config = {
@@ -5453,9 +5478,10 @@ const config = {
 } satisfies Config
 
 export default config
-</file>
 
-<file path="app/layout.tsx">
+================
+File: app/layout.tsx
+================
 import type React from "react"
 import type { Metadata } from "next"
 import { Inter, Playfair_Display } from "next/font/google"
@@ -5497,9 +5523,10 @@ export default function RootLayout({
     </html>
   )
 }
-</file>
 
-<file path="components/HeroSearchBar.tsx">
+================
+File: components/HeroSearchBar.tsx
+================
 "use client";
 
 import { useState } from "react";
@@ -5614,9 +5641,10 @@ export function HeroSearchBar() {
     </motion.div>
   );
 }
-</file>
 
-<file path="components/Header.tsx">
+================
+File: components/Header.tsx
+================
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Search, Menu, X } from "lucide-react";
@@ -5797,9 +5825,10 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
     </header>
   );
 }
-</file>
 
-<file path="app/globals.css">
+================
+File: app/globals.css
+================
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6238,9 +6267,10 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
     }
   }
 }
-</file>
 
-<file path="app/page.tsx">
+================
+File: app/page.tsx
+================
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -6860,6 +6890,11 @@ export default function HomePage() {
     </div>
   );
 }
-</file>
 
-</files>
+
+
+
+
+================================================================
+End of Codebase
+================================================================
