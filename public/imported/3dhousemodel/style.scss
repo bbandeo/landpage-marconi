@@ -1313,3 +1313,13 @@ body{
 }
 
 .door-t{ transform: translateZ(8.4vw); }
+
+/* PATCH: hacer transparente el fondo global del modelo */
+html, body {
+  background: transparent !important;
+}
+
+/* opcional: eliminar el overlay gris del body */
+body {
+  background-color: transparent !important;
+}
