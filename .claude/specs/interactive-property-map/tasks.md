@@ -230,7 +230,7 @@
   - Revisar código para eliminar console.logs innecesarios
   - _Requisitos: 7.2, 7.3, NF-4.1, NF-5.3_
 
-- [ ] 26. Documentar la implementación
+- [x] 26. Documentar la implementación
   - Actualizar README.md si es necesario con información del mapa
   - Documentar configuración de variables de entorno (si se agregaron)
   - Agregar comentarios JSDoc a funciones complejas
@@ -238,7 +238,7 @@
   - Crear guía de uso para administradores si es necesario
   - _Requisitos: NF-4.4, NF-4.5_
 
-- [ ] 27. Realizar code review y QA final
+- [x] 27. Realizar code review y QA final
   - Revisar que todo el código sigue los patrones del proyecto
   - Verificar que se cumple CLAUDE.md (simplicidad, no sobre-ingeniería)
   - Probar todos los flujos de usuario manualmente

@@ -7,7 +7,8 @@ A comprehensive Next.js 15 real estate platform with integrated analytics system
 Marconi Inmobiliaria is a full-featured real estate platform that includes:
 
 - **Public Property Listings**: Modern, responsive property showcase
-- **Admin Dashboard**: Complete property and lead management system  
+- **Interactive Property Map**: Real-time map with clustering and custom markers
+- **Admin Dashboard**: Complete property and lead management system
 - **Analytics System**: Comprehensive GDPR-compliant tracking and reporting
 - **Lead Management**: CRM functionality with multi-source attribution
 - **Multi-device Support**: Optimized for desktop, tablet, and mobile
@@ -25,9 +26,78 @@ This project features a comprehensive analytics system designed specifically for
 
 ### Documentation
 - **[📋 System Architecture](docs/analytics-system-architecture.md)** - Complete technical overview
-- **[🔌 API Reference](docs/analytics-api-reference.md)** - Detailed API documentation  
+- **[🔌 API Reference](docs/analytics-api-reference.md)** - Detailed API documentation
 - **[🔒 GDPR Compliance](docs/analytics-gdpr-compliance.md)** - Privacy and compliance guide
 - **[⚙️ Integration Guide](docs/analytics-integration-guide.md)** - Implementation instructions
+
+## 🗺️ Interactive Property Map
+
+A fully-featured, responsive map component powered by Leaflet and OpenStreetMap:
+
+### Key Features
+- **Real-time Property Display**: Shows all available properties with live coordinates
+- **Smart Clustering**: Automatic grouping for 50+ properties to maintain performance
+- **Custom Markers**: Color-coded pins (Red: Houses, Blue: Apartments, Green: Land)
+- **Interactive Popups**: Property details with images, prices, and quick actions
+- **Responsive Design**: Optimized for mobile, tablet, and desktop
+- **Accessibility**: WCAG 2.1 AA compliant with keyboard navigation
+- **Analytics Integration**: Tracks map interactions and property views
+
+### Quick Usage
+
+```tsx
+import InteractivePropertyMap from '@/components/map/InteractivePropertyMap'
+
+// Basic usage
+<InteractivePropertyMap />
+
+// Advanced usage with options
+<InteractivePropertyMap
+  height="600px"
+  initialZoom={13}
+  enableClustering={true}
+  maxProperties={100}
+  onPropertyClick={(id) => console.log('Property clicked:', id)}
+/>
+```
+
+### Configuration
+
+Map configuration is centralized in `lib/map-config.ts`:
+
+```typescript
+export const MAP_CONFIG = {
+  defaultCenter: [-29.15, -59.65],  // Reconquista, Santa Fe
+  defaultZoom: 13,
+  minZoom: 5,
+  maxZoom: 18,
+  clusteringThreshold: 50,  // Auto-cluster above 50 properties
+  tileLayerUrl: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+}
+```
+
+### Testing
+
+```bash
+# Run E2E tests for the map
+pnpm test:e2e e2e/interactive-property-map.spec.ts
+
+# Run accessibility tests
+pnpm test:a11y
+
+# Run performance tests
+pnpm test:performance
+```
+
+### Geocoding
+
+Populate property coordinates automatically:
+
+```bash
+pnpm geocode:properties
+```
+
+This script uses OpenStreetMap's Nominatim API to geocode property addresses.
 
 ## 🚀 Quick Start
 
@@ -75,6 +145,7 @@ This project features a comprehensive analytics system designed specifically for
 - **Tailwind CSS** - Utility-first styling
 - **Supabase** - Database and authentication
 - **Cloudinary** - Image management
+- **Leaflet** - Interactive maps with OpenStreetMap
 
 ### Analytics Stack
 - **PostgreSQL Functions** - Server-side analytics processing
@@ -95,29 +166,51 @@ This project features a comprehensive analytics system designed specifically for
 marconi-webapp/
 ├── app/                    # Next.js App Router pages
 │   ├── admin/             # Admin dashboard
-│   ├── api/analytics/     # Analytics API endpoints
+│   ├── api/
+│   │   ├── analytics/     # Analytics API endpoints
+│   │   ├── geocode/       # Geocoding API
+│   │   └── properties/    # Property APIs (including map-locations)
 │   ├── propiedades/       # Public property pages
 │   └── ...
 ├── components/            # React components
 │   ├── admin/            # Admin-specific components
+│   ├── map/              # Map components
+│   │   ├── InteractivePropertyMap.tsx
+│   │   ├── PropertyMapMarker.tsx
+│   │   ├── PropertyMapPopup.tsx
+│   │   ├── MapLoadingState.tsx
+│   │   ├── MapErrorState.tsx
+│   │   └── MapEmptyState.tsx
 │   ├── ui/               # shadcn/ui components
 │   └── ...
 ├── services/             # Business logic services
 │   ├── analytics.ts      # Analytics service class
 │   ├── properties.ts     # Property management
+│   ├── map.ts            # Map service
 │   └── leads.ts          # Lead management
 ├── hooks/                # Custom React hooks
 │   ├── useAnalytics.ts   # Analytics integration
+│   ├── usePropertyMap.ts # Map data management
+│   ├── useMapResponsive.ts # Responsive map configuration
 │   └── ...
 ├── lib/                  # Utility libraries
 │   ├── analytics-client.ts # Client-side analytics
 │   ├── supabase.ts       # Database client
+│   ├── map-config.ts     # Map configuration
 │   └── ...
 ├── types/                # TypeScript definitions
 │   ├── analytics.ts      # Analytics type system
+│   ├── map.ts            # Map type definitions
 │   └── ...
-├── scripts/              # Database migrations
-│   └── analytics-schema-migration.sql
+├── scripts/              # Utility scripts
+│   ├── analytics-schema-migration.sql
+│   └── populate-property-coordinates.ts
+├── e2e/                  # End-to-end tests
+│   ├── interactive-property-map.spec.ts
+│   ├── accessibility-map.spec.ts
+│   └── ACCESSIBILITY_REPORT.md
+├── performance-tests/    # Performance tests
+│   └── map-performance.spec.ts
 └── docs/                 # Documentation
     ├── analytics-system-architecture.md
     ├── analytics-api-reference.md
@@ -133,6 +226,17 @@ pnpm dev          # Start development server
 pnpm build        # Build for production
 pnpm start        # Start production server
 pnpm lint         # Run ESLint (disabled in build)
+
+# Testing
+pnpm test                  # Run unit tests
+pnpm test:e2e              # Run all E2E tests
+pnpm test:e2e:ui           # Run E2E tests with UI
+pnpm test:a11y             # Run accessibility tests
+pnpm test:performance      # Run performance tests
+pnpm test:map              # Run map-specific tests
+
+# Map & Geocoding
+pnpm geocode:properties    # Geocode property addresses
 
 # Database
 pnpm db:migrate   # Run database migrations
