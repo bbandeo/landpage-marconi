@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { Home, ChevronLeft, ChevronRight } from 'lucide-react'
 import useEmblaCarousel from 'embla-carousel-react'
@@ -115,6 +115,29 @@ export function PropertyImageCarousel({
     emblaApi?.scrollTo(index)
   }, [emblaApi])
 
+  // Sync state with Embla API
+  useEffect(() => {
+    if (!emblaApi) return
+
+    // Handler to update state when carousel position changes
+    const onSelect = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap())
+      setCanScrollPrev(emblaApi.canScrollPrev())
+      setCanScrollNext(emblaApi.canScrollNext())
+    }
+
+    // Listen to 'select' event fired by Embla when slide changes
+    emblaApi.on('select', onSelect)
+
+    // Initialize state immediately
+    onSelect()
+
+    // Cleanup: remove listener when component unmounts
+    return () => {
+      emblaApi.off('select', onSelect)
+    }
+  }, [emblaApi])
+
   return (
     <div className="relative group/carousel rounded-t-2xl overflow-hidden">
       {/* Embla Viewport - this is the window that shows the current slide */}
@@ -190,7 +213,6 @@ export function PropertyImageCarousel({
         ))}
       </div>
 
-      {/* TODO: Sync state with Embla API in task 5 to update selectedIndex and canScroll states */}
     </div>
   )
 }
