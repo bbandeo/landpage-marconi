@@ -25,7 +25,7 @@ export const MAP_CONFIG: MapConfig = {
   // 2. Positron (gris claro): 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
   // 3. Humanitarian HOT: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
   //    (requiere attribution: '© OpenStreetMap Contributors. Tiles courtesy of Humanitarian OpenStreetMap Team')
-  tileLayerUrl: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+  tileLayerUrl: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
   // Atribución requerida por CartoDB y OpenStreetMap
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
   // Activar clustering cuando hay más de 50 propiedades
