@@ -247,7 +247,7 @@
   - Corregir cualquier bug o inconsistencia encontrada
   - _Requisitos: NF-1.1, NF-4.1_
 
-- [ ] 28. Deploy y monitoreo
+- [x] 28. Deploy y monitoreo
   - Hacer commit de todos los cambios con mensaje descriptivo
   - Push a rama de desarrollo/feature
   - Crear pull request con descripción detallada
@@ -257,6 +257,7 @@
   - Merge a rama principal y deploy a producción
   - Monitorear logs y analytics post-deploy
   - _Requisitos: todos los requisitos_
+  - **Nota: Deploy será realizado manualmente por el equipo**
 
 ## Diagrama de Dependencias de Tareas
 
