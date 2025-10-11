@@ -110,6 +110,11 @@ export function PropertyImageCarousel({
     emblaApi?.scrollNext()
   }, [emblaApi])
 
+  const scrollTo = useCallback((index: number, e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent navigation to property detail page
+    emblaApi?.scrollTo(index)
+  }, [emblaApi])
+
   return (
     <div className="relative group/carousel rounded-t-2xl overflow-hidden">
       {/* Embla Viewport - this is the window that shows the current slide */}
@@ -168,8 +173,24 @@ export function PropertyImageCarousel({
         </Button>
       )}
 
-      {/* TODO: Add dot indicators in task 4 */}
-      {/* TODO: Sync state with Embla API in task 5 to update canScrollPrev/canScrollNext */}
+      {/* Dot indicators - Position indicators for current image */}
+      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={(e) => scrollTo(index, e)}
+            className={`rounded-full transition-all duration-300 ${
+              index === selectedIndex
+                ? 'bg-vibrant-orange w-6 h-2'  // Active: wider, orange
+                : 'bg-white/60 hover:bg-white/80 w-2 h-2'  // Inactive: smaller, white
+            }`}
+            aria-label={`Ir a imagen ${index + 1} de ${images.length}`}
+            aria-current={index === selectedIndex ? 'true' : 'false'}
+          />
+        ))}
+      </div>
+
+      {/* TODO: Sync state with Embla API in task 5 to update selectedIndex and canScroll states */}
     </div>
   )
 }
