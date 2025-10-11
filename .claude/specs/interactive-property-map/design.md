@@ -1,7 +1,6 @@
 # Documento de Diseño - Mapa Interactivo de Propiedades
 
 ## Resumen
-
 Este documento define el diseño técnico para implementar un mapa interactivo de propiedades en la página principal de Marconi Inmobiliaria. El mapa mostrará todas las propiedades disponibles mediante marcadores geográficos, se sincronizará automáticamente con el estado de las propiedades en la base de datos, y se integrará con el sistema de análisis existente.
 
 **Tecnología seleccionada:** React Leaflet con OpenStreetMap
