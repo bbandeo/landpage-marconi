@@ -19,8 +19,13 @@ export const MAP_CONFIG: MapConfig = {
     [-55.061314, -73.560562], // Suroeste
     [-21.781277, -53.591835], // Noreste
   ],
-  // CartoDB Dark Matter tile layer - Modo oscuro premium
-  tileLayerUrl: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  // CartoDB Voyager tile layer - Estilo con colores sutiles que armoniza con la paleta del sitio
+  // OPCIONES ALTERNATIVAS:
+  // 1. Voyager (actual): 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png'
+  // 2. Positron (gris claro): 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+  // 3. Humanitarian HOT: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
+  //    (requiere attribution: '© OpenStreetMap Contributors. Tiles courtesy of Humanitarian OpenStreetMap Team')
+  tileLayerUrl: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
   // Atribución requerida por CartoDB y OpenStreetMap
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
   // Activar clustering cuando hay más de 50 propiedades
