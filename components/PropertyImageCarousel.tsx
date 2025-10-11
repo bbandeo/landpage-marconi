@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import Image from 'next/image'
-import { Home } from 'lucide-react'
+import { Home, ChevronLeft, ChevronRight } from 'lucide-react'
 import useEmblaCarousel from 'embla-carousel-react'
+import { Button } from '@/components/ui/button'
 
 /**
  * Props for PropertyImageCarousel component
@@ -95,6 +96,19 @@ export function PropertyImageCarousel({
   })
 
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [canScrollPrev, setCanScrollPrev] = useState(false)
+  const [canScrollNext, setCanScrollNext] = useState(false)
+
+  // Navigation callbacks with stopPropagation to prevent card click
+  const scrollPrev = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent navigation to property detail page
+    emblaApi?.scrollPrev()
+  }, [emblaApi])
+
+  const scrollNext = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent navigation to property detail page
+    emblaApi?.scrollNext()
+  }, [emblaApi])
 
   return (
     <div className="relative group/carousel rounded-t-2xl overflow-hidden">
@@ -128,9 +142,34 @@ export function PropertyImageCarousel({
         </div>
       </div>
 
-      {/* TODO: Add navigation controls in next task */}
+      {/* Previous button - Only show if can scroll back */}
+      {canScrollPrev && (
+        <Button
+          onClick={scrollPrev}
+          size="sm"
+          variant="ghost"
+          className="absolute left-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 z-10 bg-black/70 hover:bg-vibrant-orange/80 text-bone-white hover:text-bone-white backdrop-blur-md rounded-full p-2.5 shadow-lg hover:scale-110 border border-white/10"
+          aria-label="Ver imagen anterior"
+        >
+          <ChevronLeft className="w-5 h-5" aria-hidden="true" />
+        </Button>
+      )}
+
+      {/* Next button - Only show if can scroll forward */}
+      {canScrollNext && (
+        <Button
+          onClick={scrollNext}
+          size="sm"
+          variant="ghost"
+          className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover/carousel:opacity-100 transition-opacity duration-300 z-10 bg-black/70 hover:bg-vibrant-orange/80 text-bone-white hover:text-bone-white backdrop-blur-md rounded-full p-2.5 shadow-lg hover:scale-110 border border-white/10"
+          aria-label="Ver imagen siguiente"
+        >
+          <ChevronRight className="w-5 h-5" aria-hidden="true" />
+        </Button>
+      )}
+
       {/* TODO: Add dot indicators in task 4 */}
-      {/* TODO: Sync state with Embla API in task 5 */}
+      {/* TODO: Sync state with Embla API in task 5 to update canScrollPrev/canScrollNext */}
     </div>
   )
 }
