@@ -27,15 +27,34 @@ export default function PropertyMapPopup({ property, onViewDetails }: PropertyMa
   // Obtener primera imagen optimizada
   const firstImage = property.images && property.images.length > 0 ? property.images[0] : null
 
-  const imageUrl = firstImage
-    ? getOptimizedImageUrl(firstImage, {
+  // Manejar tanto URLs completas como public_ids de Cloudinary
+  const getImageUrl = (image: string | null): string => {
+    if (!image) return '/placeholder.jpg'
+
+    // Si ya es una URL completa (http o https), usarla directamente
+    if (image.startsWith('http://') || image.startsWith('https://')) {
+      return image
+    }
+
+    // Si es un public_id de Cloudinary, optimizarlo
+    try {
+      const optimizedUrl = getOptimizedImageUrl(image, {
         width: 400,
         height: 250,
         crop: 'fill',
         quality: 'auto',
         fetch_format: 'auto',
       })
-    : '/placeholder-property.jpg'
+
+      // Si getOptimizedImageUrl retorna vacío, usar placeholder
+      return optimizedUrl || '/placeholder.jpg'
+    } catch (error) {
+      console.warn('Error optimizing image:', error)
+      return '/placeholder.jpg'
+    }
+  }
+
+  const imageUrl = getImageUrl(firstImage)
 
   // Traducir tipos
   const translatePropertyType = (type: string) => {
@@ -79,6 +98,12 @@ export default function PropertyMapPopup({ property, onViewDetails }: PropertyMa
           className="object-cover transition-transform duration-500 hover:scale-105"
           sizes="(max-width: 640px) 320px, 360px"
           loading="lazy"
+          unoptimized={imageUrl.startsWith('http') && !imageUrl.includes('cloudinary')}
+          onError={(e) => {
+            // Si la imagen falla, mostrar placeholder
+            const target = e.target as HTMLImageElement
+            target.src = '/placeholder.jpg'
+          }}
         />
 
         {/* Badge de tipo de operación */}

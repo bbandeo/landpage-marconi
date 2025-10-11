@@ -106,21 +106,57 @@ export const MARKER_STYLES = {
 }
 
 /**
- * Crea un icono personalizado para marcadores de propiedades
- * Usa el sistema de colores del proyecto (vibrant-orange)
+ * COLORES DE MARCADORES SEGÚN TIPO DE PROPIEDAD
+ */
+export const MARKER_COLORS = {
+  Casa: 'red',
+  casa: 'red',
+  house: 'red',
+  Departamento: 'blue',
+  departamento: 'blue',
+  apartment: 'blue',
+  Terreno: 'green',
+  terreno: 'green',
+  land: 'green',
+  Comercial: 'orange',
+  comercial: 'orange',
+  commercial: 'orange',
+  default: 'orange',
+}
+
+/**
+ * Obtiene el color del marcador según el tipo de propiedad
  *
+ * @param propertyType - Tipo de propiedad (Casa, Departamento, Terreno, etc.)
+ * @returns Color del marcador (red, green, blue, orange)
+ */
+export const getMarkerColor = (propertyType: string): string => {
+  return MARKER_COLORS[propertyType as keyof typeof MARKER_COLORS] || MARKER_COLORS.default
+}
+
+/**
+ * Crea un icono personalizado para marcadores de propiedades
+ * El color varía según el tipo de propiedad:
+ * - Rojo: Casa
+ * - Verde: Terreno
+ * - Azul: Departamento
+ * - Naranja: Otros/Comercial
+ *
+ * @param propertyType - Tipo de propiedad
  * @returns Icono de Leaflet o null si se ejecuta en servidor
  */
-export const createPropertyMarkerIcon = () => {
+export const createPropertyMarkerIcon = (propertyType?: string) => {
   if (typeof window === 'undefined') return null
 
   const L = require('leaflet')
   require('leaflet-defaulticon-compatibility')
   require('leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css')
 
-  // Icono personalizado con el color naranja vibrante del proyecto
+  const color = propertyType ? getMarkerColor(propertyType) : 'orange'
+
+  // Icono personalizado con color según tipo de propiedad
   return new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],

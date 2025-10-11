@@ -18,11 +18,11 @@ export default function PropertyMapMarker({ property, onClick, isSelected = fals
   const [markerIcon, setMarkerIcon] = useState<any>(null)
   const { trackInteraction } = useAnalytics()
 
-  // Crear icono del marcador en cliente
+  // Crear icono del marcador en cliente con color según tipo de propiedad
   useEffect(() => {
-    const icon = createPropertyMarkerIcon()
+    const icon = createPropertyMarkerIcon(property.property_type)
     setMarkerIcon(icon)
-  }, [])
+  }, [property.property_type])
 
   // Handler para click en el marcador
   const handleMarkerClick = () => {
