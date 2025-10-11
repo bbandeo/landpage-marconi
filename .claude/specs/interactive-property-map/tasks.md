@@ -212,7 +212,7 @@
   - Optimizar si el tiempo de carga excede los límites establecidos
   - _Requisitos: 7.1, 7.2, 7.3, NF-5.1, NF-5.2_
 
-- [ ] 24. Realizar pruebas de accesibilidad
+- [x] 24. Realizar pruebas de accesibilidad
   - Verificar navegación con teclado (Tab, Enter, Space)
   - Probar con screen readers (NVDA, JAWS, VoiceOver)
   - Validar contraste de colores con herramientas WCAG
@@ -221,7 +221,7 @@
   - Corregir cualquier problema de accesibilidad detectado
   - _Requisitos: NF-1.1, NF-1.2_
 
-- [ ] 25. Optimizar y pulir la implementación
+- [x] 25. Optimizar y pulir la implementación
   - Implementar memoización con `useMemo` para cálculos costosos
   - Agregar debouncing para eventos frecuentes si es necesario
   - Verificar que las imágenes en popups usen lazy loading

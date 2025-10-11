@@ -16,7 +16,7 @@
 
 'use client'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useCallback } from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import type { InteractivePropertyMapProps } from '@/types/map'
@@ -67,13 +67,26 @@ export default function InteractivePropertyMap({
   const responsiveConfig = useMapResponsive()
   const { trackInteraction } = useAnalytics()
 
-  // Configuración del mapa
-  const mapHeight = height || responsiveConfig.height
-  const mapZoom = initialZoom || responsiveConfig.defaultZoom
-  const mapCenter = initialCenter || MAP_CONFIG.defaultCenter
+  // Configuración del mapa - memoizada para evitar re-renderizados innecesarios
+  const mapHeight = useMemo(() => height || responsiveConfig.height, [height, responsiveConfig.height])
+  const mapZoom = useMemo(() => initialZoom || responsiveConfig.defaultZoom, [initialZoom, responsiveConfig.defaultZoom])
+  const mapCenter = useMemo(() => initialCenter || MAP_CONFIG.defaultCenter, [initialCenter])
 
-  // Determinar si activar clustering
-  const shouldCluster = enableClustering || properties.length >= MAP_CONFIG.clusteringThreshold
+  // Determinar si activar clustering - memoizado
+  const shouldCluster = useMemo(
+    () => enableClustering || properties.length >= MAP_CONFIG.clusteringThreshold,
+    [enableClustering, properties.length]
+  )
+
+  // Memoizar handler de click de propiedad
+  const handlePropertyClick = useCallback(
+    (propertyId: number) => {
+      if (onPropertyClick) {
+        onPropertyClick(propertyId)
+      }
+    },
+    [onPropertyClick]
+  )
 
   // Tracking de carga exitosa
   useEffect(() => {
@@ -155,14 +168,14 @@ export default function InteractivePropertyMap({
             iconCreateFunction={createClusterIcon}
           >
             {properties.map((property) => (
-              <PropertyMapMarker key={property.id} property={property} onClick={onPropertyClick} />
+              <PropertyMapMarker key={property.id} property={property} onClick={handlePropertyClick} />
             ))}
           </MarkerClusterGroup>
         ) : (
           // Sin clustering
           <>
             {properties.map((property) => (
-              <PropertyMapMarker key={property.id} property={property} onClick={onPropertyClick} />
+              <PropertyMapMarker key={property.id} property={property} onClick={handlePropertyClick} />
             ))}
           </>
         )}

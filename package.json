@@ -20,6 +20,9 @@
     "test:performance": "playwright test performance-tests/",
     "test:performance:headed": "playwright test performance-tests/ --headed",
     "test:performance:report": "playwright test performance-tests/ --reporter=html",
+    "test:a11y": "playwright test e2e/accessibility-map.spec.ts",
+    "test:a11y:headed": "playwright test e2e/accessibility-map.spec.ts --headed",
+    "test:a11y:debug": "playwright test e2e/accessibility-map.spec.ts --debug",
     "geocode:properties": "tsx scripts/populate-property-coordinates.ts"
   },
   "dependencies": {

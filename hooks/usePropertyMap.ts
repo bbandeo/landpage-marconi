@@ -104,7 +104,6 @@ export function usePropertyMap(options: UsePropertyMapOptions = {}): UseProperty
     } catch (err) {
       // No tratar AbortError como error real
       if (err instanceof Error && err.name === 'AbortError') {
-        console.info('Property fetch aborted')
         return
       }
 

@@ -54,7 +54,6 @@ export class MapService {
       }
 
       if (!data || data.length === 0) {
-        console.info('No properties found with valid coordinates')
         return []
       }
 
@@ -74,7 +73,6 @@ export class MapService {
         })
         .map((property) => this.transformPropertyForMap(property))
 
-      console.info(`Loaded ${validProperties.length} properties for map`)
       return validProperties
     } catch (error) {
       console.error('MapService.getMapProperties error:', error)
