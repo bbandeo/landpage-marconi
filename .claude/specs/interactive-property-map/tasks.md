@@ -2,14 +2,14 @@
 
 ## Tareas de Implementación
 
-- [ ] 1. Instalar dependencias y configurar Leaflet
+- [x] 1. Instalar dependencias y configurar Leaflet
   - Instalar paquetes npm: `leaflet`, `react-leaflet`, `react-leaflet-cluster` y `@types/leaflet`
   - Agregar importación de estilos CSS de Leaflet en `app/globals.css`
   - Crear estilos personalizados para marcadores, clusters y popups
   - Verificar que las dependencias funcionen correctamente con Next.js 15
   - _Requisitos: 5.1, 5.4, NF-4.3_
 
-- [ ] 2. Crear tipos TypeScript para el mapa
+- [x] 2. Crear tipos TypeScript para el mapa
   - Crear archivo `types/map.ts` con todas las interfaces definidas en el diseño
   - Definir `MapPropertyData`, `MapConfig`, `MapErrorType`, `MapError` class
   - Definir `MapInteractionEvent`, `InteractivePropertyMapProps`, `PropertyMapMarkerProps`
@@ -17,7 +17,7 @@
   - Definir `MapResponsiveConfig` y `MapBounds`
   - _Requisitos: NF-4.1, NF-4.3_
 
-- [ ] 3. Crear configuración del mapa
+- [x] 3. Crear configuración del mapa
   - Crear archivo `lib/map-config.ts` con constante `MAP_CONFIG`
   - Definir centro inicial en Reconquista, Santa Fe (-29.1500, -59.6500)
   - Configurar límites geográficos de Argentina para validación
@@ -27,7 +27,7 @@
   - Definir `MARKER_STYLES` para estados default y selected
   - _Requisitos: 1.3, 4.3, 5.3, NF-2.1, NF-2.2, NF-2.3_
 
-- [ ] 4. Implementar MapService
+- [x] 4. Implementar MapService
   - Crear archivo `services/map.ts` con clase `MapService`
   - Implementar método `getMapProperties()` que consulta Supabase
   - Aplicar filtros: `status = 'available'`, `latitude IS NOT NULL`, `longitude IS NOT NULL`
@@ -39,7 +39,7 @@
   - Escribir tests unitarios para `MapService` en `__tests__/services/map.test.ts`
   - _Requisitos: 2.1, 2.2, 3.1, 3.2, 4.1, 4.2, 4.3, 4.4, 7.4, 8.4_
 
-- [ ] 5. Crear endpoint API para ubicaciones del mapa
+- [x] 5. Crear endpoint API para ubicaciones del mapa
   - Crear archivo `app/api/properties/map-locations/route.ts`
   - Implementar función `GET` que llama a `MapService.getMapProperties()`
   - Retornar respuesta JSON con estructura: `{ success, properties, count, timestamp }`
@@ -48,7 +48,7 @@
   - Considerar implementar rate limiting para prevenir abuso
   - _Requisitos: 1.1, 7.4, 8.2, 8.4, NF-3.4_
 
-- [ ] 6. Implementar hook usePropertyMap
+- [x] 6. Implementar hook usePropertyMap
   - Crear archivo `hooks/usePropertyMap.ts`
   - Implementar estado local: properties, loading, error, bounds
   - Implementar función `loadProperties` que hace fetch a `/api/properties/map-locations`
@@ -62,14 +62,14 @@
   - Escribir tests para el hook en `__tests__/hooks/usePropertyMap.test.tsx`
   - _Requisitos: 1.1, 1.4, 7.1, 7.5, 8.1, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 7. Crear componente MapLoadingState
+- [x] 7. Crear componente MapLoadingState
   - Crear archivo `components/map/MapLoadingState.tsx`
   - Implementar skeleton loader con altura configurable
   - Usar componentes de shadcn/ui (Skeleton) si están disponibles
   - Mostrar animación de carga atractiva y consistente con el diseño del sitio
   - _Requisitos: 1.5, 7.5_
 
-- [ ] 8. Crear componente MapErrorState
+- [x] 8. Crear componente MapErrorState
   - Crear archivo `components/map/MapErrorState.tsx`
   - Mostrar mensaje de error basado en el tipo de error
   - Incluir botón "Reintentar" que ejecute callback `onRetry`
@@ -77,7 +77,7 @@
   - Usar estilos consistentes con el sistema de diseño del proyecto
   - _Requisitos: 1.5, 8.2, 8.3, 8.4, 8.5_
 
-- [ ] 9. Crear componente MapEmptyState
+- [x] 9. Crear componente MapEmptyState
   - Crear archivo `components/map/MapEmptyState.tsx`
   - Mostrar mensaje: "No hay propiedades disponibles en este momento"
   - Permitir mensaje personalizado mediante prop
@@ -85,7 +85,7 @@
   - Usar estilos consistentes con el sistema de diseño
   - _Requisitos: 8.1_
 
-- [ ] 10. Crear componente PropertyMapPopup
+- [x] 10. Crear componente PropertyMapPopup
   - Crear archivo `components/map/PropertyMapPopup.tsx`
   - Mostrar información de propiedad: título, precio formateado, tipo de operación, tipo de propiedad
   - Incluir imagen thumbnail de la propiedad (primera imagen del array)
@@ -96,7 +96,7 @@
   - Aplicar estilos responsive (ancho mínimo/máximo según dispositivo)
   - _Requisitos: 2.3, 2.4, 2.5, 6.3, 9.2, NF-2.1, NF-2.2_
 
-- [ ] 11. Crear componente PropertyMapMarker
+- [x] 11. Crear componente PropertyMapMarker
   - Crear archivo `components/map/PropertyMapMarker.tsx`
   - Usar componente `Marker` de react-leaflet
   - Configurar posición con `[property.latitude, property.longitude]`
@@ -108,7 +108,7 @@
   - Implementar soporte de teclado (Enter/Space para activar)
   - _Requisitos: 2.1, 2.3, 2.4, 6.3, 9.1, 9.4, NF-2.4_
 
-- [ ] 12. Implementar hook useMapResponsive
+- [x] 12. Implementar hook useMapResponsive
   - Crear hook personalizado en `components/InteractivePropertyMap.tsx` o separado
   - Detectar tamaño de ventana con `window.innerWidth`
   - Retornar configuración apropiada de `MAP_RESPONSIVE_CONFIG` (mobile, tablet, desktop)
@@ -116,7 +116,7 @@
   - Usar debounce para evento resize si es necesario
   - _Requisitos: NF-2.1, NF-2.2, NF-2.3, NF-2.4_
 
-- [ ] 13. Implementar componente InteractivePropertyMap (parte 1: estructura base)
+- [x] 13. Implementar componente InteractivePropertyMap (parte 1: estructura base)
   - Crear archivo `components/InteractivePropertyMap.tsx`
   - Marcar componente como `'use client'`
   - Importar dependencias de react-leaflet: `MapContainer`, `TileLayer`
@@ -127,7 +127,7 @@
   - Implementar lógica de estados: loading, error, empty
   - _Requisitos: 1.1, 1.2, 5.5, NF-4.1_
 
-- [ ] 14. Implementar componente InteractivePropertyMap (parte 2: renderizado del mapa)
+- [x] 14. Implementar componente InteractivePropertyMap (parte 2: renderizado del mapa)
   - Renderizar `MapLoadingState` cuando `loading === true`
   - Renderizar `MapErrorState` cuando `error !== null`
   - Renderizar `MapEmptyState` cuando `isEmpty === true`
@@ -137,7 +137,7 @@
   - Implementar lógica para usar `fitBounds` si hay bounds calculados
   - _Requisitos: 1.1, 1.3, 1.4, 1.5, 5.5_
 
-- [ ] 15. Implementar componente InteractivePropertyMap (parte 3: marcadores y clustering)
+- [x] 15. Implementar componente InteractivePropertyMap (parte 3: marcadores y clustering)
   - Implementar lógica condicional para clustering: activar si `properties.length > 50` o `enableClustering === true`
   - Configurar `MarkerClusterGroup` con opciones: `chunkedLoading`, `spiderfyOnMaxZoom`, `maxClusterRadius`
   - Crear función `iconCreateFunction` personalizada para clusters con estilos del proyecto
@@ -145,7 +145,7 @@
   - Pasar callbacks apropiados a los marcadores
   - _Requisitos: 2.1, 2.6, 7.2, NF-5.1_
 
-- [ ] 16. Implementar componente InteractivePropertyMap (parte 4: integración con analytics)
+- [x] 16. Implementar componente InteractivePropertyMap (parte 4: integración con analytics)
   - Integrar hook `useAnalytics`
   - Rastrear evento `map_loaded` cuando las propiedades se cargan exitosamente
   - Incluir metadata: `properties_count`, `clustering_enabled`
@@ -153,7 +153,7 @@
   - Implementar debounce para eventos de zoom/pan si se rastrean
   - _Requisitos: 9.1, 9.2, 9.3, 9.4, 9.5, NF-3.2_
 
-- [ ] 17. Implementar componente InteractivePropertyMap (parte 5: accesibilidad)
+- [x] 17. Implementar componente InteractivePropertyMap (parte 5: accesibilidad)
   - Agregar atributos ARIA: `role="region"`, `aria-label`, `aria-describedby`
   - Crear elemento `<p>` oculto con `sr-only` para descripción del mapa
   - Incluir conteo de propiedades en descripción para screen readers
@@ -161,7 +161,7 @@
   - Verificar contraste de colores (mínimo 4.5:1)
   - _Requisitos: NF-1.1, NF-1.2_
 
-- [ ] 18. Agregar estilos CSS personalizados para el mapa
+- [x] 18. Agregar estilos CSS personalizados para el mapa
   - Agregar estilos al archivo `app/globals.css`
   - Importar `leaflet/dist/leaflet.css`
   - Crear estilos para `.custom-cluster-icon`
@@ -171,7 +171,7 @@
   - Asegurar que los colores cumplan con requisitos de contraste WCAG
   - _Requisitos: 5.3, NF-2.1, NF-2.4_
 
-- [ ] 19. Integrar mapa en la página principal
+- [x] 19. Integrar mapa en la página principal
   - Abrir archivo `app/page.tsx`
   - Importar `InteractivePropertyMap` usando `dynamic` de Next.js
   - Configurar `ssr: false` y componente de loading
@@ -180,14 +180,14 @@
   - Verificar que el mapa se cargue correctamente sin errores de SSR
   - _Requisitos: 1.1, 1.2, 5.2, 5.5_
 
-- [ ] 20. Implementar sincronización automática de propiedades
+- [x] 20. Implementar sincronización automática de propiedades
   - Verificar que `MapService.getMapProperties()` filtre correctamente por status
   - Confirmar que cambios en status de propiedades se reflejan al recargar la página
   - Agregar logs informativos cuando se filtran propiedades por status
   - Documentar que la sincronización es automática pero requiere recarga de página
   - _Requisitos: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6_
 
-- [ ] 21. Escribir tests de integración
+- [x] 21. Escribir tests de integración
   - Crear archivo `__tests__/components/InteractivePropertyMap.integration.test.tsx`
   - Test: debe renderizar mapa con marcadores
   - Test: debe abrir popup al hacer clic en marcador
@@ -196,7 +196,7 @@
   - Usar mocks para fetch API y hooks de analytics
   - _Requisitos: todos los requisitos funcionales_
 
-- [ ] 22. Escribir tests E2E
+- [x] 22. Escribir tests E2E
   - Crear archivo de tests E2E (Playwright o Cypress)
   - Test: debe cargar el mapa en la página principal
   - Test: debe mostrar popup al hacer clic en marcador
