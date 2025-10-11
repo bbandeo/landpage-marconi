@@ -17,6 +17,9 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
+    "test:performance": "playwright test performance-tests/",
+    "test:performance:headed": "playwright test performance-tests/ --headed",
+    "test:performance:report": "playwright test performance-tests/ --reporter=html",
     "geocode:properties": "tsx scripts/populate-property-coordinates.ts"
   },
   "dependencies": {

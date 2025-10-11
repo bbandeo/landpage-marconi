@@ -204,7 +204,7 @@
   - Test: debe funcionar en diferentes tamaños de pantalla (móvil, tablet, desktop)
   - _Requisitos: 1.1, 2.3, 6.1, 6.2, 6.3, NF-2.1, NF-2.2_
 
-- [ ] 23. Realizar tests de rendimiento
+- [x] 23. Realizar tests de rendimiento
   - Verificar que el mapa carga en menos de 3 segundos con conexión 3G
   - Probar con 50+ propiedades para verificar clustering
   - Probar con 100+ propiedades para verificar degradación de performance

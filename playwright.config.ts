@@ -7,6 +7,9 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
 
+  // Incluir también tests de rendimiento
+  testMatch: ['**/*.spec.ts', '**/performance-tests/**/*.spec.ts'],
+
   // Tiempo máximo para cada test
   timeout: 30 * 1000,
 
