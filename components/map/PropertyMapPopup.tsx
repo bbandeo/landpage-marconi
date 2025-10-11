@@ -56,19 +56,25 @@ export default function PropertyMapPopup({ property, onViewDetails }: PropertyMa
 
   const imageUrl = getImageUrl(firstImage)
 
-  // Traducir tipos
+  // Traducir tipos y capitalizar
   const translatePropertyType = (type: string) => {
     const translations: Record<string, string> = {
       house: 'Casa',
       apartment: 'Departamento',
       land: 'Terreno',
       commercial: 'Comercial',
+      casa: 'Casa',
+      departamento: 'Departamento',
+      terreno: 'Terreno',
+      comercial: 'Comercial',
       Casa: 'Casa',
       Departamento: 'Departamento',
       Terreno: 'Terreno',
       Comercial: 'Comercial',
     }
-    return translations[type] || type
+    const translated = translations[type] || type
+    // Capitalizar primera letra si no está traducido
+    return translated.charAt(0).toUpperCase() + translated.slice(1).toLowerCase()
   }
 
   const translateOperationType = (type: string) => {
@@ -88,9 +94,9 @@ export default function PropertyMapPopup({ property, onViewDetails }: PropertyMa
   }
 
   return (
-    <div className="w-[320px] sm:w-[360px] bg-night-blue/95 backdrop-blur-sm rounded-lg overflow-hidden">
+    <div className="w-[320px] sm:w-[360px] bg-gradient-to-br from-night-blue/98 to-night-blue/95 backdrop-blur-md rounded-xl overflow-hidden shadow-2xl border border-support-gray/10 animate-in fade-in slide-in-from-bottom-4 duration-300">
       {/* Imagen de la propiedad */}
-      <div className="relative w-full h-48 bg-support-gray/10 overflow-hidden">
+      <div className="relative w-full h-48 bg-gradient-to-br from-support-gray/20 to-support-gray/10 overflow-hidden group">
         <Image
           src={imageUrl}
           alt={property.title}
@@ -143,10 +149,11 @@ export default function PropertyMapPopup({ property, onViewDetails }: PropertyMa
         <Link
           href={`/propiedades/${property.id}`}
           onClick={handleViewDetails}
-          className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-vibrant-orange hover:bg-vibrant-orange/90 text-bone-white text-sm font-semibold rounded-lg transition-all hover-lift group"
+          className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-vibrant-orange hover:bg-vibrant-orange/90 text-sm font-semibold rounded-lg transition-all hover-lift group"
+          style={{ color: '#F5F5F5' }}
         >
-          <span>Ver Detalles</span>
-          <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          <span className="text-bone-white">Ver Detalles</span>
+          <ArrowRight className="w-4 h-4 text-bone-white transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
     </div>

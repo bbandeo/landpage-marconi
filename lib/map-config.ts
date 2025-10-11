@@ -19,10 +19,10 @@ export const MAP_CONFIG: MapConfig = {
     [-55.061314, -73.560562], // Suroeste
     [-21.781277, -53.591835], // Noreste
   ],
-  // OpenStreetMap tile layer
-  tileLayerUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  // Atribución requerida por OpenStreetMap
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  // CartoDB Dark Matter tile layer - Modo oscuro premium
+  tileLayerUrl: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  // Atribución requerida por CartoDB y OpenStreetMap
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
   // Activar clustering cuando hay más de 50 propiedades
   clusteringThreshold: 50,
   // Radio máximo de clustering (80px)
