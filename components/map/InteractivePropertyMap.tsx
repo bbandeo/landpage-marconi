@@ -65,7 +65,7 @@ export default function InteractivePropertyMap({
     maxProperties,
   })
   const responsiveConfig = useMapResponsive()
-  const { trackEvent } = useAnalytics()
+  const { trackInteraction } = useAnalytics()
 
   // Configuración del mapa
   const mapHeight = height || responsiveConfig.height
@@ -78,30 +78,24 @@ export default function InteractivePropertyMap({
   // Tracking de carga exitosa
   useEffect(() => {
     if (!loading && !error && properties.length > 0) {
-      trackEvent({
-        name: 'map_loaded',
-        properties: {
-          properties_count: properties.length,
-          clustering_enabled: shouldCluster,
-          source: 'interactive_map',
-        },
+      trackInteraction('map_loaded', 'interactive_map', undefined, {
+        properties_count: properties.length,
+        clustering_enabled: shouldCluster,
+        source: 'interactive_map',
       })
     }
-  }, [loading, error, properties.length, shouldCluster, trackEvent])
+  }, [loading, error, properties.length, shouldCluster, trackInteraction])
 
   // Tracking de errores
   useEffect(() => {
     if (error) {
-      trackEvent({
-        name: 'map_error',
-        properties: {
-          error_type: error.type,
-          error_message: error.message,
-          source: 'interactive_map',
-        },
+      trackInteraction('map_error', 'interactive_map', undefined, {
+        error_type: error.type,
+        error_message: error.message,
+        source: 'interactive_map',
       })
     }
-  }, [error, trackEvent])
+  }, [error, trackInteraction])
 
   // Estado de carga
   if (loading) {

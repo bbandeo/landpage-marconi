@@ -8,13 +8,16 @@
  */
 
 import { createClient } from '@supabase/supabase-js'
+console.log(`📁 Buscando variables de entorno en la carpeta: ${process.cwd()}`)
+console.log('SUPABASE_SERVICE_ROLE_KEY:', process.env.SUPABASE_SERVICE_ROLE_KEY)
+console.log('NEXT_PUBLIC_SUPABASE_URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
 
 // Configuración de Supabase
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseUrl = "https://uutffduomvmyuqmeqjbw.supabase.co"
+const supabaseServiceKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1dGZmZHVvbXZteXVxbWVxamJ3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MTA0OTQwOSwiZXhwIjoyMDY2NjI1NDA5fQ.2cDZpzcKUud3qIFmSKUe9sCSO3rRkUmYMkMEHo8C2Ag"
 
 if (!supabaseUrl || !supabaseServiceKey) {
-  console.error('❌ Faltan variables de entorno: NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY')
+  console.error('❌ Faltan variables55 de entorno: NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY')
   process.exit(1)
 }
 

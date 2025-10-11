@@ -16,7 +16,7 @@ import { useAnalytics } from '@/hooks/useAnalytics'
 
 export default function PropertyMapMarker({ property, onClick, isSelected = false }: PropertyMapMarkerProps) {
   const [markerIcon, setMarkerIcon] = useState<any>(null)
-  const { trackEvent } = useAnalytics()
+  const { trackInteraction } = useAnalytics()
 
   // Crear icono del marcador en cliente
   useEffect(() => {
@@ -32,28 +32,20 @@ export default function PropertyMapMarker({ property, onClick, isSelected = fals
     }
 
     // Tracking de analytics
-    trackEvent({
-      name: 'map_pin_click',
-      properties: {
-        property_id: property.id,
-        property_title: property.title,
-        property_type: property.property_type,
-        operation_type: property.operation_type,
-        source: 'interactive_map',
-      },
+    trackInteraction('map_pin_click', `map_marker_${property.id}`, property.id, {
+      property_title: property.title,
+      property_type: property.property_type,
+      operation_type: property.operation_type,
+      source: 'interactive_map',
     })
   }
 
   // Handler para click en "Ver Detalles"
   const handleViewDetails = (propertyId: number) => {
     // Tracking de analytics
-    trackEvent({
-      name: 'map_view_details',
-      properties: {
-        property_id: propertyId,
-        source: 'interactive_map',
-        action_type: 'view_details',
-      },
+    trackInteraction('map_view_details', `map_view_details_${propertyId}`, propertyId, {
+      source: 'interactive_map',
+      action_type: 'view_details',
     })
   }
 
