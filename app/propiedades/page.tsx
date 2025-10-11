@@ -476,9 +476,9 @@ export default function PropiedadesPage() {
             <h2 className="component-title mb-2">Resultados</h2>
           </div>
 
-          {/* Properties List - DISEÑO VERTICAL CON IMÁGENES PROMINENTES */}
+          {/* Properties Grid - DISEÑO EN MOSAICO RESPONSIVE */}
           {currentProperties.length > 0 ? (
-            <div className="space-y-8 mb-premium-xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-premium-xl">
               {currentProperties.map((property) => (
                 <PropertyCard key={property.id} property={property} />
               ))}
