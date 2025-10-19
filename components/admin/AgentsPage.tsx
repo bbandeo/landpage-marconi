@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Plus, Search, Edit, Trash2, Users, Mail, Phone, MessageCircle, User } from "lucide-react"
+import { Plus, Search, Edit, Trash2, Users, Mail, Phone, MessageCircle, User, Power } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -24,6 +24,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { toast } from "@/hooks/use-toast"
+import { getOptimizedImageUrl } from "@/lib/cloudinary"
 import AgentForm from "./AgentForm"
 import type { Agent } from "@/lib/supabase"
 import type { AgentFormData } from "@/types/agent"
@@ -103,6 +104,37 @@ export default function AgentsPage() {
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "No se pudo eliminar el agente",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const handleToggleActive = async (agent: Agent) => {
+    try {
+      const response = await fetch(`/api/agents/${agent.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ active: !agent.active }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "Error al actualizar agente")
+      }
+
+      const updatedAgent = await response.json()
+
+      toast({
+        title: "Éxito",
+        description: `Agente ${updatedAgent.active ? "activado" : "desactivado"} correctamente`,
+      })
+
+      setAgents((prev) => prev.map((a) => (a.id === updatedAgent.id ? updatedAgent : a)))
+    } catch (error) {
+      console.error("Error toggling agent active status:", error)
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "No se pudo actualizar el agente",
         variant: "destructive",
       })
     }
@@ -321,32 +353,42 @@ export default function AgentsPage() {
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAgents.map((agent) => (
-            <Card key={agent.id} className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
-              <CardContent className="p-6">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  {/* Photo */}
-                  <div className="relative">
-                    {agent.photo_url ? (
-                      <img
-                        src={agent.photo_url}
-                        alt={agent.name}
-                        className="w-24 h-24 rounded-full object-cover border-4 border-gray-700"
-                      />
-                    ) : (
-                      <div className="w-24 h-24 rounded-full bg-gray-700 border-4 border-gray-600 flex items-center justify-center">
-                        <User className="w-12 h-12 text-gray-500" />
-                      </div>
-                    )}
-                    <Badge
-                      variant={agent.active ? "default" : "secondary"}
-                      className={`absolute -bottom-1 -right-1 ${
-                        agent.active ? "bg-green-500" : "bg-gray-500"
-                      }`}
-                    >
-                      {agent.active ? "Activo" : "Inactivo"}
-                    </Badge>
-                  </div>
+          {filteredAgents.map((agent) => {
+            const photoUrl = agent.photo_public_id
+              ? getOptimizedImageUrl(agent.photo_public_id, {
+                  width: 96,
+                  height: 96,
+                  crop: "fill",
+                  gravity: "face",
+                })
+              : agent.photo_url
+
+            return (
+              <Card key={agent.id} className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
+                <CardContent className="p-6">
+                  <div className="flex flex-col items-center text-center space-y-4">
+                    {/* Photo */}
+                    <div className="relative">
+                      {photoUrl ? (
+                        <img
+                          src={photoUrl}
+                          alt={agent.name}
+                          className="w-24 h-24 rounded-full object-cover border-4 border-gray-700"
+                        />
+                      ) : (
+                        <div className="w-24 h-24 rounded-full bg-gray-700 border-4 border-gray-600 flex items-center justify-center">
+                          <User className="w-12 h-12 text-gray-500" />
+                        </div>
+                      )}
+                      <Badge
+                        variant={agent.active ? "default" : "secondary"}
+                        className={`absolute -bottom-1 -right-1 ${
+                          agent.active ? "bg-green-500" : "bg-gray-500"
+                        }`}
+                      >
+                        {agent.active ? "Activo" : "Inactivo"}
+                      </Badge>
+                    </div>
 
                   {/* Name and Specialty */}
                   <div className="w-full">
@@ -380,28 +422,43 @@ export default function AgentsPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex gap-2 w-full pt-4 border-t border-gray-700">
+                  <div className="flex flex-col gap-2 w-full pt-4 border-t border-gray-700">
                     <Button
-                      onClick={() => handleEdit(agent)}
+                      onClick={() => handleToggleActive(agent)}
                       variant="outline"
-                      className="flex-1 bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                      className={`w-full ${
+                        agent.active
+                          ? "bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                          : "bg-green-700 border-green-600 text-white hover:bg-green-600"
+                      }`}
                     >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Editar
+                      <Power className="w-4 h-4 mr-2" />
+                      {agent.active ? "Desactivar" : "Activar"}
                     </Button>
-                    <Button
-                      onClick={() => handleDelete(agent)}
-                      variant="destructive"
-                      className="flex-1"
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Eliminar
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handleEdit(agent)}
+                        variant="outline"
+                        className="flex-1 bg-gray-700 border-gray-600 text-white hover:bg-gray-600"
+                      >
+                        <Edit className="w-4 h-4 mr-2" />
+                        Editar
+                      </Button>
+                      <Button
+                        onClick={() => handleDelete(agent)}
+                        variant="destructive"
+                        className="flex-1"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Eliminar
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
-          ))}
+            )
+          })}
         </div>
       )}
 
