@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Phone,
@@ -16,6 +16,7 @@ import {
   Crown,
   Check,
   ArrowRight,
+  UserCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +29,8 @@ import Link from "next/link";
 import Header from "@/components/Header"
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero"
+import { AgentService } from "@/services/agents";
+import type { Agent as DBAgent } from "@/lib/supabase";
 
 interface Agent {
   id: number;
@@ -42,112 +45,41 @@ interface Agent {
   icon: typeof Home;
 }
 
-const agents: Agent[] = [
-  {
-    id: 1,
-    name: "Gustavo Marconi",
-    role: "Gestor Comercial y CEO",
-    specialization: "Propiedades Residenciales y Comerciales",
-    phone: "+54 9 3482 704694",
-    email: "marconinegociosinmobiliarios@hotmail.com",
-    image: "gustavo_vdczse",
-    description: "CEO y fundador de Marconi Inmobiliaria, con más de 15 años de experiencia en el mercado inmobiliario de Reconquista. Especialista en propiedades residenciales y comerciales, liderando el equipo con visión estratégica y compromiso total con la satisfacción del cliente.",
-    achievements: [
-      "Fundador de Marconi Inmobiliaria",
-      "Más de 500 transacciones exitosas",
-      "Líder del mercado inmobiliario local",
-      "Especialista en inversiones inmobiliarias"
-    ],
-    icon: Crown
-  },
-  {
-    id: 2,
-    name: "Ramón Suligoy",
-    role: "Gestor comercial",
-    specialization: "Propiedades Comerciales",
-    phone: "+54 9 3482 219676",
-    email: "marconinegociosinmobiliarios@hotmail.com",
-    image: "ramon_iyryyc",
-    description: "Gestor comercial especializado en propiedades comerciales e inversiones. Con amplia experiencia en el mercado local, ayuda a empresarios y emprendedores a encontrar la ubicación perfecta para sus negocios en Reconquista y zona.",
-    achievements: [
-      "Especialista en locales comerciales",
-      "Asesor de más de 100 empresas",
-      "Experto en inversiones comerciales",
-      "Conocimiento profundo del mercado local"
-    ],
-    icon: Building2
-  },
-  {
-    id: 3,
-    name: "Priscila Maydana",
-    role: "Gestora comercial",
-    specialization: "Propiedades Residenciales",
-    phone: "+54 9 3482 653547",
-    email: "marconinegociosinmobiliarios@hotmail.com",
-    image: "priscila_gbc46h",
-    description: "Gestora comercial especializada en propiedades residenciales. Su enfoque personalizado y atención al detalle la convierten en la elección ideal para familias que buscan su hogar perfecto en Reconquista.",
-    achievements: [
-      "Especialista en propiedades familiares",
-      "Más de 200 familias satisfechas",
-      "Experta en barrios residenciales",
-      "Certificación en atención al cliente"
-    ],
-    icon: Home
-  },
-  {
-    id: 4,
-    name: "Facundo Altamirano",
-    role: "Community manager inmobiliario",
-    specialization: "Marketing Digital Inmobiliario",
-    phone: "+54 9 3482 755308",
-    email: "marconinegociosinmobiliarios@hotmail.com",
-    image: "facundo_axinkj",
-    description: "Community Manager especializado en marketing digital inmobiliario. Se encarga de la presencia online de la empresa y de conectar propiedades con potenciales compradores a través de estrategias digitales innovadoras.",
-    achievements: [
-      "Especialista en marketing digital",
-      "Gestión de redes sociales inmobiliarias",
-      "Estrategias de contenido efectivas",
-      "Amplio alcance en redes sociales"
-    ],
-    icon: Users
-  },
-  {
-    id: 5,
-    name: "Micaela Domínguez",
-    role: "Community manager inmobiliario",
-    specialization: "Marketing Digital y Comunicaciones",
-    phone: "+54 9 3487 229722",
-    email: "marconinegociosinmobiliarios@hotmail.com",
-    image: "micaela_rl56r5",
-    description: "Community Manager especializada en comunicaciones digitales y marketing inmobiliario. Trabaja en conjunto con el equipo para crear contenido atractivo y mantener una comunicación fluida con clientes actuales y potenciales.",
-    achievements: [
-      "Experta en comunicación digital",
-      "Gestión integral de redes sociales",
-      "Creación de contenido visual",
-      "Atención al cliente online"
-    ],
-    icon: MessageCircle
-  },
-  {
-    id: 6,
-    name: "Bruno Bordón",
-    role: "Corredor Inmobiliario",
-    specialization: "Transacciones Inmobiliarias",
-    phone: "+54 9 3482 261937",
-    email: "marconinegociosinmobiliarios@hotmail.com",
-    image: "bruno_aqcgnn",
-    description: "Corredor inmobiliario matriculado con amplia experiencia en transacciones inmobiliarias. Se especializa en asesorar legalmente las operaciones y garantizar que todos los procesos se realicen de manera correcta y segura.",
-    achievements: [
-      "Corredor matriculado",
-      "Especialista en aspectos legales",
-      "Más de 300 transacciones completadas",
-      "Asesoramiento integral en operaciones"
-    ],
-    icon: Award
+// Helper function to map DB agent to page agent format
+function mapDBAgentToPageAgent(dbAgent: DBAgent): Agent {
+  // Determine icon based on specialty
+  let icon = UserCircle;
+  if (dbAgent.specialty?.toLowerCase().includes('comercial')) icon = Building2;
+  else if (dbAgent.specialty?.toLowerCase().includes('residencial')) icon = Home;
+  else if (dbAgent.specialty?.toLowerCase().includes('marketing') || dbAgent.specialty?.toLowerCase().includes('digital')) icon = Users;
+  else if (dbAgent.specialty?.toLowerCase().includes('corredor') || dbAgent.specialty?.toLowerCase().includes('legal')) icon = Award;
+
+  // Generate achievements based on years of experience
+  const achievements: string[] = [];
+  if (dbAgent.specialty) {
+    achievements.push(`Especialista en ${dbAgent.specialty}`);
   }
-];
+  if (dbAgent.years_of_experience) {
+    achievements.push(`${dbAgent.years_of_experience} años de experiencia`);
+  }
+  achievements.push("Agente profesional de Marconi Inmobiliaria");
+
+  return {
+    id: dbAgent.id,
+    name: dbAgent.name,
+    role: dbAgent.specialty || "Agente Inmobiliario",
+    specialization: dbAgent.specialty || "Propiedades",
+    phone: dbAgent.phone,
+    email: dbAgent.email,
+    image: dbAgent.photo_public_id || "",
+    description: dbAgent.bio || `${dbAgent.name} es parte del equipo profesional de Marconi Inmobiliaria.`,
+    achievements,
+    icon,
+  };
+}
 
 export default function AgentesPage() {
+  const [agents, setAgents] = useState<Agent[]>([]);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [contactForm, setContactForm] = useState({
     name: "",
@@ -158,6 +90,21 @@ export default function AgentesPage() {
   });
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // Load agents from database
+  useEffect(() => {
+    async function loadAgents() {
+      try {
+        const dbAgents = await AgentService.getActiveAgents();
+        const mappedAgents = dbAgents.map(mapDBAgentToPageAgent);
+        setAgents(mappedAgents);
+      } catch (error) {
+        console.error("Error loading agents:", error);
+        // Keep empty array on error
+      }
+    }
+    loadAgents();
+  }, []);
 
   const handleContactAgent = (agent: Agent) => {
     setSelectedAgent(agent);
