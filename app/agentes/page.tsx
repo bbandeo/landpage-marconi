@@ -187,7 +187,7 @@ export default function AgentesPage() {
         }
         description="Conocé al equipo de profesionales inmobiliarios que te acompañará en cada paso para encontrar tu próxima propiedad en Reconquista"
         withAnimation={true}
-        imageClassName="object-cover object-top scale-90"
+        imageClassName="object-cover object-center"
         ctaText="Conocer al Equipo"
         ctaAction={scrollToTeam}
       />
