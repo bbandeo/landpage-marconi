@@ -157,6 +157,13 @@ export default function AgentesPage() {
     }
   };
 
+  const scrollToTeam = () => {
+    document.getElementById('team-section')?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
+
   return (
     <div className="min-h-screen bg-premium-main">
       {/* Header Premium */}
@@ -165,14 +172,28 @@ export default function AgentesPage() {
       <Hero
         backgroundImage="/assets/hero/agentsc.png"
         alt="Agentes - Marconi Inmobiliaria"
-        title={<>NUESTROS <span className="text-orange-400">AGENTES</span></>}
+        title={
+          <>
+            NUESTROS{" "}
+            <span className="text-orange-400 relative inline-block">
+              <span className="absolute inset-0 blur-lg bg-orange-500/40"></span>
+              <span className="relative" style={{
+                textShadow: '0 0 20px rgba(251, 146, 60, 0.5), 0 0 40px rgba(251, 146, 60, 0.3), 0 4px 8px rgba(0, 0, 0, 0.3)'
+              }}>
+                AGENTES
+              </span>
+            </span>
+          </>
+        }
         description="Conocé al equipo de profesionales inmobiliarios que te acompañará en cada paso para encontrar tu próxima propiedad en Reconquista"
         withAnimation={true}
         imageClassName="object-cover object-top scale-90"
+        ctaText="Conocer al Equipo"
+        ctaAction={scrollToTeam}
       />
 
       {/* Team Section - PREMIUM DESIGN */}
-      <section className="section-premium bg-premium-main">
+      <section id="team-section" className="section-premium bg-premium-main">
         <div className="container-premium">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
