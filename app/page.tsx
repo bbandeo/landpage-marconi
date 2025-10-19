@@ -230,29 +230,28 @@ export default function HomePage() {
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
       <section className="relative min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
-        {/* Background con Parallax - Fixed overflow containment */}
-        <motion.div 
+        {/* Background Video con Parallax - Fixed overflow containment */}
+        <motion.div
           className="absolute inset-0 overflow-hidden"
           style={{ y: heroY, opacity: heroOpacity }}
         >
-          <Image
-            src={
-              getOptimizedImageUrl("IMG_2850_c7gzcr", {
-                width: 1920,
-                height: 1080,
-                gravity: "south",
-                quality: "auto",
-                format: "auto",
-                saturation: 10, // Mejorar saturación
-                contrast: 10,   // Mejorar contraste
-              }) || "/placeholder.svg"
-            }
-            alt="Reconquista - Marconi Inmobiliaria"
-            fill
-            className="object-cover scale-105" // Further reduced scale to prevent overflow
-            priority
-          />
-          
+          {/* Video background rotado 90° en sentido horario */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="min-w-full min-h-full object-cover"
+              style={{
+                transform: 'rotate(90deg) scale(1.5)',
+                transformOrigin: 'center center',
+              }}
+            >
+              <source src="/assets/hero/area-reco.mp4" type="video/mp4" />
+            </video>
+          </div>
+
           {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
 
