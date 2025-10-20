@@ -235,7 +235,7 @@ export default function HomePage() {
           className="absolute inset-0 overflow-hidden"
           style={{ y: heroY, opacity: heroOpacity }}
         >
-          {/* Video background rotado 90° en sentido horario */}
+          {/* Video background */}
           <div className="absolute inset-0 flex items-center justify-center">
             <video
               autoPlay
@@ -244,7 +244,6 @@ export default function HomePage() {
               playsInline
               className="min-w-full min-h-full object-cover"
               style={{
-                transform: 'rotate(90deg) scale(1.5)',
                 transformOrigin: 'center center',
               }}
             >
