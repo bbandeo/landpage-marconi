@@ -4,6 +4,7 @@
 // Ejecuta la migración SQL para hacer page_url nullable
 // =====================================================================================
 
+
 const { createClient } = require('@supabase/supabase-js')
 
 async function runMigration() {
