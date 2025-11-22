@@ -26,6 +26,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FeaturedPropertiesSlider } from "@/components/FeaturedPropertiesSlider";
 import { HeroSearchBar } from "@/components/HeroSearchBar";
+import HeroModern from "@/components/hero/HeroModern";
 import { getOptimizedImageUrl } from "@/lib/cloudinary";
 import Link from "next/link";
 import Image from "next/image";
@@ -228,73 +229,8 @@ export default function HomePage() {
       {/* Header Premium */}
       <Header />
 
-      {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
-        {/* Background Video con Parallax - Fixed overflow containment */}
-        <motion.div
-          className="absolute inset-0 overflow-hidden"
-          style={{ y: heroY, opacity: heroOpacity }}
-        >
-          {/* Video background */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="min-w-full min-h-full object-cover"
-              style={{
-                transformOrigin: 'center center',
-              }}
-            >
-              <source src="/assets/hero/area-reco.mp4" type="video/mp4" />
-            </video>
-          </div>
-
-          {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
-
-          {/* EFECTO DIFUMINADO NARANJA SUTIL */}
-          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/60 via-orange-500/30 to-transparent" />
-
-          {/* Overlay central para mejorar contraste del texto */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20" />
-        </motion.div>
-
-        {/* CONTENIDO PRINCIPAL - LAYOUT UNIFICADO PARA TODOS LOS TAMAÑOS */}
-        <div className="relative z-10 w-full min-h-screen flex flex-col overflow-hidden" style={{ contain: 'layout style', transform: 'translateY(-20vh)' }}>
-          
-          {/* CONTENIDO SUPERIOR - CLAIM CENTRADO */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center px-4">
-              {/* CLAIM PRINCIPAL */}
-              <motion.div
-                initial={{ opacity: 0, y: 60, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                style={{ y: contentY }}
-              >
-                <div className="relative inline-block">
-                  <Image
-                    src="/assets/impact_text/vivilaexperiencia.PNG"
-                    alt="Viví la experiencia de encontrar tu lugar en el mundo"
-                    width={1000}
-                    height={250}
-                    className="w-full max-w-[90%] sm:max-w-3xl lg:max-w-4xl h-auto"
-                    priority
-                  />
-                  <div className="absolute -inset-2 lg:-inset-4 bg-gradient-to-r from-orange-600/10 via-transparent to-red-600/10 rounded-2xl lg:rounded-3xl blur-2xl lg:blur-3xl -z-10" />
-                </div>
-              </motion.div>
-            </div>
-          </div>
-          
-          {/* CONTENIDO INFERIOR - BUSCADOR HERO */}
-          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-2 sm:pb-3 lg:pb-4 px-4">
-            <HeroSearchBar />
-          </div>
-        </div>
-      </section>
+      {/* HERO SECTION - NUEVO DISEÑO MODERNO */}
+      <HeroModern />
 
       {/* Barra separadora fluida naranja */}
       <div className="h-2 w-full bg-gradient-to-b from-orange-500/70 via-orange-600/30 to-[#0d0f1a]" />
