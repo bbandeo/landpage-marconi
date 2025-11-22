@@ -1,82 +1,93 @@
 "use client";
 
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { motion } from "framer-motion";
+import { useMemo } from "react";
 
 export default function HeroBackground() {
-  const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; duration: number }>>([]);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const beams = useMemo(
+    () =>
+      Array.from({ length: 3 }, (_, index) => ({
+        id: index,
+        delay: index * 1.2,
+        top: `${20 + index * 18}%`,
+      })),
+    []
+  );
 
-  useEffect(() => {
-    // Set window dimensions
-    setDimensions({ width: window.innerWidth, height: window.innerHeight });
-
-    // Generate particles
-    const newParticles = Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      duration: 20 + Math.random() * 20
-    }));
-    setParticles(newParticles);
-
-    // Update dimensions on resize
-    const handleResize = () => {
-      setDimensions({ width: window.innerWidth, height: window.innerHeight });
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const sparks = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, index) => ({
+        id: index,
+        left: `${Math.random() * 100}%`,
+        delay: Math.random() * 4,
+        duration: 6 + Math.random() * 6,
+      })),
+    []
+  );
 
   return (
     <>
-      {/* Gradiente de fondo */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a0e27] via-[#141826] to-[#0a0e27]" />
+      <div className="absolute inset-0 bg-[#04040c]" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#060a1b] via-[#05050f] to-[#020205]" />
 
-      {/* Overlay con patrón sutil */}
       <div className="absolute inset-0 opacity-30">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255, 107, 53, 0.05) 1px, transparent 1px)`,
-          backgroundSize: '32px 32px'
-        }} />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 40px)",
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              "repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 40px)",
+          }}
+        />
       </div>
 
-      {/* Partículas animadas */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-[-20%] left-[-10%] h-[32rem] w-[32rem] rounded-full bg-orange-500/10 blur-[180px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] h-[28rem] w-[28rem] rounded-full bg-purple-500/10 blur-[160px]" />
+      </div>
+
       <div className="absolute inset-0">
-        {particles.map((particle) => (
+        {beams.map((beam) => (
           <motion.div
-            key={particle.id}
-            className="absolute w-1 h-1 rounded-full"
-            style={{
-              background: 'radial-gradient(circle, rgba(255, 107, 53, 0.3) 0%, transparent 70%)',
-              boxShadow: '0 0 4px rgba(255, 107, 53, 0.2)'
-            }}
-            initial={{
-              x: particle.x,
-              y: dimensions.height + 20
-            }}
-            animate={{
-              y: -20,
-              x: particle.x + (Math.random() - 0.5) * 200,
-              opacity: [0, 1, 1, 0]
-            }}
+            key={beam.id}
+            className="absolute left-[55%] h-48 w-px bg-gradient-to-b from-transparent via-orange-400/40 to-transparent"
+            style={{ top: beam.top }}
+            animate={{ opacity: [0, 1, 0], scaleY: [0.7, 1.2, 0.8] }}
             transition={{
-              duration: particle.duration,
+              duration: 6,
               repeat: Infinity,
-              ease: "linear",
-              opacity: {
-                times: [0, 0.1, 0.9, 1]
-              }
+              delay: beam.delay,
+              ease: "easeInOut",
             }}
           />
         ))}
       </div>
 
-      {/* Gradiente radial desde el centro */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] opacity-20">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-orange-500/10 to-transparent blur-3xl" />
-        </div>
+        {sparks.map((spark) => (
+          <motion.div
+            key={spark.id}
+            className="absolute h-1 w-1 rounded-full bg-orange-300"
+            style={{ left: spark.left }}
+            animate={{
+              y: ["120%", "-10%"],
+              opacity: [0, 0.8, 0],
+              scale: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: spark.duration,
+              repeat: Infinity,
+              delay: spark.delay,
+              ease: "easeOut",
+            }}
+          />
+        ))}
       </div>
     </>
   );

@@ -1,78 +1,94 @@
 "use client";
 
-import { motion } from 'framer-motion';
-import { Users, Home, Clock } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { motion } from "framer-motion";
+import { Clock, Home, Users } from "lucide-react";
+import { useEffect, useState } from "react";
+
+const cards = [
+  {
+    id: "active",
+    label: "Personas explorando",
+    icon: Users,
+    suffix: " ahora",
+    color: "from-orange-500/20 to-pink-500/10",
+  },
+  {
+    id: "inventory",
+    label: "Propiedades activas",
+    icon: Home,
+    suffix: " listadas",
+    color: "from-blue-500/20 to-cyan-500/10",
+  },
+  {
+    id: "update",
+    label: "Actualización",
+    icon: Clock,
+    suffix: " min",
+    color: "from-green-400/20 to-emerald-500/10",
+  },
+];
 
 export default function HeroIndicators() {
-  const [activeUsers, setActiveUsers] = useState(3);
-  const [lastUpdate, setLastUpdate] = useState(2);
-  const [availableProperties, setAvailableProperties] = useState(42);
+  const [activeUsers, setActiveUsers] = useState(5);
+  const [inventory, setInventory] = useState(42);
+  const [minutes, setMinutes] = useState(1);
 
   useEffect(() => {
-    // Simular actualizaciones dinámicas
     const interval = setInterval(() => {
-      setActiveUsers(prev => Math.max(2, Math.min(8, prev + Math.floor(Math.random() * 3) - 1)));
-      setLastUpdate(prev => (prev + 1) % 60);
-    }, 5000);
+      setActiveUsers((prev) => Math.max(3, Math.min(12, prev + (Math.random() > 0.5 ? 1 : -1))));
+      setMinutes((prev) => (prev + 1) % 12);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const inventoryInterval = setInterval(() => {
+      setInventory((prev) => Math.max(30, Math.min(55, prev + (Math.random() > 0.5 ? 1 : -1))));
+    }, 6000);
+
+    return () => clearInterval(inventoryInterval);
+  }, []);
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: -20 }}
+      className="grid gap-4 md:grid-cols-3"
+      initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
-      className="flex flex-wrap gap-3 mb-6"
     >
-      {/* Badge de usuarios activos */}
-      <motion.div
-        className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 backdrop-blur-sm border border-orange-500/30 rounded-full"
-        animate={{
-          borderColor: ['rgba(255, 107, 53, 0.3)', 'rgba(255, 107, 53, 0.5)', 'rgba(255, 107, 53, 0.3)']
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-      >
-        <span className="relative flex h-2 w-2">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500" />
-        </span>
-        <Users className="w-3 h-3 text-orange-300" />
-        <span className="text-orange-300 text-sm font-medium">
-          {activeUsers} personas explorando ahora
-        </span>
-      </motion.div>
+      {cards.map(({ id, label, icon: Icon, suffix, color }, idx) => {
+        const value =
+          id === "active" ? activeUsers : id === "inventory" ? inventory : minutes || 1;
 
-      {/* Badge de propiedades disponibles */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.5 }}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 rounded-full"
-      >
-        <Home className="w-3 h-3 text-blue-300" />
-        <span className="text-blue-300 text-sm font-medium">
-          {availableProperties} propiedades disponibles
-        </span>
-      </motion.div>
+        return (
+          <motion.div
+            key={id}
+            className={`relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br ${color} p-4`}
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs uppercase tracking-[0.35em] text-white/40">{label}</p>
+                <p className="mt-1 text-2xl font-semibold text-white">
+                  {value}
+                  <span className="ml-1 text-sm text-white/60">{suffix}</span>
+                </p>
+              </div>
+              <div className="rounded-full bg-white/10 p-2 text-white/70">
+                <Icon className="h-4 w-4" />
+              </div>
+            </div>
 
-      {/* Badge de última actualización */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.7 }}
-        className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 backdrop-blur-sm border border-green-500/30 rounded-full"
-      >
-        <Clock className="w-3 h-3 text-green-300" />
-        <span className="text-green-300 text-sm font-medium">
-          Actualizado hace {lastUpdate} min
-        </span>
-      </motion.div>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"
+              animate={{ opacity: [0, 0.4, 0], x: ["-50%", "150%"] }}
+              transition={{ duration: 4, repeat: Infinity, delay: idx * 0.4 }}
+            />
+          </motion.div>
+        );
+      })}
     </motion.div>
   );
 }

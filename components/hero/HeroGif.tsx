@@ -1,147 +1,219 @@
-"use client";
-
-import { useEffect, useState } from 'react';
-import { motion, MotionValue, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import Image from 'next/image';
+import { useEffect, useState } from "react";
+import {
+  motion,
+  MotionValue,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
 interface HeroGifProps {
   scrollY: MotionValue<number>;
 }
 
+const floatingChips = [
+  { label: "Preventa activa", value: "03 unidades" },
+  { label: "Visitas guiadas", value: "Live 360º" },
+];
+
 export default function HeroGif({ scrollY }: HeroGifProps) {
   const [mounted, setMounted] = useState(false);
-
-  // Mouse tracking para efecto magnético
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Spring suave para el movimiento
   const smoothMouseX = useSpring(mouseX, { stiffness: 300, damping: 30 });
   const smoothMouseY = useSpring(mouseY, { stiffness: 300, damping: 30 });
 
-  // Parallax suave
-  const gifY = useTransform(scrollY, [0, 500], [0, -50]);
-  const gifScale = useTransform(scrollY, [0, 300], [1, 0.95]);
-
-  // Transformaciones 3D basadas en el mouse
-  const rotateX = useTransform(smoothMouseY, [-20, 20], [5, -5]);
-  const rotateY = useTransform(smoothMouseX, [-20, 20], [-5, 5]);
+  const visualY = useTransform(scrollY, [0, 500], [0, -60]);
+  const visualScale = useTransform(scrollY, [0, 400], [1, 0.94]);
+  const rotateX = useTransform(smoothMouseY, [-20, 20], [4, -4]);
+  const rotateY = useTransform(smoothMouseX, [-20, 20], [-4, 4]);
 
   useEffect(() => {
     setMounted(true);
 
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!mounted) return;
-      const { clientX, clientY } = e;
+    const handleMouseMove = (event: MouseEvent) => {
       const { innerWidth, innerHeight } = window;
-
-      // Normalizar posición del mouse (-20 a 20)
-      const x = (clientX - innerWidth / 2) / 25;
-      const y = (clientY - innerHeight / 2) / 25;
-
+      const x = ((event.clientX - innerWidth / 2) / innerWidth) * 20;
+      const y = ((event.clientY - innerHeight / 2) / innerHeight) * 20;
       mouseX.set(x);
       mouseY.set(y);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mounted, mouseX, mouseY]);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <motion.div
-      className="absolute right-[10%] top-1/2 -translate-y-1/2 w-[35%] md:w-[40%] max-w-[600px] z-[5]"
+      className="relative"
       style={{
-        y: gifY,
-        scale: gifScale,
+        y: visualY,
+        scale: visualScale,
         x: smoothMouseX,
         rotateX,
         rotateY,
         transformStyle: "preserve-3d",
-        transformPerspective: 1000
+        transformPerspective: 1000,
       }}
       initial={{ opacity: 0, scale: 0.8, filter: "blur(20px)" }}
-      animate={{
-        opacity: 1,
-        scale: 1,
-        filter: "blur(0px)"
-      }}
+      animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
       transition={{
-        duration: 1.2,
+        duration: 1.1,
         ease: [0.215, 0.61, 0.355, 1.0],
-        opacity: { duration: 0.8 },
-        scale: { duration: 1.2 },
-        filter: { duration: 1.0 }
-      }}
-      whileHover={{
-        scale: 1.02,
-        transition: { duration: 0.3 }
       }}
     >
-      <div className="relative">
-        {/* GIF principal */}
-        <div className="relative">
-          <Image
-            src="/assets/hero/casa.gif"
-            alt="Casa Marconi - Encontrá tu hogar"
-            width={600}
-            height={400}
-            className="w-full h-auto rounded-lg"
-            priority
-            unoptimized
-          />
-
-          {/* Overlay con gradiente sutil */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0e27]/20 to-transparent rounded-lg pointer-events-none" />
-        </div>
-
-        {/* Efecto de glow naranja */}
-        <div className="absolute inset-0 -z-10 blur-3xl opacity-50">
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-500/30 via-orange-400/20 to-transparent" />
-        </div>
-
-        {/* Partículas orbitantes alrededor del GIF */}
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-orange-400/40 rounded-full blur-sm"
-            style={{
-              top: '50%',
-              left: '50%',
-            }}
-            animate={{
-              x: [
-                Math.cos((i * 120) * Math.PI / 180) * 150,
-                Math.cos((i * 120 + 360) * Math.PI / 180) * 150
-              ],
-              y: [
-                Math.sin((i * 120) * Math.PI / 180) * 150,
-                Math.sin((i * 120 + 360) * Math.PI / 180) * 150
-              ],
-            }}
-            transition={{
-              duration: 15 + i * 2,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-        ))}
-
-        {/* Pulso de energía */}
+      <div className="relative rounded-[32px] border border-white/10 bg-[#060b1b]/70 p-8 shadow-[0_40px_120px_rgba(3,4,13,0.9)] backdrop-blur-xl">
         <motion.div
-          className="absolute inset-0 rounded-lg border border-orange-500/20"
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.3, 0, 0.3],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
+          className="absolute inset-0 rounded-[32px] bg-gradient-to-r from-orange-500/10 via-purple-500/5 to-transparent blur-3xl"
+          animate={{ opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        <motion.div
+          className="relative"
+          animate={{ y: [0, -4, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <NeonHouse />
+        </motion.div>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-2">
+          {floatingChips.map((chip) => (
+            <motion.div
+              key={chip.label}
+              className="rounded-2xl border border-white/10 bg-white/5 p-4"
+              animate={{ opacity: [0.6, 1, 0.6] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              <p className="text-xs uppercase tracking-[0.3em] text-white/50">
+                {chip.label}
+              </p>
+              <p className="text-lg font-semibold text-white">{chip.value}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          className="pointer-events-none absolute inset-4 rounded-[28px] border border-orange-400/20"
+          animate={{ opacity: [0.15, 0.5, 0.15] }}
+          transition={{ duration: 5, repeat: Infinity }}
         />
       </div>
     </motion.div>
+  );
+}
+
+function NeonHouse() {
+  return (
+    <motion.svg
+      viewBox="0 0 420 320"
+      className="mx-auto w-full max-w-[420px]"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.8 }}
+    >
+      <defs>
+        <linearGradient id="neonStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#ff914d" />
+          <stop offset="100%" stopColor="#ffce6b" />
+        </linearGradient>
+        <linearGradient id="neonFill" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="rgba(255,145,77,0.15)" />
+          <stop offset="100%" stopColor="rgba(255,145,77,0.05)" />
+        </linearGradient>
+      </defs>
+
+      <motion.path
+        d="M40 200 L210 70 L380 200 V300 H40 Z"
+        fill="url(#neonFill)"
+        stroke="url(#neonStroke)"
+        strokeWidth="3"
+        strokeLinejoin="round"
+        animate={{ filter: ["drop-shadow(0 0 8px #ff914d)", "drop-shadow(0 0 15px #ff914d)", "drop-shadow(0 0 8px #ff914d)"] }}
+        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      <motion.path
+        d="M210 70 L210 35"
+        stroke="url(#neonStroke)"
+        strokeWidth="3"
+        strokeLinecap="round"
+        animate={{ opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 3, repeat: Infinity }}
+      />
+
+      <motion.rect
+        x="170"
+        y="190"
+        width="60"
+        height="95"
+        stroke="url(#neonStroke)"
+        strokeWidth="3"
+        rx="8"
+        fill="rgba(5,5,20,0.5)"
+        animate={{ opacity: [0.6, 1, 0.6] }}
+        transition={{ duration: 2.8, repeat: Infinity }}
+      />
+
+      <motion.rect
+        x="250"
+        y="190"
+        width="80"
+        height="55"
+        stroke="url(#neonStroke)"
+        strokeWidth="3"
+        rx="8"
+        fill="rgba(5,5,20,0.5)"
+      />
+
+      <motion.circle
+        cx="330"
+        cy="120"
+        r="22"
+        stroke="url(#neonStroke)"
+        strokeWidth="3"
+        fill="rgba(255,255,255,0.05)"
+        animate={{ scale: [1, 1.15, 1] }}
+        transition={{ duration: 3.5, repeat: Infinity }}
+      />
+
+      <motion.path
+        d="M320 130 L320 110 L325 120 L330 110 L330 130"
+        stroke="#ffffff"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        animate={{ opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 2.6, repeat: Infinity }}
+      />
+
+      {[60, 110, 160, 210, 260, 310].map((x) => (
+        <motion.line
+          key={x}
+          x1={x}
+          y1="220"
+          x2={x + 20}
+          y2="220"
+          stroke="url(#neonStroke)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          animate={{ opacity: [0, 1, 0] }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            delay: x / 120,
+          }}
+        />
+      ))}
+    </motion.svg>
   );
 }
