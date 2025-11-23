@@ -251,7 +251,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative h-[84vh] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
+      <section className="relative h-[81vh] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
         {/* Background GIF con Parallax */}
         <motion.div
           className="absolute inset-0 overflow-hidden"
@@ -285,38 +285,44 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10" />
         </motion.div>
 
-        {/* CONTENIDO PRINCIPAL - LAYOUT UNIFICADO PARA TODOS LOS TAMAÑOS */}
-        <div className="relative z-10 w-full h-full flex flex-col overflow-hidden" style={{ contain: 'layout style' }}>
+        {/* CONTENIDO PRINCIPAL - NUEVA JERARQUÍA VISUAL */}
+        <div className="relative z-10 w-full h-full flex flex-col justify-between overflow-hidden py-6 md:py-8" style={{ contain: 'layout style' }}>
 
-          {/* CONTENIDO SUPERIOR - CLAIM CENTRADO */}
-          <div className="flex-1 flex items-start md:items-center justify-center pt-8 md:pt-0">
-            <div className="text-center px-4">
-              {/* CLAIM PRINCIPAL */}
-              <motion.div
-                initial={{ opacity: 0, y: 60, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                style={{ y: contentY }}
-              >
-                <div className="relative inline-block">
-                  {/* Imagen con sutil drop shadow */}
-                  <Image
-                    src="/assets/impact_text/vivilaexperiencia.PNG"
-                    alt="Viví la experiencia de encontrar tu lugar en el mundo"
-                    width={1000}
-                    height={250}
-                    className="w-full max-w-[280px] sm:max-w-[90%] md:max-w-3xl lg:max-w-4xl h-auto relative z-10 drop-shadow-[0_0_20px_rgba(249,115,22,0.7)]"
-                    priority
-                  />
-                </div>
-              </motion.div>
-            </div>
-          </div>
-          
-          {/* CONTENIDO INFERIOR - BUSCADOR HERO */}
-          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-4 md:pb-2 lg:pb-4 px-4">
+          {/* 1. FORMULARIO DE BÚSQUEDA - PRIORIDAD MÁXIMA */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="w-full px-4"
+          >
             <HeroSearchBar />
+          </motion.div>
+
+          {/* 2. TITULAR/SLOGAN - CENTRO EMOCIONAL */}
+          <div className="flex-1 flex items-center justify-center px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
+              style={{ y: contentY }}
+              className="text-center"
+            >
+              <div className="relative inline-block">
+                {/* Imagen con sutil drop shadow */}
+                <Image
+                  src="/assets/impact_text/vivilaexperiencia.PNG"
+                  alt="Viví la experiencia de encontrar tu lugar en el mundo"
+                  width={1000}
+                  height={250}
+                  className="w-full max-w-[280px] sm:max-w-[90%] md:max-w-3xl lg:max-w-4xl h-auto relative z-10 drop-shadow-[0_0_20px_rgba(249,115,22,0.7)]"
+                  priority
+                />
+              </div>
+            </motion.div>
           </div>
+
+          {/* Espaciador inferior para equilibrio visual */}
+          <div className="h-4 md:h-8"></div>
         </div>
       </section>
 
