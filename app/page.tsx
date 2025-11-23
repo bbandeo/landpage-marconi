@@ -625,29 +625,25 @@ export default function HomePage() {
               viewport={{ once: true }}
               className="flex flex-col sm:flex-row gap-6 justify-center items-center"
             >
+              {/* NIVEL 1: CTA Principal - Naranja Sólido Architectural Sharp */}
               <Link href="/propiedades">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white px-12 py-6 text-xl font-bold rounded-xl shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 hover:scale-105 min-w-[320px] md:min-w-[400px]"
+                  className="bg-[#D97535] hover:bg-[#C46630] text-white px-12 py-6 text-lg font-semibold rounded-sm shadow-xl hover:shadow-2xl transition-all duration-300 min-w-[320px] md:min-w-[400px] tracking-wide uppercase"
                 >
-                  VER PROPIEDADES
-                  <motion.div
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                    className="ml-3"
-                  >
-                    <ArrowRight className="h-6 w-6" />
-                  </motion.div>
+                  Ver Propiedades
+                  <ArrowRight className="h-5 w-5 ml-3" strokeWidth={2} />
                 </Button>
               </Link>
-              
+
+              {/* NIVEL 2: Ghost Button - Elegancia Minimalista */}
               <Link href="/contacto">
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-white text-white hover:bg-white hover:text-orange-600 px-8 py-4 text-lg font-bold rounded-full bg-transparent backdrop-blur-sm hover:scale-105 transition-all duration-300 shadow-xl min-w-[280px]"
+                  className="border-2 border-white text-white hover:bg-white hover:text-gray-900 px-10 py-6 text-lg font-medium rounded-sm bg-transparent transition-all duration-300 min-w-[280px] tracking-wide uppercase"
                 >
-                  CONTACTAR EXPERTO
+                  Contactar Experto
                 </Button>
               </Link>
             </motion.div>

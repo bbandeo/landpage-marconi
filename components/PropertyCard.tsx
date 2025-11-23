@@ -43,9 +43,9 @@ export function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         {/* OVERLAYS SOBRE EL CARRUSEL */}
-        {/* ETIQUETA VENTA/ALQUILER - SUPERIOR IZQUIERDA - ELEGANCIA MINIMALISTA */}
+        {/* ETIQUETA VENTA/ALQUILER - SUPERIOR IZQUIERDA - ARCHITECTURAL SHARP */}
         <div className="absolute top-4 left-4 z-20">
-          <div className="backdrop-blur-sm bg-white/90 text-gray-800 px-3 py-1 rounded-full text-[10px] font-medium uppercase tracking-[1.5px] shadow-lg">
+          <div className="backdrop-blur-sm bg-white/90 text-gray-800 px-3 py-1 rounded-sm text-[10px] font-medium uppercase tracking-[1.5px] shadow-lg">
             {property.operation === "sale" ? "VENTA" : "ALQUILER"}
           </div>
         </div>
@@ -56,7 +56,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
             size="sm"
             variant="ghost"
             onClick={(e) => e.stopPropagation()}
-            className="bg-black/70 hover:bg-orange-500/90 text-white backdrop-blur-md rounded-full p-2.5 shadow-lg hover:scale-110 transition-all duration-300 border border-white/10"
+            className="bg-black/70 hover:bg-orange-500/90 text-white backdrop-blur-md rounded-sm p-2.5 shadow-lg hover:scale-105 transition-all duration-300 border border-white/10"
           >
             <Heart className="w-4 h-4" strokeWidth={1.5} />
           </Button>
@@ -64,7 +64,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
             size="sm"
             variant="ghost"
             onClick={(e) => e.stopPropagation()}
-            className="bg-black/70 hover:bg-orange-500/90 text-white backdrop-blur-md rounded-full p-2.5 shadow-lg hover:scale-110 transition-all duration-300 border border-white/10"
+            className="bg-black/70 hover:bg-orange-500/90 text-white backdrop-blur-md rounded-sm p-2.5 shadow-lg hover:scale-105 transition-all duration-300 border border-white/10"
           >
             <Mail className="w-4 h-4" strokeWidth={1.5} />
           </Button>
@@ -72,7 +72,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
         {/* Featured badge - INFERIOR DERECHA */}
         {property.featured && (
-          <div className="absolute bottom-4 right-4 z-20 backdrop-blur-sm bg-white/90 text-gray-800 px-3 py-1 rounded-full text-[10px] font-medium uppercase tracking-[1.5px] shadow-lg flex items-center gap-1.5">
+          <div className="absolute bottom-4 right-4 z-20 backdrop-blur-sm bg-white/90 text-gray-800 px-3 py-1 rounded-sm text-[10px] font-medium uppercase tracking-[1.5px] shadow-lg flex items-center gap-1.5">
             <Eye className="w-3 h-3" strokeWidth={2} />
             DESTACADA
           </div>
@@ -174,11 +174,11 @@ export function PropertyCard({ property }: PropertyCardProps) {
           )}
         </div>
 
-        {/* BOTÓN CTA - ALINEADO AL FONDO CON FLEXBOX */}
+        {/* BOTÓN CTA - NIVEL 2: Ghost Button (Architectural Sharp) */}
         <Link href={`/propiedades/${property.id}`} className="block mt-auto">
-          <Button className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-semibold py-2.5 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm">
-            Ver detalles completos
-            <ArrowRight className="w-4 h-4 ml-2" strokeWidth={2} />
+          <Button className="w-full bg-transparent border border-gray-400 hover:bg-white hover:border-white text-gray-300 hover:text-gray-900 font-medium py-2.5 px-4 rounded-sm transition-all duration-300 text-sm tracking-wide uppercase">
+            Ver propiedad
+            <ArrowRight className="w-4 h-4 ml-2" strokeWidth={1.5} />
           </Button>
         </Link>
       </CardContent>

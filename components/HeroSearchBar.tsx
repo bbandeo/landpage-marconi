@@ -81,11 +81,11 @@ export function HeroSearchBar() {
             </select>
           </div>
 
-          {/* Submit Button - Único elemento naranja */}
+          {/* Submit Button - NIVEL 1: CTA Principal (Architectural Sharp) */}
           <div className="md:col-span-3">
             <button
               type="submit"
-              className="w-full h-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-semibold py-3.5 md:py-4 rounded-xl shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30 flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-[0.98] text-sm md:text-base"
+              className="w-full h-full bg-[#D97535] hover:bg-[#C46630] text-white font-semibold py-3.5 md:py-4 rounded-sm shadow-lg hover:shadow-xl flex items-center justify-center gap-2 transition-all duration-300 text-sm md:text-base tracking-wide uppercase"
             >
               <Search className="h-4 w-4 md:h-5 md:w-5" strokeWidth={2} />
               <span className="hidden sm:inline">Buscar</span>
