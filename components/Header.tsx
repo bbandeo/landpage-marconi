@@ -166,8 +166,8 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
         </div>
       )}
 
-      {/* Decorative divider line - PREMIUM GRADIENT */}
-      <div className="w-full h-1 bg-gradient-to-r from-transparent via-vibrant-orange to-transparent shadow-lg opacity-80"></div>
+      {/* Decorative divider line */}
+      <div className="w-full h-1 bg-[#43464E]"></div>
     </header>
   );
 }
