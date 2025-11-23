@@ -95,9 +95,9 @@ function CounterAnimation({ value, label, icon: Icon }: { value: string, label: 
       viewport={{ once: true }}
       className="text-center group"
     >
-      <motion.div 
+      <motion.div
         whileHover={{ scale: 1.05 }}
-        className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-orange-600 to-red-600 rounded-full mb-6 shadow-xl shadow-orange-600/30 group-hover:shadow-orange-600/50 transition-all duration-300"
+        className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-gray-700 to-gray-800 rounded-full mb-6 shadow-xl shadow-black/20 group-hover:shadow-black/30 transition-all duration-300 border border-white/10"
       >
         <Icon className="h-12 w-12 text-white" />
       </motion.div>
@@ -251,17 +251,17 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative h-[81vh] md:min-h-screen overflow-hidden bg-[#0a0e27]">
+      <section className="relative h-[81vh] md:min-h-screen overflow-hidden bg-[#1A1A1A]">
         {/* Background con efecto blob */}
         <div className="absolute inset-0">
           {/* Efecto blob animado que sigue el cursor */}
           <div id="hero-blob"></div>
 
-          {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50 z-10" />
+          {/* OVERLAY ELEGANTE PARA PROFUNDIDAD */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 z-10" />
 
-          {/* EFECTO DIFUMINADO NARANJA SUTIL */}
-          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/40 via-orange-500/20 to-transparent z-10" />
+          {/* EFECTO DIFUMINADO NARANJA MUY SUTIL (SOLO ACENTO) */}
+          <div className="absolute inset-x-0 bottom-0 h-24 md:h-32 bg-gradient-to-t from-orange-600/15 via-orange-500/5 to-transparent z-10" />
         </div>
 
         {/* CONTENIDO PRINCIPAL - REORGANIZADO */}
@@ -280,7 +280,7 @@ export default function HomePage() {
                   src="/assets/hero/casa.gif"
                   alt="Casa Marconi"
                   fill
-                  className="object-contain drop-shadow-[0_0_30px_rgba(249,115,22,0.3)]"
+                  className="object-contain drop-shadow-[0_0_40px_rgba(255,255,255,0.1)]"
                   priority
                   unoptimized
                 />
@@ -295,8 +295,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Barra separadora fluida naranja */}
-      <div className="h-2 w-full bg-gradient-to-b from-orange-500/70 via-orange-600/30 to-[#0d0f1a]" />
+      {/* Barra separadora sutil */}
+      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
       {/* Propiedades Destacadas - PREMIUM DESIGN */}
       <section
@@ -304,9 +304,9 @@ export default function HomePage() {
         className="section-spacing relative overflow-hidden"
       >
         {/* Fondo simplificado y elegante */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1A1A1A] via-[#1F1F1F] to-[#151515]">
           {/* Sombras suaves para profundidad */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-black/5" />
         </div>
 
         <div className="container-premium relative z-10">
@@ -580,7 +580,7 @@ export default function HomePage() {
       </section>
 
       {/* CTA SECTION - DISEÑO PREMIUM SIMPLIFICADO */}
-      <section className="section-spacing bg-gradient-to-br from-orange-600 via-orange-500 to-red-600 relative overflow-hidden">
+      <section className="section-spacing bg-gradient-to-br from-[#1A1A1A] via-[#1F1F1F] to-[#151515] relative overflow-hidden border-y border-white/5">
         {/* Patrón de textura sutil */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
