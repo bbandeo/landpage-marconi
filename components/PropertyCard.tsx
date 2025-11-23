@@ -21,6 +21,13 @@ interface PropertyCardProps {
 export function PropertyCard({ property }: PropertyCardProps) {
   const shouldShowRoomInfo = property.type !== 'terreno';
 
+  // Normalizar formato de moneda: "USD", "ARS", etc. sin duplicar símbolos
+  const formatCurrency = (currency: string | undefined): string => {
+    if (!currency) return 'USD';
+    // Eliminar símbolos duplicados como "USD$" -> "USD"
+    return currency.replace(/\$+/g, '').trim().toUpperCase();
+  };
+
   return (
     <Card className="group overflow-hidden bg-[#1E1E1E] backdrop-blur-md border border-white/10 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl hover:-translate-y-1.5 flex flex-col h-full">
       {/* LAYOUT VERTICAL - CARRUSEL ARRIBA + CONTENIDO ABAJO */}
@@ -36,17 +43,11 @@ export function PropertyCard({ property }: PropertyCardProps) {
         </div>
 
         {/* OVERLAYS SOBRE EL CARRUSEL */}
-        {/* ETIQUETA VENTA/ALQUILER - SUPERIOR IZQUIERDA - GHOST/GLASSMORPHISM */}
+        {/* ETIQUETA VENTA/ALQUILER - SUPERIOR IZQUIERDA - ELEGANCIA MINIMALISTA */}
         <div className="absolute top-4 left-4 z-20">
-          {property.operation === "sale" ? (
-            <div className="backdrop-blur-md bg-white/5 border-2 border-orange-500/80 text-white px-4 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[1px] shadow-xl">
-              VENTA
-            </div>
-          ) : (
-            <div className="backdrop-blur-md bg-white/5 border-2 border-gray-300/60 text-gray-200 px-4 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[1px] shadow-xl">
-              ALQUILER
-            </div>
-          )}
+          <div className="backdrop-blur-sm bg-white/90 text-gray-800 px-3 py-1 rounded-full text-[10px] font-medium uppercase tracking-[1.5px] shadow-lg">
+            {property.operation === "sale" ? "VENTA" : "ALQUILER"}
+          </div>
         </div>
 
         {/* CTAs COMO ÍCONOS - SUPERIOR DERECHA */}
@@ -71,8 +72,8 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
         {/* Featured badge - INFERIOR DERECHA */}
         {property.featured && (
-          <div className="absolute bottom-4 right-4 z-20 backdrop-blur-md bg-white/5 border-2 border-yellow-500/80 text-yellow-400 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[1px] shadow-xl flex items-center gap-1.5">
-            <Eye className="w-3.5 h-3.5" strokeWidth={2} />
+          <div className="absolute bottom-4 right-4 z-20 backdrop-blur-sm bg-white/90 text-gray-800 px-3 py-1 rounded-full text-[10px] font-medium uppercase tracking-[1.5px] shadow-lg flex items-center gap-1.5">
+            <Eye className="w-3 h-3" strokeWidth={2} />
             DESTACADA
           </div>
         )}
@@ -86,7 +87,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
           <div className="mb-4">
             {property.price > 0 ? (
               <>
-                <div className="text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">{property.currency}</div>
+                <div className="text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">{formatCurrency(property.currency)}</div>
                 <div className="text-[22px] font-bold text-white tracking-tight leading-none">
                   ${property.price.toLocaleString()}
                 </div>

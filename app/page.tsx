@@ -236,23 +236,18 @@ export default function HomePage() {
 
           {/* 1. CASA GIF - PARTE SUPERIOR/MEDIA */}
           <div className="flex-1 flex items-center justify-center px-4">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative w-full max-w-3xl md:max-w-4xl lg:max-w-5xl"
-            >
+            <div className="relative w-full max-w-3xl md:max-w-4xl lg:max-w-5xl">
               <div className="relative aspect-[4/3] md:aspect-[16/9]">
                 <Image
                   src="/assets/hero/casa.gif"
                   alt="Casa Marconi"
                   fill
-                  className="object-contain drop-shadow-[0_0_40px_rgba(255,255,255,0.1)]"
+                  className="object-contain"
                   priority
                   unoptimized
                 />
               </div>
-            </motion.div>
+            </div>
           </div>
 
           {/* 2. BUSCADOR HORIZONTAL - PARTE INFERIOR */}
@@ -268,7 +263,7 @@ export default function HomePage() {
       {/* Propiedades Destacadas - PREMIUM DESIGN */}
       <section
         id="propiedades"
-        className="section-spacing relative overflow-hidden"
+        className="py-20 md:py-32 relative overflow-hidden"
       >
         {/* Fondo simplificado y elegante */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#1A1A1A] via-[#1F1F1F] to-[#151515]">
@@ -359,7 +354,7 @@ export default function HomePage() {
       {/* MAPA INTERACTIVO - Sección del mapa de propiedades */}
       <section
         id="mapa"
-        className="section-spacing relative overflow-hidden bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900"
+        className="py-20 md:py-32 relative overflow-hidden bg-gradient-to-b from-gray-900 via-slate-900 to-gray-900"
       >
         <div className="container-premium relative z-10">
           {/* Header de la sección */}
