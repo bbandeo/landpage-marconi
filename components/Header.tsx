@@ -25,25 +25,25 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
 
   const getLinkClassName = (path: string) => {
     if (isActivePage(path)) {
-      return "interactive-element border-b-2 border-vibrant-orange pb-1 font-medium";
+      return "text-vibrant-orange font-medium relative pb-1.5";
     }
-    return "text-bone-white/80 hover:text-vibrant-orange transition-colors";
+    return "text-bone-white/80 hover:text-vibrant-orange transition-colors pb-1.5";
   };
 
   // Special case for contacto page - uses vibrant orange ONLY when active
   const getContactLinkClassName = () => {
     if (isActivePage("/contacto")) {
-      return "interactive-element border-b-2 border-vibrant-orange pb-1 font-medium";
+      return "text-vibrant-orange font-medium relative pb-1.5";
     }
-    return "text-bone-white/80 hover:text-vibrant-orange transition-colors";
+    return "text-bone-white/80 hover:text-vibrant-orange transition-colors pb-1.5";
   };
 
   // Special case for agentes page - uses vibrant orange ONLY when active
   const getAgentesLinkClassName = () => {
     if (isActivePage("/agentes")) {
-      return "interactive-element border-b-2 border-vibrant-orange pb-1 font-medium";
+      return "text-vibrant-orange font-medium relative pb-1.5";
     }
-    return "text-bone-white/80 hover:text-vibrant-orange transition-colors";
+    return "text-bone-white/80 hover:text-vibrant-orange transition-colors pb-1.5";
   };
 
   // Scroll progress tracking
@@ -76,7 +76,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
       </div>
       
       <div className="w-full container-premium">
-        <div className="flex items-center justify-between h-20 md:h-24">
+        <div className="flex items-center justify-between h-20 md:h-28">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image

@@ -270,116 +270,128 @@ export default function PropiedadesPage() {
 
       <Hero
         backgroundImage="/assets/hero/casa_llaves.png"
-        alt="Casa con llaves - Marconi Inmobiliaria"
+        alt="Interior luminoso - Marconi Inmobiliaria"
         title={
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.1]">
-            Nuestras <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Propiedades</span>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl tracking-tight leading-[1.1]">
+            <span className="font-light text-white">Nuestras</span>
+            <br />
+            <span className="font-bold text-orange-500">Propiedades</span>
           </h2>
         }
         description=""
         showCounter={false}
       >
-        {/* Filters - Compact with Expandable Design */}
+        {/* Filters - Panel de Control Premium */}
         <div className="max-w-6xl mx-auto">
-          <div className="bg-premium-card backdrop-blur-md rounded-2xl p-6 border border-support-gray/20 shadow-xl">
+          <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 border border-gray-200 shadow-xl">
 
-            {/* Basic Filters - Always Visible */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-              {/* Search - Full width on mobile */}
-              <div className="md:col-span-2">
+            {/* Basic Filters - Layout Horizontal Premium */}
+            <div className="flex flex-col lg:flex-row gap-3">
+              {/* Search - Ocupa más espacio */}
+              <div className="flex-1 lg:flex-[2]">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-support-gray w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                   <Input
                     placeholder="Buscar propiedades..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray focus:border-vibrant-orange backdrop-blur-sm rounded-xl focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300 h-11"
+                    className="pl-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-orange-500 rounded-xl focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 h-12"
                   />
                 </div>
               </div>
 
               {/* Operation */}
-              <Select value={operationFilter} onValueChange={setOperationFilter}>
-                <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white backdrop-blur-sm rounded-xl focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300 h-11">
-                  <SelectValue placeholder="Alquiler/Venta" />
-                </SelectTrigger>
-                <SelectContent className="bg-night-blue border-support-gray/30">
-                  <SelectItem value="all">Alquiler/Venta</SelectItem>
-                  <SelectItem value="sale">Venta</SelectItem>
-                  <SelectItem value="rent">Alquiler</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex-1">
+                <Select value={operationFilter} onValueChange={setOperationFilter}>
+                  <SelectTrigger className="bg-gray-50 border-gray-200 text-gray-900 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 h-12">
+                    <SelectValue placeholder="Alquiler/Venta" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-gray-200">
+                    <SelectItem value="all">Alquiler/Venta</SelectItem>
+                    <SelectItem value="sale">Venta</SelectItem>
+                    <SelectItem value="rent">Alquiler</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
               {/* Type */}
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white backdrop-blur-sm rounded-xl focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300 h-11">
-                  <SelectValue placeholder="Tipo" />
-                </SelectTrigger>
-                <SelectContent className="bg-night-blue border-support-gray/30">
-                  <SelectItem value="all">Tipo de propiedad</SelectItem>
-                  <SelectItem value="house">Casa</SelectItem>
-                  <SelectItem value="apartment">Departamento</SelectItem>
-                  <SelectItem value="terreno">Terreno</SelectItem>
-                  <SelectItem value="commercial">Comercial</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Expand/Collapse Button - Only show when collapsed */}
-            {!showAdvancedFilters && (
-              <div className="flex justify-center mb-4">
-                <Button
-                  onClick={() => setShowAdvancedFilters(true)}
-                  variant="outline"
-                  className="bg-night-blue/60 border-support-gray/30 text-bone-white hover:bg-vibrant-orange hover:border-vibrant-orange hover:text-white transition-all duration-300 rounded-xl px-4 py-2 flex items-center gap-2"
-                >
-                  <Filter className="w-4 h-4" />
-                  Más filtros
-                  <ChevronDown className="w-4 h-4" />
-                </Button>
+              <div className="flex-1">
+                <Select value={typeFilter} onValueChange={setTypeFilter}>
+                  <SelectTrigger className="bg-gray-50 border-gray-200 text-gray-900 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 h-12">
+                    <SelectValue placeholder="Tipo" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-gray-200">
+                    <SelectItem value="all">Tipo de propiedad</SelectItem>
+                    <SelectItem value="house">Casa</SelectItem>
+                    <SelectItem value="apartment">Departamento</SelectItem>
+                    <SelectItem value="terreno">Terreno</SelectItem>
+                    <SelectItem value="commercial">Comercial</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            )}
+
+              {/* Botón Buscar + Más filtros en línea */}
+              <div className="flex gap-2">
+                <Button
+                  className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white rounded-xl px-6 h-12 font-semibold shadow-lg shadow-orange-500/20 transition-all"
+                >
+                  <Search className="w-4 h-4 mr-2" />
+                  Buscar
+                </Button>
+
+                {!showAdvancedFilters && (
+                  <Button
+                    onClick={() => setShowAdvancedFilters(true)}
+                    variant="outline"
+                    className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 rounded-xl px-4 h-12 flex items-center gap-2"
+                  >
+                    <Filter className="w-4 h-4" />
+                    <span className="hidden sm:inline">Más filtros</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            </div>
 
             {/* Advanced Filters - Collapsible */}
             {showAdvancedFilters && (
-              <div className="space-y-4 border-t border-support-gray/20 pt-4">
+              <div className="space-y-4 border-t border-gray-200 pt-4 mt-4">
                 {/* Price and Area */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div>
-                    <label className="secondary-text block mb-2 text-sm">Precio mínimo</label>
+                    <label className="text-gray-700 font-medium block mb-2 text-sm">Precio mínimo</label>
                     <Input
                       placeholder="Ej: 50000"
                       value={minPrice}
                       onChange={(e) => setMinPrice(e.target.value)}
-                      className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
+                      className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
                     />
                   </div>
                   <div>
-                    <label className="secondary-text block mb-2 text-sm">Precio máximo</label>
+                    <label className="text-gray-700 font-medium block mb-2 text-sm">Precio máximo</label>
                     <Input
                       placeholder="Ej: 200000"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(e.target.value)}
-                      className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
+                      className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
                     />
                   </div>
                   <div>
-                    <label className="secondary-text block mb-2 text-sm">Metros² mín.</label>
+                    <label className="text-gray-700 font-medium block mb-2 text-sm">Metros² mín.</label>
                     <Input
                       placeholder="Ej: 50"
                       value={minArea}
                       onChange={(e) => setMinArea(e.target.value)}
-                      className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
+                      className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
                     />
                   </div>
                   <div>
-                    <label className="secondary-text block mb-2 text-sm">Metros² máx.</label>
+                    <label className="text-gray-700 font-medium block mb-2 text-sm">Metros² máx.</label>
                     <Input
                       placeholder="Ej: 200"
                       value={maxArea}
                       onChange={(e) => setMaxArea(e.target.value)}
-                      className="bg-night-blue/60 border-support-gray/30 text-bone-white placeholder:text-subtle-gray rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300"
+                      className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
                     />
                   </div>
                 </div>
@@ -389,10 +401,10 @@ export default function PropiedadesPage() {
                   {/* Neighborhood */}
                   <div className="col-span-2">
                     <Select value={neighborhoodFilter} onValueChange={setNeighborhoodFilter}>
-                      <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
+                      <SelectTrigger className="bg-gray-50 border-gray-200 text-gray-900 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300">
                         <SelectValue placeholder="Barrio" />
                       </SelectTrigger>
-                      <SelectContent className="bg-night-blue border-support-gray/30">
+                      <SelectContent className="bg-white border-gray-200">
                         <SelectItem value="all">Todos los barrios</SelectItem>
                         {uniqueNeighborhoods.map((neighborhood) => (
                           <SelectItem key={neighborhood} value={neighborhood}>
@@ -405,10 +417,10 @@ export default function PropiedadesPage() {
 
                   {/* Bedrooms - Compact */}
                   <Select value={bedroomsFilter} onValueChange={setBedroomsFilter}>
-                    <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
+                    <SelectTrigger className="bg-gray-50 border-gray-200 text-gray-900 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300">
                       <SelectValue placeholder="Hab." />
                     </SelectTrigger>
-                    <SelectContent className="bg-night-blue border-support-gray/30">
+                    <SelectContent className="bg-white border-gray-200">
                       <SelectItem value="all">Hab.</SelectItem>
                       <SelectItem value="1">1+</SelectItem>
                       <SelectItem value="2">2+</SelectItem>
@@ -419,10 +431,10 @@ export default function PropiedadesPage() {
 
                   {/* Bathrooms - Compact */}
                   <Select value={bathroomsFilter} onValueChange={setBathroomsFilter}>
-                    <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
+                    <SelectTrigger className="bg-gray-50 border-gray-200 text-gray-900 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300">
                       <SelectValue placeholder="Baños" />
                     </SelectTrigger>
-                    <SelectContent className="bg-night-blue border-support-gray/30">
+                    <SelectContent className="bg-white border-gray-200">
                       <SelectItem value="all">Baños</SelectItem>
                       <SelectItem value="1">1+</SelectItem>
                       <SelectItem value="2">2+</SelectItem>
@@ -432,10 +444,10 @@ export default function PropiedadesPage() {
 
                   {/* Sort */}
                   <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="bg-night-blue/60 border-support-gray/30 text-bone-white rounded-xl h-11 focus:border-vibrant-orange focus:ring-2 focus:ring-vibrant-orange/20 transition-all duration-300">
+                    <SelectTrigger className="bg-gray-50 border-gray-200 text-gray-900 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300">
                       <SelectValue placeholder="Ordenar por" />
                     </SelectTrigger>
-                    <SelectContent className="bg-night-blue border-support-gray/30">
+                    <SelectContent className="bg-white border-gray-200">
                       <SelectItem value="newest">Más recientes</SelectItem>
                       <SelectItem value="price-low">Precio: menor a mayor</SelectItem>
                       <SelectItem value="price-high">Precio: mayor a menor</SelectItem>
@@ -447,7 +459,7 @@ export default function PropiedadesPage() {
                   <Button
                     onClick={() => setShowAdvancedFilters(false)}
                     variant="outline"
-                    className="bg-night-blue/60 border-support-gray/30 text-bone-white hover:bg-vibrant-orange hover:border-vibrant-orange hover:text-white transition-all duration-300 rounded-xl px-3 py-2 flex items-center gap-2 h-11"
+                    className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 rounded-xl px-3 py-2 flex items-center gap-2 h-11"
                   >
                     <Filter className="w-4 h-4" />
                     Menos filtros

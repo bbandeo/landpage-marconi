@@ -47,13 +47,14 @@ export default function Hero({
           src={backgroundImage}
           alt={alt}
           fill
-          className={imageClassName}
+          className={`${imageClassName}`}
+          style={{ filter: 'blur(8px)' }}
           priority
         />
-        {/* Premium overlay with depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-night-blue/70 via-night-blue/50 to-night-blue/40" />
-        {/* Enhanced orange gradient for continuity - Sutil y estratégico */}
-        <div className="absolute inset-x-0 bottom-0 h-48 md:h-64 bg-gradient-to-t from-orange-600/40 via-orange-500/20 to-transparent" />
+        {/* Premium overlay elegante y sofisticado */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#000022]/80 via-[#000022]/60 to-[#000022]/70" />
+        {/* Sutil acento inferior */}
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/20 to-transparent" />
       </div>
 
       {/* Centered content wrapper with flexbox */}
@@ -66,8 +67,8 @@ export default function Hero({
           })}
           className="text-center max-w-5xl w-full"
         >
-          {/* Title with enhanced spacing and glow effect */}
-          <h1 className="hero-title mb-12 md:mb-16 text-white drop-shadow-2xl">
+          {/* Title con flat design limpio */}
+          <h1 className="hero-title mb-12 md:mb-16">
             {title}
           </h1>
 
