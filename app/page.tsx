@@ -251,9 +251,17 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative h-[81vh] md:min-h-screen overflow-hidden bg-[#1A1A1A]">
+      <section className="relative h-[81vh] md:min-h-screen overflow-hidden bg-[#000022]">
         {/* Background con efecto blob */}
         <div className="absolute inset-0">
+          {/* Gradient superior orientado a esquina izquierda */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: `linear-gradient(to top left, #000022 66%, #1F2833 100%)`
+            }}
+          />
+
           {/* Efecto blob animado que sigue el cursor */}
           <div id="hero-blob"></div>
 
