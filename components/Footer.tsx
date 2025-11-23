@@ -1,87 +1,78 @@
-import React from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
+import React from 'react';
+import { Facebook, Instagram, Linkedin } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 pt-8 pb-16 relative">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="md:col-span-2">
-            <div className="flex items-center space-x-2 mb-6">
-              <Image
-                src="/assets/logos/marconi_header_orangewhite.png"
-                alt="Marconi Inmobiliaria"
-                width={140}
-                height={45}
-                className="h-10 w-auto"
-              />
-            </div>
-            <p className="text-lg text-gray-300 mb-6 max-w-md leading-relaxed">
-              Experiencia premium en bienes raíces. Comprometidos con encontrar 
-              la propiedad perfecta para cada familia.
+    <footer className="bg-[#0b1120] border-t border-gray-800 pt-16 pb-8">
+      <div className="max-w-7xl mx-auto px-4">
+
+        {/* Grid de 4 Columnas */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+
+          {/* Columna 1: Marca */}
+          <div className="space-y-4">
+            <h2 className="text-2xl text-white font-bold tracking-tight">Marconi</h2>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Elevando el estándar inmobiliario en Reconquista. Comprometidos con la excelencia y la confianza de nuestros clientes.
             </p>
-            
-            {/* Iconos de redes sociales minimalistas */}
-            <div className="flex space-x-4">
-              <div className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 cursor-pointer group">
-                <div className="w-4 h-4 bg-gray-400 group-hover:bg-orange-500 transition-colors duration-300 rounded-sm"></div>
-              </div>
-              <div className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 cursor-pointer group">
-                <div className="w-4 h-4 bg-gray-400 group-hover:bg-orange-500 transition-colors duration-300 rounded-sm"></div>
-              </div>
-              <div className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 cursor-pointer group">
-                <div className="w-4 h-4 bg-gray-400 group-hover:bg-orange-500 transition-colors duration-300 rounded-sm"></div>
-              </div>
+            <div className="flex space-x-4 pt-2">
+              <a href="#" className="text-gray-400 hover:text-orange-500 transition"><Facebook size={20} /></a>
+              <a href="#" className="text-gray-400 hover:text-orange-500 transition"><Instagram size={20} /></a>
+              <a href="#" className="text-gray-400 hover:text-orange-500 transition"><Linkedin size={20} /></a>
             </div>
           </div>
 
+          {/* Columna 2: Explorar */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-6">Enlaces</h3>
-            <ul className="space-y-4 text-gray-300">
-              <li>
-                <Link
-                  href="/propiedades"
-                  className="text-base hover:text-orange-400 transition-colors duration-300 hover:translate-x-1 inline-block"
-                >
-                  Propiedades
-                </Link>
+            <h3 className="text-white font-semibold mb-6">Explorar</h3>
+            <ul className="space-y-3 text-sm text-gray-400">
+              <li><a href="#" className="hover:text-orange-500 transition">Propiedades en Venta</a></li>
+              <li><a href="#" className="hover:text-orange-500 transition">Propiedades en Alquiler</a></li>
+              <li><a href="#" className="hover:text-orange-500 transition">Nuestros Agentes</a></li>
+              <li><a href="#" className="hover:text-orange-500 transition">Oportunidades de Inversión</a></li>
+            </ul>
+          </div>
+
+          {/* Columna 3: Legal */}
+          <div>
+            <h3 className="text-white font-semibold mb-6">Legal</h3>
+            <ul className="space-y-3 text-sm text-gray-400">
+              <li><a href="#" className="hover:text-orange-500 transition">Términos y Condiciones</a></li>
+              <li><a href="#" className="hover:text-orange-500 transition">Política de Privacidad</a></li>
+              <li><a href="#" className="hover:text-orange-500 transition">Defensa del Consumidor</a></li>
+            </ul>
+          </div>
+
+          {/* Columna 4: Contacto */}
+          <div>
+            <h3 className="text-white font-semibold mb-6">Contacto</h3>
+            <ul className="space-y-4 text-sm text-gray-400">
+              <li className="flex flex-col">
+                <span className="text-gray-600 text-xs uppercase mb-1">Dirección</span>
+                Jorge Newbery 1562, Reconquista
               </li>
-              <li>
-                <Link
-                  href="/agentes"
-                  className="text-base hover:text-orange-400 transition-colors duration-300 hover:translate-x-1 inline-block"
-                >
-                  Agentes
-                </Link>
+              <li className="flex flex-col">
+                <span className="text-gray-600 text-xs uppercase mb-1">Email</span>
+                contacto@marconi.com
               </li>
-              <li>
-                <Link
-                  href="/contacto"
-                  className="text-base hover:text-orange-400 transition-colors duration-300 hover:translate-x-1 inline-block"
-                >
-                  Contacto
-                </Link>
+              <li className="flex flex-col">
+                <span className="text-gray-600 text-xs uppercase mb-1">Teléfono</span>
+                +54 3482 308100
               </li>
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-lg font-bold text-white mb-6">Contacto</h3>
-            <ul className="space-y-4 text-gray-300">
-              <li className="text-base">📍 Reconquista, Santa Fe</li>
-              <li className="text-base">📞 +54 9 3482 308100</li>
-              <li className="text-base">✉️ marconinegociosinmobiliarios@hotmail.com</li>
-            </ul>
-          </div>
         </div>
 
-        <div className="border-t border-gray-700/50 mt-12 pt-8 text-center">
-          <p className="text-gray-400 text-base">
-            &copy; 2025 Marconi Inmobiliaria. Todos los derechos reservados.
-          </p>
+        {/* Fila Inferior: Copyright */}
+        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
+          <p>&copy; 2024 Marconi Negocios Inmobiliarios. Todos los derechos reservados.</p>
+          <div className="mt-4 md:mt-0 space-x-6">
+            <span className="cursor-pointer hover:text-gray-400">Mapa del sitio</span>
+            <span className="cursor-pointer hover:text-gray-400">Accesibilidad</span>
+          </div>
         </div>
       </div>
     </footer>
-  )
+  );
 }
