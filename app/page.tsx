@@ -31,6 +31,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FeaturesSection from "@/components/FeaturesSection";
 
 // Importar servicios
 import { useIsClient } from "@/hooks/use-is-client";
@@ -256,6 +257,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* FeaturesSection - ¿Por qué elegirnos? */}
+      <FeaturesSection />
 
       {/* Barra separadora sutil */}
       <div className="h-px w-full bg-gradient-to-r from-transparent via-white/10 to-transparent" />
