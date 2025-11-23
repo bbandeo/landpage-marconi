@@ -236,12 +236,12 @@ export default function HomePage() {
           style={{ y: heroY, opacity: heroOpacity }}
         >
           {/* GIF background */}
-          <div className="absolute inset-0 flex items-center justify-center bg-[#0a0e27]">
+          <div className="absolute inset-0 flex items-center justify-center bg-[#000022] md:bg-[#0a0e27]">
             <Image
               src="/assets/hero/casa.gif"
               alt="Casa Marconi - Background"
               fill
-              className="object-cover"
+              className="object-contain md:object-cover p-4 md:p-0"
               style={{
                 transformOrigin: 'center center',
               }}
@@ -272,6 +272,7 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 style={{ y: contentY }}
+                className="hidden md:block"
               >
                 <div className="relative inline-block">
                   <Image
