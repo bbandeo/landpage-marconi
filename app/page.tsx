@@ -407,7 +407,7 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="relative bg-night-blue/50 backdrop-blur-sm rounded-2xl p-2 sm:p-4 border border-support-gray/20 shadow-2xl">
+            <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
               <InteractivePropertyMap height="600px" className="shadow-xl" />
             </div>
 
@@ -466,30 +466,38 @@ export default function HomePage() {
             </p>
 
             {/* Beneficios */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 pt-4">
               <div className="flex items-center gap-4">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-500/15 text-orange-400 ring-1 ring-orange-500/30">
-                  <MapPin className="w-5 h-5" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-orange-500/10 flex-shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center">
+                    <MapPin className="w-3 h-3 text-white" strokeWidth={2.5} />
+                  </div>
                 </div>
-                <span className="text-white/90 font-medium">Confianza local</span>
+                <span className="text-white/90 font-medium leading-tight">Confianza local</span>
               </div>
               <div className="flex items-center gap-4">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-500/15 text-orange-400 ring-1 ring-orange-500/30">
-                  <Landmark className="w-5 h-5" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-orange-500/10 flex-shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center">
+                    <Landmark className="w-3 h-3 text-white" strokeWidth={2.5} />
+                  </div>
                 </div>
-                <span className="text-white/90 font-medium">Conocimiento del mercado</span>
+                <span className="text-white/90 font-medium leading-tight">Conocimiento del mercado</span>
               </div>
               <div className="flex items-center gap-4">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-500/15 text-orange-400 ring-1 ring-orange-500/30">
-                  <MessageCircle className="w-5 h-5" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-orange-500/10 flex-shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center">
+                    <MessageCircle className="w-3 h-3 text-white" strokeWidth={2.5} />
+                  </div>
                 </div>
-                <span className="text-white/90 font-medium">Atención personalizada</span>
+                <span className="text-white/90 font-medium leading-tight">Atención personalizada</span>
               </div>
               <div className="flex items-center gap-4">
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-orange-500/15 text-orange-400 ring-1 ring-orange-500/30">
-                  <Award className="w-5 h-5" />
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-orange-500/10 flex-shrink-0">
+                  <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center">
+                    <Award className="w-3 h-3 text-white" strokeWidth={2.5} />
+                  </div>
                 </div>
-                <span className="text-white/90 font-medium">Experiencia comprobada</span>
+                <span className="text-white/90 font-medium leading-tight">Experiencia comprobada</span>
               </div>
             </div>
 
@@ -625,9 +633,9 @@ export default function HomePage() {
               <Link href="/propiedades">
                 <Button
                   size="lg"
-                  className="glow-on-hover bg-gray-900 text-white hover:bg-gray-800 px-8 py-4 text-lg font-bold rounded-full shadow-2xl shadow-black/30 hover:shadow-black/50 transition-all duration-300 hover:scale-105 border-2 border-white/20 hover:border-white/40 min-w-[280px]"
+                  className="bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white px-12 py-6 text-xl font-bold rounded-xl shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 hover:scale-105 min-w-[320px] md:min-w-[400px]"
                 >
-                  EXPLORAR PROPIEDADES
+                  VER PROPIEDADES
                   <motion.div
                     animate={{ x: [0, 5, 0] }}
                     transition={{ repeat: Infinity, duration: 1.5 }}

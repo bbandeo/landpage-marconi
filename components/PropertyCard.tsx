@@ -22,7 +22,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const shouldShowRoomInfo = property.type !== 'terreno';
 
   return (
-    <Card className="group overflow-hidden bg-premium-card backdrop-blur-md border border-vibrant-orange/10 shadow-lg hover:shadow-2xl hover:shadow-vibrant-orange/20 transition-all duration-700 rounded-2xl">
+    <Card className="group overflow-hidden bg-[#1E1E1E] backdrop-blur-md border border-white/10 shadow-lg hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-700 rounded-2xl">
       {/* LAYOUT VERTICAL - CARRUSEL ARRIBA + CONTENIDO ABAJO */}
 
       {/* CARRUSEL DE IMÁGENES - Ocupa parte superior de la tarjeta */}
@@ -36,8 +36,8 @@ export function PropertyCard({ property }: PropertyCardProps) {
         {/* OVERLAYS SOBRE EL CARRUSEL */}
         {/* ETIQUETA VENTA/ALQUILER - SUPERIOR IZQUIERDA */}
         <div className="absolute top-4 left-4 z-20">
-          <div className="bg-gradient-to-r from-vibrant-orange via-orange-600 to-red-600 text-bone-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest shadow-2xl shadow-vibrant-orange/40 border border-white/20 backdrop-blur-sm">
-            {property.operation === "sale" ? "VENTA" : "ALQUILER"}
+          <div className="bg-white/90 text-gray-900 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide shadow-lg border border-gray-200/50 backdrop-blur-md">
+            {property.operation === "sale" ? "Venta" : "Alquiler"}
           </div>
         </div>
 
@@ -77,12 +77,20 @@ export function PropertyCard({ property }: PropertyCardProps) {
           {/* Precio destacado */}
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-sm font-medium text-meta mb-1">{property.currency}</div>
-              <div className="text-3xl font-black heading-primary tracking-tight">
-                ${property.price.toLocaleString()}
-              </div>
-              {property.operation === "rent" && (
-                <div className="text-xs secondary-text">por mes</div>
+              {property.price > 0 ? (
+                <>
+                  <div className="text-sm font-medium text-meta mb-1">{property.currency}</div>
+                  <div className="text-3xl font-black heading-primary tracking-tight">
+                    ${property.price.toLocaleString()}
+                  </div>
+                  {property.operation === "rent" && (
+                    <div className="text-xs secondary-text">por mes</div>
+                  )}
+                </>
+              ) : (
+                <div className="text-2xl font-bold text-orange-500">
+                  A Consultar
+                </div>
               )}
             </div>
           </div>
