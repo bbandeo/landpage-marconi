@@ -274,10 +274,9 @@ export default function HomePage() {
 
           {/* Efecto blob animado que sigue el cursor */}
           <div id="hero-blob"></div>
-          <div id="hero-blur"></div>
 
           {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
 
           {/* EFECTO DIFUMINADO NARANJA SUTIL */}
           <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/40 via-orange-500/20 to-transparent" />
