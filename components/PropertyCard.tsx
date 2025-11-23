@@ -4,7 +4,7 @@ import React from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Heart, Mail, ArrowRight, MapPin, Bed, Bath, Square, Eye } from "lucide-react"
+import { ArrowRight, MapPin, Bed, Bath, Square, Eye } from "lucide-react"
 import Link from "next/link"
 import type { Property as PropertyType } from "@/lib/supabase"
 import PropertyImageCarousel from "@/components/PropertyImageCarousel"
@@ -40,34 +40,6 @@ export function PropertyCard({ property }: PropertyCardProps) {
             propertyTitle={property.title}
             propertyId={property.id}
           />
-        </div>
-
-        {/* OVERLAYS SOBRE EL CARRUSEL */}
-        {/* ETIQUETA VENTA/ALQUILER - SUPERIOR IZQUIERDA - ARCHITECTURAL SHARP */}
-        <div className="absolute top-4 left-4 z-20">
-          <div className="backdrop-blur-sm bg-white/90 text-gray-800 px-3 py-1 rounded-sm text-[10px] font-medium uppercase tracking-[1.5px] shadow-lg">
-            {property.operation === "sale" ? "VENTA" : "ALQUILER"}
-          </div>
-        </div>
-
-        {/* CTAs COMO ÍCONOS - SUPERIOR DERECHA */}
-        <div className="absolute top-4 right-4 z-20 flex gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={(e) => e.stopPropagation()}
-            className="bg-black/70 hover:bg-orange-500/90 text-white backdrop-blur-md rounded-sm p-2.5 shadow-lg hover:scale-105 transition-all duration-300 border border-white/10"
-          >
-            <Heart className="w-4 h-4" strokeWidth={1.5} />
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={(e) => e.stopPropagation()}
-            className="bg-black/70 hover:bg-orange-500/90 text-white backdrop-blur-md rounded-sm p-2.5 shadow-lg hover:scale-105 transition-all duration-300 border border-white/10"
-          >
-            <Mail className="w-4 h-4" strokeWidth={1.5} />
-          </Button>
         </div>
 
         {/* Featured badge - INFERIOR DERECHA */}
