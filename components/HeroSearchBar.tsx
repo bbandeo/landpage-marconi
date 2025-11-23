@@ -102,7 +102,7 @@ export function HeroSearchBar() {
           {/* Botón de Búsqueda */}
           <Button
             onClick={handleSearch}
-            className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-medium px-6 h-10 text-sm rounded-lg transition-all duration-200 hover:scale-[1.02] border-0 shadow-lg"
+            className="glow-on-hover bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-medium px-6 h-10 text-sm rounded-lg transition-all duration-200 hover:scale-[1.02] border-0 shadow-lg"
           >
             <Search className="w-4 h-4 mr-1.5" />
             Buscar
