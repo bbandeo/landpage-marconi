@@ -116,7 +116,7 @@ function CounterAnimation({ value, label, icon: Icon }: { value: string, label: 
 export default function HomePage() {
   const [currentStat, setCurrentStat] = useState(0);
   const isClient = useIsClient();
-  
+
   // Parallax effects DISABLED to prevent elements escaping hero boundaries
   const { scrollY } = useScroll();
   // All transforms set to 0 to eliminate any movement
@@ -125,6 +125,28 @@ export default function HomePage() {
   const contentY = useTransform(scrollY, [0, 400], [0, 0]);
   const bottomY = useTransform(scrollY, [0, 500], [0, 0]);
   const scrollIndicatorY = useTransform(scrollY, [0, 300], [0, 0]);
+
+  // Efecto blob que sigue el cursor
+  useEffect(() => {
+    const blob = document.getElementById("hero-blob");
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (!blob) return;
+
+      const { clientX, clientY } = event;
+
+      blob.animate({
+        left: `${clientX}px`,
+        top: `${clientY}px`
+      }, { duration: 3000, fill: "forwards" });
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+    };
+  }, []);
 
   // Estados para datos del backend
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
@@ -250,6 +272,10 @@ export default function HomePage() {
             />
           </div>
 
+          {/* Efecto blob animado que sigue el cursor */}
+          <div id="hero-blob"></div>
+          <div id="hero-blur"></div>
+
           {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
 
@@ -274,61 +300,15 @@ export default function HomePage() {
                 style={{ y: contentY }}
               >
                 <div className="relative inline-block">
-                  {/* Efecto de resplandor animado de fondo */}
-                  <motion.div
-                    className="absolute -inset-4 lg:-inset-6 bg-gradient-to-r from-orange-600/30 via-red-500/30 to-orange-600/30 rounded-3xl blur-3xl"
-                    animate={{
-                      opacity: [0.3, 0.6, 0.3],
-                      scale: [1, 1.05, 1],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
+                  {/* Imagen con sutil drop shadow */}
+                  <Image
+                    src="/assets/impact_text/vivilaexperiencia.PNG"
+                    alt="Viví la experiencia de encontrar tu lugar en el mundo"
+                    width={1000}
+                    height={250}
+                    className="w-full max-w-[280px] sm:max-w-[90%] md:max-w-3xl lg:max-w-4xl h-auto relative z-10 drop-shadow-[0_0_20px_rgba(249,115,22,0.7)]"
+                    priority
                   />
-
-                  {/* Anillos de resplandor neón */}
-                  <motion.div
-                    className="absolute -inset-3 lg:-inset-5 rounded-2xl"
-                    style={{
-                      background: 'linear-gradient(45deg, rgba(249, 115, 22, 0.4), rgba(239, 68, 68, 0.4), rgba(249, 115, 22, 0.4))',
-                      filter: 'blur(20px)',
-                    }}
-                    animate={{
-                      rotate: [0, 360],
-                      opacity: [0.2, 0.4, 0.2],
-                    }}
-                    transition={{
-                      rotate: { duration: 8, repeat: Infinity, ease: "linear" },
-                      opacity: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                    }}
-                  />
-
-                  {/* Imagen con efecto de brillo */}
-                  <motion.div
-                    animate={{
-                      filter: [
-                        'brightness(1) contrast(1)',
-                        'brightness(1.1) contrast(1.05)',
-                        'brightness(1) contrast(1)',
-                      ],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <Image
-                      src="/assets/impact_text/vivilaexperiencia.PNG"
-                      alt="Viví la experiencia de encontrar tu lugar en el mundo"
-                      width={1000}
-                      height={250}
-                      className="w-full max-w-[280px] sm:max-w-[90%] md:max-w-3xl lg:max-w-4xl h-auto relative z-10 drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
-                      priority
-                    />
-                  </motion.div>
                 </div>
               </motion.div>
             </div>
