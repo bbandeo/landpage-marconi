@@ -298,31 +298,8 @@ export default function HomePage() {
             <HeroSearchBar />
           </motion.div>
 
-          {/* 2. TITULAR/SLOGAN - CENTRO EMOCIONAL */}
-          <div className="flex-1 flex items-center justify-center px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
-              style={{ y: contentY }}
-              className="text-center"
-            >
-              <div className="relative inline-block">
-                {/* Imagen con sutil drop shadow */}
-                <Image
-                  src="/assets/impact_text/vivilaexperiencia.PNG"
-                  alt="Viví la experiencia de encontrar tu lugar en el mundo"
-                  width={1000}
-                  height={250}
-                  className="w-full max-w-[280px] sm:max-w-[90%] md:max-w-3xl lg:max-w-4xl h-auto relative z-10 drop-shadow-[0_0_20px_rgba(249,115,22,0.7)]"
-                  priority
-                />
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Espaciador inferior para equilibrio visual */}
-          <div className="h-4 md:h-8"></div>
+          {/* Espaciador para centrar visualmente el buscador */}
+          <div className="flex-1"></div>
         </div>
       </section>
 
