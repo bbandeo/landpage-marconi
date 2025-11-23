@@ -22,23 +22,31 @@ export function PropertyCard({ property }: PropertyCardProps) {
   const shouldShowRoomInfo = property.type !== 'terreno';
 
   return (
-    <Card className="group overflow-hidden bg-[#1E1E1E] backdrop-blur-md border border-white/10 shadow-lg hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-700 rounded-2xl">
+    <Card className="group overflow-hidden bg-[#1E1E1E] backdrop-blur-md border border-white/10 shadow-lg hover:shadow-2xl transition-all duration-500 rounded-2xl hover:-translate-y-1.5 flex flex-col h-full">
       {/* LAYOUT VERTICAL - CARRUSEL ARRIBA + CONTENIDO ABAJO */}
 
       {/* CARRUSEL DE IMÁGENES - Ocupa parte superior de la tarjeta */}
-      <div className="relative">
-        <PropertyImageCarousel
-          images={property.images || []}
-          propertyTitle={property.title}
-          propertyId={property.id}
-        />
+      <div className="relative overflow-hidden" style={{ aspectRatio: '16/9' }}>
+        <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
+          <PropertyImageCarousel
+            images={property.images || []}
+            propertyTitle={property.title}
+            propertyId={property.id}
+          />
+        </div>
 
         {/* OVERLAYS SOBRE EL CARRUSEL */}
-        {/* ETIQUETA VENTA/ALQUILER - SUPERIOR IZQUIERDA */}
+        {/* ETIQUETA VENTA/ALQUILER - SUPERIOR IZQUIERDA - GHOST/GLASSMORPHISM */}
         <div className="absolute top-4 left-4 z-20">
-          <div className="bg-white/90 text-gray-900 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide shadow-lg border border-gray-200/50 backdrop-blur-md">
-            {property.operation === "sale" ? "Venta" : "Alquiler"}
-          </div>
+          {property.operation === "sale" ? (
+            <div className="backdrop-blur-md bg-white/5 border-2 border-orange-500/80 text-white px-4 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[1px] shadow-xl">
+              VENTA
+            </div>
+          ) : (
+            <div className="backdrop-blur-md bg-white/5 border-2 border-gray-300/60 text-gray-200 px-4 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[1px] shadow-xl">
+              ALQUILER
+            </div>
+          )}
         </div>
 
         {/* CTAs COMO ÍCONOS - SUPERIOR DERECHA */}
@@ -47,123 +55,129 @@ export function PropertyCard({ property }: PropertyCardProps) {
             size="sm"
             variant="ghost"
             onClick={(e) => e.stopPropagation()}
-            className="bg-black/70 hover:bg-vibrant-orange/80 text-bone-white hover:text-bone-white backdrop-blur-md rounded-full p-2.5 shadow-lg hover:scale-110 transition-all duration-300 border border-white/10"
+            className="bg-black/70 hover:bg-orange-500/90 text-white backdrop-blur-md rounded-full p-2.5 shadow-lg hover:scale-110 transition-all duration-300 border border-white/10"
           >
-            <Heart className="w-4 h-4" />
+            <Heart className="w-4 h-4" strokeWidth={1.5} />
           </Button>
           <Button
             size="sm"
             variant="ghost"
             onClick={(e) => e.stopPropagation()}
-            className="bg-black/70 hover:bg-vibrant-orange/80 text-bone-white hover:text-bone-white backdrop-blur-md rounded-full p-2.5 shadow-lg hover:scale-110 transition-all duration-300 border border-white/10"
+            className="bg-black/70 hover:bg-orange-500/90 text-white backdrop-blur-md rounded-full p-2.5 shadow-lg hover:scale-110 transition-all duration-300 border border-white/10"
           >
-            <Mail className="w-4 h-4" />
+            <Mail className="w-4 h-4" strokeWidth={1.5} />
           </Button>
         </div>
 
         {/* Featured badge - INFERIOR DERECHA */}
         {property.featured && (
-          <div className="absolute bottom-4 right-4 z-20 bg-gradient-to-r from-yellow-500 to-yellow-600 text-night-blue px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg border border-white/20">
-            <Eye className="w-3.5 h-3.5" />
+          <div className="absolute bottom-4 right-4 z-20 backdrop-blur-md bg-white/5 border-2 border-yellow-500/80 text-yellow-400 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-[1px] shadow-xl flex items-center gap-1.5">
+            <Eye className="w-3.5 h-3.5" strokeWidth={2} />
             DESTACADA
           </div>
         )}
       </div>
 
-      {/* CONTENIDO DE LA PROPIEDAD */}
-      <CardContent className="p-6">
+      {/* CONTENIDO DE LA PROPIEDAD - CON FLEXBOX PARA ALINEAR BOTÓN AL FONDO */}
+      <CardContent className="p-6 flex flex-col flex-1">
         {/* SECCIÓN SUPERIOR: PRECIO Y TÍTULO */}
-        <div className="mb-4">
-          {/* Precio destacado */}
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              {property.price > 0 ? (
-                <>
-                  <div className="text-sm font-medium text-meta mb-1">{property.currency}</div>
-                  <div className="text-3xl font-black heading-primary tracking-tight">
-                    ${property.price.toLocaleString()}
-                  </div>
-                  {property.operation === "rent" && (
-                    <div className="text-xs secondary-text">por mes</div>
-                  )}
-                </>
-              ) : (
-                <div className="text-2xl font-bold text-orange-500">
-                  A Consultar
+        <div className="mb-4 flex-1">
+          {/* Precio destacado - 1º NIVEL DE JERARQUÍA */}
+          <div className="mb-4">
+            {property.price > 0 ? (
+              <>
+                <div className="text-xs font-medium text-gray-400 mb-1 uppercase tracking-wider">{property.currency}</div>
+                <div className="text-[22px] font-bold text-white tracking-tight leading-none">
+                  ${property.price.toLocaleString()}
                 </div>
-              )}
-            </div>
+                {property.operation === "rent" && (
+                  <div className="text-xs text-gray-500 mt-1">por mes</div>
+                )}
+              </>
+            ) : (
+              <div className="text-[22px] font-bold text-orange-500 tracking-tight">
+                A Consultar
+              </div>
+            )}
           </div>
 
-          {/* Título y ubicación */}
+          {/* Título - LIMITADO A 1 LÍNEA CON ELLIPSIS */}
           <Link href={`/propiedades/${property.id}`}>
-            <h3 className="font-bold heading-primary text-xl mb-2 hover:text-vibrant-orange transition-colors cursor-pointer line-clamp-2">
+            <h3 className="font-semibold text-white text-lg mb-3 hover:text-orange-500 transition-colors cursor-pointer truncate">
               {property.title}
             </h3>
           </Link>
-          <div className="flex items-center text-secondary font-medium text-sm mb-4">
-            <MapPin className="w-4 h-4 mr-1.5 text-vibrant-orange flex-shrink-0" />
-            <span className="line-clamp-1">{property.neighborhood}, Reconquista</span>
+
+          {/* Ubicación - 2º NIVEL DE JERARQUÍA */}
+          <div className="flex items-center text-[#AAAAAA] font-normal text-sm mb-4">
+            <MapPin className="w-4 h-4 mr-1.5 text-gray-500 flex-shrink-0" strokeWidth={1.5} />
+            <span className="truncate">{property.neighborhood}, Reconquista</span>
           </div>
+
+          {/* CARACTERÍSTICAS ESENCIALES - 3º NIVEL DE JERARQUÍA */}
+          {(() => {
+            const hasCharacteristics = property.bedrooms || property.bathrooms || property.area_m2;
+            return hasCharacteristics && (
+              <div className="flex items-center gap-5 mb-4 text-gray-400">
+                {property.area_m2 && (
+                  <div className="flex items-center text-sm">
+                    <Square className="w-4 h-4 mr-1.5 text-gray-500" strokeWidth={1.5} />
+                    <span className="font-medium text-gray-300">{property.area_m2}m²</span>
+                  </div>
+                )}
+                {shouldShowRoomInfo && property.bedrooms && (
+                  <>
+                    {property.area_m2 && <div className="w-px h-4 bg-gray-700" />}
+                    <div className="flex items-center text-sm">
+                      <Bed className="w-4 h-4 mr-1.5 text-gray-500" strokeWidth={1.5} />
+                      <span className="font-medium text-gray-300">{property.bedrooms} dorm.</span>
+                    </div>
+                  </>
+                )}
+                {shouldShowRoomInfo && property.bathrooms && (
+                  <>
+                    {(property.area_m2 || property.bedrooms) && <div className="w-px h-4 bg-gray-700" />}
+                    <div className="flex items-center text-sm">
+                      <Bath className="w-4 h-4 mr-1.5 text-gray-500" strokeWidth={1.5} />
+                      <span className="font-medium text-gray-300">{property.bathrooms} baños</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* FEATURES BADGES */}
+          {property.features && property.features.length > 0 && (
+            <div className="mb-4">
+              <div className="flex flex-wrap gap-2">
+                {property.features.slice(0, 3).map((feature, i) => (
+                  <Badge
+                    key={i}
+                    variant="secondary"
+                    className="bg-white/5 text-gray-400 border border-white/10 px-2.5 py-0.5 rounded-lg text-xs font-medium"
+                  >
+                    {feature}
+                  </Badge>
+                ))}
+                {property.features.length > 3 && (
+                  <Badge
+                    variant="outline"
+                    className="text-gray-400 border-white/10 px-2.5 py-0.5 rounded-lg text-xs"
+                  >
+                    +{property.features.length - 3}
+                  </Badge>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* CARACTERÍSTICAS ESENCIALES */}
-        {(() => {
-          const hasCharacteristics = property.bedrooms || property.bathrooms || property.area_m2;
-          return hasCharacteristics && (
-            <div className="flex items-center gap-4 mb-4 text-premium-primary flex-wrap">
-              {property.area_m2 && (
-                <div className="flex items-center secondary-text text-sm">
-                  <Square className="w-4 h-4 mr-1.5 text-support-gray" />
-                  <span className="font-medium">{property.area_m2}m²</span>
-                </div>
-              )}
-              {shouldShowRoomInfo && property.bedrooms && (
-                <div className="flex items-center secondary-text text-sm">
-                  <Bed className="w-4 h-4 mr-1.5 text-support-gray" />
-                  <span className="font-medium">{property.bedrooms} dorm.</span>
-                </div>
-              )}
-              {shouldShowRoomInfo && property.bathrooms && (
-                <div className="flex items-center secondary-text text-sm">
-                  <Bath className="w-4 h-4 mr-1.5 text-support-gray" />
-                  <span className="font-medium">{property.bathrooms} baños</span>
-                </div>
-              )}
-            </div>
-          );
-        })()}
-
-        {/* FEATURES BADGES */}
-        {property.features && property.features.length > 0 && (
-          <div className="mb-4">
-            <div className="flex flex-wrap gap-2">
-              {property.features.slice(0, 3).map((feature, i) => (
-                <Badge
-                  key={i}
-                  variant="secondary"
-                  className="bg-support-gray/10 text-meta border border-support-gray/25 px-2.5 py-0.5 rounded-lg text-xs font-medium"
-                >
-                  {feature}
-                </Badge>
-              ))}
-              {property.features.length > 3 && (
-                <Badge
-                  variant="outline"
-                  className="text-meta border-support-gray/30 px-2.5 py-0.5 rounded-lg text-xs"
-                >
-                  +{property.features.length - 3}
-                </Badge>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* BOTÓN CTA */}
-        <Link href={`/propiedades/${property.id}`} className="block">
-          <Button className="w-full bg-gradient-to-r from-vibrant-orange to-orange-600 hover:from-orange-600 hover:to-red-600 text-bone-white font-semibold py-2.5 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm">
+        {/* BOTÓN CTA - ALINEADO AL FONDO CON FLEXBOX */}
+        <Link href={`/propiedades/${property.id}`} className="block mt-auto">
+          <Button className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white font-semibold py-2.5 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-sm">
             Ver detalles completos
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRight className="w-4 h-4 ml-2" strokeWidth={2} />
           </Button>
         </Link>
       </CardContent>
