@@ -204,7 +204,7 @@ export default function AgentesPage() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-premium-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {agents.map((agent, index) => (
               <motion.div
                 key={agent.id}
@@ -212,68 +212,43 @@ export default function AgentesPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
+                className="group"
               >
-                <Card className="overflow-hidden hover-lift group">
-                  <div className="relative">
-                    <div className="aspect-[3/4] overflow-hidden">
-                      <Image
-                        src={getOptimizedImageUrl(agent.image, { 
-                          width: 300, 
-                          height: 400, 
-                          crop: "fill", 
-                          gravity: "face",
-                          quality: "auto",
-                          format: "auto"
-                        })}
-                        alt={agent.name}
-                        width={300}
-                        height={400}
-                        className="w-full h-full object-cover hover-scale"
-                      />
-                    </div>
-                    
-                    {/* Status badge */}
-                    <div className="absolute top-premium-sm right-premium-sm">
-                      <Badge className="bg-vibrant-orange text-bone-white">
-                        <div className="w-2 h-2 bg-bone-white rounded-full mr-1"></div>
-                        Disponible
-                      </Badge>
-                    </div>
+                {/* CLEAN PROFILE CARD - Foto como protagonista */}
+                <div className="space-y-4">
+                  {/* Foto con hover elegante */}
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-sm">
+                    <Image
+                      src={getOptimizedImageUrl(agent.image, {
+                        width: 400,
+                        height: 533,
+                        crop: "fill",
+                        gravity: "face",
+                        quality: "auto",
+                        format: "auto"
+                      })}
+                      alt={agent.name}
+                      width={400}
+                      height={533}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                    />
                   </div>
 
-                  <CardContent className="card-premium">
-                    <div className="mb-premium-md">
-                      <h3 className="heading-lg text-premium-primary mb-premium-sm">{agent.name}</h3>
-                      <p className="body-md text-vibrant-orange font-semibold mb-premium-sm">{agent.role}</p>
-                    </div>
+                  {/* Info minimalista */}
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-white tracking-tight">{agent.name}</h3>
+                    <p className="text-sm text-gray-400 font-normal">{agent.role}</p>
 
-                    <div className="mb-premium-md">
-                      <Badge variant="secondary" className="bg-support-gray/10 text-premium-secondary mb-premium-sm">
-                        {agent.specialization}
-                      </Badge>
-                    </div>
-
-
-                    <div className="flex gap-premium-sm">
-                      <Button 
-                        className="flex-1"
-                        onClick={() => handleContactAgent(agent)}
-                      >
-                        Contactar
-                        <MessageCircle className="w-4 h-4 ml-1" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        asChild
-                      >
-                        <a href={`tel:${agent.phone}`}>
-                          <Phone className="w-4 h-4" />
-                        </a>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    {/* Enlace sutil - NIVEL 3 */}
+                    <button
+                      onClick={() => handleContactAgent(agent)}
+                      className="group/link inline-flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors duration-300 mt-3"
+                    >
+                      <span>Contactar a {agent.name.split(' ')[0]}</span>
+                      <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" strokeWidth={1.5} />
+                    </button>
+                  </div>
+                </div>
               </motion.div>
             ))}
           </div>
