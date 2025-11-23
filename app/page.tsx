@@ -246,60 +246,52 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#05080F]">
+    <div className="min-h-screen bg-premium-main">
       {/* Header Premium */}
       <Header />
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative h-[81vh] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
-        {/* Background GIF con Parallax */}
-        <motion.div
-          className="absolute inset-0 overflow-hidden"
-          style={{ y: heroY, opacity: heroOpacity }}
-        >
-          {/* GIF background */}
-          <div className="absolute inset-0 flex items-center justify-center bg-[#05080F]">
-            <Image
-              src="/assets/hero/casa.gif"
-              alt="Casa Marconi - Background"
-              fill
-              className="object-contain md:object-cover p-4 md:p-0"
-              style={{
-                transformOrigin: 'center center',
-              }}
-              priority
-              unoptimized
-            />
-          </div>
-
+      <section className="relative h-[81vh] md:min-h-screen overflow-hidden bg-[#0a0e27]">
+        {/* Background con efecto blob */}
+        <div className="absolute inset-0">
           {/* Efecto blob animado que sigue el cursor */}
           <div id="hero-blob"></div>
 
           {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/50 z-10" />
 
           {/* EFECTO DIFUMINADO NARANJA SUTIL */}
-          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/40 via-orange-500/20 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/40 via-orange-500/20 to-transparent z-10" />
+        </div>
 
-          {/* Overlay central para mejorar contraste del texto */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10" />
-        </motion.div>
+        {/* CONTENIDO PRINCIPAL - REORGANIZADO */}
+        <div className="relative z-20 w-full h-full flex flex-col justify-between py-6 md:py-12">
 
-        {/* CONTENIDO PRINCIPAL - NUEVA JERARQUÍA VISUAL */}
-        <div className="relative z-10 w-full h-full flex flex-col justify-between overflow-hidden py-6 md:py-8" style={{ contain: 'layout style' }}>
+          {/* 1. CASA GIF - PARTE SUPERIOR/MEDIA */}
+          <div className="flex-1 flex items-center justify-center px-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative w-full max-w-3xl md:max-w-4xl lg:max-w-5xl"
+            >
+              <div className="relative aspect-[4/3] md:aspect-[16/9]">
+                <Image
+                  src="/assets/hero/casa.gif"
+                  alt="Casa Marconi"
+                  fill
+                  className="object-contain drop-shadow-[0_0_30px_rgba(249,115,22,0.3)]"
+                  priority
+                  unoptimized
+                />
+              </div>
+            </motion.div>
+          </div>
 
-          {/* 1. FORMULARIO DE BÚSQUEDA - PRIORIDAD MÁXIMA */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="w-full px-4"
-          >
+          {/* 2. BUSCADOR HORIZONTAL - PARTE INFERIOR */}
+          <div className="px-4 pb-4 md:pb-8">
             <HeroSearchBar />
-          </motion.div>
-
-          {/* Espaciador para centrar visualmente el buscador */}
-          <div className="flex-1"></div>
+          </div>
         </div>
       </section>
 
@@ -312,7 +304,7 @@ export default function HomePage() {
         className="section-spacing relative overflow-hidden"
       >
         {/* Fondo simplificado y elegante */}
-        <div className="absolute inset-0 bg-[#0F1623]">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800">
           {/* Sombras suaves para profundidad */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
         </div>
@@ -371,7 +363,7 @@ export default function HomePage() {
                   <Link href="/propiedades">
                     <Button
                       size="lg"
-                      className="glow-on-hover max-w-md bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-semibold py-4 px-8 rounded-2xl shadow-2xl shadow-orange-600/30 hover:shadow-[0_0_15px_rgba(249,115,22,0.6)] transition-all duration-300 hover:scale-105 group border-0 flex items-center justify-center gap-2"
+                      className="glow-on-hover max-w-md bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-4 px-8 rounded-2xl shadow-2xl shadow-orange-600/30 hover:shadow-[0_0_15px_rgba(249,115,22,0.6)] transition-all duration-300 hover:scale-105 group border-0 flex items-center justify-center gap-2"
                     >
                       VER TODO EL CATÁLOGO
                       <span className="transform transition-transform group-hover:translate-x-1">
@@ -538,7 +530,7 @@ export default function HomePage() {
               <Link href="/agentes">
                 <Button
                   size="lg"
-                  className="glow-on-hover mt-8 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-semibold px-12 py-6 rounded-full shadow-2xl shadow-orange-600/30 hover:shadow-orange-600/50 transition-all duration-300 group border-0 w-fit text-lg"
+                  className="glow-on-hover mt-8 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold px-12 py-6 rounded-full shadow-2xl shadow-orange-600/30 hover:shadow-orange-600/50 transition-all duration-300 group border-0 w-fit text-lg"
                 >
                   Conocé más
                   <motion.div
@@ -666,7 +658,7 @@ export default function HomePage() {
               <Link href="/propiedades">
                 <Button
                   size="lg"
-                  className="glow-on-hover bg-gray-900 text-white hover:bg-gray-800 px-8 py-4 text-lg font-semibold rounded-full shadow-2xl shadow-black/30 hover:shadow-black/50 transition-all duration-300 hover:scale-105 border-2 border-white/20 hover:border-white/40 min-w-[280px]"
+                  className="glow-on-hover bg-gray-900 text-white hover:bg-gray-800 px-8 py-4 text-lg font-bold rounded-full shadow-2xl shadow-black/30 hover:shadow-black/50 transition-all duration-300 hover:scale-105 border-2 border-white/20 hover:border-white/40 min-w-[280px]"
                 >
                   EXPLORAR PROPIEDADES
                   <motion.div
