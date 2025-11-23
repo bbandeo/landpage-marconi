@@ -229,7 +229,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
+      <section className="relative min-h-[70vh] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
         {/* Background GIF con Parallax */}
         <motion.div
           className="absolute inset-0 overflow-hidden"
@@ -261,7 +261,7 @@ export default function HomePage() {
         </motion.div>
 
         {/* CONTENIDO PRINCIPAL - LAYOUT UNIFICADO PARA TODOS LOS TAMAÑOS */}
-        <div className="relative z-10 w-full min-h-screen flex flex-col overflow-hidden" style={{ contain: 'layout style', transform: 'translateY(-20vh)' }}>
+        <div className="relative z-10 w-full min-h-[70vh] md:min-h-screen flex flex-col overflow-hidden" style={{ contain: 'layout style' }}>
           
           {/* CONTENIDO SUPERIOR - CLAIM CENTRADO */}
           <div className="flex-1 flex items-center justify-center">
@@ -290,7 +290,7 @@ export default function HomePage() {
           </div>
           
           {/* CONTENIDO INFERIOR - BUSCADOR HERO */}
-          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-2 sm:pb-3 lg:pb-4 px-4">
+          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-4 md:pb-2 lg:pb-4 px-4">
             <HeroSearchBar />
           </div>
         </div>
