@@ -229,7 +229,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative h-[87vh] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
+      <section className="relative h-[84vh] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
         {/* Background GIF con Parallax */}
         <motion.div
           className="absolute inset-0 overflow-hidden"
