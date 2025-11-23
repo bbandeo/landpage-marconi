@@ -246,7 +246,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-premium-main">
+    <div className="min-h-screen bg-[#05080F]">
       {/* Header Premium */}
       <Header />
 
@@ -258,7 +258,7 @@ export default function HomePage() {
           style={{ y: heroY, opacity: heroOpacity }}
         >
           {/* GIF background */}
-          <div className="absolute inset-0 flex items-center justify-center bg-[#000022] md:bg-[#0a0e27]">
+          <div className="absolute inset-0 flex items-center justify-center bg-[#05080F]">
             <Image
               src="/assets/hero/casa.gif"
               alt="Casa Marconi - Background"
@@ -312,7 +312,7 @@ export default function HomePage() {
         className="section-spacing relative overflow-hidden"
       >
         {/* Fondo simplificado y elegante */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-gray-900 to-slate-800">
+        <div className="absolute inset-0 bg-[#0F1623]">
           {/* Sombras suaves para profundidad */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
         </div>
@@ -371,7 +371,7 @@ export default function HomePage() {
                   <Link href="/propiedades">
                     <Button
                       size="lg"
-                      className="glow-on-hover max-w-md bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-4 px-8 rounded-2xl shadow-2xl shadow-orange-600/30 hover:shadow-[0_0_15px_rgba(249,115,22,0.6)] transition-all duration-300 hover:scale-105 group border-0 flex items-center justify-center gap-2"
+                      className="glow-on-hover max-w-md bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-semibold py-4 px-8 rounded-2xl shadow-2xl shadow-orange-600/30 hover:shadow-[0_0_15px_rgba(249,115,22,0.6)] transition-all duration-300 hover:scale-105 group border-0 flex items-center justify-center gap-2"
                     >
                       VER TODO EL CATÁLOGO
                       <span className="transform transition-transform group-hover:translate-x-1">
@@ -538,7 +538,7 @@ export default function HomePage() {
               <Link href="/agentes">
                 <Button
                   size="lg"
-                  className="glow-on-hover mt-8 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold px-12 py-6 rounded-full shadow-2xl shadow-orange-600/30 hover:shadow-orange-600/50 transition-all duration-300 group border-0 w-fit text-lg"
+                  className="glow-on-hover mt-8 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-semibold px-12 py-6 rounded-full shadow-2xl shadow-orange-600/30 hover:shadow-orange-600/50 transition-all duration-300 group border-0 w-fit text-lg"
                 >
                   Conocé más
                   <motion.div
@@ -666,7 +666,7 @@ export default function HomePage() {
               <Link href="/propiedades">
                 <Button
                   size="lg"
-                  className="glow-on-hover bg-gray-900 text-white hover:bg-gray-800 px-8 py-4 text-lg font-bold rounded-full shadow-2xl shadow-black/30 hover:shadow-black/50 transition-all duration-300 hover:scale-105 border-2 border-white/20 hover:border-white/40 min-w-[280px]"
+                  className="glow-on-hover bg-gray-900 text-white hover:bg-gray-800 px-8 py-4 text-lg font-semibold rounded-full shadow-2xl shadow-black/30 hover:shadow-black/50 transition-all duration-300 hover:scale-105 border-2 border-white/20 hover:border-white/40 min-w-[280px]"
                 >
                   EXPLORAR PROPIEDADES
                   <motion.div

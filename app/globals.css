@@ -14,6 +14,12 @@
 
 @layer base {
   :root {
+    /* BRAND PREMIUM COLORS - Stripe/Linear Style */
+    --brand-dark: 5 8 15; /* #05080F */
+    --brand-surface: 15 22 35; /* #0F1623 */
+    --brand-accent: 234 88 12; /* #EA580C - Burnt Orange */
+    --brand-highlight: 251 146 60; /* #FB923C */
+
     /* TEMA CLARO - Para modo administrativo eventual */
     --background: 0 0% 96%; /* #F5F5F5 - Blanco Hueso */
     --foreground: 210 13% 16%; /* #212832 - Azul Nocturno */
@@ -48,16 +54,16 @@
 
   .dark {
     /* TEMA PREMIUM OSCURO - Modo principal del sitio */
-    --background: 210 13% 16%; /* #212832 - Azul Nocturno */
+    --background: 5 8 15; /* #05080F - Brand Dark */
     --foreground: 0 0% 96%; /* #F5F5F5 - Blanco Hueso */
 
-    --card: 210 13% 16%; /* #212832 - Azul Nocturno */
+    --card: 15 22 35; /* #0F1623 - Brand Surface */
     --card-foreground: 0 0% 96%;
 
-    --popover: 210 13% 16%;
+    --popover: 15 22 35;
     --popover-foreground: 0 0% 96%;
 
-    --primary: 21 84% 56%; /* #F37321 - Naranja Vibrante */
+    --primary: 234 88% 12%; /* #EA580C - Brand Accent */
     --primary-foreground: 0 0% 96%;
 
     --secondary: 210 13% 20%; /* Variación más clara del azul nocturno */
@@ -66,7 +72,7 @@
     --muted: 210 13% 20%;
     --muted-foreground: 210 13% 70%; /* #B3B3B3 - Gris Sutil para texto secundario */
 
-    --accent: 21 84% 56%; /* #F37321 - Naranja Vibrante - SOLO interactivos */
+    --accent: 234 88% 12%; /* #EA580C - Brand Accent */
     --accent-foreground: 0 0% 96%;
 
     --destructive: 0 62.8% 30.6%;
@@ -74,7 +80,7 @@
 
     --border: 210 13% 20%;
     --input: 210 13% 20%;
-    --ring: 21 84% 56%;
+    --ring: 234 88% 12%;
   }
 }
 
