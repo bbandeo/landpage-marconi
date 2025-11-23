@@ -229,7 +229,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative min-h-[70vh] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
+      <section className="relative h-[calc(100vh-4rem)] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
         {/* Background GIF con Parallax */}
         <motion.div
           className="absolute inset-0 overflow-hidden"
@@ -261,10 +261,10 @@ export default function HomePage() {
         </motion.div>
 
         {/* CONTENIDO PRINCIPAL - LAYOUT UNIFICADO PARA TODOS LOS TAMAÑOS */}
-        <div className="relative z-10 w-full min-h-[70vh] md:min-h-screen flex flex-col overflow-hidden" style={{ contain: 'layout style' }}>
-          
+        <div className="relative z-10 w-full h-full flex flex-col overflow-hidden" style={{ contain: 'layout style' }}>
+
           {/* CONTENIDO SUPERIOR - CLAIM CENTRADO */}
-          <div className="flex-1 flex items-center justify-center">
+          <div className="flex-1 flex items-start md:items-center justify-center pt-8 md:pt-0">
             <div className="text-center px-4">
               {/* CLAIM PRINCIPAL */}
               <motion.div
@@ -272,7 +272,6 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
                 style={{ y: contentY }}
-                className="hidden md:block"
               >
                 <div className="relative inline-block">
                   <Image
@@ -280,7 +279,7 @@ export default function HomePage() {
                     alt="Viví la experiencia de encontrar tu lugar en el mundo"
                     width={1000}
                     height={250}
-                    className="w-full max-w-[90%] sm:max-w-3xl lg:max-w-4xl h-auto"
+                    className="w-full max-w-[280px] sm:max-w-[90%] md:max-w-3xl lg:max-w-4xl h-auto"
                     priority
                   />
                   <div className="absolute -inset-2 lg:-inset-4 bg-gradient-to-r from-orange-600/10 via-transparent to-red-600/10 rounded-2xl lg:rounded-3xl blur-2xl lg:blur-3xl -z-10" />
