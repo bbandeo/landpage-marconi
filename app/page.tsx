@@ -230,35 +230,34 @@ export default function HomePage() {
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
       <section className="relative min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
-        {/* Background Video con Parallax - Fixed overflow containment */}
+        {/* Background GIF con Parallax */}
         <motion.div
           className="absolute inset-0 overflow-hidden"
           style={{ y: heroY, opacity: heroOpacity }}
         >
-          {/* Video background */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="min-w-full min-h-full object-cover"
+          {/* GIF background */}
+          <div className="absolute inset-0 flex items-center justify-center bg-[#0a0e27]">
+            <Image
+              src="/assets/hero/casa.gif"
+              alt="Casa Marconi - Background"
+              fill
+              className="object-cover"
               style={{
                 transformOrigin: 'center center',
               }}
-            >
-              <source src="/assets/hero/area-reco.mp4" type="video/mp4" />
-            </video>
+              priority
+              unoptimized
+            />
           </div>
 
           {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/40 to-black/70" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
 
           {/* EFECTO DIFUMINADO NARANJA SUTIL */}
-          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/60 via-orange-500/30 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/40 via-orange-500/20 to-transparent" />
 
           {/* Overlay central para mejorar contraste del texto */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10" />
         </motion.div>
 
         {/* CONTENIDO PRINCIPAL - LAYOUT UNIFICADO PARA TODOS LOS TAMAÑOS */}
