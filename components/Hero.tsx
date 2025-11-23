@@ -51,8 +51,8 @@ export default function Hero({
           style={{ filter: 'blur(8px)' }}
           priority
         />
-        {/* Overlay oscuro para legibilidad (60%) */}
-        <div className="absolute inset-0 bg-black/60" />
+        {/* Overlay oscuro para legibilidad (75%) */}
+        <div className="absolute inset-0 bg-black/75" />
       </div>
 
       {/* Centered content wrapper with flexbox */}

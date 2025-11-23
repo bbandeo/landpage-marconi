@@ -181,7 +181,7 @@ export default function ContactoPage() {
         },
         body: JSON.stringify({
           name: 'Cliente - Email',
-          email: 'marconinegociosinmobiliarios@hotmail.com',
+          email: 'contacto@marconi.com.ar',
           message: 'Solicitud de contacto por email desde página de contacto',
           source: 'email',
           property_id: null,
@@ -248,8 +248,8 @@ export default function ContactoPage() {
     {
       icon: Mail,
       title: "Email",
-      content: "marconinegociosinmobiliarios@hotmail.com",
-      action: "mailto:marconinegociosinmobiliarios@hotmail.com",
+      content: "contacto@marconi.com.ar",
+      action: "mailto:contacto@marconi.com.ar",
       color: "text-vibrant-orange",
     },
   ];
@@ -339,7 +339,7 @@ export default function ContactoPage() {
                       await handleEmailClick();
                     }
                   }}
-                  className="group p-8 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-orange-500/50 transition-all duration-300 cursor-pointer"
+                  className="group p-8 rounded-xl bg-white/8 border border-white/20 hover:bg-white/12 hover:border-orange-500/50 transition-all duration-300 cursor-pointer"
                 >
                   {/* Icono naranja grande */}
                   <div className="mb-6">
@@ -347,7 +347,7 @@ export default function ContactoPage() {
                   </div>
 
                   {/* Dato grande en blanco */}
-                  <div className="text-2xl font-semibold text-white mb-2 break-words">
+                  <div className="text-xl font-semibold text-white mb-2 break-words">
                     {method.content}
                   </div>
 

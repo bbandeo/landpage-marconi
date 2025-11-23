@@ -283,7 +283,7 @@ export default function PropiedadesPage() {
       >
         {/* Filters - Panel de Control Premium */}
         <div className="max-w-6xl mx-auto">
-          <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 border border-gray-200 shadow-xl">
+          <div className="bg-white/95 backdrop-blur-md rounded-2xl p-5 border border-gray-200" style={{ boxShadow: '0px 10px 30px rgba(0,0,0,0.15)' }}>
 
             {/* Basic Filters - Layout Horizontal Premium */}
             <div className="flex flex-col lg:flex-row gap-3">
@@ -295,7 +295,7 @@ export default function PropiedadesPage() {
                     placeholder="Buscar propiedades..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:border-orange-500 rounded-xl focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 h-12"
+                    className="pl-10 bg-[#F0F2F5] border border-[#E0E0E0] text-gray-900 placeholder:text-gray-400 focus:border-orange-500 rounded-xl focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 h-12"
                   />
                 </div>
               </div>
@@ -303,7 +303,7 @@ export default function PropiedadesPage() {
               {/* Operation */}
               <div className="flex-1">
                 <Select value={operationFilter} onValueChange={setOperationFilter}>
-                  <SelectTrigger className="bg-gray-50 border-gray-200 text-gray-900 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 h-12">
+                  <SelectTrigger className="bg-[#F0F2F5] border border-[#E0E0E0] text-gray-900 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 h-12">
                     <SelectValue placeholder="Alquiler/Venta" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border-gray-200">
@@ -317,7 +317,7 @@ export default function PropiedadesPage() {
               {/* Type */}
               <div className="flex-1">
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className="bg-gray-50 border-gray-200 text-gray-900 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 h-12">
+                  <SelectTrigger className="bg-[#F0F2F5] border border-[#E0E0E0] text-gray-900 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 h-12">
                     <SelectValue placeholder="Tipo" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border-gray-200">
@@ -364,7 +364,7 @@ export default function PropiedadesPage() {
                       placeholder="Ej: 50000"
                       value={minPrice}
                       onChange={(e) => setMinPrice(e.target.value)}
-                      className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
+                      className="bg-[#F0F2F5] border border-[#E0E0E0] text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
                     />
                   </div>
                   <div>
@@ -373,7 +373,7 @@ export default function PropiedadesPage() {
                       placeholder="Ej: 200000"
                       value={maxPrice}
                       onChange={(e) => setMaxPrice(e.target.value)}
-                      className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
+                      className="bg-[#F0F2F5] border border-[#E0E0E0] text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
                     />
                   </div>
                   <div>
@@ -382,7 +382,7 @@ export default function PropiedadesPage() {
                       placeholder="Ej: 50"
                       value={minArea}
                       onChange={(e) => setMinArea(e.target.value)}
-                      className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
+                      className="bg-[#F0F2F5] border border-[#E0E0E0] text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
                     />
                   </div>
                   <div>
@@ -391,7 +391,7 @@ export default function PropiedadesPage() {
                       placeholder="Ej: 200"
                       value={maxArea}
                       onChange={(e) => setMaxArea(e.target.value)}
-                      className="bg-gray-50 border-gray-200 text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
+                      className="bg-[#F0F2F5] border border-[#E0E0E0] text-gray-900 placeholder:text-gray-400 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300"
                     />
                   </div>
                 </div>
@@ -401,7 +401,7 @@ export default function PropiedadesPage() {
                   {/* Neighborhood */}
                   <div className="col-span-2">
                     <Select value={neighborhoodFilter} onValueChange={setNeighborhoodFilter}>
-                      <SelectTrigger className="bg-gray-50 border-gray-200 text-gray-900 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300">
+                      <SelectTrigger className="bg-[#F0F2F5] border border-[#E0E0E0] text-gray-900 rounded-xl h-11 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300">
                         <SelectValue placeholder="Barrio" />
                       </SelectTrigger>
                       <SelectContent className="bg-white border-gray-200">

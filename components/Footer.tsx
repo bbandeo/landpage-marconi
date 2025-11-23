@@ -33,7 +33,7 @@ export default function Footer() {
                 <Phone className="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors duration-300" />
               </a>
               <a
-                href="mailto:marconinegociosinmobiliarios@hotmail.com"
+                href="mailto:contacto@marconi.com.ar"
                 className="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 cursor-pointer group"
                 aria-label="Email"
               >
