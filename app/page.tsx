@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
   Search,
@@ -116,15 +116,6 @@ function CounterAnimation({ value, label, icon: Icon }: { value: string, label: 
 export default function HomePage() {
   const [currentStat, setCurrentStat] = useState(0);
   const isClient = useIsClient();
-  
-  // Parallax effects DISABLED to prevent elements escaping hero boundaries
-  const { scrollY } = useScroll();
-  // All transforms set to 0 to eliminate any movement
-  const heroY = useTransform(scrollY, [0, 800], [0, 0]);
-  const heroOpacity = useTransform(scrollY, [0, 600], [1, 1]);
-  const contentY = useTransform(scrollY, [0, 400], [0, 0]);
-  const bottomY = useTransform(scrollY, [0, 500], [0, 0]);
-  const scrollIndicatorY = useTransform(scrollY, [0, 300], [0, 0]);
 
   // Estados para datos del backend
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
@@ -228,70 +219,54 @@ export default function HomePage() {
       {/* Header Premium */}
       <Header />
 
-      {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
-        {/* Background GIF con Parallax */}
-        <motion.div
-          className="absolute inset-0 overflow-hidden"
-          style={{ y: heroY, opacity: heroOpacity }}
-        >
-          {/* GIF background */}
-          <div className="absolute inset-0 flex items-center justify-center bg-[#0a0e27]">
-            <Image
-              src="/assets/hero/casa.gif"
-              alt="Casa Marconi - Background"
-              fill
-              className="object-cover"
-              style={{
-                transformOrigin: 'center center',
-              }}
-              priority
-              unoptimized
-            />
-          </div>
+      {/* HERO SECTION - DISEÑO MINIMALISTA Y MODERNO */}
+      <section className="relative min-h-screen overflow-hidden">
+        {/* Background GIF - Protagonista visual */}
+        <div className="absolute inset-0">
+          <Image
+            src="/assets/hero/casa.gif"
+            alt="Casa Marconi - Background"
+            fill
+            className="object-cover object-center"
+            priority
+            unoptimized
+          />
 
-          {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+          {/* Overlay minimalista - Solo para legibilidad del texto */}
+          <div className="absolute inset-0 bg-black/30" />
+        </div>
 
-          {/* EFECTO DIFUMINADO NARANJA SUTIL */}
-          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/40 via-orange-500/20 to-transparent" />
+        {/* CONTENIDO PRINCIPAL - Layout limpio y centrado */}
+        <div className="relative z-10 w-full min-h-screen flex flex-col justify-between py-24 px-4">
 
-          {/* Overlay central para mejorar contraste del texto */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10" />
-        </motion.div>
-
-        {/* CONTENIDO PRINCIPAL - LAYOUT UNIFICADO PARA TODOS LOS TAMAÑOS */}
-        <div className="relative z-10 w-full min-h-screen flex flex-col overflow-hidden" style={{ contain: 'layout style', transform: 'translateY(-20vh)' }}>
-          
-          {/* CONTENIDO SUPERIOR - CLAIM CENTRADO */}
+          {/* CLAIM PRINCIPAL - Centrado verticalmente */}
           <div className="flex-1 flex items-center justify-center">
-            <div className="text-center px-4">
-              {/* CLAIM PRINCIPAL */}
-              <motion.div
-                initial={{ opacity: 0, y: 60, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                style={{ y: contentY }}
-              >
-                <div className="relative inline-block">
-                  <Image
-                    src="/assets/impact_text/vivilaexperiencia.PNG"
-                    alt="Viví la experiencia de encontrar tu lugar en el mundo"
-                    width={1000}
-                    height={250}
-                    className="w-full max-w-[90%] sm:max-w-3xl lg:max-w-4xl h-auto"
-                    priority
-                  />
-                  <div className="absolute -inset-2 lg:-inset-4 bg-gradient-to-r from-orange-600/10 via-transparent to-red-600/10 rounded-2xl lg:rounded-3xl blur-2xl lg:blur-3xl -z-10" />
-                </div>
-              </motion.div>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="text-center"
+            >
+              <Image
+                src="/assets/impact_text/vivilaexperiencia.PNG"
+                alt="Viví la experiencia de encontrar tu lugar en el mundo"
+                width={1000}
+                height={250}
+                className="w-full max-w-[85%] sm:max-w-2xl lg:max-w-3xl h-auto mx-auto drop-shadow-2xl"
+                priority
+              />
+            </motion.div>
           </div>
-          
-          {/* CONTENIDO INFERIOR - BUSCADOR HERO */}
-          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-2 sm:pb-3 lg:pb-4 px-4">
+
+          {/* BUSCADOR HERO - Anclado al fondo con espacio */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="w-full max-w-5xl mx-auto"
+          >
             <HeroSearchBar />
-          </div>
+          </motion.div>
         </div>
       </section>
 
