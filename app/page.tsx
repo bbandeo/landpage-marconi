@@ -229,7 +229,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative h-[calc(100vh-4rem)] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
+      <section className="relative h-[87vh] md:min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
         {/* Background GIF con Parallax */}
         <motion.div
           className="absolute inset-0 overflow-hidden"
@@ -274,15 +274,61 @@ export default function HomePage() {
                 style={{ y: contentY }}
               >
                 <div className="relative inline-block">
-                  <Image
-                    src="/assets/impact_text/vivilaexperiencia.PNG"
-                    alt="Viví la experiencia de encontrar tu lugar en el mundo"
-                    width={1000}
-                    height={250}
-                    className="w-full max-w-[280px] sm:max-w-[90%] md:max-w-3xl lg:max-w-4xl h-auto"
-                    priority
+                  {/* Efecto de resplandor animado de fondo */}
+                  <motion.div
+                    className="absolute -inset-4 lg:-inset-6 bg-gradient-to-r from-orange-600/30 via-red-500/30 to-orange-600/30 rounded-3xl blur-3xl"
+                    animate={{
+                      opacity: [0.3, 0.6, 0.3],
+                      scale: [1, 1.05, 1],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
                   />
-                  <div className="absolute -inset-2 lg:-inset-4 bg-gradient-to-r from-orange-600/10 via-transparent to-red-600/10 rounded-2xl lg:rounded-3xl blur-2xl lg:blur-3xl -z-10" />
+
+                  {/* Anillos de resplandor neón */}
+                  <motion.div
+                    className="absolute -inset-3 lg:-inset-5 rounded-2xl"
+                    style={{
+                      background: 'linear-gradient(45deg, rgba(249, 115, 22, 0.4), rgba(239, 68, 68, 0.4), rgba(249, 115, 22, 0.4))',
+                      filter: 'blur(20px)',
+                    }}
+                    animate={{
+                      rotate: [0, 360],
+                      opacity: [0.2, 0.4, 0.2],
+                    }}
+                    transition={{
+                      rotate: { duration: 8, repeat: Infinity, ease: "linear" },
+                      opacity: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                    }}
+                  />
+
+                  {/* Imagen con efecto de brillo */}
+                  <motion.div
+                    animate={{
+                      filter: [
+                        'brightness(1) contrast(1)',
+                        'brightness(1.1) contrast(1.05)',
+                        'brightness(1) contrast(1)',
+                      ],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <Image
+                      src="/assets/impact_text/vivilaexperiencia.PNG"
+                      alt="Viví la experiencia de encontrar tu lugar en el mundo"
+                      width={1000}
+                      height={250}
+                      className="w-full max-w-[280px] sm:max-w-[90%] md:max-w-3xl lg:max-w-4xl h-auto relative z-10 drop-shadow-[0_0_15px_rgba(249,115,22,0.5)]"
+                      priority
+                    />
+                  </motion.div>
                 </div>
               </motion.div>
             </div>
