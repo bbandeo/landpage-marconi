@@ -51,10 +51,8 @@ export default function Hero({
           style={{ filter: 'blur(8px)' }}
           priority
         />
-        {/* Premium overlay elegante y sofisticado */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#000022]/80 via-[#000022]/60 to-[#000022]/70" />
-        {/* Sutil acento inferior */}
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/20 to-transparent" />
+        {/* Overlay oscuro para legibilidad (60%) */}
+        <div className="absolute inset-0 bg-black/60" />
       </div>
 
       {/* Centered content wrapper with flexbox */}

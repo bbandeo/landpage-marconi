@@ -302,50 +302,60 @@ export default function ContactoPage() {
       <Header />
 
       {/* Hero Section - PREMIUM DESIGN */}
-      <section className="section-premium bg-premium-main">
+      <section className="section-premium bg-[#000022]">
         <div className="container-premium text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="display-lg text-premium-primary mb-premium-lg">
-              <span className="accent-premium">CONTACTANOS</span>
+            <h1 className="text-4xl md:text-5xl font-light text-white mb-6">
+              Contáctanos
             </h1>
-            <p className="body-xl text-premium-secondary max-w-4xl mx-auto mb-premium-xl">
-              Estamos aquí para ayudarte a encontrar la propiedad perfecta 
+            <p className="text-lg md:text-xl text-white/80 max-w-3xl mx-auto mb-16 font-light">
+              Estamos aquí para ayudarte a encontrar la propiedad perfecta
               o responder cualquier consulta sobre nuestros servicios
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-premium-lg max-w-3xl mx-auto">
+
+            {/* Tarjetas de Contacto - Datos Protagonistas */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               {contactMethods.map((method, index) => (
-                <motion.div
+                <motion.a
                   key={index}
+                  href={method.action}
+                  target={method.title === "WhatsApp" ? "_blank" : undefined}
+                  rel={method.title === "WhatsApp" ? "noopener noreferrer" : undefined}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + index * 0.1 }}
-                  className="text-center"
+                  onClick={async (e) => {
+                    if (method.title === "Teléfono") {
+                      await handlePhoneClick();
+                    } else if (method.title === "WhatsApp") {
+                      e.preventDefault();
+                      await handleWhatsAppClick();
+                      window.open(method.action, '_blank', 'noopener,noreferrer');
+                    } else if (method.title === "Email") {
+                      await handleEmailClick();
+                    }
+                  }}
+                  className="group p-8 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-orange-500/50 transition-all duration-300 cursor-pointer"
                 >
-                  <Button
-                    size="lg"
-                    className="w-full"
-                    onClick={async () => {
-                      if (method.title === "Teléfono") {
-                        await handlePhoneClick();
-                        window.location.href = method.action;
-                      } else if (method.title === "WhatsApp") {
-                        await handleWhatsAppClick();
-                        window.open(method.action, '_blank', 'noopener,noreferrer');
-                      } else if (method.title === "Email") {
-                        await handleEmailClick();
-                        window.location.href = method.action;
-                      }
-                    }}
-                  >
-                    <method.icon className="w-5 h-5 mr-2" />
+                  {/* Icono naranja grande */}
+                  <div className="mb-6">
+                    <method.icon className="w-12 h-12 text-orange-500 mx-auto group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+
+                  {/* Dato grande en blanco */}
+                  <div className="text-2xl font-semibold text-white mb-2 break-words">
+                    {method.content}
+                  </div>
+
+                  {/* Etiqueta pequeña en gris */}
+                  <div className="text-sm text-gray-400 font-medium">
                     {method.title}
-                  </Button>
-                  <p className="caption-lg text-premium-secondary mt-premium-sm">{method.content}</p>
-                </motion.div>
+                  </div>
+                </motion.a>
               ))}
             </div>
           </motion.div>

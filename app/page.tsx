@@ -231,23 +231,6 @@ export default function HomePage() {
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
       <section className="relative h-[81vh] md:min-h-screen overflow-hidden bg-[#000022]">
-        {/* Background */}
-        <div className="absolute inset-0">
-          {/* Gradient superior orientado a esquina izquierda */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(to top left, #000022 66%, #1F2833 100%)`
-            }}
-          />
-
-          {/* OVERLAY ELEGANTE PARA PROFUNDIDAD */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 z-10" />
-
-          {/* EFECTO DIFUMINADO NARANJA MUY SUTIL (SOLO ACENTO) */}
-          <div className="absolute inset-x-0 bottom-0 h-24 md:h-32 bg-gradient-to-t from-orange-600/15 via-orange-500/5 to-transparent z-10" />
-        </div>
-
         {/* CONTENIDO PRINCIPAL - REORGANIZADO */}
         <div className="relative z-20 w-full h-full flex flex-col justify-between py-6 md:py-12">
 
