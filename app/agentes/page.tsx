@@ -173,17 +173,10 @@ export default function AgentesPage() {
         backgroundImage="/assets/hero/agentsc.png"
         alt="Agentes - Marconi Inmobiliaria"
         title={
-          <>
-            NUESTROS{" "}
-            <span className="text-orange-400 relative inline-block">
-              <span className="absolute inset-0 blur-lg bg-orange-500/40"></span>
-              <span className="relative" style={{
-                textShadow: '0 0 20px rgba(251, 146, 60, 0.5), 0 0 40px rgba(251, 146, 60, 0.3), 0 4px 8px rgba(0, 0, 0, 0.3)'
-              }}>
-                AGENTES
-              </span>
-            </span>
-          </>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.1]">
+            Nuestros <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Agentes</span>
+          </h2>
         }
         description="Conocé al equipo de profesionales inmobiliarios que te acompañará en cada paso para encontrar tu próxima propiedad en Reconquista"
         withAnimation={true}

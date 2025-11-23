@@ -271,7 +271,12 @@ export default function PropiedadesPage() {
       <Hero
         backgroundImage="/assets/hero/casa_llaves.png"
         alt="Casa con llaves - Marconi Inmobiliaria"
-        title="NUESTRAS PROPIEDADES"
+        title={
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.1]">
+            Nuestras <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Propiedades</span>
+          </h2>
+        }
         description=""
         showCounter={false}
       >
