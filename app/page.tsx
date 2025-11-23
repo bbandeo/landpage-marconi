@@ -126,27 +126,6 @@ export default function HomePage() {
   const bottomY = useTransform(scrollY, [0, 500], [0, 0]);
   const scrollIndicatorY = useTransform(scrollY, [0, 300], [0, 0]);
 
-  // Efecto blob que sigue el cursor
-  useEffect(() => {
-    const blob = document.getElementById("hero-blob");
-
-    const handlePointerMove = (event: PointerEvent) => {
-      if (!blob) return;
-
-      const { clientX, clientY } = event;
-
-      blob.animate({
-        left: `${clientX}px`,
-        top: `${clientY}px`
-      }, { duration: 3000, fill: "forwards" });
-    };
-
-    window.addEventListener("pointermove", handlePointerMove);
-
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-    };
-  }, []);
 
   // Estados para datos del backend
   const [featuredProperties, setFeaturedProperties] = useState<Property[]>([]);
@@ -252,7 +231,7 @@ export default function HomePage() {
 
       {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
       <section className="relative h-[81vh] md:min-h-screen overflow-hidden bg-[#000022]">
-        {/* Background con efecto blob */}
+        {/* Background */}
         <div className="absolute inset-0">
           {/* Gradient superior orientado a esquina izquierda */}
           <div
@@ -261,9 +240,6 @@ export default function HomePage() {
               background: `linear-gradient(to top left, #000022 66%, #1F2833 100%)`
             }}
           />
-
-          {/* Efecto blob animado que sigue el cursor */}
-          <div id="hero-blob"></div>
 
           {/* OVERLAY ELEGANTE PARA PROFUNDIDAD */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 z-10" />
