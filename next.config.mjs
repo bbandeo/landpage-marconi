@@ -9,10 +9,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Desactivar Turbopack - usar Webpack para compatibilidad con Leaflet
-  experimental: {
-    turbo: false,
-  },
 }
 
 export default nextConfig
