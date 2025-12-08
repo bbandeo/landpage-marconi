@@ -229,21 +229,45 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - SPLIT TECH (Pantalla Dividida Asimétrica) */}
-      <section className="relative w-full h-screen flex flex-col lg:flex-row bg-black overflow-hidden">
+      <section className="relative w-full h-screen flex flex-col lg:flex-row bg-[#050505] overflow-hidden">
 
         {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
         {/* Orden 2 en móvil (abajo), Orden 1 en desktop (izquierda) */}
         <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-8 lg:px-16 z-10 order-2 lg:order-1 relative bg-[#050505]">
 
+          {/* Grid Overlay Sutil - Blueprint pattern */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-30"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+              `,
+              backgroundSize: '40px 40px'
+            }}
+          />
+
           {/* Línea Neón divisoria (Solo visible en Desktop al borde derecho) */}
-          <div className="hidden lg:block absolute right-0 top-0 h-full w-[1px] bg-orange-500/50 shadow-[0_0_10px_rgba(255,95,31,0.8)]" />
+          <div
+            className="hidden lg:block absolute right-0 top-0 h-full w-[2px] z-20"
+            style={{
+              background: 'linear-gradient(to bottom, transparent 0%, #f97316 15%, #f97316 85%, transparent 100%)',
+              boxShadow: '0 0 15px rgba(249, 115, 22, 0.6), 0 0 30px rgba(249, 115, 22, 0.3), 0 0 45px rgba(249, 115, 22, 0.1)'
+            }}
+          />
+
+          {/* Marcador de sección superior derecho */}
+          <div className="absolute top-8 right-8 lg:right-12 flex items-center gap-2 text-[10px] tracking-[0.2em] text-gray-500 font-mono">
+            <span className="w-5 h-px bg-gray-600" />
+            SEC.01
+          </div>
 
           {/* Logo pequeño superior */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-8"
+            className="mb-8 relative z-10"
           >
             <Image
               src="/assets/logos/marconi_title.svg"
@@ -254,16 +278,32 @@ export default function HomePage() {
             />
           </motion.div>
 
-          {/* Título Principal (H1) */}
+          {/* Título Principal (H1) con gradiente mejorado */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6"
+            className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 relative z-10"
           >
-            Encontrá tu{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">
+            Encontrá tu
+            <br />
+            <span
+              className="relative inline-block"
+              style={{
+                background: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}
+            >
               hogar ideal
+              {/* Línea decorativa bajo el gradiente */}
+              <span
+                className="absolute -bottom-1 left-0 w-full h-[2px]"
+                style={{
+                  background: 'linear-gradient(to right, #f97316, transparent)'
+                }}
+              />
             </span>
           </motion.h1>
 
@@ -272,49 +312,47 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-[#A1A1AA] text-lg lg:text-xl mb-8 max-w-md leading-relaxed"
+            className="text-[#888] text-base lg:text-lg mb-8 max-w-[280px] leading-relaxed relative z-10"
           >
             Somos expertos en el mercado inmobiliario de Reconquista. Te acompañamos en cada paso hacia tu nuevo hogar.
           </motion.p>
 
-          {/* Botones CTA */}
+          {/* Botones CTA con efecto shimmer */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col sm:flex-row gap-3 relative z-10"
           >
             <Link href="/propiedades">
-              <button className="px-8 py-3 bg-orange-600 hover:bg-orange-500 text-white font-medium rounded-md transition-all duration-300 shadow-[0_0_20px_rgba(234,88,12,0.3)] hover:shadow-[0_0_30px_rgba(234,88,12,0.5)]">
+              <button className="relative px-6 py-3 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
                 Ver Propiedades
+                {/* Shimmer effect */}
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </button>
             </Link>
             <Link href="/contacto">
-              <button className="px-8 py-3 border border-gray-700 text-gray-300 hover:border-white hover:text-white rounded-md transition-all duration-300">
-                Contactar
+              <button className="px-6 py-3 border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200 text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300">
+                Contactar →
               </button>
             </Link>
           </motion.div>
 
-          {/* Stats mini (opcional) */}
+          {/* Footer markers - Coordenadas estilo tech */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.9 }}
-            className="flex gap-8 mt-12 pt-8 border-t border-gray-800"
+            className="absolute bottom-8 left-8 lg:left-16 flex gap-6 text-[9px] text-gray-500 font-mono tracking-[0.1em]"
           >
-            <div>
-              <div className="text-2xl font-bold text-white">200+</div>
-              <div className="text-sm text-gray-500">Propiedades</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">98%</div>
-              <div className="text-sm text-gray-500">Satisfacción</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">5+</div>
-              <div className="text-sm text-gray-500">Años</div>
-            </div>
+            <span className="flex items-center gap-1">
+              <span className="text-orange-500/50">◆</span>
+              LAT 29.1° S
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="text-orange-500/50">◆</span>
+              LONG 59.6° W
+            </span>
           </motion.div>
         </div>
 
@@ -323,10 +361,20 @@ export default function HomePage() {
         <div className="w-full lg:w-[58%] h-[40%] lg:h-full relative order-1 lg:order-2">
 
           {/* Gradiente de fusión para suavizar el corte (izquierda del video) */}
-          <div className="absolute inset-y-0 left-0 w-24 lg:w-32 bg-gradient-to-r from-[#050505] via-[#050505]/50 to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 left-0 w-20 lg:w-24 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
 
           {/* Gradiente inferior en móvil para transición al texto */}
-          <div className="lg:hidden absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#050505] to-transparent z-10 pointer-events-none" />
+          <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#050505] to-transparent z-10 pointer-events-none" />
+
+          {/* Brackets decorativos en las esquinas del video */}
+          <div className="absolute top-4 left-4 w-5 h-5 border-t border-l border-orange-500/40 z-20 pointer-events-none" />
+          <div className="absolute bottom-4 right-4 w-5 h-5 border-b border-r border-orange-500/40 z-20 pointer-events-none" />
+
+          {/* Indicador LIVE */}
+          <div className="absolute top-4 right-4 flex items-center gap-2 bg-black/60 backdrop-blur-sm px-3 py-1.5 z-20 font-mono text-[9px] tracking-[0.15em] text-gray-500">
+            <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse" />
+            LIVE
+          </div>
 
           {/* Video */}
           <video
@@ -339,6 +387,23 @@ export default function HomePage() {
             <source src="/assets/hero/video-casa-hero-1.mp4" type="video/mp4" />
           </video>
         </div>
+
+        {/* SCROLL INDICATOR - Centrado en la parte inferior */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-30"
+        >
+          <span className="text-[9px] tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
+          <div className="relative w-[1px] h-8 bg-gray-700 overflow-hidden">
+            <motion.div
+              animate={{ y: ['-100%', '100%'] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute w-full h-full bg-gradient-to-b from-orange-500 to-transparent"
+            />
+          </div>
+        </motion.div>
 
       </section>
 
