@@ -16,7 +16,7 @@
 
 'use client'
 
-import { useEffect, useMemo, useCallback } from 'react'
+import { useEffect, useMemo, useCallback, useState } from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import type { InteractivePropertyMapProps } from '@/types/map'
@@ -60,6 +60,16 @@ export default function InteractivePropertyMap({
   className = '',
   onPropertyClick,
 }: InteractivePropertyMapProps) {
+  // Estado para CSS de Leaflet
+  const [cssLoaded, setCssLoaded] = useState(false)
+
+  // Cargar CSS de Leaflet dinámicamente en el cliente
+  useEffect(() => {
+    import('leaflet/dist/leaflet.css').then(() => {
+      setCssLoaded(true)
+    })
+  }, [])
+
   // Hooks
   const { properties, loading, error, bounds, isEmpty, refresh } = usePropertyMap({
     maxProperties,
@@ -110,8 +120,8 @@ export default function InteractivePropertyMap({
     }
   }, [error, trackInteraction])
 
-  // Estado de carga
-  if (loading) {
+  // Estado de carga (incluye espera de CSS)
+  if (loading || !cssLoaded) {
     return <MapLoadingState height={mapHeight} />
   }
 
