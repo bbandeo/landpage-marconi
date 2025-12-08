@@ -705,8 +705,7 @@
      LEAFLET MAP CUSTOMIZATION
      ======================================== */
 
-  /* Importar estilos base de Leaflet */
-  @import 'leaflet/dist/leaflet.css';
+  /* Estilos base de Leaflet se importan en el componente del mapa */
 
   /* CONTENEDOR DEL MAPA */
   .leaflet-container {
