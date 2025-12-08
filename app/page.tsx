@@ -228,71 +228,118 @@ export default function HomePage() {
       {/* Header Premium */}
       <Header />
 
-      {/* HERO SECTION - LAYOUT MODERNO Y CONVERSIÓN */}
-      <section className="relative min-h-screen overflow-hidden" style={{ contain: 'layout style paint', clipPath: 'inset(0)' }}>
-        {/* Background GIF con Parallax */}
-        <motion.div
-          className="absolute inset-0 overflow-hidden"
-          style={{ y: heroY, opacity: heroOpacity }}
-        >
-          {/* GIF background */}
-          <div className="absolute inset-0 flex items-center justify-center bg-[#0a0e27]">
+      {/* HERO SECTION - SPLIT TECH (Pantalla Dividida Asimétrica) */}
+      <section className="relative w-full h-screen flex flex-col lg:flex-row bg-black overflow-hidden">
+
+        {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
+        {/* Orden 2 en móvil (abajo), Orden 1 en desktop (izquierda) */}
+        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-8 lg:px-16 z-10 order-2 lg:order-1 relative bg-[#050505]">
+
+          {/* Línea Neón divisoria (Solo visible en Desktop al borde derecho) */}
+          <div className="hidden lg:block absolute right-0 top-0 h-full w-[1px] bg-orange-500/50 shadow-[0_0_10px_rgba(255,95,31,0.8)]" />
+
+          {/* Logo pequeño superior */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-8"
+          >
             <Image
-              src="/assets/hero/casa.gif"
-              alt="Casa Marconi - Background"
-              fill
-              className="object-cover"
-              style={{
-                transformOrigin: 'center center',
-              }}
-              priority
-              unoptimized
+              src="/assets/logos/marconi_title.svg"
+              alt="Marconi Inmobiliaria"
+              width={160}
+              height={45}
+              className="opacity-90"
             />
-          </div>
+          </motion.div>
 
-          {/* OVERLAY MEJORADO PARA LEGIBILIDAD */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+          {/* Título Principal (H1) */}
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6"
+          >
+            Encontrá tu{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">
+              hogar ideal
+            </span>
+          </motion.h1>
 
-          {/* EFECTO DIFUMINADO NARANJA SUTIL */}
-          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-orange-600/40 via-orange-500/20 to-transparent" />
+          {/* Subtítulo (Lead) */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-[#A1A1AA] text-lg lg:text-xl mb-8 max-w-md leading-relaxed"
+          >
+            Somos expertos en el mercado inmobiliario de Reconquista. Te acompañamos en cada paso hacia tu nuevo hogar.
+          </motion.p>
 
-          {/* Overlay central para mejorar contraste del texto */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10" />
-        </motion.div>
+          {/* Botones CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="flex flex-col sm:flex-row gap-4"
+          >
+            <Link href="/propiedades">
+              <button className="px-8 py-3 bg-orange-600 hover:bg-orange-500 text-white font-medium rounded-md transition-all duration-300 shadow-[0_0_20px_rgba(234,88,12,0.3)] hover:shadow-[0_0_30px_rgba(234,88,12,0.5)]">
+                Ver Propiedades
+              </button>
+            </Link>
+            <Link href="/contacto">
+              <button className="px-8 py-3 border border-gray-700 text-gray-300 hover:border-white hover:text-white rounded-md transition-all duration-300">
+                Contactar
+              </button>
+            </Link>
+          </motion.div>
 
-        {/* CONTENIDO PRINCIPAL - LAYOUT UNIFICADO PARA TODOS LOS TAMAÑOS */}
-        <div className="relative z-10 w-full min-h-screen flex flex-col overflow-hidden" style={{ contain: 'layout style', transform: 'translateY(-20vh)' }}>
-          
-          {/* CONTENIDO SUPERIOR - CLAIM CENTRADO */}
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center px-4">
-              {/* CLAIM PRINCIPAL */}
-              <motion.div
-                initial={{ opacity: 0, y: 60, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                style={{ y: contentY }}
-              >
-                <div className="relative inline-block">
-                  <Image
-                    src="/assets/impact_text/vivilaexperiencia.PNG"
-                    alt="Viví la experiencia de encontrar tu lugar en el mundo"
-                    width={1000}
-                    height={250}
-                    className="w-full max-w-[90%] sm:max-w-3xl lg:max-w-4xl h-auto"
-                    priority
-                  />
-                  <div className="absolute -inset-2 lg:-inset-4 bg-gradient-to-r from-orange-600/10 via-transparent to-red-600/10 rounded-2xl lg:rounded-3xl blur-2xl lg:blur-3xl -z-10" />
-                </div>
-              </motion.div>
+          {/* Stats mini (opcional) */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+            className="flex gap-8 mt-12 pt-8 border-t border-gray-800"
+          >
+            <div>
+              <div className="text-2xl font-bold text-white">200+</div>
+              <div className="text-sm text-gray-500">Propiedades</div>
             </div>
-          </div>
-          
-          {/* CONTENIDO INFERIOR - BUSCADOR HERO */}
-          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center pb-2 sm:pb-3 lg:pb-4 px-4">
-            <HeroSearchBar />
-          </div>
+            <div>
+              <div className="text-2xl font-bold text-white">98%</div>
+              <div className="text-sm text-gray-500">Satisfacción</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-white">5+</div>
+              <div className="text-sm text-gray-500">Años</div>
+            </div>
+          </motion.div>
         </div>
+
+        {/* COLUMNA DERECHA: VIDEO */}
+        {/* Orden 1 en móvil (arriba), Orden 2 en desktop (derecha) */}
+        <div className="w-full lg:w-[58%] h-[40%] lg:h-full relative order-1 lg:order-2">
+
+          {/* Gradiente de fusión para suavizar el corte (izquierda del video) */}
+          <div className="absolute inset-y-0 left-0 w-24 lg:w-32 bg-gradient-to-r from-[#050505] via-[#050505]/50 to-transparent z-10 pointer-events-none" />
+
+          {/* Gradiente inferior en móvil para transición al texto */}
+          <div className="lg:hidden absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-[#050505] to-transparent z-10 pointer-events-none" />
+
+          {/* Video */}
+          <video
+            className="w-full h-full object-cover object-center"
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src="/assets/hero/video-casa-hero-1.mp4" type="video/mp4" />
+          </video>
+        </div>
+
       </section>
 
       {/* Barra separadora fluida naranja */}
