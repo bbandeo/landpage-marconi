@@ -341,7 +341,7 @@ export default function HomePage() {
         </AnimatePresence>
 
         {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
-        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-8 lg:px-16 z-10 order-2 lg:order-1 relative bg-[#0a0a0c]">
+        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 z-10 order-2 lg:order-1 relative bg-[#0a0a0c]">
 
           {/* ═══════════════════════════════════════════════════════════════
               FASE 1: BLUEPRINT GRID - Aparece con fade sutil
@@ -407,7 +407,7 @@ export default function HomePage() {
               ═══════════════════════════════════════════════════════════════ */}
 
           {/* Título Principal */}
-          <div className="overflow-hidden relative z-10 mb-6">
+          <div className="overflow-hidden relative z-10 mb-6 lg:mb-8 2xl:mb-10 max-w-[480px] xl:max-w-[520px] 2xl:max-w-[600px]">
             <motion.div
               initial={{ y: 100, opacity: 0 }}
               animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
@@ -449,7 +449,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-            className="text-[#888] text-base lg:text-lg xl:text-xl 2xl:text-2xl mb-8 max-w-[280px] lg:max-w-[320px] xl:max-w-[400px] 2xl:max-w-[480px] leading-relaxed relative z-10"
+            className="text-[#888] text-base lg:text-lg xl:text-xl 2xl:text-2xl mb-8 lg:mb-10 xl:mb-12 2xl:mb-14 max-w-[280px] lg:max-w-[320px] xl:max-w-[400px] 2xl:max-w-[480px] leading-relaxed relative z-10"
           >
             Somos expertos en el mercado inmobiliario de Reconquista. Te acompañamos en cada paso hacia tu nuevo hogar.
           </motion.p>
@@ -459,7 +459,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="flex flex-col lg:flex-row gap-3 lg:gap-4 relative z-10"
+            className="flex flex-col lg:flex-row gap-3 lg:gap-4 xl:gap-5 2xl:gap-6 relative z-10"
           >
             <Link href="/propiedades">
               <button className="relative px-6 py-3 xl:px-8 xl:py-4 2xl:px-10 2xl:py-5 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] lg:text-xs xl:text-sm 2xl:text-base font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
@@ -480,7 +480,7 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={animationPhase >= 5 ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="flex flex-col items-center gap-2 mt-8 lg:mt-12 relative z-10"
+            className="flex flex-col items-center gap-2 mt-8 lg:mt-12 xl:mt-14 2xl:mt-16 relative z-10"
           >
             <span className="text-[9px] lg:text-[10px] xl:text-[11px] 2xl:text-xs tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
             <div className="relative w-[1px] h-8 xl:h-10 2xl:h-12 bg-gray-700 overflow-hidden">
