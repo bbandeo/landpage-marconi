@@ -535,12 +535,12 @@ export default function HomePage() {
             <source src="/assets/hero/video-casa-hero-1.mp4" type="video/mp4" />
           </video>
 
-          {/* Video Loop - Se reproduce 2 veces después del principal */}
+          {/* Video Loop - Se reproduce 2 veces y queda congelado en último frame */}
           <video
             ref={loopVideoRef}
             className="absolute inset-0 w-full h-full object-cover object-center"
             style={{
-              opacity: showLoopVideo && loopCount < 2 ? 1 : 0,
+              opacity: showLoopVideo ? 1 : 0,
               transition: 'opacity 0.3s ease-out'
             }}
             autoPlay
@@ -553,6 +553,7 @@ export default function HomePage() {
                 loopVideoRef.current.currentTime = 0;
                 loopVideoRef.current.play();
               }
+              // Después de 2 reproducciones, el video queda pausado en el último frame
             }}
           >
             <source src="/assets/hero/video-casa-loop-1.mp4" type="video/mp4" />
