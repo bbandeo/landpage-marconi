@@ -470,7 +470,7 @@ export default function HomePage() {
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </button>
             </Link>
-            <Link href="/contacto" className="w-full lg:w-auto">
+            <Link href="/contacto" className="hidden lg:block w-full lg:w-auto">
               <button className="w-full lg:w-auto h-[48px] lg:h-auto px-6 lg:px-8 xl:px-8 2xl:px-10 lg:py-4 2xl:py-5 border border-white/30 hover:border-white/50 text-white hover:text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-[1px] uppercase rounded-md transition-all duration-200 bg-transparent flex items-center justify-center active:scale-[0.98]">
                 Contactar →
               </button>
