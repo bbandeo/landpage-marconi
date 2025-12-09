@@ -82,7 +82,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
       </div>
       
       <div className="w-full container-premium">
-        <div className="flex items-center justify-between h-[76px] md:h-[90px]">
+        <div className="flex items-center justify-between h-[76px] md:h-[90px] 2xl:h-[110px]">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
@@ -90,7 +90,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
               alt="Marconi Inmobiliaria"
               width={140}
               height={45}
-              className="h-7 md:h-11 w-auto"
+              className="h-7 md:h-11 2xl:h-14 w-auto"
               priority
             />
           </Link>
@@ -101,7 +101,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
               href="/propiedades"
               className={getLinkClassName("/propiedades")}
             >
-              <span className="body-md font-medium tracking-wide">
+              <span className="body-md 2xl:text-base font-medium tracking-wide">
                 PROPIEDADES
               </span>
             </Link>
@@ -109,7 +109,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
               href="/agentes"
               className={getAgentesLinkClassName()}
             >
-              <span className="body-md font-medium tracking-wide">
+              <span className="body-md 2xl:text-base font-medium tracking-wide">
                 AGENTES
               </span>
             </Link>
@@ -117,7 +117,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
               href="/contacto"
               className={getContactLinkClassName()}
             >
-              <span className="body-md font-medium tracking-wide">
+              <span className="body-md 2xl:text-base font-medium tracking-wide">
                 CONTACTO
               </span>
             </Link>

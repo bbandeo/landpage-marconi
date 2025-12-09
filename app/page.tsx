@@ -323,7 +323,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - SPLIT TECH con Animación Coordinada */}
-      <section className="relative w-full h-screen pt-[108px] lg:pt-[122px] flex flex-col lg:flex-row bg-[#0a0a0c] overflow-hidden">
+      <section className="relative w-full h-screen pt-[108px] lg:pt-[122px] 2xl:pt-[142px] flex flex-col lg:flex-row bg-[#0a0a0c] overflow-hidden">
 
         {/* ═══════════════════════════════════════════════════════════════
             FASE 0: BLACKOUT OVERLAY
@@ -413,7 +413,7 @@ export default function HomePage() {
               animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
               transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
             >
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
+              <h1 className="text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white leading-tight">
                 Encontrá tu
               </h1>
             </motion.div>
@@ -423,7 +423,7 @@ export default function HomePage() {
               transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
             >
               <span
-                className="text-4xl lg:text-5xl xl:text-6xl font-bold relative inline-block"
+                className="text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold relative inline-block"
                 style={{
                   background: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)',
                   WebkitBackgroundClip: 'text',
@@ -449,7 +449,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-            className="text-[#888] text-base lg:text-lg mb-8 max-w-[280px] leading-relaxed relative z-10"
+            className="text-[#888] text-base lg:text-lg xl:text-xl 2xl:text-2xl mb-8 max-w-[280px] lg:max-w-[320px] xl:max-w-[400px] 2xl:max-w-[480px] leading-relaxed relative z-10"
           >
             Somos expertos en el mercado inmobiliario de Reconquista. Te acompañamos en cada paso hacia tu nuevo hogar.
           </motion.p>
@@ -462,14 +462,14 @@ export default function HomePage() {
             className="flex flex-col lg:flex-row gap-3 lg:gap-4 relative z-10"
           >
             <Link href="/propiedades">
-              <button className="relative px-6 py-3 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
+              <button className="relative px-6 py-3 xl:px-8 xl:py-4 2xl:px-10 2xl:py-5 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] lg:text-xs xl:text-sm 2xl:text-base font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
                 Ver Propiedades
                 {/* Shimmer effect */}
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </button>
             </Link>
             <Link href="/contacto">
-              <button className="px-6 py-3 border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200 text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300">
+              <button className="px-6 py-3 xl:px-8 xl:py-4 2xl:px-10 2xl:py-5 border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200 text-[11px] lg:text-xs xl:text-sm 2xl:text-base font-medium tracking-[0.1em] uppercase transition-all duration-300">
                 Contactar →
               </button>
             </Link>
@@ -482,8 +482,8 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="flex flex-col items-center gap-2 mt-8 lg:mt-12 relative z-10"
           >
-            <span className="text-[9px] tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
-            <div className="relative w-[1px] h-8 bg-gray-700 overflow-hidden">
+            <span className="text-[9px] lg:text-[10px] xl:text-[11px] 2xl:text-xs tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
+            <div className="relative w-[1px] h-8 xl:h-10 2xl:h-12 bg-gray-700 overflow-hidden">
               <motion.div
                 animate={{ y: ['-100%', '100%'] }}
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
