@@ -137,7 +137,11 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
 
       {/* Mobile Navigation Menu - PREMIUM STYLED */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-black/70 backdrop-blur-md border-b border-white/10">
+        <div className={`md:hidden transition-all duration-300 ${
+          scrolled
+            ? 'bg-black/70 backdrop-blur-md border-b border-white/10'
+            : 'bg-transparent'
+        }`}>
           <div className="container-premium py-premium-md">
             <nav className="flex flex-col space-y-premium-sm">
               <Link
