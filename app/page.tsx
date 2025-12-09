@@ -323,7 +323,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - SPLIT TECH con Animación Coordinada */}
-      <section className="relative w-full h-screen pt-[108px] lg:pt-[122px] 2xl:pt-[142px] flex flex-col lg:flex-row bg-[#0a0a0c] overflow-hidden">
+      <section className="relative w-full h-screen pt-[108px] lg:pt-[122px] 2xl:pt-[142px] flex flex-col lg:flex-row bg-[#00021F] overflow-hidden">
 
         {/* ═══════════════════════════════════════════════════════════════
             FASE 0: BLACKOUT OVERLAY
@@ -341,7 +341,7 @@ export default function HomePage() {
         </AnimatePresence>
 
         {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
-        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 z-10 order-2 lg:order-1 relative bg-[#0a0a0c]">
+        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 z-10 order-2 lg:order-1 relative bg-[#00021F]">
 
           {/* ═══════════════════════════════════════════════════════════════
               FASE 1: BLUEPRINT GRID - Aparece con fade sutil
@@ -498,10 +498,10 @@ export default function HomePage() {
         <div className="w-full lg:w-[58%] h-[40%] lg:h-full relative order-1 lg:order-2">
 
           {/* Gradiente de fusión */}
-          <div className="absolute inset-y-0 left-0 w-20 lg:w-24 bg-gradient-to-r from-[#0a0a0c] to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 left-0 w-20 lg:w-24 bg-gradient-to-r from-[#00021F] to-transparent z-10 pointer-events-none" />
 
           {/* Gradiente inferior en móvil */}
-          <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0c] to-transparent z-10 pointer-events-none" />
+          <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#00021F] to-transparent z-10 pointer-events-none" />
 
           {/* Video Principal - Se reproduce una vez */}
           <video
@@ -552,7 +552,7 @@ export default function HomePage() {
       </section>
 
       {/* Transición suave Hero → Propiedades */}
-      <div className="relative h-32 w-full bg-gradient-to-b from-[#0a0a0c] via-[#0d0f14] to-slate-900 overflow-hidden">
+      <div className="relative h-32 w-full bg-gradient-to-b from-[#00021F] via-[#0d0f14] to-slate-900 overflow-hidden">
         {/* Línea decorativa sutil */}
         <div className="absolute top-8 left-1/2 -translate-x-1/2 w-24 h-[1px] bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
       </div>
