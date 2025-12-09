@@ -21,7 +21,7 @@ interface PropertyImageCarouselProps {
  */
 function PlaceholderImage() {
   return (
-    <div className="relative aspect-[4/3] bg-night-blue/80 flex items-center justify-center rounded-t-2xl">
+    <div className="relative aspect-[16/10] bg-night-blue/80 flex items-center justify-center rounded-t-2xl">
       <div className="text-center">
         <Home className="w-12 h-12 mx-auto mb-2 text-support-gray/40" />
         <p className="text-sm text-support-gray">Sin imágenes disponibles</p>
@@ -36,7 +36,7 @@ function PlaceholderImage() {
  */
 function SingleImage({ image, title }: { image: string; title: string }) {
   return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-t-2xl">
+    <div className="relative aspect-[16/10] overflow-hidden rounded-t-2xl">
       <Image
         src={image}
         alt={`${title} - Vista principal`}
@@ -150,7 +150,7 @@ export function PropertyImageCarousel({
               className="flex-[0_0_100%] min-w-0"
             >
               {/* Image container with fixed aspect ratio */}
-              <div className="relative aspect-[4/3]">
+              <div className="relative aspect-[16/10]">
                 <Image
                   src={image}
                   alt={`${propertyTitle} - Imagen ${index + 1}`}

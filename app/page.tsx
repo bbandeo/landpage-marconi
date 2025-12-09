@@ -323,7 +323,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - SPLIT TECH con Animación Coordinada */}
-      <section className="relative w-full h-[calc(100vh-76px)] lg:h-[calc(100vh-90px)] flex flex-col lg:flex-row bg-[#050505] overflow-hidden">
+      <section className="relative w-full h-[calc(100vh-76px)] lg:h-[calc(100vh-90px)] flex flex-col lg:flex-row bg-[#0a0a0c] overflow-hidden">
 
         {/* ═══════════════════════════════════════════════════════════════
             FASE 0: BLACKOUT OVERLAY
@@ -341,7 +341,7 @@ export default function HomePage() {
         </AnimatePresence>
 
         {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
-        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-8 lg:px-16 z-10 order-2 lg:order-1 relative bg-[#050505]">
+        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-8 lg:px-16 z-10 order-2 lg:order-1 relative bg-[#0a0a0c]">
 
           {/* ═══════════════════════════════════════════════════════════════
               FASE 1: BLUEPRINT GRID - Aparece con fade sutil
@@ -361,38 +361,22 @@ export default function HomePage() {
           />
 
           {/* ═══════════════════════════════════════════════════════════════
-              FASE 2: LÍNEA NEÓN DIVISORIA
-              Se expande desde el centro hacia arriba y abajo
+              FASE 2: LÍNEA DIVISORIA SUTIL
+              Gradiente que se desvanece para no competir con el título
               ═══════════════════════════════════════════════════════════════ */}
           <motion.div
-            initial={{ height: 0, top: "50%" }}
+            initial={{ height: 0, top: "50%", opacity: 0 }}
             animate={animationPhase >= 2 ? {
               height: "100%",
               top: 0,
-            } : { height: 0, top: "50%" }}
+              opacity: 1,
+            } : { height: 0, top: "50%", opacity: 0 }}
             transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
-            className="hidden lg:block absolute right-0 w-[2px] z-20"
+            className="hidden lg:block absolute right-0 w-[1px] z-20"
             style={{
-              background: '#f97316',
-              boxShadow: '0 0 5px #f97316, 0 0 10px #f97316, 0 0 20px rgba(249, 115, 22, 0.5), 0 0 40px rgba(249, 115, 22, 0.3)'
+              background: 'linear-gradient(to bottom, transparent 0%, rgba(249, 115, 22, 0.3) 20%, rgba(249, 115, 22, 0.4) 50%, rgba(249, 115, 22, 0.3) 80%, transparent 100%)',
             }}
-          >
-            {/* Puntos brillantes en los extremos */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: animationPhase >= 3 ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
-              className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#f97316]"
-              style={{ boxShadow: '0 0 10px #f97316, 0 0 20px #f97316' }}
-            />
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: animationPhase >= 3 ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
-              className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#f97316]"
-              style={{ boxShadow: '0 0 10px #f97316, 0 0 20px #f97316' }}
-            />
-          </motion.div>
+          />
 
           {/* ═══════════════════════════════════════════════════════════════
               PULSO DE ENERGÍA - Viaja por la línea hacia el contenido
@@ -514,10 +498,10 @@ export default function HomePage() {
         <div className="w-full lg:w-[58%] h-[40%] lg:h-full relative order-1 lg:order-2">
 
           {/* Gradiente de fusión */}
-          <div className="absolute inset-y-0 left-0 w-20 lg:w-24 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 left-0 w-20 lg:w-24 bg-gradient-to-r from-[#0a0a0c] to-transparent z-10 pointer-events-none" />
 
           {/* Gradiente inferior en móvil */}
-          <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#050505] to-transparent z-10 pointer-events-none" />
+          <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a0a0c] to-transparent z-10 pointer-events-none" />
 
           {/* Video Principal - Se reproduce una vez */}
           <video
@@ -567,8 +551,11 @@ export default function HomePage() {
 
       </section>
 
-      {/* Barra separadora fluida naranja */}
-      <div className="h-2 w-full bg-gradient-to-b from-orange-500/70 via-orange-600/30 to-[#0d0f1a]" />
+      {/* Transición suave Hero → Propiedades */}
+      <div className="relative h-32 w-full bg-gradient-to-b from-[#0a0a0c] via-[#0d0f14] to-slate-900 overflow-hidden">
+        {/* Línea decorativa sutil */}
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 w-24 h-[1px] bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
+      </div>
 
       {/* Propiedades Destacadas - PREMIUM DESIGN */}
       <section
