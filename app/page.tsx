@@ -229,7 +229,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - SPLIT TECH (Pantalla Dividida Asimétrica) */}
-      <section className="relative w-full h-screen flex flex-col lg:flex-row bg-[#050505] overflow-hidden">
+      <section className="relative w-full h-[calc(100vh-76px)] lg:h-[calc(100vh-90px)] flex flex-col lg:flex-row bg-[#050505] overflow-hidden">
 
         {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
         {/* Orden 2 en móvil (abajo), Orden 1 en desktop (izquierda) */}
@@ -300,7 +300,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex flex-col sm:flex-row gap-6 relative z-10"
+            className="flex flex-row gap-4 relative z-10"
           >
             <Link href="/propiedades">
               <button className="relative px-6 py-3 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
@@ -314,6 +314,23 @@ export default function HomePage() {
                 Contactar →
               </button>
             </Link>
+          </motion.div>
+
+          {/* SCROLL INDICATOR - Debajo de botones */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.2 }}
+            className="flex flex-col items-center gap-2 mt-8 lg:mt-12 relative z-10"
+          >
+            <span className="text-[9px] tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
+            <div className="relative w-[1px] h-8 bg-gray-700 overflow-hidden">
+              <motion.div
+                animate={{ y: ['-100%', '100%'] }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute w-full h-full bg-gradient-to-b from-orange-500 to-transparent"
+              />
+            </div>
           </motion.div>
 
         </div>
@@ -339,23 +356,6 @@ export default function HomePage() {
             <source src="/assets/hero/video-casa-hero-1.mp4" type="video/mp4" />
           </video>
         </div>
-
-        {/* SCROLL INDICATOR - A la derecha del título en mobile, centrado en desktop */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          className="absolute bottom-[45%] right-8 lg:bottom-6 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 flex flex-col items-center gap-2 z-30"
-        >
-          <span className="text-[9px] tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
-          <div className="relative w-[1px] h-8 bg-gray-700 overflow-hidden">
-            <motion.div
-              animate={{ y: ['-100%', '100%'] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute w-full h-full bg-gradient-to-b from-orange-500 to-transparent"
-            />
-          </div>
-        </motion.div>
 
       </section>
 

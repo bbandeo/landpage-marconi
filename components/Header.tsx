@@ -76,7 +76,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
       </div>
       
       <div className="w-full container-premium">
-        <div className="flex items-center justify-between h-20 md:h-24">
+        <div className="flex items-center justify-between h-[76px] md:h-[90px]">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image
@@ -84,7 +84,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
               alt="Marconi Inmobiliaria"
               width={140}
               height={45}
-              className="h-8 md:h-12 w-auto"
+              className="h-7 md:h-11 w-auto"
               priority
             />
           </Link>
