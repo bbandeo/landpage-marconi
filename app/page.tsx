@@ -166,6 +166,8 @@ export default function HomePage() {
   const [showBlackout, setShowBlackout] = useState(true);
   const [showSparks, setShowSparks] = useState(false);
   const [animationPhase, setAnimationPhase] = useState(0);
+  const [showLoopVideo, setShowLoopVideo] = useState(false);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
   
   // Parallax effects DISABLED to prevent elements escaping hero boundaries
   const { scrollY } = useScroll();
@@ -524,18 +526,33 @@ export default function HomePage() {
           {/* Gradiente inferior en móvil */}
           <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#050505] to-transparent z-10 pointer-events-none" />
 
-          {/* Video con fade in */}
+          {/* Video Principal - Se reproduce una vez */}
+          <motion.video
+            ref={heroVideoRef}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: animationPhase >= 2 && !showLoopVideo ? 1 : 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            className="absolute inset-0 w-full h-full object-cover object-center"
+            autoPlay
+            muted
+            playsInline
+            onEnded={() => setShowLoopVideo(true)}
+          >
+            <source src="/assets/hero/video-casa-hero-1.mp4" type="video/mp4" />
+          </motion.video>
+
+          {/* Video Loop - Aparece después del video principal */}
           <motion.video
             initial={{ opacity: 0 }}
-            animate={animationPhase >= 2 ? { opacity: 1 } : { opacity: 0 }}
+            animate={{ opacity: showLoopVideo ? 1 : 0 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            className="w-full h-full object-cover object-center"
+            className="absolute inset-0 w-full h-full object-cover object-center"
             autoPlay
             loop
             muted
             playsInline
           >
-            <source src="/assets/hero/video-casa-hero-1.mp4" type="video/mp4" />
+            <source src="/assets/hero/video-casa-loop-1.mp4" type="video/mp4" />
           </motion.video>
         </div>
 

@@ -59,7 +59,8 @@
       "mcp__playwright__playwright_evaluate",
       "mcp__playwright__playwright_close",
       "Bash(xargs kill:*)",
-      "Bash(git -c user.name=\"bbandeo\" -c user.email=\"bbandeo@crosetto.com.ar\" commit -m \"$(cat <<''EOF''\nfix: Limpiar Hero y mejorar UX móvil\n\n- Quitar logo Marconi duplicado del Hero\n- Quitar brackets decorativos del video\n- Aumentar espacio entre botones CTA (gap-3 → gap-6)\n- Mover scroll indicator a la derecha del título en mobile\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(git -c user.name=\"bbandeo\" -c user.email=\"bbandeo@crosetto.com.ar\" commit -m \"$(cat <<''EOF''\nfix: Limpiar Hero y mejorar UX móvil\n\n- Quitar logo Marconi duplicado del Hero\n- Quitar brackets decorativos del video\n- Aumentar espacio entre botones CTA (gap-3 → gap-6)\n- Mover scroll indicator a la derecha del título en mobile\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git -c user.name=\"bbandeo\" -c user.email=\"bbandeo@crosetto.com.ar\" commit -m \"$(cat <<''EOF''\nfeat: Transición de video intro a video loop en Hero\n\n- Video principal (video-casa-hero-1.mp4) se reproduce una vez\n- Al terminar, hace fade out\n- Video loop (video-casa-loop-1.mp4) hace fade in y se reproduce infinitamente\n- Transición suave de 1.5s entre videos\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": []
   }
