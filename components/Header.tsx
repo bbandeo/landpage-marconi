@@ -69,8 +69,8 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
   return (
     <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
       scrolled
-        ? 'bg-black/70 backdrop-blur-md border-b border-white/10 py-2'
-        : 'bg-transparent py-4'
+        ? 'bg-[#00021F] border-b border-white/10 py-2'
+        : 'bg-[#00021F] py-4'
     }`}>
       {/* Scroll Progress Bar - PREMIUM */}
       <div
@@ -127,7 +127,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden text-bone-white hover:bg-premium-card"
+            className="md:hidden text-bone-white hover:bg-white/10"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -137,12 +137,12 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
 
       {/* Mobile Navigation Menu - PREMIUM STYLED */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-premium-main border-b border-support-gray/20">
+        <div className="md:hidden bg-[#00021F] border-b border-white/10">
           <div className="container-premium py-premium-md">
             <nav className="flex flex-col space-y-premium-sm">
               <Link
                 href="/propiedades"
-                className={`${getLinkClassName("/propiedades")} block py-premium-sm px-premium-md rounded-lg hover:bg-premium-card transition-colors`}
+                className={`${getLinkClassName("/propiedades")} block py-premium-sm px-premium-md rounded-lg hover:bg-white/10 transition-colors`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <span className="body-md font-medium tracking-wide">
@@ -151,7 +151,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
               </Link>
               <Link
                 href="/agentes"
-                className={`${getAgentesLinkClassName()} block py-premium-sm px-premium-md rounded-lg hover:bg-premium-card transition-colors`}
+                className={`${getAgentesLinkClassName()} block py-premium-sm px-premium-md rounded-lg hover:bg-white/10 transition-colors`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <span className="body-md font-medium tracking-wide">
@@ -160,7 +160,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
               </Link>
               <Link
                 href="/contacto"
-                className={`${getContactLinkClassName()} block py-premium-sm px-premium-md rounded-lg hover:bg-premium-card transition-colors`}
+                className={`${getContactLinkClassName()} block py-premium-sm px-premium-md rounded-lg hover:bg-white/10 transition-colors`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <span className="body-md font-medium tracking-wide">
