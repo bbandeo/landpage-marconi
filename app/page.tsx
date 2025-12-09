@@ -256,22 +256,6 @@ export default function HomePage() {
             }}
           />
 
-          {/* Logo pequeño superior */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-8 relative z-10"
-          >
-            <Image
-              src="/assets/logos/marconi_title.svg"
-              alt="Marconi Inmobiliaria"
-              width={160}
-              height={45}
-              className="opacity-90"
-            />
-          </motion.div>
-
           {/* Título Principal (H1) con gradiente mejorado */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -316,7 +300,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex flex-col sm:flex-row gap-3 relative z-10"
+            className="flex flex-col sm:flex-row gap-6 relative z-10"
           >
             <Link href="/propiedades">
               <button className="relative px-6 py-3 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
@@ -344,10 +328,6 @@ export default function HomePage() {
           {/* Gradiente inferior en móvil para transición al texto */}
           <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#050505] to-transparent z-10 pointer-events-none" />
 
-          {/* Brackets decorativos en las esquinas del video */}
-          <div className="absolute top-4 left-4 w-5 h-5 border-t border-l border-orange-500/40 z-20 pointer-events-none" />
-          <div className="absolute bottom-4 right-4 w-5 h-5 border-b border-r border-orange-500/40 z-20 pointer-events-none" />
-
           {/* Video */}
           <video
             className="w-full h-full object-cover object-center"
@@ -360,12 +340,12 @@ export default function HomePage() {
           </video>
         </div>
 
-        {/* SCROLL INDICATOR - Centrado en la parte inferior */}
+        {/* SCROLL INDICATOR - A la derecha del título en mobile, centrado en desktop */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 1.2 }}
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-30"
+          className="absolute bottom-[45%] right-8 lg:bottom-6 lg:left-1/2 lg:right-auto lg:-translate-x-1/2 flex flex-col items-center gap-2 z-30"
         >
           <span className="text-[9px] tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
           <div className="relative w-[1px] h-8 bg-gray-700 overflow-hidden">
