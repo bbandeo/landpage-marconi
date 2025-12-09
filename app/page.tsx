@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
 import {
   Search,
@@ -113,9 +113,59 @@ function CounterAnimation({ value, label, icon: Icon }: { value: string, label: 
   );
 }
 
+// Componente de chispas para la ignición
+function Sparks({ isVisible }: { isVisible: boolean }) {
+  const sparks = Array.from({ length: 8 }, (_, i) => ({
+    id: i,
+    angle: (i * 45) + Math.random() * 20 - 10,
+    distance: 80 + Math.random() * 60,
+    duration: 0.6 + Math.random() * 0.4,
+    size: 3 + Math.random() * 3,
+  }));
+
+  return (
+    <AnimatePresence>
+      {isVisible && sparks.map((spark) => (
+        <motion.div
+          key={spark.id}
+          initial={{
+            x: 0,
+            y: 0,
+            opacity: 1,
+            scale: 1
+          }}
+          animate={{
+            x: Math.cos(spark.angle * Math.PI / 180) * spark.distance,
+            y: Math.sin(spark.angle * Math.PI / 180) * spark.distance,
+            opacity: 0,
+            scale: 0
+          }}
+          exit={{ opacity: 0 }}
+          transition={{
+            duration: spark.duration,
+            ease: "easeOut"
+          }}
+          className="absolute rounded-full"
+          style={{
+            width: spark.size,
+            height: spark.size,
+            background: `linear-gradient(135deg, #fff, #f97316)`,
+            boxShadow: `0 0 ${spark.size * 2}px #f97316, 0 0 ${spark.size * 4}px rgba(249, 115, 22, 0.5)`,
+          }}
+        />
+      ))}
+    </AnimatePresence>
+  );
+}
+
 export default function HomePage() {
   const [currentStat, setCurrentStat] = useState(0);
   const isClient = useIsClient();
+
+  // Estados para la secuencia de animación del Hero
+  const [showBlackout, setShowBlackout] = useState(true);
+  const [showSparks, setShowSparks] = useState(false);
+  const [animationPhase, setAnimationPhase] = useState(0);
   
   // Parallax effects DISABLED to prevent elements escaping hero boundaries
   const { scrollY } = useScroll();
@@ -168,6 +218,46 @@ export default function HomePage() {
       setCurrentStat((prev) => (prev + 1) % stats.length);
     }, 2000);
     return () => clearInterval(interval);
+  }, []);
+
+  // Secuencia de animación coordinada del Hero
+  useEffect(() => {
+    // Fase 0: Blackout se desvanece (0.3s)
+    const phase0 = setTimeout(() => {
+      setShowBlackout(false);
+      setAnimationPhase(1);
+    }, 300);
+
+    // Fase 1: Grid aparece (1s)
+    const phase1 = setTimeout(() => {
+      setAnimationPhase(2);
+    }, 1000);
+
+    // Fase 2: Video + Línea neón (1.5s)
+    const phase2 = setTimeout(() => {
+      setAnimationPhase(3);
+    }, 1500);
+
+    // Fase 3: Ignición - chispas (3.8s)
+    const phase3 = setTimeout(() => {
+      setShowSparks(true);
+      setAnimationPhase(4);
+      // Ocultar chispas después de 1s
+      setTimeout(() => setShowSparks(false), 1000);
+    }, 3800);
+
+    // Fase 4: Contenido (4.2s)
+    const phase4 = setTimeout(() => {
+      setAnimationPhase(5);
+    }, 4200);
+
+    return () => {
+      clearTimeout(phase0);
+      clearTimeout(phase1);
+      clearTimeout(phase2);
+      clearTimeout(phase3);
+      clearTimeout(phase4);
+    };
   }, []);
 
 
@@ -228,16 +318,35 @@ export default function HomePage() {
       {/* Header Premium */}
       <Header />
 
-      {/* HERO SECTION - SPLIT TECH (Pantalla Dividida Asimétrica) */}
+      {/* HERO SECTION - SPLIT TECH con Animación Coordinada */}
       <section className="relative w-full h-[calc(100vh-76px)] lg:h-[calc(100vh-90px)] flex flex-col lg:flex-row bg-[#050505] overflow-hidden">
 
+        {/* ═══════════════════════════════════════════════════════════════
+            FASE 0: BLACKOUT OVERLAY
+            Se desvanece primero para revelar la escena
+            ═══════════════════════════════════════════════════════════════ */}
+        <AnimatePresence>
+          {showBlackout && (
+            <motion.div
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="fixed inset-0 bg-black z-[100] pointer-events-none"
+            />
+          )}
+        </AnimatePresence>
+
         {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
-        {/* Orden 2 en móvil (abajo), Orden 1 en desktop (izquierda) */}
         <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-8 lg:px-16 z-10 order-2 lg:order-1 relative bg-[#050505]">
 
-          {/* Grid Overlay Sutil - Blueprint pattern */}
-          <div
-            className="absolute inset-0 pointer-events-none opacity-30"
+          {/* ═══════════════════════════════════════════════════════════════
+              FASE 1: BLUEPRINT GRID - Aparece con fade sutil
+              ═══════════════════════════════════════════════════════════════ */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: animationPhase >= 1 ? 0.3 : 0 }}
+            transition={{ duration: 2, ease: "easeOut" }}
+            className="absolute inset-0 pointer-events-none"
             style={{
               backgroundImage: `
                 linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
@@ -247,80 +356,148 @@ export default function HomePage() {
             }}
           />
 
-          {/* Línea Neón divisoria (Solo visible en Desktop al borde derecho) */}
-          <div
-            className="hidden lg:block absolute right-0 top-0 h-full w-[2px] z-20"
+          {/* ═══════════════════════════════════════════════════════════════
+              FASE 2: LÍNEA NEÓN DIVISORIA
+              Se expande desde el centro hacia arriba y abajo
+              ═══════════════════════════════════════════════════════════════ */}
+          <motion.div
+            initial={{ height: 0, top: "50%" }}
+            animate={animationPhase >= 2 ? {
+              height: "100%",
+              top: 0,
+            } : { height: 0, top: "50%" }}
+            transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
+            className="hidden lg:block absolute right-0 w-[2px] z-20"
             style={{
-              background: 'linear-gradient(to bottom, transparent 0%, #f97316 15%, #f97316 85%, transparent 100%)',
-              boxShadow: '0 0 15px rgba(249, 115, 22, 0.6), 0 0 30px rgba(249, 115, 22, 0.3), 0 0 45px rgba(249, 115, 22, 0.1)'
+              background: '#f97316',
+              boxShadow: '0 0 5px #f97316, 0 0 10px #f97316, 0 0 20px rgba(249, 115, 22, 0.5), 0 0 40px rgba(249, 115, 22, 0.3)'
             }}
-          />
-
-          {/* Título Principal (H1) con gradiente mejorado */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight mb-6 relative z-10"
           >
-            Encontrá tu
-            <br />
-            <span
-              className="relative inline-block"
-              style={{
-                background: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}
-            >
-              hogar ideal
-              {/* Línea decorativa bajo el gradiente */}
-              <span
-                className="absolute -bottom-1 left-0 w-full h-[2px]"
-                style={{
-                  background: 'linear-gradient(to right, #f97316, transparent)'
-                }}
-              />
-            </span>
-          </motion.h1>
+            {/* Puntos brillantes en los extremos */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: animationPhase >= 3 ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#f97316]"
+              style={{ boxShadow: '0 0 10px #f97316, 0 0 20px #f97316' }}
+            />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: animationPhase >= 3 ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#f97316]"
+              style={{ boxShadow: '0 0 10px #f97316, 0 0 20px #f97316' }}
+            />
+          </motion.div>
 
-          {/* Subtítulo (Lead) */}
+          {/* ═══════════════════════════════════════════════════════════════
+              PULSO DE ENERGÍA - Viaja por la línea hacia el contenido
+              ═══════════════════════════════════════════════════════════════ */}
+          {animationPhase >= 3 && (
+            <motion.div
+              initial={{ top: -30, opacity: 0 }}
+              animate={{ top: "100%", opacity: [0, 1, 1, 0] }}
+              transition={{ duration: 1.5, ease: "easeInOut" }}
+              className="hidden lg:block absolute right-[-2px] w-[5px] h-8 rounded z-30 pointer-events-none"
+              style={{
+                background: 'linear-gradient(to bottom, transparent, #fff, #f97316, transparent)',
+                filter: 'blur(1px)'
+              }}
+            />
+          )}
+
+          {/* ═══════════════════════════════════════════════════════════════
+              FASE 3: CHISPAS DE IGNICIÓN
+              Salen disparadas cuando se enciende la animación
+              ═══════════════════════════════════════════════════════════════ */}
+          <div className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 items-center justify-center z-30 pointer-events-none">
+            <Sparks isVisible={showSparks} />
+          </div>
+
+          {/* ═══════════════════════════════════════════════════════════════
+              FASE 4: CONTENIDO - Aparece en cascada
+              ═══════════════════════════════════════════════════════════════ */}
+
+          {/* Título Principal */}
+          <div className="overflow-hidden relative z-10 mb-6">
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
+              transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            >
+              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight">
+                Encontrá tu
+              </h1>
+            </motion.div>
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
+              transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
+            >
+              <span
+                className="text-4xl lg:text-5xl xl:text-6xl font-bold relative inline-block"
+                style={{
+                  background: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}
+              >
+                hogar ideal
+              </span>
+              {/* Underline que se dibuja */}
+              <motion.div
+                initial={{ scaleX: 0 }}
+                animate={animationPhase >= 5 ? { scaleX: 1 } : { scaleX: 0 }}
+                transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                className="h-[2px] mt-2 origin-left"
+                style={{ background: 'linear-gradient(to right, #f97316, #ea580c, transparent)' }}
+              />
+            </motion.div>
+          </div>
+
+          {/* Subtítulo */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
+            animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
             className="text-[#888] text-base lg:text-lg mb-8 max-w-[280px] leading-relaxed relative z-10"
           >
             Somos expertos en el mercado inmobiliario de Reconquista. Te acompañamos en cada paso hacia tu nuevo hogar.
           </motion.p>
 
-          {/* Botones CTA con efecto shimmer */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="flex flex-row gap-4 relative z-10"
-          >
-            <Link href="/propiedades">
-              <button className="relative px-6 py-3 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
-                Ver Propiedades
-                {/* Shimmer effect */}
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-              </button>
-            </Link>
-            <Link href="/contacto">
-              <button className="px-6 py-3 border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200 text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300">
-                Contactar →
-              </button>
-            </Link>
-          </motion.div>
+          {/* Botones CTA */}
+          <div className="flex flex-row gap-4 relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            >
+              <Link href="/propiedades">
+                <button className="relative px-6 py-3 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
+                  Ver Propiedades
+                  <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                </button>
+              </Link>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.35 }}
+            >
+              <Link href="/contacto">
+                <button className="px-6 py-3 border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200 text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300">
+                  Contactar →
+                </button>
+              </Link>
+            </motion.div>
+          </div>
 
-          {/* SCROLL INDICATOR - Debajo de botones */}
+          {/* SCROLL INDICATOR */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
+            animate={animationPhase >= 5 ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
             className="flex flex-col items-center gap-2 mt-8 lg:mt-12 relative z-10"
           >
             <span className="text-[9px] tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
@@ -336,17 +513,19 @@ export default function HomePage() {
         </div>
 
         {/* COLUMNA DERECHA: VIDEO */}
-        {/* Orden 1 en móvil (arriba), Orden 2 en desktop (derecha) */}
         <div className="w-full lg:w-[58%] h-[40%] lg:h-full relative order-1 lg:order-2">
 
-          {/* Gradiente de fusión para suavizar el corte (izquierda del video) */}
+          {/* Gradiente de fusión */}
           <div className="absolute inset-y-0 left-0 w-20 lg:w-24 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
 
-          {/* Gradiente inferior en móvil para transición al texto */}
+          {/* Gradiente inferior en móvil */}
           <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#050505] to-transparent z-10 pointer-events-none" />
 
-          {/* Video */}
-          <video
+          {/* Video con fade in */}
+          <motion.video
+            initial={{ opacity: 0 }}
+            animate={animationPhase >= 2 ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
             className="w-full h-full object-cover object-center"
             autoPlay
             loop
@@ -354,7 +533,7 @@ export default function HomePage() {
             playsInline
           >
             <source src="/assets/hero/video-casa-hero-1.mp4" type="video/mp4" />
-          </video>
+          </motion.video>
         </div>
 
       </section>
