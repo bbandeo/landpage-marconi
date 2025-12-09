@@ -475,7 +475,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="flex flex-row gap-4 relative z-10"
+            className="flex flex-col lg:flex-row gap-3 lg:gap-4 relative z-10"
           >
             <Link href="/propiedades">
               <button className="relative px-6 py-3 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
@@ -535,7 +535,7 @@ export default function HomePage() {
             <source src="/assets/hero/video-casa-hero-1.mp4" type="video/mp4" />
           </video>
 
-          {/* Video Loop - Se reproduce 2 veces y queda congelado en último frame */}
+          {/* Video Loop - Se reproduce 5 veces y se congela en el segundo 4 de la 5ta reproducción */}
           <video
             ref={loopVideoRef}
             className="absolute inset-0 w-full h-full object-cover object-center"
@@ -546,14 +546,19 @@ export default function HomePage() {
             autoPlay
             muted
             playsInline
+            onTimeUpdate={() => {
+              // En la 5ta reproducción (loopCount === 4), pausar en el segundo 4
+              if (loopCount === 4 && loopVideoRef.current && loopVideoRef.current.currentTime >= 4) {
+                loopVideoRef.current.pause();
+              }
+            }}
             onEnded={() => {
               const newCount = loopCount + 1;
               setLoopCount(newCount);
-              if (newCount < 2 && loopVideoRef.current) {
+              if (newCount < 5 && loopVideoRef.current) {
                 loopVideoRef.current.currentTime = 0;
                 loopVideoRef.current.play();
               }
-              // Después de 2 reproducciones, el video queda pausado en el último frame
             }}
           >
             <source src="/assets/hero/video-casa-loop-1.mp4" type="video/mp4" />
