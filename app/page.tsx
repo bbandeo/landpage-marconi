@@ -167,7 +167,9 @@ export default function HomePage() {
   const [showSparks, setShowSparks] = useState(false);
   const [animationPhase, setAnimationPhase] = useState(0);
   const [showLoopVideo, setShowLoopVideo] = useState(false);
+  const [loopCount, setLoopCount] = useState(0);
   const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const loopVideoRef = useRef<HTMLVideoElement>(null);
   
   // Parallax effects DISABLED to prevent elements escaping hero boundaries
   const { scrollY } = useScroll();
@@ -468,35 +470,26 @@ export default function HomePage() {
             Somos expertos en el mercado inmobiliario de Reconquista. Te acompañamos en cada paso hacia tu nuevo hogar.
           </motion.p>
 
-          {/* CTAs - Solo texto minimalista */}
-          <div className="flex flex-row gap-8 relative z-10">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            >
-              <Link
-                href="/propiedades"
-                className="group text-[12px] font-medium tracking-[0.15em] uppercase text-white hover:text-[#f97316] transition-colors duration-300"
-              >
+          {/* Botones CTA con efecto shimmer */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+            className="flex flex-row gap-4 relative z-10"
+          >
+            <Link href="/propiedades">
+              <button className="relative px-6 py-3 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
                 Ver Propiedades
-                <span className="block h-[1px] w-0 group-hover:w-full bg-[#f97316] transition-all duration-300 mt-1" />
-              </Link>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.35 }}
-            >
-              <Link
-                href="/contacto"
-                className="group text-[12px] font-medium tracking-[0.15em] uppercase text-gray-400 hover:text-white transition-colors duration-300"
-              >
-                Contactar
-                <span className="block h-[1px] w-0 group-hover:w-full bg-white transition-all duration-300 mt-1" />
-              </Link>
-            </motion.div>
-          </div>
+                {/* Shimmer effect */}
+                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              </button>
+            </Link>
+            <Link href="/contacto">
+              <button className="px-6 py-3 border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200 text-[11px] font-medium tracking-[0.1em] uppercase transition-all duration-300">
+                Contactar →
+              </button>
+            </Link>
+          </motion.div>
 
           {/* SCROLL INDICATOR */}
           <motion.div
@@ -527,33 +520,43 @@ export default function HomePage() {
           <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#050505] to-transparent z-10 pointer-events-none" />
 
           {/* Video Principal - Se reproduce una vez */}
-          <motion.video
+          <video
             ref={heroVideoRef}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: animationPhase >= 2 && !showLoopVideo ? 1 : 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
             className="absolute inset-0 w-full h-full object-cover object-center"
+            style={{
+              opacity: animationPhase >= 2 && !showLoopVideo ? 1 : 0,
+              transition: 'opacity 0.3s ease-out'
+            }}
             autoPlay
             muted
             playsInline
             onEnded={() => setShowLoopVideo(true)}
           >
             <source src="/assets/hero/video-casa-hero-1.mp4" type="video/mp4" />
-          </motion.video>
+          </video>
 
-          {/* Video Loop - Aparece después del video principal */}
-          <motion.video
-            initial={{ opacity: 0 }}
-            animate={{ opacity: showLoopVideo ? 1 : 0 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
+          {/* Video Loop - Se reproduce 2 veces después del principal */}
+          <video
+            ref={loopVideoRef}
             className="absolute inset-0 w-full h-full object-cover object-center"
+            style={{
+              opacity: showLoopVideo && loopCount < 2 ? 1 : 0,
+              transition: 'opacity 0.3s ease-out'
+            }}
             autoPlay
-            loop
             muted
             playsInline
+            onEnded={() => {
+              const newCount = loopCount + 1;
+              setLoopCount(newCount);
+              if (newCount < 2 && loopVideoRef.current) {
+                loopVideoRef.current.currentTime = 0;
+                loopVideoRef.current.play();
+              }
+            }}
           >
             <source src="/assets/hero/video-casa-loop-1.mp4" type="video/mp4" />
-          </motion.video>
+          </video>
         </div>
 
       </section>
