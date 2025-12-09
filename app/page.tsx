@@ -242,18 +242,18 @@ export default function HomePage() {
       setAnimationPhase(3);
     }, 1500);
 
-    // Fase 3: Ignición - chispas (3.8s)
+    // Fase 3: Ignición - chispas (3.1s) - adelantado 700ms
     const phase3 = setTimeout(() => {
       setShowSparks(true);
       setAnimationPhase(4);
       // Ocultar chispas después de 1s
       setTimeout(() => setShowSparks(false), 1000);
-    }, 3800);
+    }, 3100);
 
-    // Fase 4: Contenido (4.2s)
+    // Fase 4: Contenido (3.5s) - adelantado 700ms
     const phase4 = setTimeout(() => {
       setAnimationPhase(5);
-    }, 4200);
+    }, 3500);
 
     return () => {
       clearTimeout(phase0);
@@ -323,7 +323,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - SPLIT TECH con Animación Coordinada */}
-      <section className="relative w-full h-[calc(100vh-76px)] lg:h-[calc(100vh-90px)] flex flex-col lg:flex-row bg-[#0a0a0c] overflow-hidden">
+      <section className="relative w-full h-screen flex flex-col lg:flex-row bg-[#0a0a0c] overflow-hidden">
 
         {/* ═══════════════════════════════════════════════════════════════
             FASE 0: BLACKOUT OVERLAY
@@ -372,7 +372,7 @@ export default function HomePage() {
               opacity: 1,
             } : { height: 0, top: "50%", opacity: 0 }}
             transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
-            className="hidden lg:block absolute right-0 w-[1px] z-20"
+            className="hidden lg:block absolute right-0 w-[2px] z-20"
             style={{
               background: 'linear-gradient(to bottom, transparent 0%, rgba(249, 115, 22, 0.3) 20%, rgba(249, 115, 22, 0.4) 50%, rgba(249, 115, 22, 0.3) 80%, transparent 100%)',
             }}

@@ -16,6 +16,7 @@ interface HeaderProps {
 export default function Header({ showMobileSearch = true }: HeaderProps) {
   const pathname = usePathname();
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isClient = useIsClient();
 
@@ -46,7 +47,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
     return "text-bone-white/80 hover:text-vibrant-orange transition-colors";
   };
 
-  // Scroll progress tracking
+  // Scroll progress tracking + glassmorphism effect
   useEffect(() => {
     if (!isClient) {
       return;
@@ -57,6 +58,7 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
         document.documentElement.scrollHeight - window.innerHeight;
       const progress = height > 0 ? (winScroll / height) * 100 : 0;
       setScrollProgress(progress);
+      setScrolled(winScroll > 50);
     };
     window.addEventListener("scroll", handleScroll);
     // Ejecutar una vez para inicializar en el primer render del cliente
@@ -65,7 +67,11 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
   }, [isClient]);
 
   return (
-    <header className="bg-premium-main border-b border-support-gray/20 sticky top-0 z-50 shadow-xl">
+    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      scrolled
+        ? 'bg-black/70 backdrop-blur-md border-b border-white/10 py-2'
+        : 'bg-transparent py-4'
+    }`}>
       {/* Scroll Progress Bar - PREMIUM */}
       <div
         aria-hidden
@@ -166,8 +172,10 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
         </div>
       )}
 
-      {/* Decorative divider line - PREMIUM GRADIENT */}
-      <div className="w-full h-1 bg-gradient-to-r from-transparent via-vibrant-orange to-transparent shadow-lg opacity-80"></div>
+      {/* Decorative divider line - Solo cuando hay scroll */}
+      {scrolled && (
+        <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-vibrant-orange/50 to-transparent"></div>
+      )}
     </header>
   );
 }
