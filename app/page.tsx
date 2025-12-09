@@ -342,7 +342,8 @@ export default function HomePage() {
         </AnimatePresence>
 
         {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
-        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-center px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 z-10 order-2 lg:order-1 relative bg-transparent">
+        {/* Mobile: h-[55%] con justify-start y pt-6 para que el título sea visible arriba */}
+        <div className="w-full lg:w-[42%] h-[55%] lg:h-full flex flex-col justify-start pt-4 lg:pt-0 lg:justify-center px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 z-10 order-2 lg:order-1 relative bg-transparent">
 
           {/* ═══════════════════════════════════════════════════════════════
               FASE 1: BLUEPRINT GRID - Aparece con fade sutil
@@ -408,23 +409,23 @@ export default function HomePage() {
               ═══════════════════════════════════════════════════════════════ */}
 
           {/* Título Principal */}
-          <div className="overflow-hidden relative z-10 mb-6 lg:mb-8 2xl:mb-10 max-w-[480px] xl:max-w-[520px] 2xl:max-w-[600px]">
+          <div className="relative z-10 mb-4 lg:mb-8 2xl:mb-10 max-w-[480px] xl:max-w-[520px] 2xl:max-w-[600px]">
             <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
+              initial={{ y: 50, opacity: 0 }}
+              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
               transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
             >
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white leading-tight">
                 Encontrá tu
               </h1>
             </motion.div>
             <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 100, opacity: 0 }}
+              initial={{ y: 50, opacity: 0 }}
+              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
               transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
             >
               <span
-                className="text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold relative inline-block"
+                className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold relative inline-block"
                 style={{
                   background: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)',
                   WebkitBackgroundClip: 'text',
@@ -450,38 +451,38 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-            className="text-[#888] text-base lg:text-lg xl:text-xl 2xl:text-2xl mb-8 lg:mb-10 xl:mb-12 2xl:mb-14 max-w-[280px] lg:max-w-[320px] xl:max-w-[400px] 2xl:max-w-[480px] leading-relaxed relative z-10"
+            className="text-[#888] text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl mb-6 lg:mb-10 xl:mb-12 2xl:mb-14 max-w-[300px] lg:max-w-[320px] xl:max-w-[400px] 2xl:max-w-[480px] leading-relaxed relative z-10"
           >
             Somos expertos en el mercado inmobiliario de Reconquista. Te acompañamos en cada paso hacia tu nuevo hogar.
           </motion.p>
 
-          {/* Botones CTA - Mobile: Full width, altura 52px, gap 16px */}
+          {/* Botones CTA - Mobile: Full width, altura 48px, gap 12px */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="flex flex-col lg:flex-row gap-4 lg:gap-5 2xl:gap-6 relative z-10 w-full max-w-[320px] lg:max-w-none mt-8 lg:mt-0"
+            className="flex flex-col lg:flex-row gap-3 lg:gap-5 2xl:gap-6 relative z-10 w-full max-w-[300px] lg:max-w-none"
           >
             <Link href="/propiedades" className="w-full lg:w-auto">
-              <button className="relative w-full lg:w-auto h-[52px] lg:h-auto px-6 lg:px-8 xl:px-8 2xl:px-10 lg:py-4 2xl:py-5 bg-[#E85D18] hover:bg-orange-500 text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-[1px] uppercase rounded-md transition-all duration-200 overflow-hidden group flex items-center justify-center active:scale-[0.98]">
+              <button className="relative w-full lg:w-auto h-[48px] lg:h-auto px-6 lg:px-8 xl:px-8 2xl:px-10 lg:py-4 2xl:py-5 bg-[#E85D18] hover:bg-orange-500 text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-[1px] uppercase rounded-md transition-all duration-200 overflow-hidden group flex items-center justify-center active:scale-[0.98]">
                 Ver Propiedades
                 {/* Shimmer effect */}
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </button>
             </Link>
             <Link href="/contacto" className="w-full lg:w-auto">
-              <button className="w-full lg:w-auto h-[52px] lg:h-auto px-6 lg:px-8 xl:px-8 2xl:px-10 lg:py-4 2xl:py-5 border border-white/30 hover:border-white/50 text-white hover:text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-[1px] uppercase rounded-md transition-all duration-200 bg-transparent flex items-center justify-center active:scale-[0.98]">
+              <button className="w-full lg:w-auto h-[48px] lg:h-auto px-6 lg:px-8 xl:px-8 2xl:px-10 lg:py-4 2xl:py-5 border border-white/30 hover:border-white/50 text-white hover:text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-[1px] uppercase rounded-md transition-all duration-200 bg-transparent flex items-center justify-center active:scale-[0.98]">
                 Contactar →
               </button>
             </Link>
           </motion.div>
 
-          {/* SCROLL INDICATOR */}
+          {/* SCROLL INDICATOR - Oculto en mobile para ahorrar espacio */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={animationPhase >= 5 ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="flex flex-col items-center gap-2 mt-8 lg:mt-12 xl:mt-14 2xl:mt-16 relative z-10"
+            className="hidden lg:flex flex-col items-center gap-2 mt-8 lg:mt-12 xl:mt-14 2xl:mt-16 relative z-10"
           >
             <span className="text-[9px] lg:text-[10px] xl:text-[11px] 2xl:text-xs tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
             <div className="relative w-[1px] h-8 xl:h-10 2xl:h-12 bg-gray-700 overflow-hidden">
@@ -496,7 +497,8 @@ export default function HomePage() {
         </div>
 
         {/* COLUMNA DERECHA: VIDEO */}
-        <div className="w-full lg:w-[58%] h-[40%] lg:h-full relative order-1 lg:order-2">
+        {/* Mobile: h-[45%] para dar más espacio al contenido */}
+        <div className="w-full lg:w-[58%] h-[45%] lg:h-full relative order-1 lg:order-2">
 
           {/* Gradiente de fusión lateral */}
           <div className="absolute inset-y-0 left-0 w-20 lg:w-24 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, #00021F 0%, transparent 100%)' }} />
