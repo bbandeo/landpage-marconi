@@ -155,7 +155,7 @@ export const createPropertyMarkerIcon = (propertyType?: string) => {
 
   const L = require('leaflet')
   require('leaflet-defaulticon-compatibility')
-  require('leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css')
+  // CSS is loaded in layout.tsx to avoid Turbopack HMR issues
 
   const color = propertyType ? getMarkerColor(propertyType) : 'orange'
 

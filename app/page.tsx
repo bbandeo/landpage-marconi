@@ -323,7 +323,7 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - SPLIT TECH con Animación Coordinada */}
-      <section className="relative w-full h-screen flex flex-col lg:flex-row bg-[#0a0a0c] overflow-hidden">
+      <section className="relative w-full h-screen pt-[108px] lg:pt-[122px] flex flex-col lg:flex-row bg-[#0a0a0c] overflow-hidden">
 
         {/* ═══════════════════════════════════════════════════════════════
             FASE 0: BLACKOUT OVERLAY
