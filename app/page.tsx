@@ -323,7 +323,8 @@ export default function HomePage() {
       <Header />
 
       {/* HERO SECTION - SPLIT TECH con Animación Coordinada */}
-      <section className="relative w-full h-screen pt-[108px] lg:pt-[122px] 2xl:pt-[142px] flex flex-col lg:flex-row overflow-hidden" style={{ background: 'linear-gradient(to bottom, #00021F 0%, #00021F 50%, #000000 100%)' }}>
+      {/* Mobile: pt-16 (64px navbar) | Desktop: mantiene valores originales */}
+      <section className="relative w-full h-screen pt-16 lg:pt-[122px] 2xl:pt-[142px] flex flex-col lg:flex-row overflow-hidden" style={{ background: 'linear-gradient(to bottom, #00021F 0%, #00021F 50%, #000000 100%)' }}>
 
         {/* ═══════════════════════════════════════════════════════════════
             FASE 0: BLACKOUT OVERLAY
@@ -454,22 +455,22 @@ export default function HomePage() {
             Somos expertos en el mercado inmobiliario de Reconquista. Te acompañamos en cada paso hacia tu nuevo hogar.
           </motion.p>
 
-          {/* Botones CTA con efecto shimmer */}
+          {/* Botones CTA - Mobile: Full width, altura 52px, gap 16px */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="flex flex-col lg:flex-row gap-3 lg:gap-4 xl:gap-5 2xl:gap-6 relative z-10"
+            className="flex flex-col lg:flex-row gap-4 lg:gap-5 2xl:gap-6 relative z-10 w-full max-w-[320px] lg:max-w-none mt-8 lg:mt-0"
           >
-            <Link href="/propiedades">
-              <button className="relative px-6 py-3 xl:px-8 xl:py-4 2xl:px-10 2xl:py-5 bg-[#ea580c] hover:bg-orange-500 text-white text-[11px] lg:text-xs xl:text-sm 2xl:text-base font-medium tracking-[0.1em] uppercase transition-all duration-300 overflow-hidden group">
+            <Link href="/propiedades" className="w-full lg:w-auto">
+              <button className="relative w-full lg:w-auto h-[52px] lg:h-auto px-6 lg:px-8 xl:px-8 2xl:px-10 lg:py-4 2xl:py-5 bg-[#E85D18] hover:bg-orange-500 text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-[1px] uppercase rounded-md transition-all duration-200 overflow-hidden group flex items-center justify-center active:scale-[0.98]">
                 Ver Propiedades
                 {/* Shimmer effect */}
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </button>
             </Link>
-            <Link href="/contacto">
-              <button className="px-6 py-3 xl:px-8 xl:py-4 2xl:px-10 2xl:py-5 border border-gray-700 text-gray-400 hover:border-gray-500 hover:text-gray-200 text-[11px] lg:text-xs xl:text-sm 2xl:text-base font-medium tracking-[0.1em] uppercase transition-all duration-300">
+            <Link href="/contacto" className="w-full lg:w-auto">
+              <button className="w-full lg:w-auto h-[52px] lg:h-auto px-6 lg:px-8 xl:px-8 2xl:px-10 lg:py-4 2xl:py-5 border border-white/30 hover:border-white/50 text-white hover:text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-[1px] uppercase rounded-md transition-all duration-200 bg-transparent flex items-center justify-center active:scale-[0.98]">
                 Contactar →
               </button>
             </Link>
