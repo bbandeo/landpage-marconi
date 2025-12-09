@@ -224,36 +224,36 @@ export default function HomePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Secuencia de animación coordinada del Hero
+  // Secuencia de animación coordinada del Hero - OPTIMIZADA (tiempos rápidos y profesionales)
   useEffect(() => {
-    // Fase 0: Blackout se desvanece (0.3s)
+    // Fase 0: Blackout se desvanece inmediatamente (100ms)
     const phase0 = setTimeout(() => {
       setShowBlackout(false);
       setAnimationPhase(1);
-    }, 300);
+    }, 100);
 
-    // Fase 1: Grid aparece (1s)
+    // Fase 1: Grid aparece (200ms)
     const phase1 = setTimeout(() => {
       setAnimationPhase(2);
-    }, 1000);
+    }, 200);
 
-    // Fase 2: Video + Línea neón (1.5s)
+    // Fase 2: Video + Línea neón (400ms)
     const phase2 = setTimeout(() => {
       setAnimationPhase(3);
-    }, 1500);
+    }, 400);
 
-    // Fase 3: Ignición - chispas (3.1s) - adelantado 700ms
+    // Fase 3: Ignición - chispas (600ms)
     const phase3 = setTimeout(() => {
       setShowSparks(true);
       setAnimationPhase(4);
-      // Ocultar chispas después de 1s
-      setTimeout(() => setShowSparks(false), 1000);
-    }, 3100);
+      // Ocultar chispas después de 500ms
+      setTimeout(() => setShowSparks(false), 500);
+    }, 600);
 
-    // Fase 4: Contenido (3.5s) - adelantado 700ms
+    // Fase 4: Contenido (800ms) - aparece rápido
     const phase4 = setTimeout(() => {
       setAnimationPhase(5);
-    }, 3500);
+    }, 800);
 
     return () => {
       clearTimeout(phase0);
@@ -342,29 +342,28 @@ export default function HomePage() {
         </AnimatePresence>
 
         {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
-        {/* Mobile: h-[55%] con justify-start y pt-6 para que el título sea visible arriba */}
-        <div className="w-full lg:w-[42%] h-[55%] lg:h-full flex flex-col justify-start pt-4 lg:pt-0 lg:justify-center px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 z-10 order-2 lg:order-1 relative bg-transparent">
+        {/* Mobile: h-[60%] con más aire y padding profesional */}
+        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-start pt-6 lg:pt-0 lg:justify-center px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 z-10 order-2 lg:order-1 relative bg-transparent">
 
           {/* ═══════════════════════════════════════════════════════════════
-              FASE 1: BLUEPRINT GRID - Aparece con fade sutil
+              FASE 1: BLUEPRINT GRID - Aparece con fade sutil (OPTIMIZADO)
               ═══════════════════════════════════════════════════════════════ */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: animationPhase >= 1 ? 0.3 : 0 }}
-            transition={{ duration: 2, ease: "easeOut" }}
+            animate={{ opacity: animationPhase >= 1 ? 0.2 : 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
             className="absolute inset-0 pointer-events-none"
             style={{
               backgroundImage: `
-                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)
               `,
               backgroundSize: '40px 40px'
             }}
           />
 
           {/* ═══════════════════════════════════════════════════════════════
-              FASE 2: LÍNEA DIVISORIA SUTIL
-              Gradiente que se desvanece para no competir con el título
+              FASE 2: LÍNEA DIVISORIA SUTIL (OPTIMIZADO)
               ═══════════════════════════════════════════════════════════════ */}
           <motion.div
             initial={{ height: 0, top: "50%", opacity: 0 }}
@@ -373,22 +372,22 @@ export default function HomePage() {
               top: 0,
               opacity: 1,
             } : { height: 0, top: "50%", opacity: 0 }}
-            transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
-            className="hidden lg:block absolute right-0 w-[2px] z-20"
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="hidden lg:block absolute right-0 w-[1px] z-20"
             style={{
               background: 'linear-gradient(to bottom, transparent 0%, rgba(249, 115, 22, 0.3) 20%, rgba(249, 115, 22, 0.4) 50%, rgba(249, 115, 22, 0.3) 80%, transparent 100%)',
             }}
           />
 
           {/* ═══════════════════════════════════════════════════════════════
-              PULSO DE ENERGÍA - Viaja por la línea hacia el contenido
+              PULSO DE ENERGÍA - Viaja por la línea hacia el contenido (OPTIMIZADO)
               ═══════════════════════════════════════════════════════════════ */}
           {animationPhase >= 3 && (
             <motion.div
               initial={{ top: -30, opacity: 0 }}
               animate={{ top: "100%", opacity: [0, 1, 1, 0] }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="hidden lg:block absolute right-[-2px] w-[5px] h-8 rounded z-30 pointer-events-none"
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="hidden lg:block absolute right-[-2px] w-[4px] h-6 rounded z-30 pointer-events-none"
               style={{
                 background: 'linear-gradient(to bottom, transparent, #fff, #f97316, transparent)',
                 filter: 'blur(1px)'
@@ -397,8 +396,7 @@ export default function HomePage() {
           )}
 
           {/* ═══════════════════════════════════════════════════════════════
-              FASE 3: CHISPAS DE IGNICIÓN
-              Salen disparadas cuando se enciende la animación
+              FASE 3: CHISPAS DE IGNICIÓN (Solo desktop)
               ═══════════════════════════════════════════════════════════════ */}
           <div className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 items-center justify-center z-30 pointer-events-none">
             <Sparks isVisible={showSparks} />
@@ -408,24 +406,24 @@ export default function HomePage() {
               FASE 4: CONTENIDO - Aparece en cascada
               ═══════════════════════════════════════════════════════════════ */}
 
-          {/* Título Principal */}
-          <div className="relative z-10 mb-4 lg:mb-8 2xl:mb-10 max-w-[480px] xl:max-w-[520px] 2xl:max-w-[600px]">
+          {/* Título Principal - Animación rápida y snappy */}
+          <div className="relative z-10 mb-6 lg:mb-8 2xl:mb-10 max-w-[480px] xl:max-w-[520px] 2xl:max-w-[600px]">
             <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
-              transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+              initial={{ y: 20, opacity: 0 }}
+              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             >
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white leading-tight">
+              <h1 className="text-4xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-white leading-tight tracking-tight">
                 Encontrá tu
               </h1>
             </motion.div>
             <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
-              transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1], delay: 0.15 }}
+              initial={{ y: 20, opacity: 0 }}
+              animate={animationPhase >= 4 ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
             >
               <span
-                className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold relative inline-block"
+                className="text-4xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold relative inline-block"
                 style={{
                   background: 'linear-gradient(135deg, #f97316 0%, #ea580c 50%, #c2410c 100%)',
                   WebkitBackgroundClip: 'text',
@@ -435,53 +433,51 @@ export default function HomePage() {
               >
                 hogar ideal
               </span>
-              {/* Underline que se dibuja */}
+              {/* Underline que se dibuja - más rápido */}
               <motion.div
                 initial={{ scaleX: 0 }}
                 animate={animationPhase >= 5 ? { scaleX: 1 } : { scaleX: 0 }}
-                transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                 className="h-[2px] mt-2 origin-left"
                 style={{ background: 'linear-gradient(to right, #f97316, #ea580c, transparent)' }}
               />
             </motion.div>
           </div>
 
-          {/* Subtítulo */}
+          {/* Subtítulo - Más aire y mejor legibilidad */}
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-            className="text-[#888] text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl mb-6 lg:mb-10 xl:mb-12 2xl:mb-14 max-w-[300px] lg:max-w-[320px] xl:max-w-[400px] 2xl:max-w-[480px] leading-relaxed relative z-10"
+            initial={{ opacity: 0, y: 15 }}
+            animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="text-gray-400 text-sm sm:text-base lg:text-lg xl:text-xl 2xl:text-2xl mb-8 lg:mb-10 xl:mb-12 2xl:mb-14 max-w-[300px] lg:max-w-[340px] xl:max-w-[400px] 2xl:max-w-[480px] leading-relaxed relative z-10"
           >
             Somos expertos en el mercado inmobiliario de Reconquista. Te acompañamos en cada paso hacia tu nuevo hogar.
           </motion.p>
 
-          {/* Botones CTA - Mobile: Full width, altura 48px, gap 12px */}
+          {/* Botón CTA - Gradiente sólido, profesional */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="flex flex-col lg:flex-row gap-3 lg:gap-5 2xl:gap-6 relative z-10 w-full max-w-[300px] lg:max-w-none"
+            initial={{ opacity: 0, y: 15 }}
+            animate={animationPhase >= 5 ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.08 }}
+            className="flex flex-col lg:flex-row gap-4 lg:gap-5 2xl:gap-6 relative z-10 w-full max-w-[300px] lg:max-w-none"
           >
             <Link href="/propiedades" className="w-full lg:w-auto">
-              <button className="relative w-full lg:w-auto h-[48px] lg:h-auto px-6 lg:px-8 xl:px-8 2xl:px-10 lg:py-4 2xl:py-5 bg-[#E85D18] hover:bg-orange-500 text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-[1px] uppercase rounded-md transition-all duration-200 overflow-hidden group flex items-center justify-center active:scale-[0.98]">
+              <button className="relative w-full lg:w-auto h-[52px] lg:h-auto px-8 lg:px-8 xl:px-10 2xl:px-12 lg:py-4 2xl:py-5 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-wide uppercase rounded-xl shadow-lg shadow-orange-900/40 hover:shadow-orange-700/60 transition-all duration-200 overflow-hidden group flex items-center justify-center active:scale-[0.97]">
                 Ver Propiedades
-                {/* Shimmer effect */}
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
               </button>
             </Link>
             <Link href="/contacto" className="hidden lg:block w-full lg:w-auto">
-              <button className="w-full lg:w-auto h-[48px] lg:h-auto px-6 lg:px-8 xl:px-8 2xl:px-10 lg:py-4 2xl:py-5 border border-white/30 hover:border-white/50 text-white hover:text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-[1px] uppercase rounded-md transition-all duration-200 bg-transparent flex items-center justify-center active:scale-[0.98]">
+              <button className="w-full lg:w-auto h-[52px] lg:h-auto px-8 lg:px-8 xl:px-10 2xl:px-12 lg:py-4 2xl:py-5 border border-white/20 hover:border-white/40 hover:bg-white/5 text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-wide uppercase rounded-xl transition-all duration-200 bg-transparent flex items-center justify-center active:scale-[0.97]">
                 Contactar →
               </button>
             </Link>
           </motion.div>
 
-          {/* SCROLL INDICATOR - Oculto en mobile para ahorrar espacio */}
+          {/* SCROLL INDICATOR - Solo desktop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={animationPhase >= 5 ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
             className="hidden lg:flex flex-col items-center gap-2 mt-8 lg:mt-12 xl:mt-14 2xl:mt-16 relative z-10"
           >
             <span className="text-[9px] lg:text-[10px] xl:text-[11px] 2xl:text-xs tracking-[0.2em] text-gray-500 uppercase font-mono">Scroll</span>
@@ -497,8 +493,8 @@ export default function HomePage() {
         </div>
 
         {/* COLUMNA DERECHA: VIDEO */}
-        {/* Mobile: h-[45%] para dar más espacio al contenido */}
-        <div className="w-full lg:w-[58%] h-[45%] lg:h-full relative order-1 lg:order-2">
+        {/* Mobile: h-[40%] - Imagen reducida para priorizar título */}
+        <div className="w-full lg:w-[58%] h-[40%] lg:h-full relative order-1 lg:order-2">
 
           {/* Gradiente de fusión lateral */}
           <div className="absolute inset-y-0 left-0 w-20 lg:w-24 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, #00021F 0%, transparent 100%)' }} />
