@@ -256,12 +256,6 @@ export default function HomePage() {
             }}
           />
 
-          {/* Marcador de sección superior derecho */}
-          <div className="absolute top-8 right-8 lg:right-12 flex items-center gap-2 text-[10px] tracking-[0.2em] text-gray-500 font-mono">
-            <span className="w-5 h-px bg-gray-600" />
-            SEC.01
-          </div>
-
           {/* Logo pequeño superior */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -338,22 +332,6 @@ export default function HomePage() {
             </Link>
           </motion.div>
 
-          {/* Footer markers - Coordenadas estilo tech */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.9 }}
-            className="absolute bottom-8 left-8 lg:left-16 flex gap-6 text-[9px] text-gray-500 font-mono tracking-[0.1em]"
-          >
-            <span className="flex items-center gap-1">
-              <span className="text-orange-500/50">◆</span>
-              LAT 29.1° S
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="text-orange-500/50">◆</span>
-              LONG 59.6° W
-            </span>
-          </motion.div>
         </div>
 
         {/* COLUMNA DERECHA: VIDEO */}
@@ -369,12 +347,6 @@ export default function HomePage() {
           {/* Brackets decorativos en las esquinas del video */}
           <div className="absolute top-4 left-4 w-5 h-5 border-t border-l border-orange-500/40 z-20 pointer-events-none" />
           <div className="absolute bottom-4 right-4 w-5 h-5 border-b border-r border-orange-500/40 z-20 pointer-events-none" />
-
-          {/* Indicador LIVE */}
-          <div className="absolute top-4 right-4 flex items-center gap-2 bg-black/60 backdrop-blur-sm px-3 py-1.5 z-20 font-mono text-[9px] tracking-[0.15em] text-gray-500">
-            <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse" />
-            LIVE
-          </div>
 
           {/* Video */}
           <video
