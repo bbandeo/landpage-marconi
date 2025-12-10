@@ -530,15 +530,15 @@ export default function HomePage() {
             muted
             playsInline
             onTimeUpdate={() => {
-              // En la 5ta reproducción (loopCount === 4), pausar en el segundo 4
-              if (loopCount === 4 && loopVideoRef.current && loopVideoRef.current.currentTime >= 4) {
+              // En la 3ra reproducción (loopCount === 2), pausar en el segundo 4
+              if (loopCount === 2 && loopVideoRef.current && loopVideoRef.current.currentTime >= 4) {
                 loopVideoRef.current.pause();
               }
             }}
             onEnded={() => {
               const newCount = loopCount + 1;
               setLoopCount(newCount);
-              if (newCount < 5 && loopVideoRef.current) {
+              if (newCount < 3 && loopVideoRef.current) {
                 loopVideoRef.current.currentTime = 0;
                 loopVideoRef.current.play();
               }
@@ -548,12 +548,15 @@ export default function HomePage() {
           </video>
         </div>
 
+        {/* Gradient Fade - Suaviza la transición Hero → siguiente sección */}
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-900 to-transparent pointer-events-none z-20" />
+
       </section>
 
       {/* Transición suave Hero → Propiedades */}
-      <div className="relative h-32 w-full bg-gradient-to-b from-black via-[#0d0f14] to-slate-900 overflow-hidden">
+      <div className="relative h-16 w-full bg-slate-900 overflow-hidden">
         {/* Línea decorativa sutil */}
-        <div className="absolute top-8 left-1/2 -translate-x-1/2 w-24 h-[1px] bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-[1px] bg-gradient-to-r from-transparent via-orange-500/30 to-transparent" />
       </div>
 
       {/* Propiedades Destacadas - PREMIUM DESIGN */}
