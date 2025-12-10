@@ -506,13 +506,12 @@ export default function HomePage() {
           {/* Gradiente de fusión lateral (Desktop) */}
           <div className="absolute inset-y-0 left-0 w-20 lg:w-24 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, #00021F 0%, transparent 100%)' }} />
 
-          {/* CINEMATIC FADE: Gradiente inferior que funde el video con el contenido (Mobile) */}
-          {/* Altura 150px para transición suave, color debe coincidir con fondo del contenido */}
+          {/* CINEMATIC FADE: Gradiente inferior suave (Mobile) */}
           <div
             className="lg:hidden absolute inset-x-0 bottom-0 z-10 pointer-events-none"
             style={{
-              height: '150px',
-              background: 'linear-gradient(to bottom, rgba(0, 2, 31, 0) 0%, rgba(0, 2, 31, 0.6) 50%, rgba(0, 2, 31, 1) 100%)'
+              height: '100px',
+              background: 'linear-gradient(to bottom, rgba(0, 2, 31, 0) 0%, rgba(0, 2, 31, 0.3) 40%, rgba(0, 2, 31, 0.7) 70%, rgba(0, 2, 31, 1) 100%)'
             }}
           />
 
