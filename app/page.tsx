@@ -342,8 +342,8 @@ export default function HomePage() {
         </AnimatePresence>
 
         {/* COLUMNA IZQUIERDA: CONTENIDO (Texto) */}
-        {/* Mobile: h-[60%] con más aire y padding profesional */}
-        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-start pt-6 lg:pt-0 lg:justify-center px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 z-10 order-2 lg:order-1 relative bg-transparent">
+        {/* Mobile: h-[60%] con overlap negativo para fusión seamless con video */}
+        <div className="w-full lg:w-[42%] h-[60%] lg:h-full flex flex-col justify-start pt-8 lg:pt-0 lg:justify-center px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 z-20 order-2 lg:order-1 relative -mt-5 lg:mt-0" style={{ backgroundColor: 'transparent' }}>
 
           {/* ═══════════════════════════════════════════════════════════════
               FASE 1: BLUEPRINT GRID - Aparece con fade sutil (OPTIMIZADO)
@@ -462,7 +462,14 @@ export default function HomePage() {
             className="flex flex-col lg:flex-row gap-4 lg:gap-5 2xl:gap-6 relative z-10 w-full max-w-[300px] lg:max-w-none"
           >
             <Link href="/propiedades" className="w-full lg:w-auto">
-              <button className="relative w-full lg:w-auto h-[52px] lg:h-auto px-8 lg:px-8 xl:px-10 2xl:px-12 lg:py-4 2xl:py-5 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-wide uppercase rounded-xl shadow-lg shadow-orange-900/40 hover:shadow-orange-700/60 transition-all duration-200 overflow-hidden group flex items-center justify-center active:scale-[0.97]">
+              <button
+                className="relative w-full lg:w-auto h-[52px] lg:h-auto px-8 lg:px-8 xl:px-10 2xl:px-12 lg:py-4 2xl:py-5 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white text-sm lg:text-xs xl:text-sm 2xl:text-base font-semibold tracking-wide uppercase rounded-xl transition-all duration-300 overflow-hidden flex items-center justify-center active:scale-[0.97] hover:-translate-y-0.5"
+                style={{
+                  boxShadow: '0 4px 15px rgba(255, 69, 0, 0.4)',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 69, 0, 0.6)'}
+                onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 4px 15px rgba(255, 69, 0, 0.4)'}
+              >
                 Ver Propiedades
               </button>
             </Link>
@@ -496,11 +503,18 @@ export default function HomePage() {
         {/* Mobile: h-[40%] - Imagen reducida para priorizar título */}
         <div className="w-full lg:w-[58%] h-[40%] lg:h-full relative order-1 lg:order-2">
 
-          {/* Gradiente de fusión lateral */}
+          {/* Gradiente de fusión lateral (Desktop) */}
           <div className="absolute inset-y-0 left-0 w-20 lg:w-24 z-10 pointer-events-none" style={{ background: 'linear-gradient(to right, #00021F 0%, transparent 100%)' }} />
 
-          {/* Gradiente inferior en móvil */}
-          <div className="lg:hidden absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none" />
+          {/* CINEMATIC FADE: Gradiente inferior que funde el video con el contenido (Mobile) */}
+          {/* Altura 150px para transición suave, color debe coincidir con fondo del contenido */}
+          <div
+            className="lg:hidden absolute inset-x-0 bottom-0 z-10 pointer-events-none"
+            style={{
+              height: '150px',
+              background: 'linear-gradient(to bottom, rgba(0, 2, 31, 0) 0%, rgba(0, 2, 31, 0.6) 50%, rgba(0, 2, 31, 1) 100%)'
+            }}
+          />
 
           {/* Video Principal - Se reproduce una vez */}
           <video
@@ -548,15 +562,12 @@ export default function HomePage() {
           </video>
         </div>
 
-        {/* Gradient Fade - Suaviza la transición Hero → siguiente sección */}
-        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-slate-900 to-transparent pointer-events-none z-20" />
-
       </section>
 
       {/* Transición suave Hero → Propiedades */}
-      <div className="relative h-16 w-full bg-slate-900 overflow-hidden">
+      <div className="relative h-32 w-full bg-gradient-to-b from-black via-[#0d0f14] to-slate-900 overflow-hidden">
         {/* Línea decorativa sutil */}
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 w-24 h-[1px] bg-gradient-to-r from-transparent via-orange-500/30 to-transparent" />
+        <div className="absolute top-8 left-1/2 -translate-x-1/2 w-24 h-[1px] bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
       </div>
 
       {/* Propiedades Destacadas - PREMIUM DESIGN */}
