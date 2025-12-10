@@ -152,56 +152,70 @@ export default function Header({ showMobileSearch = true }: HeaderProps) {
         )}
       </header>
 
-      {/* MOBILE MENU OVERLAY - Fondo sólido opaco que cubre la pantalla */}
+      {/* MOBILE MENU OVERLAY - Glassmorphism Premium */}
       {isMobileMenuOpen && (
         <div
-          className="md:hidden fixed inset-0 z-40"
+          className="md:hidden fixed inset-0 z-40 flex flex-col bg-slate-900/95 backdrop-blur-md transition-all duration-300"
           style={{ top: '64px' }}
         >
-          {/* Overlay de fondo */}
-          <div
-            className="absolute inset-0 backdrop-blur-xl"
-            style={{
-              backgroundColor: 'rgba(3, 6, 20, 0.98)',
-              height: 'calc(100vh - 64px)'
-            }}
-          >
-            {/* Contenido del menú centrado */}
-            <nav className="flex flex-col items-center justify-center h-full gap-8">
-              <Link
-                href="/propiedades"
-                className={`text-lg font-medium tracking-[1px] uppercase transition-colors ${
-                  isActivePage("/propiedades")
-                    ? "text-vibrant-orange"
-                    : "text-white hover:text-vibrant-orange"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Propiedades
-              </Link>
-              <Link
-                href="/agentes"
-                className={`text-lg font-medium tracking-[1px] uppercase transition-colors ${
-                  isActivePage("/agentes")
-                    ? "text-vibrant-orange"
-                    : "text-white hover:text-vibrant-orange"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Agentes
-              </Link>
-              <Link
-                href="/contacto"
-                className={`text-lg font-medium tracking-[1px] uppercase transition-colors ${
-                  isActivePage("/contacto")
-                    ? "text-vibrant-orange"
-                    : "text-white hover:text-vibrant-orange"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Contacto
-              </Link>
-            </nav>
+          {/* Header del Menú con Logo */}
+          <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+            <span className="text-xl font-bold text-white tracking-wide">Marconi</span>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="p-2 text-gray-300 hover:text-white transition-colors"
+              aria-label="Cerrar menú"
+            >
+              <X className="w-7 h-7" />
+            </button>
+          </div>
+
+          {/* Enlaces de Navegación - Centrados con tipografía grande */}
+          <nav className="flex-1 flex flex-col justify-center items-center gap-10">
+            <Link
+              href="/propiedades"
+              className={`text-3xl font-medium transition-colors ${
+                isActivePage("/propiedades")
+                  ? "text-vibrant-orange"
+                  : "text-white hover:text-orange-500"
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Propiedades
+            </Link>
+            <Link
+              href="/agentes"
+              className={`text-3xl font-medium transition-colors ${
+                isActivePage("/agentes")
+                  ? "text-vibrant-orange"
+                  : "text-white hover:text-orange-500"
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Agentes
+            </Link>
+            <Link
+              href="/contacto"
+              className={`text-3xl font-medium transition-colors ${
+                isActivePage("/contacto")
+                  ? "text-vibrant-orange"
+                  : "text-white hover:text-orange-500"
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Contacto
+            </Link>
+          </nav>
+
+          {/* Footer del Menú - CTA Premium */}
+          <div className="p-6 pb-10">
+            <Link
+              href="/contacto"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block w-full py-4 rounded-xl bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold text-lg text-center shadow-lg shadow-orange-900/30 active:scale-95 transition-transform"
+            >
+              Agendar Visita
+            </Link>
           </div>
         </div>
       )}
