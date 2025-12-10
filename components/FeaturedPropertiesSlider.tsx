@@ -11,7 +11,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { PropertyMiniMap } from '@/components/PropertyMiniMap'
 import { Property } from '@/lib/supabase'
-import { Home, MapPin, Bed, Bath, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Home, MapPin, Bed, Bath, Square, ChevronLeft, ChevronRight } from 'lucide-react'
 
 interface FeaturedPropertiesSliderProps {
   properties: Property[]
@@ -89,24 +89,26 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
 
   return (
     <div className="relative">
-      {/* Navegación integrada - Flechas en la esquina superior derecha */}
-      <div className="flex justify-end gap-2 mb-6">
-        <button
+      {/* Navigation Buttons */}
+      <div className="flex justify-end gap-4 mb-8">
+        <Button
+          variant="outline"
+          size="sm"
           onClick={scrollPrev}
           disabled={!canScrollPrev}
-          className="p-2 rounded-full border border-slate-700 text-white hover:bg-slate-800 transition disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Anterior"
+          className="bg-gray-800/50 border-gray-700/30 text-white hover:bg-orange-500/20 hover:border-orange-500/40 disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <button
+          <ChevronLeft className="w-4 h-4" />
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
           onClick={scrollNext}
           disabled={!canScrollNext}
-          className="p-2 rounded-full border border-slate-700 text-white hover:bg-slate-800 transition disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Siguiente"
+          className="bg-gray-800/50 border-gray-700/30 text-white hover:bg-orange-500/20 hover:border-orange-500/40 disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+          <ChevronRight className="w-4 h-4" />
+        </Button>
       </div>
 
       {/* Slider Container */}
@@ -115,7 +117,7 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
           {properties.map((property, index) => (
             <div
               key={property.id}
-              className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 px-3"
+              className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 px-4"
             >
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
@@ -124,12 +126,10 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
                 viewport={{ once: true }}
                 className="h-full"
               >
-                {/* Tarjeta Profesional Mejorada */}
-                <div className="group bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800 hover:border-orange-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/20 h-full flex flex-col">
-
-                  {/* Área de Imagen - Aspect ratio 4:3 */}
+                <Card className="group overflow-hidden bg-[#12141f] border border-gray-700/20 backdrop-blur-sm hover:border-orange-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-orange-500/30 hover:scale-[1.02] cursor-pointer h-full rounded-2xl">
+                  {/* IMAGEN CON OVERLAYS ESTRATÉGICOS */}
                   <Link href={`/propiedades/${property.id}`}>
-                    <div className="relative aspect-[4/3] w-full overflow-hidden">
+                    <div className="relative overflow-hidden h-56">
                       {property.images && property.images.length > 0 ? (
                         <Image
                           src={property.images[0]}
@@ -142,73 +142,80 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
                           }}
                         />
                       ) : (
-                        <div className="w-full h-full bg-slate-800 flex items-center justify-center">
-                          <div className="text-slate-500 text-center">
+                        <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+                          <div className="text-gray-400 text-center">
                             <Home className="w-12 h-12 mx-auto mb-2 opacity-40" />
-                            <p className="text-xs font-medium">Sin imagen</p>
+                            <p className="text-xs font-medium">Sin imagen disponible</p>
                           </div>
                         </div>
                       )}
 
-                      {/* Badge de Estado (Top Left) */}
+                      {/* Gradiente inferior para destacar precio */}
+                      <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                      {/* PILL BADGE - VENTA/ALQUILER CON GRADIENTE */}
                       <div className="absolute top-4 left-4">
-                        <div className="bg-orange-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                        <div className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg shadow-orange-600/30 hover:shadow-orange-600/50 transition-shadow duration-300 backdrop-blur-sm">
                           {property.operation_type === "venta" ? "VENTA" : "ALQUILER"}
                         </div>
                       </div>
 
-                      {/* Precio (Bottom Right - Limpio sobre fondo oscuro) */}
-                      <div className="absolute bottom-4 right-4">
-                        <div className="bg-slate-900/90 backdrop-blur text-white font-bold px-4 py-2 rounded-lg border border-slate-700">
+                      {/* PRECIO EN OVERLAY - BADGE PREMIUM CON GRADIENTE Y BORDE */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="absolute bottom-3 right-3 text-right"
+                      >
+                        <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md border border-white/20">
                           {property.currency}$ {property.price.toLocaleString()}
                         </div>
-                      </div>
+                      </motion.div>
                     </div>
                   </Link>
 
-                  {/* Área de Contenido */}
-                  <div className="p-5 flex-1 flex flex-col">
-                    {/* Título */}
+                  {/* INFORMACIÓN CON MÁS AIRE - PADDING GENEROSO */}
+                  <CardContent className="p-4 flex-1">
                     <Link href={`/propiedades/${property.id}`}>
-                      <h3 className="text-xl font-bold text-white mb-1 hover:text-orange-400 transition-colors line-clamp-1">
-                        {property.title}
-                      </h3>
-                    </Link>
+                      <div className="space-y-3">
+                        {/* TÍTULO CON JERARQUÍA CLARA - MEJORADO */}
+                        <h3 className="text-lg font-bold text-gray-100 hover:text-orange-400 transition-colors cursor-pointer line-clamp-1 leading-tight">
+                          {property.title}
+                        </h3>
 
-                    {/* Ubicación */}
-                    <div className="flex items-center text-slate-400 text-sm mb-4">
-                      <MapPin className="w-4 h-4 mr-1.5 flex-shrink-0" />
-                      <span className="truncate">{property.neighborhood}, Reconquista</span>
-                    </div>
+                        {/* UBICACIÓN - GRIS MEJORADO PARA LEGIBILIDAD */}
+                        <div className="flex items-center text-gray-400 text-sm">
+                          <MapPin size={16} className="mr-2 flex-shrink-0" />
+                          <span className="truncate">{property.neighborhood}, Reconquista</span>
+                        </div>
 
-                    {/* Separador */}
-                    <div className="h-px w-full bg-slate-800 mb-4"></div>
-
-                    {/* Features - Iconografía clara con color naranjo */}
-                    {(property.bedrooms || property.bathrooms || property.area_m2) && (
-                      <div className="flex justify-between items-center text-slate-300 mt-auto">
-                        {property.bedrooms && (
-                          <div className="flex items-center gap-2">
-                            <Bed className="w-5 h-5 text-orange-500" />
-                            <span className="text-sm font-medium">{property.bedrooms} Hab</span>
-                          </div>
-                        )}
-                        {property.bathrooms && (
-                          <div className="flex items-center gap-2">
-                            <Bath className="w-5 h-5 text-orange-500" />
-                            <span className="text-sm font-medium">{property.bathrooms} Baños</span>
-                          </div>
-                        )}
-                        {property.area_m2 && (
-                          <div className="flex items-center gap-2">
-                            <Maximize2 className="w-5 h-5 text-orange-500" />
-                            <span className="text-sm font-medium">{property.area_m2} m²</span>
+                        {/* CARACTERÍSTICAS SI ESTÁN DISPONIBLES - ICONOS MEJORADOS */}
+                        {(property.bedrooms || property.bathrooms || property.area_m2) && (
+                          <div className="flex gap-4 text-gray-300 text-sm">
+                            {property.bedrooms && (
+                              <span className="flex items-center gap-1">
+                                <span>🛏</span>
+                                {property.bedrooms}
+                              </span>
+                            )}
+                            {property.bathrooms && (
+                              <span className="flex items-center gap-1">
+                                <span>🛁</span>
+                                {property.bathrooms}
+                              </span>
+                            )}
+                            {property.area_m2 && (
+                              <span className="flex items-center gap-1">
+                                <span>📐</span>
+                                {property.area_m2} m²
+                              </span>
+                            )}
                           </div>
                         )}
                       </div>
-                    )}
-                  </div>
-                </div>
+                    </Link>
+                  </CardContent>
+                </Card>
               </motion.div>
             </div>
           ))}
@@ -217,7 +224,7 @@ export function FeaturedPropertiesSlider({ properties }: FeaturedPropertiesSlide
 
       {/* Slide Counter */}
       <div className="text-center mt-6">
-        <p className="text-slate-400 text-sm">
+        <p className="text-gray-400 text-sm">
           Mostrando {Math.min(3, properties.length)} de {properties.length} propiedades destacadas
         </p>
       </div>
