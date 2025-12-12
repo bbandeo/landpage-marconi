@@ -280,7 +280,7 @@ export default function PropiedadesPage() {
           <div className="bg-premium-card backdrop-blur-md rounded-2xl p-6 border border-support-gray/20 shadow-xl">
 
             {/* Basic Filters - Always Visible */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-4">
               {/* Search - Full width on mobile */}
               <div className="md:col-span-2">
                 <div className="relative">
@@ -340,7 +340,7 @@ export default function PropiedadesPage() {
             {showAdvancedFilters && (
               <div className="space-y-4 border-t border-support-gray/20 pt-4">
                 {/* Price and Area */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   <div>
                     <label className="secondary-text block mb-2 text-sm">Precio mínimo</label>
                     <Input
@@ -380,7 +380,7 @@ export default function PropiedadesPage() {
                 </div>
 
                 {/* Features and Location */}
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
                   {/* Neighborhood */}
                   <div className="col-span-2">
                     <Select value={neighborhoodFilter} onValueChange={setNeighborhoodFilter}>
@@ -456,7 +456,7 @@ export default function PropiedadesPage() {
       </Hero>
 
       {/* Properties Counter - Below filters */}
-      <div className="bg-premium-main py-6">
+      <div className="bg-premium-main py-8">
         <div className="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
           <div className="text-center">
             <div className="bg-premium-card/50 backdrop-blur-sm rounded-xl px-6 py-4 border border-support-gray/20 shadow-lg inline-block">

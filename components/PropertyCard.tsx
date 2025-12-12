@@ -71,7 +71,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
       </div>
 
       {/* CONTENIDO DE LA PROPIEDAD */}
-      <CardContent className="p-6">
+      <CardContent className="p-premium-sm">
         {/* SECCIÓN SUPERIOR: PRECIO Y TÍTULO */}
         <div className="mb-4">
           {/* Precio destacado */}

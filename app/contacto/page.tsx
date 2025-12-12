@@ -394,39 +394,44 @@ export default function ContactoPage() {
                     <form onSubmit={handleSubmitContact} className="space-y-premium-lg">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-premium-md">
                         <div>
-                          <label className="block caption-lg font-medium text-premium-primary mb-premium-sm">
+                          <label htmlFor="contact-name" className="block caption-lg font-medium text-premium-primary mb-premium-sm">
                             Nombre completo *
                           </label>
                           <Input
+                            id="contact-name"
                             type="text"
                             value={contactForm.name}
                             onChange={(e) => setContactForm(prev => ({ ...prev, name: e.target.value }))}
                             className="bg-premium-card border-support-gray/30 text-premium-primary placeholder:text-premium-secondary focus:border-vibrant-orange"
                             placeholder="Tu nombre completo"
                             required
+                            aria-required="true"
                           />
                         </div>
                         <div>
-                          <label className="block caption-lg font-medium text-premium-primary mb-premium-sm">
+                          <label htmlFor="contact-email" className="block caption-lg font-medium text-premium-primary mb-premium-sm">
                             Email *
                           </label>
                           <Input
+                            id="contact-email"
                             type="email"
                             value={contactForm.email}
                             onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
                             className="bg-premium-card border-support-gray/30 text-premium-primary placeholder:text-premium-secondary focus:border-vibrant-orange"
                             placeholder="tu@email.com"
                             required
+                            aria-required="true"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-premium-md">
                         <div>
-                          <label className="block caption-lg font-medium text-premium-primary mb-premium-sm">
+                          <label htmlFor="contact-phone" className="block caption-lg font-medium text-premium-primary mb-premium-sm">
                             Teléfono
                           </label>
                           <Input
+                            id="contact-phone"
                             type="tel"
                             value={contactForm.phone}
                             onChange={(e) => setContactForm(prev => ({ ...prev, phone: e.target.value }))}
@@ -435,11 +440,11 @@ export default function ContactoPage() {
                           />
                         </div>
                         <div>
-                          <label className="block caption-lg font-medium text-premium-primary mb-premium-sm">
+                          <label htmlFor="contact-subject" className="block caption-lg font-medium text-premium-primary mb-premium-sm">
                             Asunto *
                           </label>
                           <Select value={contactForm.subject} onValueChange={(value) => setContactForm(prev => ({ ...prev, subject: value }))}>
-                            <SelectTrigger className="bg-premium-card border-support-gray/30 text-premium-primary">
+                            <SelectTrigger id="contact-subject" className="bg-premium-card border-support-gray/30 text-premium-primary" aria-required="true">
                               <SelectValue placeholder="Selecciona un asunto" />
                             </SelectTrigger>
                             <SelectContent className="bg-premium-card border-support-gray/30">
@@ -455,7 +460,7 @@ export default function ContactoPage() {
                       </div>
 
                       <div>
-                        <label className="block caption-lg font-medium text-premium-primary mb-premium-sm">
+                        <label htmlFor="contact-source" className="block caption-lg font-medium text-premium-primary mb-premium-sm">
                           ¿Cómo nos encontraste? *
                         </label>
                         <LeadSourceSelector
@@ -470,15 +475,17 @@ export default function ContactoPage() {
                       </div>
 
                       <div>
-                        <label className="block caption-lg font-medium text-premium-primary mb-premium-sm">
+                        <label htmlFor="contact-message" className="block caption-lg font-medium text-premium-primary mb-premium-sm">
                           Mensaje *
                         </label>
                         <Textarea
+                          id="contact-message"
                           value={contactForm.message}
                           onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
                           className="bg-premium-card border-support-gray/30 text-premium-primary placeholder:text-premium-secondary focus:border-vibrant-orange min-h-32"
                           placeholder="Contanos en detalle tu consulta o necesidad. Mientras más información nos proporciones, mejor podremos ayudarte..."
                           required
+                          aria-required="true"
                         />
                       </div>
 
